@@ -1,0 +1,4 @@
+org.springframework.boot.env.PropertySourceLoader=\
+  com.feitai.base.UnicodePropertiesPropertySourceLoader,\
+  org.springframework.boot.env.PropertiesPropertySourceLoader,\
+  org.springframework.boot.env.YamlPropertySourceLoader
