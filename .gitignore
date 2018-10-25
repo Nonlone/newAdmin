@@ -1,5 +1,9 @@
 /target/
-!.mvn/wrapper/maven-wrapper.jar
+*/target/
+
+/.mvn/*
+/mvnw
+/mvnw.cmd
 
 ### STS ###
 .apt_generated
@@ -24,5 +28,3 @@
 /nbdist/
 /.nb-gradle/
 
-.mvn
-mvn*
