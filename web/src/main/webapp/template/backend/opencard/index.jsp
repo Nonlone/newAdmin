@@ -21,19 +21,19 @@
             <div class="control-group span7">
                 <label class="control-label">客户姓名:</label>
                 <div class="controls">
-                    <input type="text" class="input-normal control-text" name="search_LIKE_tdi.name">
+                    <input type="text" class="input-normal control-text" name="search_LIKE_idcard.name">
                 </div>
             </div>
             <div class="control-group span7">
                 <label class="control-label">注册手机号:</label>
                 <div class="controls">
-                    <input type="text" class="input-normal control-text" name="search_LIKE_tu.phone">
+                    <input type="text" class="input-normal control-text" name="search_LIKE_user.phone">
                 </div>
             </div>
             <div class="control-group span7">
                 <label class="control-label">身份证号:</label>
                 <div class="controls">
-                    <input type="text" class="input-normal control-text" name="search_LIKE_tdi.idCard">
+                    <input type="text" class="input-normal control-text" name="search_LIKE_idcard.idCard">
                 </div>
             </div>
             <div class="control-group span7">
@@ -50,7 +50,7 @@
             <div class="control-group span7">
                 <label class="control-label">产品名称:</label>
                 <div class="controls" id="selectProduct">
-                    <input id="searchProduct" type="hidden" name="search_LIKE_tp.name">
+                    <input id="searchProduct" type="hidden" name="search_LIKE_product.name">
                 </div>
             </div>
             <div class="control-group span7">

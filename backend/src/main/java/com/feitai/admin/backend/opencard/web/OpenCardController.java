@@ -291,11 +291,11 @@ public class OpenCardController extends BaseListableController<CardMore> {
 
     private SelectMultiTable getSelectMultiTable() {
         return SelectMultiTable.builder(CardMore.class)
-                .leftJoin(User.class, "tu", new OnCondition[]{
+                .leftJoin(User.class, "user", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class, "tdi", new OnCondition[]{
+                }).leftJoin(IdCardData.class, "idcard", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "userId")
-                }).leftJoin(Product.class, "tp", new OnCondition[]{
+                }).leftJoin(Product.class, "product", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "productId", Operator.EQ, "id")
                 });
     }
@@ -319,9 +319,9 @@ public class OpenCardController extends BaseListableController<CardMore> {
 
     private String getOneSql(Object id) {
         String sql = SelectMultiTable.builder(CardMore.class)
-                .leftJoin(User.class, "user_in", new OnCondition[]{
+                .leftJoin(User.class, "user", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class, "id_card", new OnCondition[]{
+                }).leftJoin(IdCardData.class, "idcard", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "userId")
                 }).leftJoin(Product.class, "product", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "productId", Operator.EQ, "id")
