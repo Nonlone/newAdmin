@@ -77,7 +77,7 @@
             </div>
           </div>
         </div>
-        <input type="hidden" name="parent.id" value="">
+        <input type="hidden" name="parent_id" value="">
         <input type="hidden" name="level" value="">
         <input type="hidden" name="id" value="">
       </form>
@@ -158,7 +158,7 @@ BUI.use(['bui/tree','bui/data','bui/toolbar','bui/select','bui/ux/crudgrid','bui
 		            //加载对应的数据，同时将分页回复到第一页
 		        }else if(node.level==1 || node.level==2){
 		        	store.set('lastParams',{});
-		        	store.load({'search_EQ_parent.id' : node.id,start : 0});
+		        	store.load({'search_EQ_parent_id' : node.id,start : 0});
 		         }else if(node.level==3){
 		        	store.set('lastParams',{});
 		        	store.load({'search_EQ_id' : node.id,start : 0});
@@ -270,9 +270,9 @@ BUI.use(['bui/tree','bui/data','bui/toolbar','bui/select','bui/ux/crudgrid','bui
 	         var beforeAddShow = function(dialog,form){
 	        	 	form.getField('level').set('value',level);
 	      		 if(parentId!=0){
-	      			form.getField('parent.id').set('value',parentId);
+	      			form.getField('parent._d').set('value',parentId);
 	      		 }else{
-	      			form.getField('parent.id').set('value','');
+	      			form.getField('parent_id').set('value','');
 	      		 }
 	      		select.setSelectedValue('permissionIds');
 	      		changeFormFieldByLevel(form,level);
@@ -281,7 +281,7 @@ BUI.use(['bui/tree','bui/data','bui/toolbar','bui/select','bui/ux/crudgrid','bui
 	   
 	         var beforeUpdateShow = function(dialog,form,record){
  	         	if(record.parent && record.parent.id){
-	         		form.getField('parent.id').set('value',record.parent.id);
+	         		form.getField('parent_id').set('value',record.parent.id);
 	         	} 
  	         	form.getField('level').set('value',record.level);
 	         	//貌似不清空数据重新加载就会有问题

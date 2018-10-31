@@ -21,19 +21,19 @@
             <div class="control-group span7">
                 <label class="control-label">客户姓名:</label>
                 <div class="controls">
-                    <input type="text" class="input-normal control-text" name="search_LIKE_idcard.name">
+                    <input type="text" class="input-normal control-text" name="search_LIKE_tdi.name">
                 </div>
             </div>
             <div class="control-group span7">
                 <label class="control-label">注册手机号:</label>
                 <div class="controls">
-                    <input type="text" class="input-normal control-text" name="search_LIKE_userIn.phone">
+                    <input type="text" class="input-normal control-text" name="search_LIKE_tu.phone">
                 </div>
             </div>
             <div class="control-group span7">
                 <label class="control-label">身份证号:</label>
                 <div class="controls">
-                    <input type="text" class="input-normal control-text" name="search_LIKE_idcard.idCard">
+                    <input type="text" class="input-normal control-text" name="search_LIKE_tdi.idCard">
                 </div>
             </div>
             <div class="control-group span7">
@@ -50,7 +50,7 @@
             <div class="control-group span7">
                 <label class="control-label">产品名称:</label>
                 <div class="controls" id="selectProduct">
-                    <input id="searchProduct" type="hidden" name="search_LIKE_product.name">
+                    <input id="searchProduct" type="hidden" name="search_LIKE_tp.name">
                 </div>
             </div>
             <div class="control-group span7">
@@ -62,19 +62,18 @@
             <div class="control-group span10">
                 <label class="control-label">提交审批时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
-                    <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_submitTime_D" data-tip="{text : '开始日期'}">
-                    <span>
-             - </span><input name="search_LTE_submitTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+                    <input type="text" class="calendar" name="search_GTE_submitTime" data-tip="{text : '开始日期'}">
+                    <span>- </span>
+                    <input   type="text" class="calendar"name="search_LTE_submitTime" data-tip="{text : '结束日期'}">
                 </div>
             </div>
             <div class="control-group span10">
                 <label class="control-label">订单创建时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_createdTime_D" data-tip="{text : '开始日期'}">
-                    <span>
-             - </span><input name="search_LTE_createdTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+                    <input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
+                    <span>- </span>
+                    <input  type="text" class="calendar" name="search_LTE_createdTime" data-tip="{text : '结束日期'}">
                 </div>
             </div>
 
@@ -197,7 +196,7 @@
             },
             {title: '授信状态', dataIndex: 'status', width: '10%', renderer: BUI.Grid.Format.enumRenderer(statusEmun)},
             {title: '授信额度', dataIndex: 'creditSum', width: '10%'},
-            {title: "授权项", dataIndex: 'auths', width: '10%'},
+            {title: "授权项", dataIndex: 'auths', width: '15%'},
             {title: '进件渠道', dataIndex: 'applyChannelId', width: '10%'},
             {title: '注册渠道', dataIndex: 'registChannelId', width: '10%'},
             {

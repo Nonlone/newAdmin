@@ -105,8 +105,8 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
      * 根据sql获取page
      *
      */
-    public List<T> findBySqls(String sqls, int pageNo, int pageSize) {
-        if (sqls.toLowerCase().indexOf("limit") < 0) {
+    public List<T> findAllBySqls(String sqls, int pageNo, int pageSize) {
+        if (sqls.toLowerCase().indexOf("limit") < 0 && pageNo >= 0 && pageSize > 0) {
             sqls = sqls + " LIMIT  " + (pageNo * pageSize) + " , " + pageSize;
         }
         List<T> results = getSqlMapper().selectList(sqls, classOfT);
@@ -145,8 +145,12 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
      */
     public Integer countBySelectMultiTable(SelectMultiTable selectMultiTable, List<SearchParams> searchParamsList) {
         String sql = selectMultiTable.buildCountSqlString() + buildSqlWhereCondition(searchParamsList);
-        Map<Object, Object> result = getSqlMapper().selectOne(sql, Map.class);
-        return (Integer) result.get("count");
+        Map<Object, Object> resultMap = getSqlMapper().selectOne(sql, Map.class);
+        Object result = resultMap.get(SelectMultiTable.COUNT_ALIAS);
+        if (result instanceof Long) {
+            return ((Long) result).intValue();
+        }
+        return (Integer) result;
     }
 
 
@@ -208,35 +212,39 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
         }
         if (!CollectionUtils.isEmpty(searchParamsList)) {
             for (SearchParams searchParams : searchParamsList) {
+                String leftParam = searchParams.getName();
+                if(!leftParam.contains(".")){
+                    leftParam = prefix+leftParam;
+                }
                 switch (searchParams.getOperator()) {
                     case EQ:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + prefix + searchParams.getName() + " = '" + searchParams.getValues()[0] + "'");
+                            sql.append(" and " +leftParam + " = '" + searchParams.getValues()[0] + "'");
                         }
                         break;
                     case LIKE:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + prefix + searchParams.getName() + " like '%" + searchParams.getValues()[0] + "%'");
+                            sql.append(" and " +leftParam + " like '%" + searchParams.getValues()[0] + "%'");
                         }
                         break;
                     case GT:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + prefix + searchParams.getName() + " > '" + searchParams.getValues()[0] + "'");
+                            sql.append(" and " + leftParam + " > '" + searchParams.getValues()[0] + "'");
                         }
                         break;
                     case LT:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + prefix + searchParams.getName() + " < '" + searchParams.getValues()[0] + "'");
+                            sql.append(" and " + leftParam + " < '" + searchParams.getValues()[0] + "'");
                         }
                         break;
                     case GTE:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + prefix + searchParams.getName() + " >= '" + searchParams.getValues()[0] + "'");
+                            sql.append(" and " + leftParam + " >= '" + searchParams.getValues()[0] + "'");
                         }
                         break;
                     case LTE:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + prefix + searchParams.getName() + " <= '" + searchParams.getValues()[0] + "'");
+                            sql.append(" and " + leftParam + " <= '" + searchParams.getValues()[0] + "'");
                         }
                         break;
                     case ORLIKE:
@@ -244,9 +252,9 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
                             int i = 0;
                             for (String value : searchParams.getValues()) {
                                 if (i == 0) {
-                                    sql.append(" and (" + prefix + searchParams.getName() + " like '%" + value + "%'");
+                                    sql.append(" and (" + leftParam + " like '%" + value + "%'");
                                 } else {
-                                    sql.append(" or " + prefix + searchParams.getName() + " like '%" + value + "%'");
+                                    sql.append(" or " + leftParam + " like '%" + value + "%'");
                                 }
                                 i++;
                             }
@@ -258,9 +266,9 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
                             int i = 0;
                             for (String value : searchParams.getValues()) {
                                 if (i == 0) {
-                                    sql.append(" and " + prefix + searchParams.getName() + " like '%" + value + "%'");
+                                    sql.append(" and " + leftParam + " like '%" + value + "%'");
                                 } else {
-                                    sql.append(" and " + prefix + searchParams.getName() + " like '%" + value + "%'");
+                                    sql.append(" and " + leftParam + " like '%" + value + "%'");
                                 }
                                 i++;
                             }
@@ -271,9 +279,9 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
                             int i = 0;
                             for (String value : searchParams.getValues()) {
                                 if (i == 0) {
-                                    sql.append(" and " + prefix + searchParams.getName() + " not like '%" + value + "%'");
+                                    sql.append(" and " + leftParam + " not like '%" + value + "%'");
                                 } else {
-                                    sql.append(" and " + prefix + searchParams.getName() + " not like '%" + value + "%'");
+                                    sql.append(" and " + leftParam + " not like '%" + value + "%'");
                                 }
                                 i++;
                             }
@@ -284,9 +292,9 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
                             int i = 0;
                             for (String value : searchParams.getValues()) {
                                 if (i == 0) {
-                                    sql.append(" and (" + prefix + searchParams.getName() + " = '" + value + "'");
+                                    sql.append(" and (" + leftParam + " = '" + value + "'");
                                 } else {
-                                    sql.append(" or " + prefix + searchParams.getName() + " = '" + value + "'");
+                                    sql.append(" or " + leftParam + " = '" + value + "'");
                                 }
                                 i++;
                             }

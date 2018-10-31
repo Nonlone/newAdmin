@@ -11,7 +11,13 @@
     var ctx = '${pageContext.request.contextPath}';
     BUI.actions = {};
     BUI.setDebug(<spring:eval expression="@webConf['bui.debug']" />);
-    //BUI.setDebug(true);
+
+    //ajax 设置 application/json
+    $(function () {
+        $.ajaxSetup({
+            dataType: "json",
+        })
+    })
 </script>
 <script type="text/javascript" src="${ctx}/static/bui/ux/crudgrid.js"></script>
 <script type="text/javascript" src="${ctx}/static/bui/ux/savedialog.js"></script>
@@ -75,11 +81,11 @@
 
 <script type="text/javascript">
 
-    document.onkeydown = function(e){
-        if(!e){
+    document.onkeydown = function (e) {
+        if (!e) {
             e = window.event;
         }
-        if((e.keyCode || e.which) == 13){
+        if ((e.keyCode || e.which) == 13) {
 
             $("#btnSearch").click();
         }
@@ -95,7 +101,7 @@
         }
     });
 
-    function searchBtn(){
+    function searchBtn() {
         document.getElementById("btnSearch").click();
     }
 

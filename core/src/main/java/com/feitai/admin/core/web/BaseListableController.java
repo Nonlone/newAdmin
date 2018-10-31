@@ -64,10 +64,9 @@ public abstract class BaseListableController<T> extends BaseController {
      */
     protected Page<T> list(String sqls, int pageNo, int pageSize, String countSqls, String countAlias) {
         Integer totalSize = getService().countBySqls(countSqls, countAlias);
-        List<T> resultList = getService().findBySqls(sqls, pageNo, pageSize);
+        List<T> resultList = getService().findAllBySqls(sqls, pageNo, pageSize);
         return buildPage(resultList, totalSize, pageNo, pageSize);
     }
-
 
 
     protected Page<T> list(ServletRequest request, String sqlHead, String sqlMainTableAlias, String sqlHeadId) {
@@ -80,7 +79,7 @@ public abstract class BaseListableController<T> extends BaseController {
             groupBy = " GROUP BY " + sqlHeadId;
         }
         String sql = sqlHead + getService().buildSqlWhereCondition(searchParamsList, sqlMainTableAlias) + groupBy;
-        return buildPage(getService().findBySqls(sql, pageNo, pageSize), pageNo, pageSize);
+        return buildPage(getService().findAllBySqls(sql, pageNo, pageSize), pageNo, pageSize);
     }
 
 
@@ -99,7 +98,7 @@ public abstract class BaseListableController<T> extends BaseController {
                 // 切分第一个作为分割符
                 sources = ArrayUtils.remove(sources, 0);
                 // 余后重新组合，转换驼峰，和 . 号
-                String name = StringUtils.humpToLine(Joiner.on("_").join(sources)).replace(".", "_");
+                String name = StringUtils.humpToLine(Joiner.on("_").join(sources));
                 if (entry.getValue().getClass().isArray()
                         && entry.getValue().getClass().getComponentType() == String.class) {
                     // String数组
@@ -138,7 +137,11 @@ public abstract class BaseListableController<T> extends BaseController {
      */
     protected <K> Page<K> buildPage(List<K> results, int totalSize, int pageNo, int pageSize) {
         Page<K> page = new Page(results);
-        page.setTotalPages(totalSize / pageSize + totalSize % pageSize > 0 ? 1 : 0);
+        if (pageNo >= 0 && pageSize > 0) {
+            page.setTotalPages(totalSize / pageSize + totalSize % pageSize > 0 ? 1 : 0);
+        } else {
+            page.setTotalPages(0);
+        }
         page.setTotalElements(totalSize);
         page.setNumber(pageNo);
         page.setSize(pageSize);

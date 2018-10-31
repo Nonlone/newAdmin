@@ -9,11 +9,9 @@ package com.feitai.admin.backend.opencard.web;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.feitai.admin.backend.auth.entity.AuthdataTempAuth;
-import com.feitai.admin.backend.auth.service.AuthdataAuthService;
+import com.feitai.admin.backend.auth.service.AuthDataService;
 import com.feitai.admin.backend.auth.service.AuthdataLinkfaceLivenessIdnumberVerificationService;
 import com.feitai.admin.backend.auth.service.AuthdataLinkfaceLivenessSelfieVerificationService;
-import com.feitai.admin.backend.auth.service.AuthdataTempAuthService;
 import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.opencard.entity.CardMore;
@@ -25,7 +23,6 @@ import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.attach.model.PhotoAttach;
 import com.feitai.jieya.server.dao.authdata.model.AuthData;
-import com.feitai.jieya.server.dao.authdata.model.BaseAuthData;
 import com.feitai.jieya.server.dao.callback.model.linkface.LinkfaceLivenessIdNumberVerifcation;
 import com.feitai.jieya.server.dao.callback.model.linkface.LinkfaceLivenessSelfieVerification;
 import com.feitai.jieya.server.dao.data.model.*;
@@ -33,21 +30,23 @@ import com.feitai.jieya.server.dao.product.model.Product;
 import com.feitai.jieya.server.dao.user.model.User;
 import com.feitai.utils.CollectionUtils;
 import com.feitai.utils.Desensitization;
-import com.feitai.utils.StringUtils;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @Controller
@@ -59,6 +58,12 @@ public class OpenCardController extends BaseListableController<CardMore> {
     private CardService cardService;
 
     @Autowired
+    private AppConfigService appConfigService;
+
+    @Autowired
+    private AuthDataService authDataService;
+
+    @Autowired
     private IdcardService idcardService;
 
     @Autowired
@@ -68,16 +73,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
     private PersonService personService;
 
     @Autowired
-    private AppConfigService appConfigService;
-
-    @Autowired
     private WorkService workService;
-
-    @Autowired
-    private AuthdataAuthService authdataAuthService;
-
-    @Autowired
-    private AuthdataTempAuthService authdataTempAuthService;
 
     @Autowired
     private ContactService contactService;
@@ -101,6 +97,33 @@ public class OpenCardController extends BaseListableController<CardMore> {
     @RequestMapping("/index")
     public String index() {
         return "/backend/opencard/index";
+    }
+
+    @RequiresPermissions("/backend/opencard:list")
+    @RequestMapping(value = "list")
+    @ResponseBody
+    public Object listPage(ServletRequest request) {
+        //根据request获取page
+        int pageNo = PageBulider.getPageNo(request);
+        int pageSize = PageBulider.getPageSize(request);
+        Page<CardMore> cardMorePage = list(getSqls(request), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        List<CardMore> cardMoreList = cardMorePage.getContent();
+        List<JSONObject> resultList = new ArrayList();
+
+        //遍历page中内容，修改或添加非数据库的自定义字段
+        for (CardMore cardMore : cardMoreList) {
+            if (cardMore.getEnable()) {
+                JSONObject json = (JSONObject) JSON.toJSON(cardMore);
+                List<String> authList = authDataService.getAuthValueString(cardMore.getId());
+                if (!CollectionUtils.isEmpty(authList)) {
+                    json.put("auths", Joiner.on("<br/>").join(authList));
+                } else {
+                    json.put("auths", "无");
+                }
+                resultList.add(json);
+            }
+        }
+        return switchContent(cardMorePage, resultList);
     }
 
 
@@ -137,21 +160,14 @@ public class OpenCardController extends BaseListableController<CardMore> {
         DateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         PersonData person = personService.findByUserId(userId);
 
-        //授权项
-        String authstr = "";
-        List<AuthData> authdataAuths = authdataAuthService.findByCardId(id);
-        if (authdataAuths.size() == 0) {
-            authstr += "无,";
-        }
-        for (AuthData auth :
-                authdataAuths) {
-            String source = auth.getSource().getValue();
-            if (source != null) {
-                authstr += (mapProperties.getSourceMap().get(source) + ",");
-            }
 
+        String auths;
+        List<String> authList = authDataService.getAuthValueString(id);
+        if (!CollectionUtils.isEmpty(authList)) {
+            auths = Joiner.on("<br/>").join(authList);
+        } else {
+            auths = "无";
         }
-        String auths = authstr.equals("") ? "" : authstr.substring(0, authstr.length() - 1);
 
         //婚姻状况最高学历生育状态
         String marital = "";
@@ -263,89 +279,23 @@ public class OpenCardController extends BaseListableController<CardMore> {
         model.addAttribute("idcard", idcard);
         model.addAttribute("user", user);
         model.addAttribute("work", work);
-        return "/admin/opencard/opencard/detail";
+        return "/backend/opencard/detail";
     }
 
-
-    @RequiresPermissions("/backend/opencard:list")
-    @RequestMapping(value = "list")
-    @ResponseBody
-    public Object listPage(ServletRequest request) {
-        //根据request获取page
-        int pageNo = PageBulider.getPageNo(request);
-        int pageSize = PageBulider.getPageSize(request);
-        Page<CardMore> cardMorePage = list(getSqls(request), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
-        List<CardMore> cardMoreList = cardMorePage.getContent();
-        List<JSONObject> resultList = new ArrayList();
-
-        //遍历page中内容，修改或添加非数据库的自定义字段
-        for (CardMore cardMore : cardMoreList) {
-            if (cardMore.getEnable()) {
-                JSONObject json = (JSONObject) JSON.toJSON(cardMore);
-                List<String> authNameList = new ArrayList();
-                List<AuthData> authDataList = authdataAuthService.findByCardId(cardMore.getId());
-                if (!CollectionUtils.isEmpty(authDataList)) {
-                    for (AuthData auth : authDataList) {
-                        authNameList.add(buildAuthValue(auth));
-                    }
-                } else {
-                    List<AuthdataTempAuth> authdataTempAuthList = authdataTempAuthService.findByCardId(cardMore.getId());
-                    if (!CollectionUtils.isEmpty(authDataList)) {
-                        for (AuthdataTempAuth authdataTempAuth : authdataTempAuthList) {
-                            authNameList.add(buildAuthValue(authdataTempAuth));
-                        }
-                    }
-                }
-                if (!CollectionUtils.isEmpty(authNameList)) {
-                    json.put("auth", Joiner.on(",").join(authNameList));
-                } else {
-                    json.put("auth", "无");
-                }
-                resultList.add(json);
-            }
-        }
-        return switchContent(cardMorePage, resultList);
-    }
-
-
-    private String buildAuthValue(BaseAuthData authData) {
-        StringBuffer sbValue = new StringBuffer();
-        if (!Objects.isNull(authData.getCode())) {
-            sbValue.append(authData.getCode().getValue());
-        }
-        if (!Objects.isNull(authData.getSource())) {
-            sbValue.append("-").append(authData.getSource().getValue());
-        }
-        String value = mapProperties.getAuthValue(sbValue.toString());
-        if (StringUtils.isNotBlank(value)) {
-            return value;
-        }
-        return sbValue.toString();
-    }
-
-    /**
-     * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2 Preparable二次部分绑定的效果,先根据form的id从数据库查出User对象,再把Form提交的内容绑定到该对象上。
-     * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.
-     */
-//    @ModelAttribute
-//    public void getcard(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
-////        if (id != -1) {
-////            model.addAttribute("opencard", this.cardService.findOneBySql(getOneSql(id)));
-////        }
-////    }
 
     @Override
     protected DynamitSupportService<CardMore> getService() {
         return this.cardService;
     }
 
+
     private SelectMultiTable getSelectMultiTable() {
         return SelectMultiTable.builder(CardMore.class)
-                .leftJoin(User.class, "user_in", new OnCondition[]{
+                .leftJoin(User.class, "tu", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class, "id_card", new OnCondition[]{
+                }).leftJoin(IdCardData.class, "tdi", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "userId")
-                }).leftJoin(Product.class, "product", new OnCondition[]{
+                }).leftJoin(Product.class, "tp", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "productId", Operator.EQ, "id")
                 });
     }
@@ -353,7 +303,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
     private String getSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(getSelectMultiTable().buildSqlString());
-        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request)));
+        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
         sbSql.append(" GROUP BY " + SelectMultiTable.MAIN_ALAIS + ".id");
         return sbSql.toString();
     }
@@ -362,7 +312,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(getSelectMultiTable().buildCountSqlString());
-        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request)));
+        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
         return sbSql.toString();
     }
 
@@ -379,10 +329,4 @@ public class OpenCardController extends BaseListableController<CardMore> {
         return sql;
     }
 
-
-    @InitBinder
-    public void initDate(WebDataBinder webDataBinder) {
-        webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-        webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-    }
 }
