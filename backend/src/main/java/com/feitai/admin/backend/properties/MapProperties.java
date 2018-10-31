@@ -50,7 +50,11 @@ public class MapProperties {
         authValueMap = ImmutableMap.copyOf(JSONObject.parseObject(authValueMapSource, Map.class));
     }
 
-    //获取授权项Map
+    /**
+     * 获取授权项Map
+     * @param key
+     * @return
+     */
     public String getAuthValue(String key) {
         if (!CollectionUtils.isEmpty(authValueMap)) {
             return authValueMap.get(key);
