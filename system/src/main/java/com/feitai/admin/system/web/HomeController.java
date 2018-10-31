@@ -56,8 +56,7 @@ public class HomeController {
     public Collection<Menu> loadMenu(ServletRequest request) {
         HttpServletRequest r = (HttpServletRequest) request;
         String ctx = r.getContextPath();
-        Collection<Menu> menu = this.userService.loadMenu(
-                this.getCurrentUserId(), ctx);
+        Collection<Menu> menu = userService.loadMenu(getCurrentUserId(), ctx);
         return menu;
     }
 

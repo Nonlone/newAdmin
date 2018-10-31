@@ -1,13 +1,26 @@
 package com.feitai.admin.core.service;
 
+import com.feitai.base.mybatis.MultipleDataSource;
 import com.feitai.base.mybatis.SqlMapper;
 import com.feitai.base.mybatis.interceptor.ClassPrefixMultiDataSourceSelector;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
+import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
+import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
+import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 前缀动态数据源服务类
@@ -19,28 +32,89 @@ public abstract class ClassPrefixDynamicSupportService<T> extends DynamitSupport
     @Autowired
     private ClassPrefixMultiDataSourceSelector classPrefixMultiDataSourceSelector;
 
-    private DatabaseIdProvider databaseIdProvider = new VendorDatabaseIdProvider();
+    @Autowired
+    private MultipleDataSource multipleDataSource;
 
+    @Autowired
+    private MybatisAutoConfiguration mybatisAutoConfiguration;
+
+    private DatabaseIdProvider databaseIdProvider = new VendorDatabaseIdProvider();
 
     @Override
     public void init() {
-        DataSource dataSource = classPrefixMultiDataSourceSelector.getDataSource(getMapperClass(getMapper()));
-        this.sqlMapper = getSqlMapper(dataSource);
+        this.sqlMapper = doGetSqlMapper();
     }
 
     @Override
-    public SqlMapper doGetMapper() {
-        DataSource dataSource = classPrefixMultiDataSourceSelector.getDataSource(getMapper().getClass());
-        return getSqlMapper(dataSource);
-    }
-
-
-    private SqlMapper getSqlMapper(DataSource dataSource) {
+    public SqlMapper doGetSqlMapper() {
         try {
-            return new SqlMapper(sqlSession, dataSource, databaseIdProvider);
-        } catch (SQLException e) {
+            DataSource dataSource = classPrefixMultiDataSourceSelector.getDataSource(getMapperClass(getMapper()));
+            MybatisProperties properties = (MybatisProperties) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "properties");
+            ResourceLoader resourceLoader = (ResourceLoader) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "resourceLoader");
+            List<ConfigurationCustomizer> configurationCustomizers = (List) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "configurationCustomizers");
+            Interceptor[] interceptors = (Interceptor[]) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "interceptors");
+            SqlSessionFactory sqlSessionFactory = sqlSessionFactory(dataSource, properties, resourceLoader, configurationCustomizers, interceptors);
+            return new SqlMapper(sqlSessionFactory.openSession());
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
     }
+
+
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource,
+                                               MybatisProperties properties,
+                                               ResourceLoader resourceLoader,
+                                               List<ConfigurationCustomizer> configurationCustomizers,
+                                               Interceptor[] interceptors) throws Exception {
+        SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
+        factory.setDataSource(dataSource);
+        factory.setVfs(SpringBootVFS.class);
+        if (StringUtils.hasText(properties.getConfigLocation())) {
+            factory.setConfigLocation(resourceLoader.getResource(properties.getConfigLocation()));
+        }
+
+        org.apache.ibatis.session.Configuration configuration = properties.getConfiguration();
+        if (configuration == null && !StringUtils.hasText(properties.getConfigLocation())) {
+            configuration = new org.apache.ibatis.session.Configuration();
+        }
+
+        if (configuration != null && !CollectionUtils.isEmpty(configurationCustomizers)) {
+            Iterator var4 = configurationCustomizers.iterator();
+
+            while (var4.hasNext()) {
+                ConfigurationCustomizer customizer = (ConfigurationCustomizer) var4.next();
+                customizer.customize(configuration);
+            }
+        }
+
+        factory.setConfiguration(configuration);
+        if (properties.getConfigurationProperties() != null) {
+            factory.setConfigurationProperties(properties.getConfigurationProperties());
+        }
+
+        if (!ObjectUtils.isEmpty(interceptors)) {
+            factory.setPlugins(interceptors);
+        }
+
+        if (this.databaseIdProvider != null) {
+            factory.setDatabaseIdProvider(this.databaseIdProvider);
+        }
+
+        if (StringUtils.hasLength(properties.getTypeAliasesPackage())) {
+            factory.setTypeAliasesPackage(properties.getTypeAliasesPackage());
+        }
+
+        if (StringUtils.hasLength(properties.getTypeHandlersPackage())) {
+            factory.setTypeHandlersPackage(properties.getTypeHandlersPackage());
+        }
+
+        if (!ObjectUtils.isEmpty(properties.resolveMapperLocations())) {
+            factory.setMapperLocations(properties.resolveMapperLocations());
+        }
+
+        return factory.getObject();
+    }
+
 
 }

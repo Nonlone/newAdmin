@@ -3589,8 +3589,8 @@ require("bui/graphic/raphael/eve");
      o         y: (number) y coordinate of the point
      o         t1: (number) t value for segment of path1
      o         t2: (number) t value for segment of path2
-     o         segment1: (number) order number for segment of path1
-     o         segment2: (number) order number for segment of path2
+     o         segment1: (number) loan number for segment of path1
+     o         segment2: (number) loan number for segment of path2
      o         bez1: (array) eight coordinates representing beziér curve for the segment of path1
      o         bez2: (array) eight coordinates representing beziér curve for the segment of path2
      o     }
@@ -7659,7 +7659,7 @@ define("bui/graphic/raphael/eve", [], function(require, exports, module){
      - name (string) name of the event, dot (`.`) or slash (`/`) separated, with optional wildcards
      - f (function) event handler function
      **
-     = (function) returned function accepts a single numeric parameter that represents z-index of the handler. It is an optional feature and only used when you need to ensure that some subset of handlers will be invoked in a given order, despite of the order of assignment. 
+     = (function) returned function accepts a single numeric parameter that represents z-index of the handler. It is an optional feature and only used when you need to ensure that some subset of handlers will be invoked in a given loan, despite of the loan of assignment.
      > Example:
      | eve.on("mouse", eatIt)(2);
      | eve.on("mouse", scream);

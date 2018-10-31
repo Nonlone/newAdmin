@@ -112,10 +112,6 @@ public class DictionaryTypeController extends BaseListableController<DictionaryT
         return this.dictionaryTypeService;
     }
 
-    @Override
-    protected String getSql() {
-        return null;
-    }
 
 
     @InitBinder

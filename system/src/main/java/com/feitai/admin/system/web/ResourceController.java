@@ -118,7 +118,6 @@ public class ResourceController extends BaseListableController<Resource> {
         return this.resourceService;
     }
 
-    @Override
     protected String getSql() {
         String sql = SelectMultiTable.builder(Resource.class)
                 .leftJoin(Resource.class, "resource", new OnCondition[]{

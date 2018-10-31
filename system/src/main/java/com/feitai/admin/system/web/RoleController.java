@@ -130,7 +130,6 @@ public class RoleController extends BaseListableController<Role> {
         return this.roleService;
     }
 
-    @Override
     protected String getSql() {
         String sql = SelectMultiTable.builder(Role.class)
                 .leftJoin(RoleAuth.class, "roleAuth", new OnCondition[]{

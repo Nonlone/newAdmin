@@ -3848,7 +3848,7 @@ BUI.augment(Base, {
     var _self = this,
       setValue,
       // if host does not have meta info corresponding to (name,value)
-      // then register on demand in order to collect all data meta info
+      // then register on demand in loan to collect all data meta info
       // 一定要注册属性元数据，否则其他模块通过 _attrs 不能枚举到所有有效属性
       // 因为属性在声明注册前可以直接设置值
       attrConfig = ensureNonEmpty(_self.__attrs, name, true),

@@ -109,11 +109,6 @@ public class PermissionController  extends BaseListableController<Permission> {
 		return this.permissionService;
 	}
 
-	@Override
-	protected String getSql() {
-		return null;
-	}
-
 
 	@InitBinder
 	public void initDate(WebDataBinder webDataBinder){

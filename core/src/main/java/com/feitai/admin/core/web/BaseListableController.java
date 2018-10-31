@@ -21,25 +21,25 @@ public abstract class BaseListableController<T> extends BaseController {
 
     private Class<T> entityClass = ObjectUtils.getGenericClass(getClass());
 
-    /***
-     * 复杂查询时返回select语句的主体，单表查询时返回null
-     * @return
-     */
-    protected abstract String getSql();
-
 
     protected Page<T> list(ServletRequest request) {
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
-        String sql = getSql();
-        if (StringUtils.isNotBlank(sql)) {
-            return buildPage(getService().findAll(sql), pageNo, pageSize);
-        } else {
-            List<Sort> sortList = PageBulider.getSort(request);
-            Map<String, Object> searchMap = WebUtils.getParametersStartingWith(request, searchPrefix);
-            List<SearchParams> searchParamsList = buildSearchParams(searchMap);
-            return buildPage(getService().findBySelectMultiTable(SelectMultiTable.builder(entityClass), searchParamsList, sortList, pageNo, pageSize), pageNo, pageSize);
-        }
+        List<Sort> sortList = PageBulider.getSort(request);
+        Map<String, Object> searchMap = WebUtils.getParametersStartingWith(request, searchPrefix);
+        List<SearchParams> searchParamsList = buildSearchParams(searchMap);
+        Integer totalSize = getService().countBySelectMultiTable(SelectMultiTable.builder(entityClass), searchParamsList);
+        List<T> result = getService().findBySelectMultiTable(SelectMultiTable.builder(entityClass), searchParamsList, sortList, pageNo, pageSize);
+        return buildPage(result, totalSize, pageNo, pageSize);
+    }
+
+
+    protected List<SearchParams> bulidSearchParamsList(ServletRequest request) {
+        return buildSearchParams(WebUtils.getParametersStartingWith(request, searchPrefix));
+    }
+
+    protected List<SearchParams> bulidSearchParamsList(ServletRequest request, String prefix) {
+        return buildSearchParams(WebUtils.getParametersStartingWith(request, prefix));
     }
 
     /***
@@ -52,12 +52,24 @@ public abstract class BaseListableController<T> extends BaseController {
         return list(request, sqlHead, SelectMultiTable.MAIN_ALAIS, "id");
     }
 
-    /***
-     * 多表搜索，需提供select语句主体
-     * @param request
-     * @param sqlHead
+    /**
+     * Sql 搜索并分页
+     *
+     * @param sqls
+     * @param pageNo
+     * @param pageSize
+     * @param countSqls
+     * @param countAlias
      * @return
      */
+    protected Page<T> list(String sqls, int pageNo, int pageSize, String countSqls, String countAlias) {
+        Integer totalSize = getService().countBySqls(countSqls, countAlias);
+        List<T> resultList = getService().findBySqls(sqls, pageNo, pageSize);
+        return buildPage(resultList, totalSize, pageNo, pageSize);
+    }
+
+
+
     protected Page<T> list(ServletRequest request, String sqlHead, String sqlMainTableAlias, String sqlHeadId) {
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
@@ -68,7 +80,7 @@ public abstract class BaseListableController<T> extends BaseController {
             groupBy = " GROUP BY " + sqlHeadId;
         }
         String sql = sqlHead + getService().buildSqlWhereCondition(searchParamsList, sqlMainTableAlias) + groupBy;
-        return buildPage(getService().findPageBySqls(sql, pageNo, pageSize), pageNo, pageSize);
+        return buildPage(getService().findBySqls(sql, pageNo, pageSize), pageNo, pageSize);
     }
 
 
@@ -111,6 +123,30 @@ public abstract class BaseListableController<T> extends BaseController {
             }
         }
         return searchParamsList;
+    }
+
+
+    /**
+     * 构建分页器
+     *
+     * @param results
+     * @param totalSize
+     * @param pageNo
+     * @param pageSize
+     * @param <K>
+     * @return
+     */
+    protected <K> Page<K> buildPage(List<K> results, int totalSize, int pageNo, int pageSize) {
+        Page<K> page = new Page(results);
+        page.setTotalPages(totalSize / pageSize + totalSize % pageSize > 0 ? 1 : 0);
+        page.setTotalElements(totalSize);
+        page.setNumber(pageNo);
+        page.setSize(pageSize);
+        page.setFirst(pageNo == 1);
+        page.setLast(pageNo == page.getTotalPages());
+        page.setNext(!page.isFirst());
+        page.setPrevious(!page.isLast());
+        return page;
     }
 
 

@@ -22,6 +22,11 @@ public class SelectMultiTable {
      */
     public static final String MAIN_ALAIS = "maintable";
 
+    /**
+     * 计数别名
+     */
+    public static final String COUNT_ALIAS = "count";
+
     /***
      *查询配置
      */
@@ -36,6 +41,7 @@ public class SelectMultiTable {
      * join连接表
      */
     private List<TableJoin> tableJoinList;
+
 
     private SelectMultiTable() {
     }
@@ -164,6 +170,18 @@ public class SelectMultiTable {
         EntityHelper.initEntityNameMap(resultClass, config);
         EntityTable entityTable = EntityHelper.getEntityTable(resultClass);
         sqlSb.append("select " + MAIN_ALAIS + ".* from " + entityTable.getName() + " AS " + MAIN_ALAIS + " ");
+        for (TableJoin tableJoin : tableJoinList) {
+            sqlSb.append(tableJoin.buildJoinString());
+        }
+        return sqlSb.toString();
+    }
+
+
+    public String buildCountSqlString() {
+        StringBuffer sqlSb = new StringBuffer();
+        EntityHelper.initEntityNameMap(resultClass, config);
+        EntityTable entityTable = EntityHelper.getEntityTable(resultClass);
+        sqlSb.append("select  count(*) AS " + COUNT_ALIAS + " from " + entityTable.getName() + " AS " + MAIN_ALAIS + " ");
         for (TableJoin tableJoin : tableJoinList) {
             sqlSb.append(tableJoin.buildJoinString());
         }

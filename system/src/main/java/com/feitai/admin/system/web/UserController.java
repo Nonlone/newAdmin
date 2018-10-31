@@ -171,11 +171,6 @@ public class UserController extends BaseListableController<User> {
         return this.userService;
     }
 
-    @Override
-    protected String getSql() {
-        return null;
-    }
-
 
     @InitBinder
     public void initDate(WebDataBinder webDataBinder) {

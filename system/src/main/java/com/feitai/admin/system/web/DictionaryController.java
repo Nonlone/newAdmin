@@ -115,7 +115,7 @@ public class DictionaryController extends BaseListableController<Dictionary> {
     @RequestMapping(value = "searchEnum")
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)
-    public Object searchEnumByDictionaryTypeId(HttpServletRequest request)  {
+    public Object searchEnumByDictionaryTypeId(HttpServletRequest request) {
         Map<String, Object> searchParams = WebUtils.getParametersStartingWith(request, "search_");
         Map<String, String> map = this.dictionaryService.searchEnum(buildSearchParams(searchParams));
         return map;
@@ -171,11 +171,6 @@ public class DictionaryController extends BaseListableController<Dictionary> {
     @Override
     protected DynamitSupportService<Dictionary> getService() {
         return this.dictionaryService;
-    }
-
-    @Override
-    protected String getSql() {
-        return null;
     }
 
 

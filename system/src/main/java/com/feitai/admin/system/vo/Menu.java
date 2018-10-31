@@ -1,6 +1,5 @@
 package com.feitai.admin.system.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.feitai.admin.system.model.Resource;
 import lombok.Data;
 

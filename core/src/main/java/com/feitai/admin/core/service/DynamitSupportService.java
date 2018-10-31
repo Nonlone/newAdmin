@@ -17,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -43,7 +44,7 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
 
     @PostConstruct
     public void init() {
-        this.sqlMapper = new SqlMapper(sqlSession);
+        this.sqlMapper = doGetSqlMapper();
     }
 
     /**
@@ -51,7 +52,7 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
      *
      * @return
      */
-    protected SqlMapper doGetMapper() {
+    protected SqlMapper doGetSqlMapper() {
         return new SqlMapper(sqlSession);
     }
 
@@ -64,7 +65,7 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
         if (Objects.isNull(sqlMapper)) {
             synchronized (DynamitSupportService.class) {
                 if (Objects.isNull(this.sqlMapper)) {
-                    this.sqlMapper = doGetMapper();
+                    this.sqlMapper = doGetSqlMapper();
                 }
             }
         }
@@ -104,22 +105,50 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
      * 根据sql获取page
      *
      */
-    public List<T> findPageBySqls(String sqls, int pageNo, int pageSize) {
-        PageHelper.startPage(pageNo, pageSize);
+    public List<T> findBySqls(String sqls, int pageNo, int pageSize) {
+        if (sqls.toLowerCase().indexOf("limit") < 0) {
+            sqls = sqls + " LIMIT  " + (pageNo * pageSize) + " , " + pageSize;
+        }
         List<T> results = getSqlMapper().selectList(sqls, classOfT);
         return walkProcessCollection(results);
     }
 
     /***
-     * 根据sql获取page
+     * 计算sql获取page
+     *
+     */
+    public Integer countBySqls(String sqls, String countAlias) {
+        Map<Object, Object> resultMap = getSqlMapper().selectOne(sqls, Map.class);
+        Object result = resultMap.get(countAlias);
+        if (result instanceof Long) {
+            return ((Long) result).intValue();
+        }
+        return (Integer) result;
+    }
+
+
+    /***
+     * 根据sql获取结果数组
      *
      */
     public List<T> findBySelectMultiTable(SelectMultiTable selectMultiTable, List<SearchParams> searchParamsList, List<Sort> sortList, int pageNo, int pageSize) {
-        String sql = selectMultiTable.buildSqlString() + buildSqlWhereCondition(searchParamsList) + " ORDER BY " + buildSqlSort(sortList);
-        PageHelper.startPage(pageNo, pageSize);
+        String sql = selectMultiTable.buildSqlString() + buildSqlWhereCondition(searchParamsList)
+                + " ORDER BY " + buildSqlSort(sortList)
+                + " LIMIT " + pageNo * pageSize + " , " + pageSize;
         List<T> results = getSqlMapper().selectList(sql, classOfT);
         return walkProcessCollection(results);
     }
+
+    /***
+     * 根据sql获取count
+     *
+     */
+    public Integer countBySelectMultiTable(SelectMultiTable selectMultiTable, List<SearchParams> searchParamsList) {
+        String sql = selectMultiTable.buildCountSqlString() + buildSqlWhereCondition(searchParamsList);
+        Map<Object, Object> result = getSqlMapper().selectOne(sql, Map.class);
+        return (Integer) result.get("count");
+    }
+
 
     private String buildSqlSort(List<Sort> sortList) {
         StringBuilder sb = new StringBuilder();
