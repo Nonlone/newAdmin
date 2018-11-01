@@ -63,22 +63,23 @@ public class UserController extends BaseListableController<User> {
         Page<User> listPage = super.list(request);
         String list = JSON.toJSONString(listPage);
         List newList = new ArrayList();
-        Map mapList = JSON.parseObject(list,Map.class);
-        List<JSONObject> content = (List<JSONObject>)mapList.get("content");
+        Map mapList = JSON.parseObject(list, Map.class);
+        List<JSONObject> content = (List<JSONObject>) mapList.get("content");
         //遍历page中内容，修改或添加非数据库的自定义字段
-        for (JSONObject json:
+        for (JSONObject json :
                 content) {
-            try{
-                Map<String, Object> map = JSONObject.parseObject(json.toJSONString(), new TypeReference<Map<String, Object>>(){});
-                Integer userId = (Integer)map.get("id");
+            try {
+                Map<String, Object> map = JSONObject.parseObject(json.toJSONString(), new TypeReference<Map<String, Object>>() {
+                });
+                Integer userId = (Integer) map.get("id");
                 List<Role> roles = userService.getRoles(userId.toString());
-                map.put("roles",roles);
+                map.put("roles", roles);
                 newList.add(map);
-            }catch(Exception e){
-                log.error("this json handle fail:[{}]! message:{}",json,e.getMessage());
+            } catch (Exception e) {
+                log.error("this json handle fail:[{}]! message:{}", json, e.getMessage());
                 continue;
             }
-            mapList.put("content",newList);
+            mapList.put("content", newList);
         }
         return mapList;
     }
@@ -118,10 +119,9 @@ public class UserController extends BaseListableController<User> {
     @RequiresPermissions(value = "/system/user:add")
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
-    public Object add(@Valid User user,
-                      @RequestParam(value = "roleIds") List<Long> roleIds) {
+    public Object add(@Valid User user, @RequestParam(value = "roleIds") List<Long> roleIds) {
         for (Long roleId : roleIds) {
-            userService.saveUserRole(user.getId(),roleId);
+            userService.saveUserRole(user.getId(), roleId);
         }
         user.setCreateTime(new Date());
         User creater = new User();
@@ -136,11 +136,12 @@ public class UserController extends BaseListableController<User> {
     @ResponseBody
     public Object update(@Valid @ModelAttribute("user") User user,
                          @RequestParam(value = "roleIds") List<Long> roleIds) {
-        user.setPlainPassword(null);// 强制将密码设置为空，避免有人越权把密码传回来进行修改
+        // 强制将密码设置为空，避免有人越权把密码传回来进行修改
+        user.setPlainPassword(null);
         // 清除从数据库load出来的角色列表
         userService.clearUserRole(user.getId());
         for (Long roleId : roleIds) {
-            userService.saveUserRole(user.getId(),roleId);
+            userService.saveUserRole(user.getId(), roleId);
         }
         this.userService.save(user);
         return successResult;
@@ -151,7 +152,7 @@ public class UserController extends BaseListableController<User> {
     @ResponseBody
     public Object del(@RequestParam(value = "ids[]") Long[] ids) {
         this.userService.delete(ids);
-        for (Long id:ids){
+        for (Long id : ids) {
             userService.clearUserRole(id);
         }
         return successResult;

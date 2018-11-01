@@ -13,14 +13,4 @@ import java.util.List;
 @Slf4j
 public class DictionaryTypeService extends DynamitSupportService<DictionaryType> {
 
-    public List<ListItem> findAllItems() {
-        List<DictionaryType> list = this.mapper.selectAll();
-        List<ListItem> items = new ArrayList<ListItem>(list.size());
-        for (DictionaryType dictionaryType : list) {
-            ListItem item = new ListItem(dictionaryType.getName(),
-                    String.valueOf(dictionaryType.getId()));
-            items.add(item);
-        }
-        return items;
-    }
 }

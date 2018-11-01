@@ -21,23 +21,14 @@ import java.util.List;
 @Slf4j
 public class ResourceService extends DynamitSupportService<Resource> {
 
-    @Autowired
-    private ApplicationContext applicationContext;
 
     public List<TreeItem> getRsourceList(){
-        OneAnnotationFieldWalkProcessor oneAnnotationFieldWalkProcessor = new OneAnnotationFieldWalkProcessor(applicationContext);
-        ManyAnnotationFieldWalkProcessor manyAnnotationFieldWalkProcessor = new ManyAnnotationFieldWalkProcessor(applicationContext);
         Example example = Example.builder(Resource.class).andWhere(Sqls.custom().andEqualTo("level",1)).build();
-        List<Resource> resources = this.mapper.selectByExample(example);
+        List<Resource> resources = getMapper().selectByExample(example);
         List<Resource> modelList = new ArrayList<>();
-        for (Resource t:
-                resources) {
-            if(t!=null){
-                ObjectUtils.fieldWalkProcess(t,oneAnnotationFieldWalkProcessor);
-                ObjectUtils.fieldWalkProcess(t,manyAnnotationFieldWalkProcessor);
-                modelList.add(t);
-            }
-        }
+       walkProcessCollection(modelList);
+
+       //TODO 迁移到Controller
         List<TreeItem> trees = new ArrayList<TreeItem>(resources.size());
         for(Resource resource : modelList){
             trees.add(this.resourceToTree(resource));

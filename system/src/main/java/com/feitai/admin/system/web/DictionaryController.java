@@ -46,7 +46,6 @@ public class DictionaryController extends BaseListableController<Dictionary> {
     @RequestMapping(value = "list")
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)
-    // 写日志但是不打印请求的params,但不打印ResponseBody的内容
     public Object listPage(ServletRequest request) {
         Page<Dictionary> listPage = super.list(request);
         return listPage;
@@ -75,7 +74,7 @@ public class DictionaryController extends BaseListableController<Dictionary> {
             @RequestParam(value = "headText", defaultValue = "") String headText,
             @RequestParam(value = "headValue", defaultValue = "") String headValue,
             @RequestParam(value = "headCharsetName", defaultValue = "iso8859-1") String headCharsetName) throws UnsupportedEncodingException {
-        org.springframework.data.domain.Sort sort = new org.springframework.data.domain.Sort(org.springframework.data.domain.Sort.Direction.ASC, "orderId");
+        Sort sort = new Sort( "orderId",Sort.Direction.ASC);
         Map<String, Object> searchParams = WebUtils.getParametersStartingWith(request, "search_");
         //当使用GET操作时需要传编码进行转码
         if(request.getMethod()=="GET"){

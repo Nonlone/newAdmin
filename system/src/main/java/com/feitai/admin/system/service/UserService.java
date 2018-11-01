@@ -31,10 +31,10 @@ import java.util.*;
 @Slf4j
 public class UserService extends ClassPrefixDynamicSupportService<User> {
 
-    private static Logger logger = LoggerFactory.getLogger(UserService.class);
-
     public static final String HASH_ALGORITHM = "SHA-1";
+
     public static final int HASH_INTERATIONS = 1024;
+
     private static final int SALT_SIZE = 8;
 
 
@@ -50,12 +50,12 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
     @Autowired
     private ApplicationContext applicationContext;
 
-    public void clearUserRole(Long userId){
-        Example example = Example.builder(UserRole.class).andWhere(Sqls.custom().andEqualTo("userId",userId)).build();
+    public void clearUserRole(Long userId) {
+        Example example = Example.builder(UserRole.class).andWhere(Sqls.custom().andEqualTo("userId", userId)).build();
         userRoleMapper.deleteByExample(example);
     }
 
-    public Integer saveUserRole(Long userId,Long roleId){
+    public Integer saveUserRole(Long userId, Long roleId) {
         UserRole userRole = new UserRole();
         userRole.setUserId(userId);
         userRole.setRoleId(roleId);
@@ -63,33 +63,30 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
     }
 
     public User findByLoginName(String loginName) {
-        Example example = Example.builder(User.class).andWhere(Sqls.custom().andEqualTo("loginName",loginName)).build();
-        User user = this.mapper.selectOneByExample(example);
-        if(user!=null){
+        Example example = Example.builder(User.class).andWhere(Sqls.custom().andEqualTo("loginName", loginName)).build();
+        User user = getMapper().selectOneByExample(example);
+        if (user != null) {
             OneAnnotationFieldWalkProcessor oneAnnotationFieldWalkProcessor = new OneAnnotationFieldWalkProcessor(applicationContext);
-            ObjectUtils.fieldWalkProcess(user,oneAnnotationFieldWalkProcessor);
+            ObjectUtils.fieldWalkProcess(user, oneAnnotationFieldWalkProcessor);
             user.setRoles(getRoles(user.getId().toString()));
         }
         return user;
     }
 
-    @Transactional(readOnly=true)
-    public List<Role> getRoles(String userId){
+    public List<Role> getRoles(String userId) {
         List<Role> list = new ArrayList<>();
-        Example example = Example.builder(UserRole.class).andWhere(Sqls.custom().andEqualTo("userId",userId)).build();
+        Example example = Example.builder(UserRole.class).andWhere(Sqls.custom().andEqualTo("userId", userId)).build();
         List<UserRole> userRoles = userRoleMapper.selectByExample(example);
-        for (UserRole userRole:
+        for (UserRole userRole :
                 userRoles) {
             Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
-            ManyAnnotationFieldWalkProcessor manyAnnotationFieldWalkProcessor = new ManyAnnotationFieldWalkProcessor(applicationContext);
-            ObjectUtils.fieldWalkProcess(role,manyAnnotationFieldWalkProcessor);
-            list.add(role);
+            list.add(walkProcess(role));
         }
         return list;
     }
 
 
-    public List<Role> findRolesByUserId(Long userId){
+    public List<Role> findRolesByUserId(Long userId) {
         List<Role> roles = getRoles(userId.toString());
         roles.size();//在shiro如果权限检查不是页面出发的就会导致无法异步加载所以这里用size强制加载。
         return roles;
@@ -97,19 +94,13 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
 
     /**
      * 在保存用户时,发送用户修改通知消息, 由消息接收者异步进行较为耗时的通知邮件发送.
-     *
+     * <p>
      * 如果企图修改超级用户,取出当前操作员用户,打印其信息然后抛出异常.
      *
      * @return
-     *
      */
-    public User saveUser(User user) {
-
-        // if (isSupervisor(user)) {
-        // logger.warn("操作员{}尝试修改超级管理员用户", getCurrentUserName());
-        // throw new ServiceException("不能修改超级管理员用户");
-        // }
-
+    @Override
+    public User save(User user) {
         // 设定安全的密码，生成随机的salt并经过1024次 sha-1 hash
         if (StringUtils.isNotBlank(user.getPlainPassword())) {
             entryptPassword(user);
@@ -117,16 +108,16 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
         if (user.getCreateTime() == null) {
             user.setCreateTime(new Date());
         }
-        return this.save(user);
+        return super.save(user);
     }
 
-    public boolean checkPassword(Long id, String password){
+    public boolean checkPassword(Long id, String password) {
         User user = this.findOne(id);
         byte[] salt = Encodes.decodeHex(user.getSalt());
         byte[] hashPassword = Digests.sha1(password.getBytes(), salt, HASH_INTERATIONS);
-        if(user.getPassword().equals(Encodes.encodeHex(hashPassword))){
+        if (user.getPassword().equals(Encodes.encodeHex(hashPassword))) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -152,10 +143,11 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
             Iterator<RoleAuth> auths = role.getRoleAuths().iterator();
             while (auths.hasNext()) {
                 RoleAuth ra = auths.next();
-                try{
+                try {
                     OneAnnotationFieldWalkProcessor oneAnnotationFieldWalkProcessor = new OneAnnotationFieldWalkProcessor(applicationContext);
-                    ObjectUtils.fieldWalkProcess(ra,oneAnnotationFieldWalkProcessor);
-                }catch (Exception e){}
+                    ObjectUtils.fieldWalkProcess(ra, oneAnnotationFieldWalkProcessor);
+                } catch (Exception e) {
+                }
                 Resource resource = ra.getResource();
                 if (resource.getLevel() == 1) {
                     levelOne.put(resource.getId(), Menu.build(resource.getLevel(), resource, ctx));
@@ -197,29 +189,29 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
         return menuOne;
     }
 
-    public List<String> findUserPermissions(Long id){
+    public List<String> findUserPermissions(Long id) {
         List<Role> roles = getRoles(id.toString());
         List<String> permissionsStr = new ArrayList<String>();
-        for(Role role : roles){
+        for (Role role : roles) {
             List<RoleAuth> ras = role.getRoleAuths();
-            for(RoleAuth ra : ras){
+            for (RoleAuth ra : ras) {
                 try {
                     OneAnnotationFieldWalkProcessor oneAnnotationFieldWalkProcessor = new OneAnnotationFieldWalkProcessor(applicationContext);
-                    ObjectUtils.fieldWalkProcess(ra,oneAnnotationFieldWalkProcessor);
-                }catch (Exception e){
+                    ObjectUtils.fieldWalkProcess(ra, oneAnnotationFieldWalkProcessor);
+                } catch (Exception e) {
                 }
                 Resource resource = ra.getResource();
                 String permissionsIds = ra.getPermissionIds();
-                if(permissionsIds!=null && !"".equals(permissionsIds)){
+                if (permissionsIds != null && !"".equals(permissionsIds)) {
                     String[] idsStr = permissionsIds.split(",");
                     List<Long> ids = new ArrayList<Long>(idsStr.length);
                     List<Permission> permissions = new ArrayList<>();
-                    for(String idStr : idsStr){
+                    for (String idStr : idsStr) {
                         Permission permission = permissionMapper.selectByPrimaryKey(Long.parseLong(idStr));
                         permissions.add(permission);
                     }
-                    for(Permission permission: permissions){
-                        permissionsStr.add(resource.getCode()+":"+permission.getPermission());
+                    for (Permission permission : permissions) {
+                        permissionsStr.add(resource.getCode() + ":" + permission.getPermission());
                     }
                 }
 
