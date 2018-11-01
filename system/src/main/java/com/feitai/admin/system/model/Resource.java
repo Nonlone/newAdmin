@@ -24,6 +24,10 @@ public class Resource{
 	@Id
 	protected Long id;
 
+	@Transient
+	@One(classOfMapper = ResourceMapper.class, sourceField = "parentId")
+	private Resource parent;
+
 	private String parentId;
 
 	private String name;
@@ -47,10 +51,6 @@ public class Resource{
 	private String permissionIds;
 
 	private String memo;
-
-	@Transient
-	@One(classOfMapper = ResourceMapper.class, sourceField = "parentId")
-	private Resource parent;
 
 	@Transient
 	@Many(classOfMapper = ResourceMapper.class, classOfEntity = Resource.class, targetField = "parentId")

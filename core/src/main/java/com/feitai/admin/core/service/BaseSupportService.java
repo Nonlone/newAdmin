@@ -68,7 +68,12 @@ public abstract class BaseSupportService<T> {
      * @return 返回保存的实体
      */
     public T save(T entity) {
-        if (mapper.insert(entity) > 0) {
+        try{
+            if (mapper.insert(entity) > 0) {
+                return entity;
+            }
+        }catch (Exception e){
+            mapper.updateByPrimaryKey(entity);
             return entity;
         }
         return null;

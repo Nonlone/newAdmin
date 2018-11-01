@@ -140,12 +140,12 @@ public class OpenCardController extends BaseListableController<CardMore> {
         //身份证信息
         CardMore card = cardService.findOneBySql(getOneSql(id));
         String cardstatus = "";
-        if (card != null) {
+        if (card!=null){
             //用字典查询状态。（废用）
-            //cardstatus = dictionaryService.findByTypeCodeAndCode("authStatus",opencard.getStatus().getValue().toString());
+            //cardstatus = dictionaryService.findByTypeCodeAndCode("authStatus",card.getStatus().getValue().toString());
             cardstatus = card.getStatus().name();
         }
-        //String cardstatus = appConfigService.findByTypeCodeAndCode("authStatus",opencard.getStatus().toString());
+        //String cardstatus = appConfigService.findByTypeCodeAndCode("authStatus",card.getStatus().toString());
         IdCardData idcard = idcardService.findByUserId(card.getUserId());
         Long userId = idcard.getUserId();
 
@@ -154,31 +154,39 @@ public class OpenCardController extends BaseListableController<CardMore> {
         model.addAttribute("bankNo", bankNo);
         //年龄
         int year = new Date().getYear() - idcard.getBirthday().getYear();
-        model.addAttribute("year", year);
+        model.addAttribute("year",year);
         //生日
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         PersonData person = personService.findByUserId(userId);
 
+        //授权项
+        String authstr = "";
+        List<AuthData> authdataAuths = authdataAuthService.findByCardId(id);
+        if (authdataAuths.size()==0)authstr+="无,";
+        for (AuthData auth:
+                authdataAuths) {
+            if(auth.getSource()!=null){
+                String source = auth.getSource().getValue();
+                if(source!=null){
+                    authstr+=(commonProperties.getSourceMap().get(source)+",");
+                }
+            }
 
-        String auths;
-        List<String> authList = authDataService.getAuthValueString(id);
-        if (!CollectionUtils.isEmpty(authList)) {
-            auths = Joiner.on("<br/>").join(authList);
-        } else {
-            auths = "无";
+
         }
+        String auths = authstr.equals("")?"":authstr.substring(0,authstr.length()-1);
 
         //婚姻状况最高学历生育状态
         String marital = "";
         String educationLevel = "";
         String fertilityStatus = "";
         String residentialType = "";
-        if (person != null) {
-            marital = appConfigService.findByTypeCodeAndCode("maritalStatus", person.getMaritalStatus());
+        if(person!=null){
+            marital = appConfigService.findByTypeCodeAndCode("maritalStatus",person.getMaritalStatus());
             educationLevel = appConfigService.findByTypeCodeAndCode("educationLevel", person.getEducationLevel());
-            fertilityStatus = appConfigService.findByTypeCodeAndCode("fertilityStatus", person.getFertilityStatus());
-            residentialType = appConfigService.findByTypeCodeAndCode("residentialType", person.getResidentialType());
+            fertilityStatus = appConfigService.findByTypeCodeAndCode("fertilityStatus",person.getFertilityStatus());
+            residentialType = appConfigService.findByTypeCodeAndCode("residentialType",person.getResidentialType());
         }
         //用户基本信息
         User user = userInService.findOne(userId);
@@ -187,38 +195,42 @@ public class OpenCardController extends BaseListableController<CardMore> {
         //工作类型,行业类型
         String jobsType = "";
         String tradeType = "";
-        if (work != null) {
-            jobsType = appConfigService.findByTypeCodeAndCode("jobsType", work.getJobsType());
-            tradeType = appConfigService.findByTypeCodeAndCode("tradeType", work.getBelongIndustry());
+        if(work!=null){
+            jobsType = appConfigService.findByTypeCodeAndCode("jobsType",work.getJobsType());
+            tradeType = appConfigService.findByTypeCodeAndCode("tradeType",work.getBelongIndustry());
         }
 
         //相片地址
         List<PhotoAttach> photos = attachPhotoService.findByUserId(userId);
         for (PhotoAttach attachPhoto : photos) {
-            model.addAttribute("photo" + attachPhoto.getType(), attachPhoto.getPath());
+            model.addAttribute("photo"+attachPhoto.getType(), attachPhoto.getPath());
         }
         //脱敏处理
-        if (idcard != null) {
-            String hyIdcard = Desensitization.idCard(idcard.getIdCard());
-            model.addAttribute("hyIdcard", hyIdcard);
+        if(idcard!=null){
+            String hyIdcard = Hyposensitization.HyIdcard(idcard.getIdCard());
+            model.addAttribute("hyIdcard",hyIdcard);
         }
-        if (user != null) {
-            String hyPhone = Desensitization.phone(user.getPhone());
-            model.addAttribute("hyPhone", hyPhone);
+        if(user!=null){
+            String hyPhone = Hyposensitization.HyPhone(user.getPhone());
+            model.addAttribute("hyPhone",hyPhone);
+        }
+        if(work!=null&&work.getContactPhone()!=null){
+            String hyWorkPhone = Hyposensitization.HyPhone(work.getContactPhone());
+            model.addAttribute("hyWorkPhone",hyWorkPhone);
         }
 
         //商汤
         LinkfaceLivenessIdNumberVerifcation livenessIdnumberVerification = authdataLinkfaceLivenessIdnumberVerificationService.findByUserId(userId);
         LinkfaceLivenessSelfieVerification livenessSelfieVerification = authdataLinkfaceLivenessSelfieVerificationService.findByCardId(id);
-        if (livenessIdnumberVerification == null) {
+        if(livenessIdnumberVerification==null){
             model.addAttribute("gongan", "未对比");
-        } else {
-            model.addAttribute("gongan", livenessIdnumberVerification.getVerifyScore() * 100);
+        }else{
+            model.addAttribute("gongan", livenessIdnumberVerification.getVerifyScore()*100);
         }
-        if (livenessSelfieVerification == null) {
+        if(livenessSelfieVerification==null){
 
             model.addAttribute("huoti", "未对比");
-        } else {
+        }else {
 
             model.addAttribute("huoti", livenessSelfieVerification.getVerifyScore() * 100);
         }
@@ -228,9 +240,9 @@ public class OpenCardController extends BaseListableController<CardMore> {
         //联系人关系
         String relativeRelations = "";
         String normalRelations = "";
-        if (contact != null) {
-            relativeRelations = appConfigService.findByTypeCodeAndCode("relativeRelations", contact.getRelativeRelationship());
-            normalRelations = appConfigService.findByTypeCodeAndCode("normalRelations", contact.getOtherRelationship());
+        if(contact!=null){
+            relativeRelations = appConfigService.findByTypeCodeAndCode("relativeRelations",contact.getRelativeRelationship());
+            normalRelations = appConfigService.findByTypeCodeAndCode("normalRelations",contact.getOtherRelationship());
         }
 
         //下单地址
@@ -238,9 +250,9 @@ public class OpenCardController extends BaseListableController<CardMore> {
 
         //身份证有效时间
         String idcardTm = "";
-        if (idcard != null) {
+        if(idcard!=null){
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-HH-dd");
-            if (idcard.getEndTime() != null && idcard.getStartTime() != null) {
+            if(idcard.getEndTime()!=null&&idcard.getStartTime()!=null){
                 idcardTm = dateFormat.format(idcard.getStartTime()) + "至" + dateFormat.format(idcard.getEndTime());
             }
         }
@@ -252,31 +264,30 @@ public class OpenCardController extends BaseListableController<CardMore> {
 
         //提交审批时间
         String submitTime = " ";
-        if (card.getSubmitTime() != null) {
-
+        if(card.getSubmitTime()!=null){
             Date submitData = card.getSubmitTime();
             submitTime = formatDate.format(submitData);
         }
 
-        model.addAttribute("cardStartTm", cardStartTm);
-        model.addAttribute("submitTime", submitTime);
-        model.addAttribute("idcardTm", idcardTm);
-        model.addAttribute("area", area);
-        model.addAttribute("relativeRelations", relativeRelations);
-        model.addAttribute("normalRelations", normalRelations);
-        model.addAttribute("contact", contact);
-        model.addAttribute("tradeType", tradeType);
-        model.addAttribute("jobsType", jobsType);
-        model.addAttribute("auths", auths);
-        model.addAttribute("cardStatus", cardstatus);
-        model.addAttribute("opencard", card);
-        model.addAttribute("birthday", format.format(idcard.getBirthday()));
+        model.addAttribute("cardStartTm",cardStartTm);
+        model.addAttribute("submitTime",submitTime);
+        model.addAttribute("idcardTm",idcardTm);
+        model.addAttribute("area",area);
+        model.addAttribute("relativeRelations",relativeRelations);
+        model.addAttribute("normalRelations",normalRelations);
+        model.addAttribute("contact",contact);
+        model.addAttribute("tradeType",tradeType);
+        model.addAttribute("jobsType",jobsType);
+        model.addAttribute("auths",auths);
+        model.addAttribute("cardStatus",cardstatus);
+        model.addAttribute("card",card);
+        model.addAttribute("birthday",format.format(idcard.getBirthday()));
         model.addAttribute("person", person);
-        model.addAttribute("residentialType", residentialType);
+        model.addAttribute("residentialType",residentialType);
         model.addAttribute("marital", marital);
-        model.addAttribute("educationLevel", educationLevel);
-        model.addAttribute("fertilityStatus", fertilityStatus);
-        model.addAttribute("idcard", idcard);
+        model.addAttribute("educationLevel",educationLevel);
+        model.addAttribute("fertilityStatus",fertilityStatus);
+        model.addAttribute("idcard",idcard);
         model.addAttribute("user", user);
         model.addAttribute("work", work);
         return "/backend/opencard/detail";

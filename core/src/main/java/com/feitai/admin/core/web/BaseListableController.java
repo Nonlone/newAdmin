@@ -23,13 +23,18 @@ public abstract class BaseListableController<T> extends BaseController {
 
 
     protected Page<T> list(ServletRequest request) {
+        return list(request,SelectMultiTable.builder(entityClass));
+    }
+
+
+    protected Page<T> list(ServletRequest request,SelectMultiTable selectMultiTable) {
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
         List<Sort> sortList = PageBulider.getSort(request);
         Map<String, Object> searchMap = WebUtils.getParametersStartingWith(request, searchPrefix);
         List<SearchParams> searchParamsList = buildSearchParams(searchMap);
-        Integer totalSize = getService().countBySelectMultiTable(SelectMultiTable.builder(entityClass), searchParamsList);
-        List<T> result = getService().findBySelectMultiTable(SelectMultiTable.builder(entityClass), searchParamsList, sortList, pageNo, pageSize);
+        Integer totalSize = getService().countBySelectMultiTable(selectMultiTable, searchParamsList);
+        List<T> result = getService().findBySelectMultiTable(selectMultiTable, searchParamsList, sortList, pageNo, pageSize);
         return buildPage(result, totalSize, pageNo, pageSize);
     }
 

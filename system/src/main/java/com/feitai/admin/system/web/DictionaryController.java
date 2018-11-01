@@ -75,15 +75,15 @@ public class DictionaryController extends BaseListableController<Dictionary> {
             @RequestParam(value = "headText", defaultValue = "") String headText,
             @RequestParam(value = "headValue", defaultValue = "") String headValue,
             @RequestParam(value = "headCharsetName", defaultValue = "iso8859-1") String headCharsetName) throws UnsupportedEncodingException {
-        Sort sort = new Sort("orderId", Sort.Direction.ASC);
+        org.springframework.data.domain.Sort sort = new org.springframework.data.domain.Sort(org.springframework.data.domain.Sort.Direction.ASC, "orderId");
         Map<String, Object> searchParams = WebUtils.getParametersStartingWith(request, "search_");
         //当使用GET操作时需要传编码进行转码
-        if (request.getMethod() == "GET") {
+        if(request.getMethod()=="GET"){
             headText = new String(headText.getBytes(headCharsetName));
         }
-        List<Dictionary> list = dictionaryService.searchListItem(buildSearchParams(searchParams), sort);
-        // 转换为ItemList
-        List<ListItem> items = new ArrayList<ListItem>(list.size() + 1);
+        List<Dictionary> list = this.dictionaryService.searchListItem(
+                buildSearchParams(searchParams), sort, headText, headValue);
+        List<ListItem> items = new ArrayList<>(list.size() + 1);
         if (StringUtils.isNotBlank(headText)) {
             ListItem item = new ListItem(headText, headValue);
             items.add(item);

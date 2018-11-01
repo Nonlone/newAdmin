@@ -5,6 +5,9 @@
  *******************************************************************************/
 package com.feitai.admin.system.web;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
@@ -27,8 +30,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/system/user")
@@ -56,7 +61,26 @@ public class UserController extends BaseListableController<User> {
     @LogAnnotation(value = true, writeRespBody = false)
     public Object listPage(ServletRequest request) {
         Page<User> listPage = super.list(request);
-        return listPage;
+        String list = JSON.toJSONString(listPage);
+        List newList = new ArrayList();
+        Map mapList = JSON.parseObject(list,Map.class);
+        List<JSONObject> content = (List<JSONObject>)mapList.get("content");
+        //遍历page中内容，修改或添加非数据库的自定义字段
+        for (JSONObject json:
+                content) {
+            try{
+                Map<String, Object> map = JSONObject.parseObject(json.toJSONString(), new TypeReference<Map<String, Object>>(){});
+                Integer userId = (Integer)map.get("id");
+                List<Role> roles = userService.getRoles(userId.toString());
+                map.put("roles",roles);
+                newList.add(map);
+            }catch(Exception e){
+                log.error("this json handle fail:[{}]! message:{}",json,e.getMessage());
+                continue;
+            }
+            mapList.put("content",newList);
+        }
+        return mapList;
     }
 
     /**
@@ -97,9 +121,7 @@ public class UserController extends BaseListableController<User> {
     public Object add(@Valid User user,
                       @RequestParam(value = "roleIds") List<Long> roleIds) {
         for (Long roleId : roleIds) {
-            Role role = new Role();
-            role.setId(roleId);
-            user.getRoles().add(role);
+            userService.saveUserRole(user.getId(),roleId);
         }
         user.setCreateTime(new Date());
         User creater = new User();
@@ -114,14 +136,11 @@ public class UserController extends BaseListableController<User> {
     @ResponseBody
     public Object update(@Valid @ModelAttribute("user") User user,
                          @RequestParam(value = "roleIds") List<Long> roleIds) {
-        // 强制将密码设置为空，避免有人越权把密码传回来进行修改
-        user.setPlainPassword(null);
+        user.setPlainPassword(null);// 强制将密码设置为空，避免有人越权把密码传回来进行修改
         // 清除从数据库load出来的角色列表
-        user.getRoles().clear();
+        userService.clearUserRole(user.getId());
         for (Long roleId : roleIds) {
-            Role role = new Role();
-            role.setId(roleId);
-            user.getRoles().add(role);
+            userService.saveUserRole(user.getId(),roleId);
         }
         this.userService.save(user);
         return successResult;
@@ -132,6 +151,9 @@ public class UserController extends BaseListableController<User> {
     @ResponseBody
     public Object del(@RequestParam(value = "ids[]") Long[] ids) {
         this.userService.delete(ids);
+        for (Long id:ids){
+            userService.clearUserRole(id);
+        }
         return successResult;
     }
 
