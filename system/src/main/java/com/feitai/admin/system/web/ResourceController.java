@@ -42,12 +42,8 @@ public class ResourceController extends BaseListableController<Resource> {
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
     public Object resourceTree() {
-        List<Resource> resources = this.resourceService.getRsourceList();
-        List<TreeItem> trees = new ArrayList<TreeItem>(resources.size());
-        for (Resource resource : resources) {
-            trees.add(this.resourceToTree(resource));
-        }
-        return trees;
+        List<TreeItem> rsourceList = this.resourceService.getRsourceList();
+        return rsourceList;
     }
 
     @RequiresPermissions("/system/resource:list")
@@ -131,28 +127,6 @@ public class ResourceController extends BaseListableController<Resource> {
     public void initDate(WebDataBinder webDataBinder) {
         webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
         webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-    }
-
-
-    private TreeItem resourceToTree(Resource resource) {
-        TreeItem tree = new TreeItem();
-        tree.setId(resource.getId());
-        if (resource.getParent() != null) {
-            tree.setParentId(resource.getParent().getId());
-        }
-        tree.setText(resource.getName());
-        tree.setLevel(resource.getLevel());
-        tree.setValue(resource.getPermissionIds());
-        List<Resource> list = resource.getResources();
-        if (list != null && list.size() > 0) {
-            Iterator<Resource> it = resource.getResources().iterator();
-            List<TreeItem> children = new ArrayList<TreeItem>(list.size());
-            while (it.hasNext()) {
-                children.add(this.resourceToTree(it.next()));
-            }
-            tree.setChildren(children);
-        }
-        return tree;
     }
 
 }

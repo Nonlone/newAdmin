@@ -1,9 +1,12 @@
 package com.feitai.admin.system.model;
 
+// Generated 2014-6-19 17:10:12 by Hibernate Tools 3.4.0.CR1
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.feitai.admin.system.mapper.SysUserMapper;
 import com.feitai.base.mybatis.One;
 import lombok.Data;
+import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -20,9 +23,14 @@ import java.util.List;
 public class User {
 
 	@Id
+	@KeySql(useGeneratedKeys = true)
 	private Long id;
 
 	private Long createrId;
+
+	@Transient
+	@One(classOfMapper = SysUserMapper.class, sourceField = "createrId")
+	private User creater;
 
 	private String loginName;
 
@@ -47,15 +55,8 @@ public class User {
 	@Transient
 	private List<Role> roles = new ArrayList<Role>(0);
 
-
 	@Transient
-	@One(classOfMapper = SysUserMapper.class, sourceField = "createrId")
-	private User creater;
-
-	/**
-	 * 从界面传过来的密码，非数据库字段
-	 */
-	@Transient
+	// 从界面传过来的密码，非数据库字段
 	@JSONField(serialize = false)
 	private String plainPassword;
 

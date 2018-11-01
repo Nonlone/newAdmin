@@ -39,10 +39,8 @@
             <div class="control-group span7">
                 <label class="control-label">状态:</label>
                 <div class="controls">
-                    <div class="controls bui-form-field-select height_auto" data-items="{' ':'全部','90':'阀门拒绝','91':'授信拒绝','98':'主体拒绝','97':'提现拒绝','96':'提额拒绝','95':'续卡拒绝','-40':'续卡审核中'
-	,'-30':'提额审核中','-20':'提现审核中','-10':'授信审核中','-1':'资料填写中','-2':'放款中','0':'未激活','1':'授信（未提现）','2':'授信（已提现）'
-	,'12':'逾期','11':'授信过期','99':'卡废弃'}" class="control-text input-small">
-                        <input name="search_EQ_status" type="hidden">
+                    <div id="statusSelect" class="controls">
+                        <input id = "search_EQ_status" name="search_EQ_status" type="hidden" >
                     </div>
                 </div>
             </div>
@@ -164,84 +162,71 @@
                     } else {
                         return '';
                     }
-                }
-            },
-            {
-                title: '用户姓名', dataIndex: 'idCardDataExtend', width: '10%', renderer: function (value) {
-                    if (value) {
+                }},
+            {title:'客户姓名',dataIndex:'idcard',width:'10%',renderer: function (value) {
+                    if(value){
                         return value.name;
-                    } else {
+                    }else{
                         return '<span style="color:#ff9955">未填写</span>';
                     }
-                }
-            },
-            {
-                title: '身份证', dataIndex: 'idCardDataExtend', width: '10%', renderer: function (value) {
-                    if (value) {
+                }},
+            {title:'身份证',dataIndex:'idcard',width:'10%',renderer: function (value) {
+                    if(value){
                         return value.idCard;
-                    } else {
+                    }else{
                         return '<span style="color:#ff9955">未填写</span>';
                     }
-                }
-            },
-            {title: '用户ID', dataIndex: 'userId', width: '10%'},
-            {
-                title: '注册手机号', dataIndex: 'user', width: '10%', renderer: function (value) {
-                    if (value) {
+                }},
+            {title:'客户ID',dataIndex:'userId',width:'10%'},
+            {title:'注册手机号',dataIndex:'user',width:'10%',renderer:function (value) {
+                    if(value){
                         return value.phone;
-                    } else {
+                    }else{
                         return "";
                     }
-                }
-            },
-            {title: '授信状态', dataIndex: 'status', width: '10%', renderer: BUI.Grid.Format.enumRenderer(statusEmun)},
-            {title: '授信额度', dataIndex: 'creditSum', width: '10%'},
-            {title: "授权项", dataIndex: 'auths', width: '15%'},
-            {title: '进件渠道', dataIndex: 'applyChannelId', width: '10%'},
-            {title: '注册渠道', dataIndex: 'registChannelId', width: '10%'},
-            {
-                title: '产品名称', dataIndex: 'product', width: '10%', renderer: function (value) {
-                    if (value) {
+                }},
+            {title:'授信状态',dataIndex:'status',width:'10%',renderer:BUI.Grid.Format.enumRenderer(statusEmun)},
+            {title:'授信额度',dataIndex:'creditSum',width:'10%'},
+            {title:"授权项",dataIndex:'auths',width:'10%'},
+            {title:'进件渠道',dataIndex:'applyChannelId',width:'10%'},
+            {title:'注册渠道',dataIndex:'registChannelId',width:'10%'},
+            {title:'产品名称',dataIndex:'product',width:'10%',renderer:function(value){
+                    if(value){
                         return value.name;
-                    } else {
+                    }else{
                         return "";
                     }
-                }
-            },
-            {title: '订单创建时间', dataIndex: 'createdTime', width: '10%', renderer: BUI.Grid.Format.datetimeRenderer},
+                }},
+            {title:'订单创建时间',dataIndex:'createdTime',width:'10%',renderer:BUI.Grid.Format.datetimeRenderer},
             //{title:'过期时间',dataIndex:'expiredTime',width:'10%',renderer:BUI.Grid.Format.dateRenderer},
-            {title: '提交审批时间', dataIndex: 'submitTime', width: '10%', renderer: BUI.Grid.Format.datetimeRenderer},
-            {
-                title: '注册客户端', dataIndex: 'user', width: '10%', renderer: function (value) {
-                    if (value) {
+            {title:'提交审批时间',dataIndex:'submitTime',width:'10%',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'注册客户端',dataIndex:'user',width:'10%',renderer:function(value){
+                    if(value){
                         return value.osType;
-                    } else {
+                    }else{
                         return "";
                     }
-                }
-            },
-            {
-                title: '是否新客户', dataIndex: 'id', width: '10%', renderer: function (value) {
+                }},
+            {title:'是否新客户',dataIndex:'id',width:'10%',renderer: function (value) {
                     return '是';
-                }
-            }
+                }}
         ];
 
         var crudGrid = new CrudGrid({
-            entityName: '用户持有对应信用产品记录',
-            pkColumn: 'id',//主键
-            storeUrl: '${ctx}/backend/opencard/list',
-            addUrl: '${ctx}/backend/opencard/add',
-            updateUrl: '${ctx}/backend/opencard/update',
-            removeUrl: '${ctx}/backend/opencard/del',
-            columns: columns,
-            showAddBtn: add,
-            showUpdateBtn: update,
-            showRemoveBtn: del,
-            addOrUpdateFormId: 'addOrUpdateForm',
-            dialogContentId: 'addOrUpdate',
-            gridCfg: {
-                innerBorder: true
+            entityName : '用户持有对应信用产品记录',
+            pkColumn : 'id',//主键
+            storeUrl : '${ctx}/backend/opencard/list',
+            addUrl : '${ctx}/backend/opencard/add',
+            updateUrl : '${ctx}/backend/opencard/update',
+            removeUrl : '${ctx}/backend/opencard/del',
+            columns : columns,
+            showAddBtn : add,
+            showUpdateBtn : update,
+            showRemoveBtn : del,
+            addOrUpdateFormId : 'addOrUpdateForm',
+            dialogContentId : 'addOrUpdate',
+            gridCfg:{
+                innerBorder:true
             },
             operationColumnRenderer: function (value, obj) {//操作列最追加按钮
                 var viewStr = "";

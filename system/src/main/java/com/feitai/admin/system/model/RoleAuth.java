@@ -17,17 +17,17 @@ import javax.persistence.Transient;
 @Data
 public class RoleAuth {
 
-    @Id
-    private Long id;
+	@Id
+	private Long id;
 
-    private Integer roleId;
+	@Transient
+	@One(classOfMapper = ResourceMapper.class, sourceField = "resourceId")
+	private Resource resource;
 
-    private Integer resourceId;
+	private String permissionIds;
 
-    private String permissionIds;
+	private Integer roleId;
 
-    @Transient
-    @One(classOfMapper = ResourceMapper.class, sourceField = "resourceId")
-    private Resource resource;
+	private Integer resourceId;
 
 }

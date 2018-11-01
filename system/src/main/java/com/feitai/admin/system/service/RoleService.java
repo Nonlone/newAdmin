@@ -40,19 +40,30 @@ public class RoleService extends DynamitSupportService<Role> {
 		ObjectUtils.fieldWalkProcess(dbRole,manyAnnotationFieldWalkProcessor);
 		List<RoleAuth> ras = dbRole.getRoleAuths();
 		for (RoleAuth roleAuth:
-		ras) {
+				ras) {
 			this.roleAuthMapper.delete(roleAuth);
 		}
 		dbRole.setRoleAuths(role.getRoleAuths());
-		this.save(dbRole);
+		this.updateByPrimaryKey(dbRole);
+		for (RoleAuth roleAuth:role.getRoleAuths()){
+			this.roleAuthMapper.insert(roleAuth);
+		}
 		RealmSecurityManager securityManager = (RealmSecurityManager) SecurityUtils
 				.getSecurityManager();
 		ShiroDbRealm shiroDbRealm = (ShiroDbRealm) securityManager.getRealms()
 				.iterator().next();
 		//清空所有的缓存
 		shiroDbRealm.clearAllCachedAuthorizationInfo();
-		
+
 		return true;
+	}
+
+	@Override
+	public Role findOne(Object id){
+		Role role = this.mapper.selectByPrimaryKey(id);
+		ManyAnnotationFieldWalkProcessor manyAnnotationFieldWalkProcessor = new ManyAnnotationFieldWalkProcessor(applicationContext);
+		ObjectUtils.fieldWalkProcess(role,manyAnnotationFieldWalkProcessor);
+		return role;
 	}
 	
 }
