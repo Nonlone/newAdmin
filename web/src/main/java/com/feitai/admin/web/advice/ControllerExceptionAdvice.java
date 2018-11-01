@@ -1,8 +1,9 @@
-package com.feitai.admin.core.advice;
+package com.feitai.admin.web.advice;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.ShiroException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -36,6 +37,17 @@ public class ControllerExceptionAdvice {
     }
 
     /**
+     * 权限异常，抛出跳到登录页
+     *
+     * @param shiroException
+     */
+    @ExceptionHandler(ShiroException.class)
+    public void shiroException(ShiroException shiroException) {
+        log.error(String.format("ShiroException Error %s", shiroException.getMessage()));
+        throw shiroException;
+    }
+
+    /**
      * 无法解析JSON异常处理
      *
      * @param exception
@@ -54,45 +66,17 @@ public class ControllerExceptionAdvice {
      * @param exception
      * @return
      */
-    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ExceptionHandler({
+            MethodArgumentNotValidException.class,
+            BindException.class
+    })
     @ResponseBody
-    public JSONObject methodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public JSONObject validate(MethodArgumentNotValidException exception) {
         String errorMessage = getValidResult(exception.getBindingResult());
         log.warn(errorMessage);
         return buildJson(exception);
     }
 
-    /**
-     * 参数绑定错误
-     *
-     * @param exception
-     * @return
-     */
-    @ExceptionHandler({BindException.class})
-    @ResponseBody
-    public JSONObject bindException(BindException exception) {
-        String errorMessage = getValidResult(exception.getBindingResult());
-        log.warn(errorMessage);
-        return buildJson(exception);
-    }
-
-    /**
-     * 获取可读错误校验信息
-     *
-     * @param bindingResult
-     * @return
-     */
-    private String getReadableResultMessage(BindingResult bindingResult) {
-        StringBuilder sbError = new StringBuilder();
-        for (ObjectError error : bindingResult.getAllErrors()) {
-            if (sbError.length() != 0) {
-                sbError.append("；");
-            }
-            FieldError fError = (FieldError) error;
-            sbError.append(fError.getDefaultMessage());
-        }
-        return sbError.toString();
-    }
 
     /**
      * API异常异常处理
@@ -106,6 +90,7 @@ public class ControllerExceptionAdvice {
         log.error(String.format("Exception Error %s", exception.getMessage()), exception);
         return buildJson(exception);
     }
+
 
     /**
      * 获取系统日志校验信息

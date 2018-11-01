@@ -22,7 +22,6 @@ import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.attach.model.PhotoAttach;
-import com.feitai.jieya.server.dao.authdata.model.AuthData;
 import com.feitai.jieya.server.dao.callback.model.linkface.LinkfaceLivenessIdNumberVerifcation;
 import com.feitai.jieya.server.dao.callback.model.linkface.LinkfaceLivenessSelfieVerification;
 import com.feitai.jieya.server.dao.data.model.*;
@@ -67,7 +66,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
     private IdcardService idcardService;
 
     @Autowired
-    private UserInService userInService;
+    private UserService userService;
 
     @Autowired
     private PersonService personService;
@@ -181,7 +180,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
             residentialType = appConfigService.findByTypeCodeAndCode("residentialType", person.getResidentialType());
         }
         //用户基本信息
-        User user = userInService.findOne(userId);
+        User user = userService.findOne(userId);
         //单位信息
         WorkData work = workService.findByUserId(userId);
         //工作类型,行业类型

@@ -1,6 +1,6 @@
 package com.feitai.admin.backend.customer.mapper;
 
-import com.feitai.admin.backend.customer.entity.Idcard;
+import com.feitai.admin.backend.customer.entity.IdCardDataExtend;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -8,5 +8,5 @@ import tk.mybatis.mapper.common.Mapper;
  * author:
  * date:2018/10/15
  */
-public interface IdcardMapper extends Mapper<Idcard> {
+public interface IdCardDataExtendMapper extends Mapper<IdCardDataExtend> {
 }

@@ -167,7 +167,7 @@
                 }
             },
             {
-                title: '用户姓名', dataIndex: 'idcard', width: '10%', renderer: function (value) {
+                title: '用户姓名', dataIndex: 'idCardDataExtend', width: '10%', renderer: function (value) {
                     if (value) {
                         return value.name;
                     } else {
@@ -176,7 +176,7 @@
                 }
             },
             {
-                title: '身份证', dataIndex: 'idcard', width: '10%', renderer: function (value) {
+                title: '身份证', dataIndex: 'idCardDataExtend', width: '10%', renderer: function (value) {
                     if (value) {
                         return value.idCard;
                     } else {
@@ -246,10 +246,10 @@
             operationColumnRenderer: function (value, obj) {//操作列最追加按钮
                 var viewStr = "";
                 var id = obj.id;
-                if (ViewBtn && obj.idcard != null) {
+                if (ViewBtn && obj.idCardDataExtend != null) {
                     viewStr = CrudGrid.createLink({
                         id: "/" + obj.id,
-                        title: obj.idcard.name + '--详细信息',
+                        title: obj.idCardDataExtend.name + '--详细信息',
                         text: '<li class="icon-user"></li>',
                         href: detailUrl + obj.id
                     });

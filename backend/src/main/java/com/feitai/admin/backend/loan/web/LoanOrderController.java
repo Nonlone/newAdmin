@@ -12,7 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.feitai.admin.backend.customer.service.BankSupportService;
 import com.feitai.admin.backend.customer.service.IdcardService;
-import com.feitai.admin.backend.customer.service.UserInService;
+import com.feitai.admin.backend.customer.service.UserService;
 import com.feitai.admin.backend.fund.service.FundService;
 import com.feitai.admin.backend.loan.entity.LoanOrderMore;
 import com.feitai.admin.backend.loan.entity.RepayOrderMore;
@@ -70,7 +70,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private IdcardService idcardService;
 
     @Autowired
-    private UserInService userInService;
+    private UserService userService;
 
     @Autowired
     private ProductService productService;
@@ -152,7 +152,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     public String auth(@PathVariable("id") String id, Model model) {
         LoanOrderMore loanOrder = loanOrderService.findOneBySql(getOneSql(id));
         Long userId = loanOrder.getUserId();
-        User userIn = userInService.findOne(userId);
+        User userIn = userService.findOne(userId);
         IdCardData idcard = idcardService.findByUserId(userId);
         Product product = productService.findOne(loanOrder.getProductId());
 

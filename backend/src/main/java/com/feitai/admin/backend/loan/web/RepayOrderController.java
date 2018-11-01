@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.feitai.admin.backend.customer.service.IdcardService;
-import com.feitai.admin.backend.customer.service.UserInService;
+import com.feitai.admin.backend.customer.service.UserService;
 import com.feitai.admin.backend.loan.entity.RepayOrderMore;
 import com.feitai.admin.backend.loan.service.RepayOrderService;
 import com.feitai.admin.backend.loan.service.RepayPlanComponentService;
@@ -64,7 +64,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     private ProductService productService;
 
     @Autowired
-    private UserInService userInService;
+    private UserService userService;
 
     @Autowired
     private RepayPlanService repayPlanService;
@@ -100,7 +100,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     public String auth(@PathVariable("id") String id, Model model) {
         RepayOrderMore repayOrder = repayOrderService.findOneBySql(getOneSql(id));
         Long userId = repayOrder.getUserId();
-        User userIn = userInService.findOne(userId);
+        User userIn = userService.findOne(userId);
         IdCardData idcard = idcardService.findByUserId(userId);
         Product product = productService.findOne(repayOrder.getLoanOrder().getProductId());
         List<ProductTermFeeFeature> byProductIdAndTerm = productTermFeeFeatureService.findByProductIdAndTerm(repayOrder.getLoanOrder().getProductId(), repayOrder.getLoanOrder().getLoanTerm().shortValue());
@@ -154,7 +154,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         for (JSONObject json :
                 content) {
             Map<String, Object> map = JSONObject.parseObject(json.toJSONString(), new TypeReference<Map<String, Object>>(){});
-            //Idcard
+            //IdCardDataExtend
             Long userId = (Long) map.get("userId");
 
             //product

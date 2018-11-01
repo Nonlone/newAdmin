@@ -4,12 +4,14 @@ import com.feitai.base.mybatis.One;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
 import com.feitai.jieya.server.dao.user.mapper.UserMapper;
 import com.feitai.jieya.server.dao.user.model.User;
+import lombok.Data;
 
 import javax.persistence.Transient;
 
-public class Idcard extends IdCardData {
+@Data
+public class IdCardDataExtend extends IdCardData {
 
     @Transient
-    @One(classOfMapper = UserMapper.class, targetField = "userId")
+    @One(classOfMapper = UserMapper.class, sourceField = "userId")
     private User user;
 }

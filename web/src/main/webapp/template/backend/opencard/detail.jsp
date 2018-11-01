@@ -10,7 +10,7 @@
 	<%@include file="../../common/import-static.jsp"%>
 </head>
 <style type="text/css">
-	.photo-idcard{
+	.photo-idCardDataExtend{
 		width:150px;
 		height:150px
 	}
@@ -49,7 +49,7 @@
 						客户姓名
 					</td>
 					<td width="70px" height="30px">
-						${idcard.name}
+						${idCardDataExtend.name}
 					</td>
 					<td bgcolor="#F2F2F2" width="30px" height="30px">
 						授信额度
@@ -195,7 +195,7 @@
 							姓名：
 						</td>
 						<td width="100px" height="30px">
-							${idcard.name}
+							${idCardDataExtend.name}
 						</td>
 						<td bgcolor="#F2F2F2" width="50px"  height="30px">
 							身份证号：
@@ -209,13 +209,13 @@
 							民族：
 						</td>
 						<td width="100px" height="30px">
-							${idcard.nation}
+							${idCardDataExtend.nation}
 						</td>
 						<td bgcolor="#F2F2F2" width="50px"  height="30px">
 							性别：
 						</td>
 						<td width="100px" height="30px">
-							${idcard.sex}
+							${idCardDataExtend.sex}
 						</td>
 					</tr>
 					<tr>
@@ -243,7 +243,7 @@
 							户籍详细地址：
 						</td>
 						<td width="100px" height="30px">
-							${idcard.address}
+							${idCardDataExtend.address}
 						</td>
 					</tr>
 					<tr>
@@ -251,7 +251,7 @@
 							身份证发证机关所在地：
 						</td>
 						<td width="100px" height="30px">
-							${idcard.orgination}
+							${idCardDataExtend.orgination}
 						</td>
 						<td bgcolor="#F2F2F2" width="50px"  height="30px">
 						</td>
@@ -268,13 +268,13 @@
 				<table class="table">
 					<tbody>
 					<tr>
-						<c:if test="${not empty photoIDCARD_EMBLEM}"><td><img class="photo-idcard dialog" src="${photoIDCARD_EMBLEM}"></td></c:if>
-						<c:if test="${not empty photoIDCARD_HOLD}"><td><img class="photo-idcard dialog" src="${photoIDCARD_HOLD}"></td></c:if>
-						<c:if test="${not empty photoIDCARD_EMBLEM}"><td><img class="photo-idcard dialog" src="${photoIDCARD_EMBLEM}"></td></c:if>
-						<c:if test="${not empty photoIDCARD_POLICE}"><td><img class="photo-idcard dialog" src="${photoIDCARD_POLICE}"></td></c:if>
-						<c:if test="${not empty photoBLINK}"><td><img class="photo-idcard dialog" src="${photoBLINK}"></td></c:if>
-						<c:if test="${not empty photoMOUTH}"><td><img class="photo-idcard dialog" src="${photoMOUTH}"></td></c:if>
-						<c:if test="${not empty photoSHAKE}"><td><img class="photo-idcard dialog" src="${photo6}"></td></c:if>
+						<c:if test="${not empty photoIDCARD_EMBLEM}"><td><img class="photo-idCardDataExtend dialog" src="${photoIDCARD_EMBLEM}"></td></c:if>
+						<c:if test="${not empty photoIDCARD_HOLD}"><td><img class="photo-idCardDataExtend dialog" src="${photoIDCARD_HOLD}"></td></c:if>
+						<c:if test="${not empty photoIDCARD_EMBLEM}"><td><img class="photo-idCardDataExtend dialog" src="${photoIDCARD_EMBLEM}"></td></c:if>
+						<c:if test="${not empty photoIDCARD_POLICE}"><td><img class="photo-idCardDataExtend dialog" src="${photoIDCARD_POLICE}"></td></c:if>
+						<c:if test="${not empty photoBLINK}"><td><img class="photo-idCardDataExtend dialog" src="${photoBLINK}"></td></c:if>
+						<c:if test="${not empty photoMOUTH}"><td><img class="photo-idCardDataExtend dialog" src="${photoMOUTH}"></td></c:if>
+						<c:if test="${not empty photoSHAKE}"><td><img class="photo-idCardDataExtend dialog" src="${photo6}"></td></c:if>
 					</tr>
 					<tr>
 						<c:if test="${not empty photoIDCARD_PROTRAIT}"><td>身份证正面</td></c:if>
