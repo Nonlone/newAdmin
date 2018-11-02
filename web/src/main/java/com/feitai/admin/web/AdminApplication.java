@@ -13,7 +13,6 @@ import tk.mybatis.spring.annotation.MapperScan;
         "com.feitai.admin.**.mapper"})
 @ComponentScan(basePackages = {
         "com.feitai.admin.backend",
-//        "com.feitai.jieya",
         "com.feitai.admin.system",
         "com.feitai.admin.web",
         "com.feitai.admin.core"})
