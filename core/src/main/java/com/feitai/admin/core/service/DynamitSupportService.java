@@ -6,6 +6,7 @@ import com.feitai.base.mybatis.SqlMapper;
 import com.feitai.utils.ObjectUtils;
 import com.feitai.utils.StringUtils;
 import com.github.pagehelper.PageHelper;
+import com.google.common.base.Joiner;
 import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -80,6 +81,26 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
         this.manyAnnotationFieldWalkProcessor = new ManyAnnotationFieldWalkProcessor(applicationContext);
     }
 
+
+    /***
+     * 单表查询所有
+     * @return
+     */
+    @Override
+    public List<T> findAll() {
+        return walkProcessCollection(super.findAll());
+    }
+
+
+    /***
+     * 根据id获取单个实体
+     * @param id
+     * @return
+     */
+    @Override
+    public T findOne(Object id) {
+        return walkProcess(super.findOne(id));
+    }
 
     /***
      * 根据条件查询数组
@@ -220,45 +241,52 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
                 if (!leftParam.contains(".")) {
                     leftParam = prefix + leftParam;
                 }
+                String value = null;
                 switch (searchParams.getOperator()) {
                     case EQ:
-                        if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + leftParam + " = '" + searchParams.getValues()[0] + "'");
+                        value = getValue(searchParams.getValues()[0]);
+                        if (!ArrayUtils.isEmpty(searchParams.getValues()) && StringUtils.isNotBlank(value)) {
+                            sql.append(" and " + leftParam + " = " + value);
                         }
                         break;
                     case LIKE:
-                        if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + leftParam + " like '%" + searchParams.getValues()[0] + "%'");
+                        value = searchParams.getValues()[0].toString();
+                        if (!ArrayUtils.isEmpty(searchParams.getValues()) && StringUtils.isNotBlank(value)) {
+                            sql.append(" and " + leftParam + " like '%" + value + "%'");
                         }
                         break;
                     case GT:
-                        if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + leftParam + " > '" + searchParams.getValues()[0] + "'");
+                        value = getValue(searchParams.getValues()[0]);
+                        if (!ArrayUtils.isEmpty(searchParams.getValues()) && StringUtils.isNotBlank(value)) {
+                            sql.append(" and " + leftParam + " > " + value);
                         }
                         break;
                     case LT:
-                        if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + leftParam + " < '" + searchParams.getValues()[0] + "'");
+                        value = getValue(searchParams.getValues()[0]);
+                        if (!ArrayUtils.isEmpty(searchParams.getValues()) && StringUtils.isNotBlank(value)) {
+                            sql.append(" and " + leftParam + " < " + value);
                         }
                         break;
                     case GTE:
-                        if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + leftParam + " >= '" + searchParams.getValues()[0] + "'");
+                        value = getValue(searchParams.getValues()[0]);
+                        if (!ArrayUtils.isEmpty(searchParams.getValues()) && StringUtils.isNotBlank(value)) {
+                            sql.append(" and " + leftParam + " >= " + value);
                         }
                         break;
                     case LTE:
-                        if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + leftParam + " <= '" + searchParams.getValues()[0] + "'");
+                        value = getValue(searchParams.getValues()[0]);
+                        if (!ArrayUtils.isEmpty(searchParams.getValues()) && StringUtils.isNotBlank(value)) {
+                            sql.append(" and " + leftParam + " <= " + value);
                         }
                         break;
                     case ORLIKE:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
                             int i = 0;
-                            for (String value : searchParams.getValues()) {
+                            for (Object val : searchParams.getValues()) {
                                 if (i == 0) {
-                                    sql.append(" and (" + leftParam + " like '%" + value + "%'");
+                                    sql.append(" and (" + leftParam + " like '%" + val.toString() + "%'");
                                 } else {
-                                    sql.append(" or " + leftParam + " like '%" + value + "%'");
+                                    sql.append(" or " + leftParam + " like '%" + val.toString() + "%'");
                                 }
                                 i++;
                             }
@@ -267,38 +295,26 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
                         break;
                     case ANDLIKE:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            int i = 0;
-                            for (String value : searchParams.getValues()) {
-                                if (i == 0) {
-                                    sql.append(" and " + leftParam + " like '%" + value + "%'");
-                                } else {
-                                    sql.append(" and " + leftParam + " like '%" + value + "%'");
-                                }
-                                i++;
+                            for (Object val : searchParams.getValues()) {
+                                sql.append(" and " + leftParam + " like '%" + val.toString() + "%'");
                             }
                         }
                         break;
                     case ANDNOTLIKE:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            int i = 0;
-                            for (String value : searchParams.getValues()) {
-                                if (i == 0) {
-                                    sql.append(" and " + leftParam + " not like '%" + value + "%'");
-                                } else {
-                                    sql.append(" and " + leftParam + " not like '%" + value + "%'");
-                                }
-                                i++;
+                            for (Object val : searchParams.getValues()) {
+                                sql.append(" and " + leftParam + " not like '%" + val.toString() + "%'");
                             }
                         }
                         break;
                     case OREQ:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
                             int i = 0;
-                            for (String value : searchParams.getValues()) {
+                            for (Object val : searchParams.getValues()) {
                                 if (i == 0) {
-                                    sql.append(" and (" + leftParam + " = '" + value + "'");
+                                    sql.append(" and (" + leftParam + " = " + getValue(val));
                                 } else {
-                                    sql.append(" or " + leftParam + " = '" + value + "'");
+                                    sql.append(" or " + leftParam + " = " + getValue(val));
                                 }
                                 i++;
                             }
@@ -308,46 +324,71 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
                     case ANDNOTEQ:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
                             int i = 0;
-                            for (String value : searchParams.getValues()) {
+                            for (Object val : searchParams.getValues()) {
                                 if (i == 0) {
-                                    sql.append(" and " + prefix + searchParams.getName() + " != '" + value + "'");
+                                    sql.append(" and " + leftParam + " != " + getValue(val));
                                 } else {
-                                    sql.append(" or " + prefix + searchParams.getName() + " != '" + value + "'");
+                                    sql.append(" or " + leftParam + " != " + getValue(val));
                                 }
                                 i++;
                             }
                         }
                         break;
                     case NOTEQ:
+                        value = getValue(searchParams.getValues()[0]);
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + prefix + searchParams.getName() + " != '" + searchParams.getValues()[0] + "'");
+                            sql.append(" and " + leftParam + " != " + value);
                         }
                         break;
                     case NOTLIKE:
+                        value = getValue(searchParams.getValues()[0]);
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " + prefix + searchParams.getName() + " not like '%" + searchParams.getValues()[0] + "%'");
+                            sql.append(" and " + leftParam + " not like '%" + value + "%'");
                         }
                         break;
                     case ISNULL:
-                        sql.append(" and " + prefix + searchParams.getName() + " is null");
+                        sql.append(" and " + leftParam + " is null");
                         break;
                     case ISNOTNULL:
-                        sql.append(" and " + prefix + searchParams.getName() + " is not null");
+                        sql.append(" and " + leftParam + " is not null");
                         break;
                     case IN:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append("and " + prefix + searchParams.getName() + " in '" + searchParams.getValues()[0] + "'");
+                            StringBuffer sbSqlPart = new StringBuffer();
+                            for (Object val : searchParams.getValues()) {
+                                if (sbSqlPart.length() != 0) {
+                                    sbSqlPart.append(",");
+                                }
+                                sbSqlPart.append(getValue(val));
+                            }
+                            sql.append("and " + leftParam + " in (" + sbSqlPart.toString() + ")");
                         }
                         break;
                     case NOTIN:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append("and " + prefix + searchParams.getName() + " not in '" + searchParams.getValues()[0] + "'");
+                            StringBuffer sbSqlPart = new StringBuffer();
+                            for (Object val : searchParams.getValues()) {
+                                if (sbSqlPart.length() != 0) {
+                                    sbSqlPart.append(",");
+                                }
+                                sbSqlPart.append(getValue(val));
+                            }
+                            sql.append("and " + leftParam + " not in (" + sbSqlPart + "'");
                         }
                         break;
                 }
             }
         }
         return sql.toString();
+    }
+
+    private String getValue(Object object) {
+        if (object instanceof String && StringUtils.isNotBlank((String) object)) {
+            return "'" + (String) object + "'";
+        } else if (!Objects.isNull(object)) {
+            return object.toString();
+        }
+        return null;
     }
 
 }

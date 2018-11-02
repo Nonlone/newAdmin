@@ -14,20 +14,20 @@ public class SearchParams {
 
     private Operator operator;
 
-    private String[] values;
+    private Object[] values;
 
 
     public SearchParams() {
     }
 
-    public SearchParams(String name, Operator operator, String... values) {
+    public SearchParams(String name, Operator operator, Object... values) {
         this.name = name;
         this.operator = operator;
         this.values = values;
     }
 
 
-    public <A, B> SearchParams(Fn<A, B> fn, Operator operator, String... values) {
+    public <A, B> SearchParams(Fn<A, B> fn, Operator operator, Object... values) {
         this.name = Reflections.fnToFieldName(fn);
         this.operator = operator;
         this.values = values;

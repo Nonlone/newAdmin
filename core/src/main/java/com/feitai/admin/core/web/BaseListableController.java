@@ -23,11 +23,11 @@ public abstract class BaseListableController<T> extends BaseController {
 
 
     protected Page<T> list(ServletRequest request) {
-        return list(request,SelectMultiTable.builder(entityClass));
+        return list(request, SelectMultiTable.builder(entityClass));
     }
 
 
-    protected Page<T> list(ServletRequest request,SelectMultiTable selectMultiTable) {
+    protected Page<T> list(ServletRequest request, SelectMultiTable selectMultiTable) {
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
         List<Sort> sortList = PageBulider.getSort(request);
@@ -104,26 +104,7 @@ public abstract class BaseListableController<T> extends BaseController {
                 sources = ArrayUtils.remove(sources, 0);
                 // 余后重新组合，转换驼峰，和 . 号
                 String name = StringUtils.humpToLine(Joiner.on("_").join(sources));
-                if (entry.getValue().getClass().isArray()
-                        && entry.getValue().getClass().getComponentType() == String.class) {
-                    // String数组
-                    searchParamsList.add(new SearchParams() {{
-                        this.setName(name);
-                        this.setOperator(operator);
-                        if (!entry.getValue().equals("")) {
-                            this.setValues((String[]) entry.getValue());
-                        }
-                    }});
-                } else if (String.class.isInstance(entry.getValue())) {
-                    // String类型
-                    searchParamsList.add(new SearchParams() {{
-                        this.setName(name);
-                        this.setOperator(operator);
-                        if (!entry.getValue().equals("")) {
-                            this.setValues(new String[]{(String) entry.getValue()});
-                        }
-                    }});
-                }
+                searchParamsList.add(new SearchParams(name, operator, entry.getValue()));
             }
         }
         return searchParamsList;

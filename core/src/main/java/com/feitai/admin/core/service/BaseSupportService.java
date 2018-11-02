@@ -194,6 +194,11 @@ public abstract class BaseSupportService<T> {
     }
 
 
+    /**
+     * 获取MapperClass类
+     * @param mapper
+     * @return
+     */
     protected Class<?> getMapperClass(Mapper<?> mapper) {
         MapperProxy mapperProxy = (MapperProxy) ObjectUtils.getFieldValue(mapper, "h");
         if(!Objects.isNull(mapperProxy)){

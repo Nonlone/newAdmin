@@ -156,9 +156,9 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
 
 
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
-    public String auth(@PathVariable("id") String id, Model model) {
+    public String detail(@PathVariable("id") String id, Model model) {
         //身份证信息
-        IdCardDataExtend idCardDataExtend = this.idcardService.findOneBySql(getFindByUserIdSql(id));
+        IdCardDataExtend idCardDataExtend = getService().findOne(id);
         Long userId = idCardDataExtend.getUserId();
 
         //年龄
@@ -231,7 +231,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(getSelectMultiTable().buildSqlString());
         List<SearchParams> searchParamsList = bulidSearchParamsList(request);
-        searchParamsList.add(new SearchParams(IdCardData::getCertified, Operator.EQ, IdCardDataExtend.CERTIFIED_TRUE));
+        searchParamsList.add(new SearchParams(IdCardData::getCertified, Operator.EQ, true));
         sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
         return sbSql.toString();
     }
