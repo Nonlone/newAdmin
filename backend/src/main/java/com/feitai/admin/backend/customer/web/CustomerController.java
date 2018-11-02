@@ -211,7 +211,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         model.addAttribute("idCardDataExtend", idCardDataExtend);
         model.addAttribute("user", user);
         model.addAttribute("work", work);
-        return "customer/detail";
+        return "backend/customer/detail";
     }
 
 
@@ -231,7 +231,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(getSelectMultiTable().buildSqlString());
         List<SearchParams> searchParamsList = bulidSearchParamsList(request);
-        searchParamsList.add(new SearchParams(IdCardData::getCertified, Operator.EQ, Boolean.TRUE.toString()));
+        searchParamsList.add(new SearchParams(IdCardData::getCertified, Operator.EQ, IdCardDataExtend.CERTIFIED_TRUE));
         sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
         return sbSql.toString();
     }

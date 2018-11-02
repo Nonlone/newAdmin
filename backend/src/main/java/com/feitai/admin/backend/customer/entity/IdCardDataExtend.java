@@ -15,6 +15,10 @@ import javax.persistence.Transient;
 )
 public class IdCardDataExtend extends IdCardData {
 
+    public final static String CERTIFIED_TRUE="1";
+
+    public final static String CERTIFIED_FALSE="0";
+
     @Transient
     @One(classOfMapper = UserMapper.class, sourceField = "userId")
     private User user;
