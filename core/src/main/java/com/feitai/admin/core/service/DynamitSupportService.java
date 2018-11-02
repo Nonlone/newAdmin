@@ -170,14 +170,18 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
 
 
     protected <E> E walkProcess(E e) {
-        ObjectUtils.fieldWalkProcess(e, getOneAnnotationFieldWalkProcessor());
-        ObjectUtils.fieldWalkProcess(e, getManyAnnotationFieldWalkProcessor());
+        if (!Objects.isNull(e)) {
+            ObjectUtils.fieldWalkProcess(e, getOneAnnotationFieldWalkProcessor());
+            ObjectUtils.fieldWalkProcess(e, getManyAnnotationFieldWalkProcessor());
+        }
         return e;
     }
 
     protected <E> List<E> walkProcessCollection(List<E> collection) {
-        for (E e : collection) {
-            walkProcess(e);
+        if (!CollectionUtils.isEmpty(collection)) {
+            for (E e : collection) {
+                walkProcess(e);
+            }
         }
         return collection;
     }
@@ -213,18 +217,18 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
         if (!CollectionUtils.isEmpty(searchParamsList)) {
             for (SearchParams searchParams : searchParamsList) {
                 String leftParam = searchParams.getName();
-                if(!leftParam.contains(".")){
-                    leftParam = prefix+leftParam;
+                if (!leftParam.contains(".")) {
+                    leftParam = prefix + leftParam;
                 }
                 switch (searchParams.getOperator()) {
                     case EQ:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " +leftParam + " = '" + searchParams.getValues()[0] + "'");
+                            sql.append(" and " + leftParam + " = '" + searchParams.getValues()[0] + "'");
                         }
                         break;
                     case LIKE:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                            sql.append(" and " +leftParam + " like '%" + searchParams.getValues()[0] + "%'");
+                            sql.append(" and " + leftParam + " like '%" + searchParams.getValues()[0] + "%'");
                         }
                         break;
                     case GT:
