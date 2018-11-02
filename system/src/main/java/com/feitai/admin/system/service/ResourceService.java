@@ -25,12 +25,11 @@ public class ResourceService extends DynamitSupportService<Resource> {
     public List<TreeItem> getRsourceList(){
         Example example = Example.builder(Resource.class).andWhere(Sqls.custom().andEqualTo("level",1)).build();
         List<Resource> resources = getMapper().selectByExample(example);
-        List<Resource> modelList = new ArrayList<>();
-       walkProcessCollection(modelList);
+        walkProcessCollection(resources);
 
        //TODO 迁移到Controller
         List<TreeItem> trees = new ArrayList<TreeItem>(resources.size());
-        for(Resource resource : modelList){
+        for(Resource resource : resources){
             trees.add(this.resourceToTree(resource));
         }
         return trees;
