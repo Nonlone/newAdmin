@@ -88,7 +88,7 @@
         }
     }
 
-    BUI.use(['bui/ux/crudgrid','bui/common/page'], function (CrudGrid) {
+    BUI.use(['bui/ux/crudgrid'], function (CrudGrid) {
 
         //定义页面权限
         var add = false, update = false, del = false, list = false;

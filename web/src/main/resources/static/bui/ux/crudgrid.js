@@ -2,7 +2,7 @@
  * @fileOverview 增删改查基本
  * @ignore
  */
-define('bui/ux/crudgrid', ['bui/common', 'bui/grid', 'bui/form', 'bui/data', 'bui/overlay', 'bui/extensions/treegrid'],
+define('bui/ux/crudgrid', ['bui/common', 'bui/grid', 'bui/form', 'bui/data', 'bui/overlay', 'bui/extensions/treegrid','bui/common/page'],
     function (require) {
         var BUI = require('bui/common'),
             Grid = require('bui/grid'),

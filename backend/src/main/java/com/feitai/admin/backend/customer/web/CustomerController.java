@@ -158,7 +158,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
     public String auth(@PathVariable("id") String id, Model model) {
         //身份证信息
-        IdCardDataExtend idCardDataExtend = this.idcardService.findOneBySql(getFindByIdSql(id));
+        IdCardDataExtend idCardDataExtend = this.idcardService.findOneBySql(getFindByUserIdSql(id));
         Long userId = idCardDataExtend.getUserId();
 
         //年龄
@@ -211,7 +211,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         model.addAttribute("idCardDataExtend", idCardDataExtend);
         model.addAttribute("user", user);
         model.addAttribute("work", work);
-        return "/admin/customer/idCardDataExtend/detail";
+        return "customer/detail";
     }
 
 
