@@ -10,7 +10,7 @@
 	<%@include file="../../common/import-static.jsp"%>
 </head>
 <style type="text/css">
-	.photo-idCardDataExtend{
+	.photo-idcard{
 		width:150px;
 		height:150px
 	}
@@ -32,24 +32,82 @@
 						${card.id}
 					</td>
 					<td bgcolor="#F2F2F2" width="30px" height="30px">
+						客户姓名
+					</td>
+					<td width="70px" height="30px">
+						${idcard.name}
+					</td>
+					<td bgcolor="#F2F2F2" width="30px" height="30px">
+						客户ID
+					</td>
+					<td width="70px" height="30px">
+						<c:if test="${not empty user}">
+							${user.id}
+						</c:if>
+					</td>
+				</tr>
+				<tr>
+					<td bgcolor="#F2F2F2" width="30px" height="30px">
 						注册手机号
 					</td>
 					<td width="70px" height="30px">
 						${hyPhone}
 					</td>
 					<td bgcolor="#F2F2F2" width="30px" height="30px">
-						产品名称
+						授信状态
 					</td>
 					<td width="70px" height="30px">
-						${card.product.name}
-					</td>
-				</tr>
-				<tr>
-					<td bgcolor="#F2F2F2" width="30px" height="30px">
-						客户姓名
-					</td>
-					<td width="70px" height="30px">
-						${idCardDataExtend.name}
+						<c:if test='${cardStatus eq "VALVE_REJECT"}'>
+							阀门拒绝
+						</c:if>
+						<c:if test='${cardStatus eq "AUTHORIZED_REJECT"}'>
+							授信拒绝
+						</c:if>
+						<c:if test='${cardStatus eq "CUSTOMER_REJECT"}'>
+							主体拒绝
+						</c:if>
+						<c:if test='${cardStatus eq "WITHDRAW_REJECT"}'>
+							提现拒绝
+						</c:if>
+						<c:if test='${cardStatus eq "QUOTACHANGE_REJECT"}'>
+							提额拒绝
+						</c:if>
+						<c:if test='${cardStatus eq "RENEWAL_REJECT"}'>
+							续卡拒绝
+						</c:if>
+						<c:if test='${cardStatus eq "RENEWAL_APPROVING"}'>
+							续卡审核中
+						</c:if>
+						<c:if test='${cardStatus eq "QUOTACHAGNE_APPROVING"}'>
+							提额审核中
+						</c:if>
+						<c:if test='${cardStatus eq "WITHDRAW_APPROVING"}'>
+							提现审核中
+						</c:if>
+						<c:if test='${cardStatus eq "OPENCARD_APPROVING"}'>
+							授信审核中
+						</c:if>
+						<c:if test='${cardStatus eq "FILLING"}'>
+							资料填写中
+						</c:if>
+						<c:if test='${cardStatus eq "LOANING"}'>
+							放款中
+						</c:if>
+						<c:if test='${cardStatus eq "UNACTIVE"}'>
+							未激活
+						</c:if>
+						<c:if test='${cardStatus eq "NORMAL"}'>
+							授信（未提现）
+						</c:if>
+						<c:if test='${cardStatus eq "DEBT"}'>
+							授信（已提现）
+						</c:if>
+						<c:if test='${cardStatus eq "OVERDUE"}'>
+							逾期
+						</c:if>
+						<c:if test='${cardStatus eq "ABANDONED"}'>
+							卡废弃
+						</c:if>
 					</td>
 					<td bgcolor="#F2F2F2" width="30px" height="30px">
 						授信额度
@@ -57,12 +115,7 @@
 					<td width="70px" height="30px">
 						${card.creditSum}
 					</td>
-					<td bgcolor="#F2F2F2" width="30px" height="30px">
 
-					</td>
-					<td width="70px" height="30px">
-
-					</td>
 				</tr>
 				<tr>
 					<td bgcolor="#F2F2F2">
@@ -72,39 +125,52 @@
 						${auths}
 					</td>
 					<td bgcolor="#F2F2F2" width="30px" height="30px">
+						进件渠道
+					</td>
+					<td width="70px" height="30px">
+						<c:if test="${card.applyChannelId ne 'null'}">
+							${card.applyChannelId}
+						</c:if>
+					</td>
+					<td bgcolor="#F2F2F2" width="30px" height="30px">
+						注册渠道
+					</td>
+					<td width="70px" height="30px">
+						<c:if test="${card.registChannelId ne 'null'}">
+							${card.registChannelId}
+						</c:if>
+					</td>
+				</tr>
+				<tr>
+					<td bgcolor="#F2F2F2" width="30px" height="30px">
+						产品名称
+					</td>
+					<td width="70px" height="30px">
+						${card.product.name}
+					</td>
+
+					<td bgcolor="#F2F2F2" width="30px" height="30px">
+						订单创建时间
+					</td>
+					<td width="70px" height="30px">
+						${cardStartTm}
+					</td>
+
+					<td bgcolor="#F2F2F2" width="30px" height="30px">
+						提交审批时间
+					</td>
+					<td width="70px" height="30px">
+						${submitTime}
+					</td>
+
+				</tr>
+				<tr>
+					<td bgcolor="#F2F2F2" width="30px" height="30px">
 						客户端类型：
 					</td>
 					<td width="70px" height="30px">
 						${user.osType}
 					</td>
-					<td bgcolor="#F2F2F2" width="30px" height="30px">
-
-					</td>
-					<td width="70px" height="30px">
-
-					</td>
-				</tr>
-				<tr>
-					<td bgcolor="#F2F2F2" width="30px" height="30px">
-						授信状态
-					</td>
-					<td width="70px" height="30px">
-						${cardStatus}
-					</td>
-					<td bgcolor="#F2F2F2" width="30px" height="30px">
-						提交审批时间
-					</td>
-					<td width="70px" height="30px">
-						${card.submitTime}
-					</td>
-					<td bgcolor="#F2F2F2" width="30px" height="30px">
-						进件渠道
-					</td>
-					<td width="70px" height="30px">
-						${card.applyChannelId}
-					</td>
-				</tr>
-				<tr>
 					<td bgcolor="#F2F2F2" width="30px" height="30px">
 						是否新客户
 					</td>
@@ -143,12 +209,7 @@
 						</c:choose>
 
 					</td>
-					<td bgcolor="#F2F2F2" width="30px" height="30px">
-						订单创建时间
-					</td>
-					<td width="70px" height="30px">
-						${cardStartTm}
-					</td>
+
 				</tr>
 
 				</tbody>
@@ -195,7 +256,7 @@
 							姓名：
 						</td>
 						<td width="100px" height="30px">
-							${idCardDataExtend.name}
+							${idcard.name}
 						</td>
 						<td bgcolor="#F2F2F2" width="50px"  height="30px">
 							身份证号：
@@ -209,13 +270,13 @@
 							民族：
 						</td>
 						<td width="100px" height="30px">
-							${idCardDataExtend.nation}
+							${idcard.nation}
 						</td>
 						<td bgcolor="#F2F2F2" width="50px"  height="30px">
 							性别：
 						</td>
 						<td width="100px" height="30px">
-							${idCardDataExtend.sex}
+							${idcard.sex}
 						</td>
 					</tr>
 					<tr>
@@ -243,7 +304,7 @@
 							户籍详细地址：
 						</td>
 						<td width="100px" height="30px">
-							${idCardDataExtend.address}
+							${idcard.address}
 						</td>
 					</tr>
 					<tr>
@@ -251,7 +312,7 @@
 							身份证发证机关所在地：
 						</td>
 						<td width="100px" height="30px">
-							${idCardDataExtend.orgination}
+							${idcard.orgination}
 						</td>
 						<td bgcolor="#F2F2F2" width="50px"  height="30px">
 						</td>
@@ -268,13 +329,13 @@
 				<table class="table">
 					<tbody>
 					<tr>
-						<c:if test="${not empty photoIDCARD_EMBLEM}"><td><img class="photo-idCardDataExtend dialog" src="${photoIDCARD_EMBLEM}"></td></c:if>
-						<c:if test="${not empty photoIDCARD_HOLD}"><td><img class="photo-idCardDataExtend dialog" src="${photoIDCARD_HOLD}"></td></c:if>
-						<c:if test="${not empty photoIDCARD_EMBLEM}"><td><img class="photo-idCardDataExtend dialog" src="${photoIDCARD_EMBLEM}"></td></c:if>
-						<c:if test="${not empty photoIDCARD_POLICE}"><td><img class="photo-idCardDataExtend dialog" src="${photoIDCARD_POLICE}"></td></c:if>
-						<c:if test="${not empty photoBLINK}"><td><img class="photo-idCardDataExtend dialog" src="${photoBLINK}"></td></c:if>
-						<c:if test="${not empty photoMOUTH}"><td><img class="photo-idCardDataExtend dialog" src="${photoMOUTH}"></td></c:if>
-						<c:if test="${not empty photoSHAKE}"><td><img class="photo-idCardDataExtend dialog" src="${photo6}"></td></c:if>
+						<c:if test="${not empty photoIDCARD_EMBLEM}"><td><img class="photo-idcard dialog" src="${photoIDCARD_EMBLEM}"></td></c:if>
+						<c:if test="${not empty photoIDCARD_HOLD}"><td><img class="photo-idcard dialog" src="${photoIDCARD_HOLD}"></td></c:if>
+						<c:if test="${not empty photoIDCARD_EMBLEM}"><td><img class="photo-idcard dialog" src="${photoIDCARD_EMBLEM}"></td></c:if>
+						<c:if test="${not empty photoIDCARD_POLICE}"><td><img class="photo-idcard dialog" src="${photoIDCARD_POLICE}"></td></c:if>
+						<c:if test="${not empty photoBLINK}"><td><img class="photo-idcard dialog" src="${photoBLINK}"></td></c:if>
+						<c:if test="${not empty photoMOUTH}"><td><img class="photo-idcard dialog" src="${photoMOUTH}"></td></c:if>
+						<c:if test="${not empty photoSHAKE}"><td><img class="photo-idcard dialog" src="${photo6}"></td></c:if>
 					</tr>
 					<tr>
 						<c:if test="${not empty photoIDCARD_PROTRAIT}"><td>身份证正面</td></c:if>
@@ -332,7 +393,7 @@
 					</tr>
 					<tr>
 						<td bgcolor="#F2F2F2"  width="80px">手机号</td>
-						<td width="250px">${user.phone}</td>
+						<td width="250px">${hyPhone}</td>
 						<td width="120pxpx"></td>
 					</tr>
 
@@ -408,7 +469,7 @@
 					</tr>
 					<tr>
 						<td bgcolor="#F2F2F2" width="100px">人事手机</td>
-						<td width="200px">${work.contactPhone}</td>
+						<td width="200px">${hyWorkPhone}</td>
 					</tr>
 					<tr>
 						<td bgcolor="#F2F2F2" width="100px">人事固话</td>
@@ -428,10 +489,10 @@
 
 					<tbody>
 					<tr>
-						<th width="70px">联系人类型</th>
-						<th width="70px">关系</th>
-						<th width="70px">姓名</th>
-						<th width="70px">联系号码</th>
+						<th style="background-color: #F2F2F2" width="70px">联系人类型</th>
+						<th style="background-color: #F2F2F2" width="70px">关系</th>
+						<th style="background-color: #F2F2F2" width="70px">姓名</th>
+						<th style="background-color: #F2F2F2" width="70px">联系号码</th>
 					</tr>
 
 					<c:if test="${not empty person.spouseName}">

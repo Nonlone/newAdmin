@@ -257,6 +257,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
             submitTime = formatDate.format(submitData);
         }
 
+        model.addAttribute("card",card);
         model.addAttribute("cardStartTm", cardStartTm);
         model.addAttribute("submitTime", submitTime);
         model.addAttribute("idcardTm", idcardTm);

@@ -6,9 +6,13 @@ import com.feitai.jieya.server.dao.user.mapper.UserMapper;
 import com.feitai.jieya.server.dao.user.model.User;
 import lombok.Data;
 
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Data
+@Table(
+        name = "t_data_idcard"
+)
 public class IdCardDataExtend extends IdCardData {
 
     @Transient

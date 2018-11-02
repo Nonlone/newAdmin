@@ -8,14 +8,21 @@
 package com.feitai.admin.backend.config.service;
 
 import com.feitai.admin.core.service.DynamitSupportService;
+import com.feitai.jieya.server.dao.appconfig.mapper.AppConfigMapper;
 import com.feitai.jieya.server.dao.appconfig.model.AppConfig;
+import com.feitai.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.util.Sqls;
 
 @Service
 @Slf4j
 public class AppConfigService extends DynamitSupportService<AppConfig> {
 
+    @Autowired
+    private AppConfigMapper appConfigMapper;
     /***
      * 获取相应字段值
      * @param typeCode
@@ -23,13 +30,16 @@ public class AppConfigService extends DynamitSupportService<AppConfig> {
      * @return
      */
     public String findByTypeCodeAndCode(String typeCode, String code) {
-        AppConfig appConfigsearch = new AppConfig();
-        appConfigsearch.setCode(code);
-        appConfigsearch.setTypeCode(typeCode);
-        AppConfig appConfig = mapper.selectOne(appConfigsearch);
-        if (appConfig != null) {
-            return appConfig.getName();
+        if(StringUtils.isNotBlank(typeCode)&&StringUtils.isNotBlank(code)){
+            Example example = Example.builder(AppConfig.class).andWhere(Sqls.custom().andEqualTo("code",code).andEqualTo("typeCode",typeCode)).build();
+            AppConfig appConfig = appConfigMapper.selectOneByExample(example);
+            if (appConfig != null) {
+                return appConfig.getName();
+            }
+            return String.format("typeCode[%s],code[%s]不存在", typeCode, code);
+        }else{
+            return "";
         }
-        return String.format("typeCode[%s],code[%s]不存在", typeCode, code);
+
     }
 }
