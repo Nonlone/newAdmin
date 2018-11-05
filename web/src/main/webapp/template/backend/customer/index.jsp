@@ -126,10 +126,10 @@
             dialogContentId: 'addOrUpdate',
             operationColumnRenderer: function (value, obj) {//操作列最追加按钮
                 return CrudGrid.createLink({
-                        id: obj.userId,
+                        id: obj.id,
                         title: obj.name + '--查看详细信息',
                         text: '<li class="icon icon-list-alt"></li>',
-                        href: detailUrl + obj.userId
+                        href: detailUrl + obj.id
                     });
             },
             storeCfg: {//定义store的排序，如果是复合主键一定要修改

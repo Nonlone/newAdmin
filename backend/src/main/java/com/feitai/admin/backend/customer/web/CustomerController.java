@@ -145,11 +145,17 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         List<JSONObject> resultList = new ArrayList();
         for (IdCardDataExtend idCardDataExtend : idCardDataExtendList) {
             JSONObject json = (JSONObject) JSON.toJSON(idCardDataExtend);
-            if (StringUtils.isNotBlank(idCardDataExtend.getIdCard())) {
-                json.put("birthday", DateUtils.format(IdCardUtils.getBirthdayByIdCard(idCardDataExtend.getIdCard()), DateTimeStyle.DEFAULT_YYYY_MM_DD));
-                json.put("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
+            try {
+                if (StringUtils.isNotBlank(idCardDataExtend.getIdCard())) {
+                    json.put("birthday", DateUtils.format(IdCardUtils.getBirthdayByIdCard(idCardDataExtend.getIdCard()), DateTimeStyle.DEFAULT_YYYY_MM_DD));
+                    json.put("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
+                }
+
+                resultList.add(json);
+            }catch (Exception e){
+                log.error("this json handle fail:[{}]! message:{}",json,e.getMessage());
+                continue;
             }
-            resultList.add(json);
         }
         return switchContent(idCardPage, resultList);
     }
