@@ -1,11 +1,11 @@
 <!DOCTYPE HTML>
-<%@page contentType="text/html" pageEncoding="UTF-8" %>
-<%@include file="../../common/import-tags.jsp" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="../../common/import-tags.jsp"%>
 <html>
 <head>
-    <title><spring:eval expression="@webConf['admin.title']"/></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <%@include file="../../common/import-static.jsp" %>
+    <title><spring:eval expression="@webConf['admin.title']" /></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <%@include file="../../common/import-static.jsp"%>
 </head>
 <body>
 <div class="container">
@@ -27,7 +27,7 @@
             <div class="control-group span7">
                 <label class="control-label">注册手机号:</label>
                 <div class="controls">
-                    <input type="text" class="input-normal control-text" name="search_LIKE_user.phone">
+                    <input type="text" class="input-normal control-text" name="search_LIKE_userIn.phone">
                 </div>
             </div>
             <div class="control-group span7">
@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="control-group span7">
-                <label class="control-label">状态:</label>
+                <label class="control-label">授信状态:</label>
                 <div class="controls">
                     <div id="statusSelect" class="controls">
                         <input id = "search_EQ_status" name="search_EQ_status" type="hidden" >
@@ -60,23 +60,22 @@
             <div class="control-group span10">
                 <label class="control-label">提交审批时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
-                    <input type="text" class="calendar" name="search_GTE_submitTime" data-tip="{text : '开始日期'}">
-                    <span>- </span>
-                    <input   type="text" class="calendar"name="search_LTE_submitTime" data-tip="{text : '结束日期'}">
+                    <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
+                    <input type="text" class="calendar" name="search_GTE_submitTime_D" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_submitTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
                 </div>
             </div>
             <div class="control-group span10">
                 <label class="control-label">订单创建时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
-                    <span>- </span>
-                    <input  type="text" class="calendar" name="search_LTE_createdTime" data-tip="{text : '结束日期'}">
+                    <input type="text" class="calendar" name="search_GTE_createdTime_D" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_createdTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
                 </div>
             </div>
 
             <div class="span3 offset1">
-                <button type="button" id="btnSearch" class="button button-primary">搜索</button>
+                <button  type="button" id="btnSearch" class="button button-primary">搜索</button>
             </div>
             <div class="span3 offset1">
                 <button class="button button-danger" onclick="flushall();">清空</button>
@@ -97,18 +96,31 @@
 <script type="text/javascript">
 
     //清空按钮
-    function flushall() {
+    function flushall(){
         var elementsByTagName = document.getElementsByTagName("input");
-        for (var i = 0; i < elementsByTagName.length; i++) {
+        for(var i = 0;i<elementsByTagName.length;i++){
             elementsByTagName[i].innerText = "";
         }
     }
 
     function openout(id) {
-        window.open('${IP}' + '${ctx}/backend/opencard/detail/' + id);
+        window.open('${IP}'+'${ctx}/backend/opencard/detail/'+id);
     }
 
-    BUI.use(['bui/ux/crudgrid', 'bui/common/search', 'bui/common/page', 'bui/select', 'bui/data'], function (CrudGrid, Search, Grid, Select, Data) {
+    BUI.use(['bui/ux/crudgrid','bui/common/search','bui/common/page','bui/select','bui/data'],function (CrudGrid,Search,Grid,Select,Data) {
+
+
+        var selectStatusStore = new Data.Store({
+            url: '${ctx}/backend/opencard/getCardStatusList',
+            autoLoad: true
+        });
+
+        selectStatus = new Select.Select({
+            render:'#statusSelect',
+            valueField:'#search_EQ_status',
+            store:selectStatusStore
+        });
+        selectStatus.render();
 
         var objEmun = {'true': '是', 'false': '否'};
         var ViewBtn = true;
@@ -142,24 +154,23 @@
         //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
         <framwork:crudPermission resource="/backend/opencard"/>
 
-        var selectStore = new Data.Store({
+        var selectProductStore = new Data.Store({
             url: '${ctx}/admin/product/product/productNameList',
             autoLoad: true
         });
 
-        select = new Select.Select({
+        selectProduct = new Select.Select({
             render: '#selectProduct',
             valueField: '#searchProduct',
-            store: selectStore
+            store: selectProductStore
         });
-        select.render();
+        selectProduct.render();
 
         var columns = [
-            {
-                title: '订单号', dataIndex: 'id', width: '10%', renderer: function (value) {
-                    if (value) {
+            {title:'订单号',dataIndex:'id',width:'10%',renderer: function (value) {
+                    if(value){
                         return String(value);
-                    } else {
+                    }else{
                         return '';
                     }
                 }},
@@ -228,23 +239,19 @@
             gridCfg:{
                 innerBorder:true
             },
-            operationColumnRenderer: function (value, obj) {//操作列最追加按钮
+            operationColumnRenderer : function(value, obj){//操作列最追加按钮
                 var viewStr = "";
                 var id = obj.id;
-                if (ViewBtn && obj.idCardDataExtend != null) {
-                    viewStr = CrudGrid.createLink({
-                        id: "/" + obj.id,
-                        title: obj.idCardDataExtend.name + '--详细信息',
-                        text: '<li class="icon-user"></li>',
-                        href: detailUrl + obj.id
-                    });
+                if(ViewBtn&&obj.idcard!=null){
+                    viewStr = '<span class="x-icon x-icon-info" title="'+'详细信息'+'"><i class="icon icon-list-alt icon-white"  onclick="openout(\''+id+'\');"></i></span>';
+
                 }
                 return viewStr;
             },
-            storeCfg: {//定义store的排序，如果是复合主键一定要修改
-                sortInfo: {
-                    field: 'createdTime',//排序字段（冲突以此未标准）
-                    direction: 'DESC' //升序ASC，降序DESC
+            storeCfg:{//定义store的排序，如果是复合主键一定要修改
+                sortInfo : {
+                    field : 'createdTime',//排序字段（冲突以此未标准）
+                    direction : 'DESC' //升序ASC，降序DESC
                 }
             }
         });

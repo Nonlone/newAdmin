@@ -21,23 +21,24 @@ import java.util.Map;
 @ToString
 public class MapProperties {
 
+
+    @PostConstruct
+    public void init() {
+        authdataSource = ImmutableMap.copyOf(JSONObject.parseObject(source,Map.class));
+        authValueMap = ImmutableMap.copyOf(JSONObject.parseObject(authValueMapSource, Map.class));
+        loanStatusMap = ImmutableMap.copyOf(JSONObject.parseObject(loanStatus,Map.class));
+    }
+
+    @Value("${openCard.statusMap}")
+    private String cardStatus;
+
     /**
      * 认证数据项映射
      */
     @Value("${authdata.sourceMap}")
     private String source;
 
-    //取消放款
-    @Value("${reject.cash.url}")
-    private String rejectCash;
-
-    //获取授权项Map
-    public ImmutableMap<String, String> getSourceMap() {
-        String source = this.source;
-        Map<String, String> map = JSONObject.parseObject(source, new TypeReference<Map<String, String>>() {
-        });
-        return ImmutableMap.copyOf(map);
-    }
+    private static Map<String,String> authdataSource;
 
 
     @Value("${backend.authValueMap}")
@@ -45,10 +46,17 @@ public class MapProperties {
 
     private static Map<String, String> authValueMap;
 
-    @PostConstruct
-    public void init() {
-        authValueMap = ImmutableMap.copyOf(JSONObject.parseObject(authValueMapSource, Map.class));
-    }
+    //放款状态
+    @Value("${loanOrder.statusMap}")
+    private String loanStatus;
+
+    private static Map<String,String> loanStatusMap;
+
+
+    //取消放款
+    @Value("${reject.cash.url}")
+    private String rejectCash;
+
 
     /**
      * 获取授权项Map
@@ -58,6 +66,19 @@ public class MapProperties {
     public String getAuthValue(String key) {
         if (!CollectionUtils.isEmpty(authValueMap)) {
             return authValueMap.get(key);
+        }
+        return null;
+    }
+
+
+    /***
+     * 获取取消放款状态
+     * @param key
+     * @return
+     */
+    public String getloanStatus(String key){
+        if(!CollectionUtils.isEmpty(loanStatusMap)){
+            return loanStatusMap.get(key);
         }
         return null;
     }

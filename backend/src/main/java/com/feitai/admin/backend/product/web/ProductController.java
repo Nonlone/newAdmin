@@ -7,6 +7,7 @@
 
 package com.feitai.admin.backend.product.web;
 
+import com.feitai.admin.backend.product.entity.ProductMore;
 import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.DynamitSupportService;
@@ -32,7 +33,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/admin/product/product")
-public class ProductController extends BaseListableController<Product> {
+public class ProductController extends BaseListableController<ProductMore> {
 	@Autowired
 	private ProductService productService;
 
@@ -40,8 +41,9 @@ public class ProductController extends BaseListableController<Product> {
 	@ResponseBody
 	@LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
 	public Object ProductList(){
-		List<Product> products = productService.findAll();
+		List<ProductMore> products = productService.findAll();
 		List<ListItem> list = new ArrayList<ListItem>();
+		list.add(new ListItem("全部"," "));
 		for(Product product:products){
 			list.add(new ListItem(product.getName(), product.getName()));
 		}
@@ -53,7 +55,7 @@ public class ProductController extends BaseListableController<Product> {
 	@ResponseBody
 	@LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
 	public List<ListItem> items() {
-		List<Product> productList = productService.findAll();
+		List<ProductMore> productList = productService.findAll();
 		List<ListItem> list = new ArrayList<ListItem>();
 		for (Product product : productList) {
 			//只展示启动产品
@@ -87,7 +89,7 @@ public class ProductController extends BaseListableController<Product> {
 	@RequiresPermissions("/admin/product/product:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
-	public Object add(@Valid Product product){
+	public Object add(@Valid ProductMore product){
 		product.setCreatedTime(new Date());
 		product.setUpdateTime(new Date());
 		//给初创product给与默认值
@@ -98,7 +100,7 @@ public class ProductController extends BaseListableController<Product> {
 	@RequiresPermissions("/admin/product/product:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
-	public Object update(@Valid @ModelAttribute("product") Product product){
+	public Object update(@Valid @ModelAttribute("product") ProductMore product){
 		product.setUpdateTime(new Date());
 		this.productService.save(product);
 		return successResult;
@@ -125,7 +127,7 @@ public class ProductController extends BaseListableController<Product> {
 	}
 
 	@Override
-	protected DynamitSupportService<Product> getService() {
+	protected DynamitSupportService<ProductMore> getService() {
 		return this.productService;
 	}
 

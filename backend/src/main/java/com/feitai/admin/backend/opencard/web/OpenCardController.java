@@ -16,9 +16,12 @@ import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
+import com.feitai.admin.backend.product.entity.ProductMore;
 import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.backend.service.AttachPhotoService;
+import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
+import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.attach.model.PhotoAttach;
@@ -46,6 +49,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -98,6 +102,21 @@ public class OpenCardController extends BaseListableController<CardMore> {
         return "/backend/opencard/index";
     }
 
+
+    @RequestMapping(value = "getCardStatusList")
+    @ResponseBody
+    @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
+    public Object getCardStatusList(){
+        Map<String,String> map = JSONObject.parseObject(mapProperties.getCardStatus(), Map.class);
+        List<ListItem> list = new ArrayList<ListItem>();
+        list.add(new ListItem("全部"," "));
+        for (String key : map.keySet()) {
+            list.add(new ListItem(map.get(key),key));
+        }
+        return list;
+    }
+
+
     @RequiresPermissions("/backend/opencard:list")
     @RequestMapping(value = "list")
     @ResponseBody
@@ -105,7 +124,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
         //根据request获取page
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
-        Page<CardMore> cardMorePage = list(getSqls(request), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        Page<CardMore> cardMorePage = list(getCommonSqls(request,getSelectMultiTable().buildSqlString()), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
         List<CardMore> cardMoreList = cardMorePage.getContent();
         List<JSONObject> resultList = new ArrayList();
 
@@ -300,18 +319,9 @@ public class OpenCardController extends BaseListableController<CardMore> {
                 });
     }
 
-    private String getSqls(ServletRequest request) {
-        StringBuffer sbSql = new StringBuffer();
-        sbSql.append(getSelectMultiTable().buildSqlString());
-        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
-        sbSql.append(" GROUP BY " + SelectMultiTable.MAIN_ALAIS + ".id");
-        return sbSql.toString();
-    }
-
-
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
-        sbSql.append(getSelectMultiTable().buildCountSqlString());
+        sbSql.append(SelectMultiTable.builder(CardMore.class).buildCountSqlString());
         sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
         return sbSql.toString();
     }

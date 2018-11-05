@@ -26,6 +26,13 @@ public abstract class BaseListableController<T> extends BaseController {
         return list(request, SelectMultiTable.builder(entityClass));
     }
 
+    public String getCommonSqls(ServletRequest request,String selectMultiTableSql) {
+        StringBuffer sbSql = new StringBuffer();
+        sbSql.append(selectMultiTableSql);
+        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
+        sbSql.append(" GROUP BY " + SelectMultiTable.MAIN_ALAIS + ".id");
+        return sbSql.toString();
+    }
 
     protected Page<T> list(ServletRequest request, SelectMultiTable selectMultiTable) {
         int pageNo = PageBulider.getPageNo(request);

@@ -14,6 +14,7 @@ import com.feitai.admin.backend.fund.service.FundService;
 import com.feitai.admin.backend.fund.vo.FundChargeRequest;
 import com.feitai.admin.backend.fund.vo.FundDetailRequest;
 import com.feitai.admin.backend.fund.vo.FundRequest;
+import com.feitai.admin.backend.product.entity.ProductMore;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
@@ -24,6 +25,7 @@ import com.feitai.admin.system.model.User;
 import com.feitai.admin.system.service.UserService;
 import com.feitai.jieya.server.dao.fund.model.Fund;
 import com.feitai.jieya.server.dao.fund.model.FundAmountDetail;
+import com.feitai.jieya.server.dao.product.model.Product;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -52,7 +54,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping(value = "/admin/fund/fund")
+@RequestMapping(value = "/backend/fund")
 public class FundController extends BaseListableController<Fund> {
 
     @Autowired
@@ -68,6 +70,21 @@ public class FundController extends BaseListableController<Fund> {
     private Logger log = LoggerFactory.getLogger(FundController.class);
 
     private RestTemplate restTemplate = new RestTemplate();
+
+
+    @RequestMapping(value = "getFundList")
+    @ResponseBody
+    @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
+    public Object getFundList(){
+        List<Fund> funds = fundService.findAll();
+        List<ListItem> list = new ArrayList<ListItem>();
+        list.add(new ListItem("全部"," "));
+        for(Fund fund:funds){
+            list.add(new ListItem(fund.getFundName(), fund.getId().toString()));
+        }
+        return list;
+    }
+
 
     @RequestMapping(value = "detail", method = RequestMethod.GET)
     public ModelAndView detail(

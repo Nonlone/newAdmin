@@ -20,12 +20,17 @@ import com.feitai.admin.backend.loan.service.LoanOrderService;
 import com.feitai.admin.backend.loan.service.RepayPlanComponentService;
 import com.feitai.admin.backend.loan.service.RepayPlanService;
 import com.feitai.admin.backend.loan.vo.OrderPlande;
+import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
+import com.feitai.admin.backend.product.entity.ProductMore;
 import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
 import com.feitai.admin.backend.properties.MapProperties;
+import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
+import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
+import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.bank.model.BankSupport;
 import com.feitai.jieya.server.dao.card.model.Card;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
@@ -49,14 +54,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Controller
-@RequestMapping(value = "/admin/loan/loanOrder")
+@RequestMapping(value = "/backend/loan/loanOrder")
 @Slf4j
 public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
@@ -93,17 +95,28 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     @Autowired
     private FundService fundService;
 
-    //放款状态
-    private final ImmutableMap<Integer, String> immutableMap = ImmutableMap.<Integer, String>builder().put(10, "提现审批处理中").put(20, "待确认提现").put(30, "待放款").put(40, "放款处理中").put(50, "已放款/待还款").put(99, "已取消").put(100, "已结清").build();
-
 
     @RequestMapping(value = "")
     public String index(Model model) {
         String rejectCash = mapProperties.getRejectCash();
         model.addAttribute("rejectCash", rejectCash);
         model.addAttribute("isOut", false);
-        return "/admin/loan/loanOrder/index";
+        return "backend/loanOrder/index";
     }
+
+    @RequestMapping(value = "getLoanStatusList")
+    @ResponseBody
+    @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
+    public Object getLoanStatusList(){
+        Map<String,String> map = JSONObject.parseObject(mapProperties.getLoanStatus(), Map.class);
+        List<ListItem> list = new ArrayList<ListItem>();
+        list.add(new ListItem("全部"," "));
+        for (String key : map.keySet()) {
+            list.add(new ListItem(map.get(key),key));
+        }
+        return list;
+    }
+
 
 
     @RequiresPermissions("/admin/loan/loanOrder:list")
@@ -135,10 +148,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         //String json = "{\"serialNo\":\""+id+"\"}";
         //String result = HttpUtil.postByTypeIsJson(url, json);
 
-        LoanOrderMore one = this.loanOrderService.findOneBySql(getOneSql(id));
-        one.setCancelLoan(Byte.valueOf("1"));
-        this.loanOrderService.save(one);
-
         return BaseListableController.successResult;
     }
 
@@ -154,7 +163,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         Long userId = loanOrder.getUserId();
         User userIn = userService.findOne(userId);
         IdCardData idcard = idcardService.findByUserId(userId);
-        Product product = productService.findOne(loanOrder.getProductId());
+        ProductMore product = productService.findOne(loanOrder.getProductId());
 
         //获取产品详细信息，需要产品id和期数
         List<ProductTermFeeFeature> byProductIdAndTerm = productTermFeeFeatureService.findByProductIdAndTerm(loanOrder.getProductId(), loanOrder.getLoanTerm().shortValue());
@@ -169,26 +178,26 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
             model.addAttribute("bankCardNo", bankCardNo);
         }
 
-        model.addAttribute("loanOrder", loanOrder);
-        model.addAttribute("userIn", userIn);
-        model.addAttribute("idcard", idcard);
-        model.addAttribute("product", product);
-        if (byProductIdAndTerm.size() != 0) {
-            model.addAttribute("productIdAndTerm", byProductIdAndTerm.get(0));
+        model.addAttribute("loanOrder",loanOrder);
+        model.addAttribute("user",userIn);
+        model.addAttribute("idcard",idcard);
+        model.addAttribute("product",product);
+        if(byProductIdAndTerm.size()!=0){
+            model.addAttribute("productIdAndTerm",byProductIdAndTerm.get(0));
         }
         int year = new Date().getYear() - idcard.getBirthday().getYear();
-        model.addAttribute("year", year);
+        model.addAttribute("year",year);
         Integer status = loanOrder.getStatus();
-        String statu = immutableMap.get(status);
+        String statu = mapProperties.getloanStatus(status.toString());
 
         //授信
         Card card = cardService.findSingleById(loanOrder.getCardId());
-        if (card != null) {
+        if(card!=null){
             BigDecimal creditSum = card.getCreditSum();
-            model.addAttribute("shouxin", creditSum);
+            model.addAttribute("shouxin",creditSum);
         }
-        model.addAttribute("status", statu);
-        if (loanOrder.getBankCode() != null) {
+        model.addAttribute("status",statu);
+        if(loanOrder.getBankCode()!=null){
             BankSupport bankSuppor = bankSupportService.findByBankCode(loanOrder.getBankCode());
             model.addAttribute("bank", bankSuppor.getBankName());
         }
@@ -197,13 +206,13 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         //还款计划
         List<OrderPlande> orderPlandes = repayPlanComponentService.findOrderPlandesByRepayPlans(byLoanOrderId);
         model.addAttribute("repayPlan", orderPlandes);
-        if (loanOrder.getPayLoanTime() != null) {
-            model.addAttribute("payLoanTime", DateUtils.format(loanOrder.getPayLoanTime(), "yyyy-MM-dd HH:mm:ss"));
+        if(loanOrder.getPayLoanTime()!=null){
+            model.addAttribute("payLoanTime",DateUtils.format(loanOrder.getPayLoanTime(),"yyyy-MM-dd HH:mm:ss"));
         }
-        if (loanOrder.getApplyTime() != null) {
-            model.addAttribute("applyTime", DateUtils.format(loanOrder.getApplyTime(), "yyyy-MM-dd HH:mm:ss"));
+        if(loanOrder.getApplyTime()!=null){
+            model.addAttribute("applyTime",DateUtils.format(loanOrder.getApplyTime(),"yyyy-MM-dd HH:mm:ss"));
         }
-        return "/admin/loan/loanOrder/detail";
+        return "/backend/loanOrder/detail";
     }
 
     /**
@@ -220,78 +229,81 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Map<String, Object> listSup(ServletRequest request) {
         //根据request获取page
-        final Page<LoanOrderMore> listPage = super.list(request, getSql());
-        String list = JSON.toJSONString(listPage);
-        ;
-        List newList = new ArrayList();
-        Map mapList = JSON.parseObject(list, Map.class);
-        List<JSONObject> content = (List<JSONObject>) mapList.get("content");
+        int pageNo = PageBulider.getPageNo(request);
+        int pageSize = PageBulider.getPageSize(request);
+        Page<LoanOrderMore> loanOrderMorePage = list(getCommonSqls(request,getSelectMultiTable().buildSqlString()), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        List<LoanOrderMore> content = loanOrderMorePage.getContent();
+        List<JSONObject> resultList = new ArrayList<>();
+
         //遍历page中内容，修改或添加非数据库的自定义字段
-        for (JSONObject json :
+        for (LoanOrderMore loanOrderMore :
                 content) {
-            Map<String, Object> map = JSONObject.parseObject(json.toJSONString(), new TypeReference<Map<String, Object>>() {
-            });
-            List<ProductTermFeeFeature> search = new ArrayList<ProductTermFeeFeature>();
-            //productTermFeeFeature
-            Integer productId = (Integer) map.get("productId");
-            Integer loanTerm = (Integer) map.get("loanTerm");
-            Long cardId = (Long) map.get("cardId");
-
-            search = productTermFeeFeatureService.findByProductIdAndTerm(productId.longValue(), loanTerm.shortValue());
-
-            if (search.size() > 0) {
-                ProductTermFeeFeature productTermFeeFeature = search.get(0);
-                try {
-                    Map<String, Object> stringObjectMap = ObjectUtils.objectToMap(productTermFeeFeature);
-                    map.put("productTermFeeFeature", stringObjectMap);
-                } catch (Exception e) {
-                    log.error("", e);
-                }
+            JSONObject json = (JSONObject) JSON.toJSON(loanOrderMore);
+            try{
+                JSONObject jsonObject = handleSingleData(json);
+                resultList.add(jsonObject);
+            }catch (Exception e){
+                log.error("this json handle fail:[{}]! message:{}",json,e.getMessage());
+                continue;
             }
-
-            Integer payFundId = (Integer) map.get("payFundId");
-            if (payFundId != null) {
-                Fund fund = fundService.findOne(payFundId);
-                if (fund != null) {
-                    map.put("fundName", fund.getFundName());
-                }
-            } else {
-                map.put("fundName", "");
-            }
-
-            //授信
-            Card card = cardService.findSingleById(cardId);
-            if (card != null) {
-                BigDecimal creditSum = card.getCreditSum();
-                map.put("opencard.creditSum", creditSum);
-            }
-
-            Long applyTime = (Long) map.get("applyTime");
-            if (applyTime != null) {
-                Date date = new Date();
-                date.setTime(applyTime);
-                map.put("applyTime", date);
-            }
-
-            Long payLoanTime = (Long) map.get("payLoanTime");
-            if (payLoanTime != null) {
-                Date date = new Date();
-                date.setTime(payLoanTime);
-                map.put("payLoanTime", date);
-            }
-            newList.add(map);
         }
-        mapList.put("content", newList);
-        return mapList;
+        return switchContent(loanOrderMorePage,resultList);
     }
 
-    @Override
-    protected DynamitSupportService<LoanOrderMore> getService() {
-        return this.loanOrderService;
+    /***
+     * 处理单条数据
+     * @return
+     */
+    private JSONObject handleSingleData(JSONObject json){
+        List<ProductTermFeeFeature> search = new ArrayList<ProductTermFeeFeature>();
+        //productTermFeeFeature
+        Long productId = (Long) json.get("productId");
+        Integer loanTerm = (Integer)json.get("loanTerm");
+        Long cardId = (Long)json.get("cardId");
+
+        search = productTermFeeFeatureService.findByProductIdAndTerm(productId.longValue(),loanTerm.shortValue());
+
+        if(search.size()>0){
+            ProductTermFeeFeature productTermFeeFeature = search.get(0);
+            try {
+                Map<String, Object> stringObjectMap = ObjectUtils.objectToMap(productTermFeeFeature);
+                json.put("productTermFeeFeature",stringObjectMap);
+            }catch (Exception e){
+                log.error("productTermFeeFeature can't achieve",e);
+            }
+        }
+
+        Long payFundId = (Long) json.get("payFundId");
+        if(payFundId!=null){
+            Fund fund = fundService.findOne(payFundId);
+            if(fund!=null)
+                json.put("fundName",fund.getFundName());
+        }else{
+            json.put("fundName","");
+        }
+
+        //授信
+        Card card = cardService.findSingleById(cardId);
+        if(card!=null){
+            BigDecimal creditSum = card.getCreditSum();
+            json.put("card.creditSum",creditSum);
+            json.put("cardStatus",card.getStatus());
+            json.put("card",card);
+        }
+
+        return json;
     }
 
-    protected String getSql() {
-        String sql = SelectMultiTable.builder(LoanOrderMore.class)
+
+    private String getCountSqls(ServletRequest request) {
+        StringBuffer sbSql = new StringBuffer();
+        sbSql.append(SelectMultiTable.builder(LoanOrderMore.class).buildCountSqlString());
+        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
+        return sbSql.toString();
+    }
+
+    private SelectMultiTable getSelectMultiTable() {
+        return SelectMultiTable.builder(LoanOrderMore.class)
                 .leftJoin(RepayOrderMore.class, "repay_order", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "id", Operator.EQ, "loanOrderId"),
                 }).leftJoin(IdCardData.class, "idcard", new OnCondition[]{
@@ -302,8 +314,12 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "id")
                 }).leftJoin(Card.class, "opencard", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "userId")
-                }).buildSqlString();
-        return sql;
+                });
+    }
+
+    @Override
+    protected DynamitSupportService<LoanOrderMore> getService() {
+        return this.loanOrderService;
     }
 
 
@@ -321,12 +337,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "userId")
                 }).buildSqlString() + "where maintable.id = " + id + " Group by id";
         return sql;
-    }
-
-    @InitBinder
-    public void initDate(WebDataBinder webDataBinder) {
-        webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-        webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
     }
 
 }
