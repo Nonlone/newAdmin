@@ -1,4 +1,4 @@
-package com.feitai.admin.backend.web;
+package com.feitai.admin.backend.creditdata.web;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -19,7 +19,7 @@ import java.util.Map;
  * date:2018/8/28
  */
 @Controller
-@RequestMapping(value = "/admin/data/acquire")
+@RequestMapping(value = "/backend/data/acquire")
 public class CommonController {
 
     @Autowired

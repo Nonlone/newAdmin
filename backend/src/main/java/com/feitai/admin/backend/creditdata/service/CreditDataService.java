@@ -2,6 +2,7 @@ package com.feitai.admin.backend.creditdata.service;
 
 import com.feitai.admin.backend.creditdata.entity.CreditData;
 import com.feitai.admin.backend.creditdata.mapper.CreditDataMapper;
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import tk.mybatis.mapper.util.Sqls;
 import java.util.List;
 
 @Service
-public class CreditDataService extends DynamitSupportService<CreditData> {
+public class CreditDataService extends ClassPrefixDynamicSupportService<CreditData> {
 
 	@Autowired
 	private CreditDataMapper creditDataMapper;

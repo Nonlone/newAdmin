@@ -29,16 +29,11 @@ public class DataSourceConfiguration implements EnvironmentAware {
 
     private static final String ADMIN_DATASOURCE = "admin";
 
-    private static final String DEFAULT_ADMIN_PACKAGE = "com.feitai.admin.system";
+    private static final String DEFAULT_ADMIN_PACKAGE = "com.feitai.admin";
 
-    //服务端数据源
     private static final String BACKEND_DATASOURCE = "backend";
 
-    //服务端除dao包外自建的dao/mapper
-    private static final String DEFAULT_BACKEND_PACKAGE = "com.feitai.admin.backend";
-
-    //dao包默认package
-    private static final String DEFAULT_DAO_PACKAGE = "com.feitai.jieya.server.dao";
+    private static final String ORDER_CENTER_DATASOURCE = "orderCenter";
 
     private static final String DEFAULT_ADMIN_PACKAGE_PREFIX = DEFAULT_ADMIN_PACKAGE + ".";
 
@@ -66,8 +61,8 @@ public class DataSourceConfiguration implements EnvironmentAware {
                 //  服务端数据源
                 BACKEND_DATASOURCE
         ));
-        classPrefixMap.put(DEFAULT_DAO_PACKAGE, BACKEND_DATASOURCE);
-        classPrefixMap.put(DEFAULT_BACKEND_PACKAGE,BACKEND_DATASOURCE);
+        classPrefixMap.put("com.feitai.jieya.server.dao", BACKEND_DATASOURCE);
+        classPrefixMap.put("com.feitai.admin.backend.creditdata", ORDER_CENTER_DATASOURCE);
         return classPrefixMap;
     }
 

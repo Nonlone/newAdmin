@@ -8,6 +8,8 @@
 	<title><spring:eval expression="@webConf['admin.title']" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<%@include file="../../common/import-static.jsp"%>
+	<script type="text/javascript" src="${ctx}/static/artTemplate/dist/template.js"></script>
+	<script type="text/javascript" src="${ctx}/static/artTemplate/dist/template-native.js"></script>
 </head>
 <style type="text/css">
 	.photo-idcard{
@@ -218,10 +220,10 @@
 		</div>
 
 		<ul class="nav-tabs">
-			<li id="li_base" class="active"><a href="javascript:void(0)" onclick='loadAll("base")'>基本资料</a></li>
-			<li id="li_credit"><a href="javascript:void(0)" onclick='loadAll("credit")'>征信报告</a></li>
-			<li id="li_operator"><a href="javascript:void(0)" onclick='loadAll("operator")'>运营商报告</a></li>
-			<li id="li_bond"><a href="javascript:void(0)" onclick='loadAll("bond")'>贷后邦报告</a></li>
+			<li id="li_base" class="active"><a href="javascript:void(0)" onclick="loadAll('base')">基本资料</a></li>
+			<li id="li_credit"><a href="javascript:void(0)" onclick="loadAll('credit')">征信报告</a></li>
+			<li id="li_operator"><a href="javascript:void(0)" onclick="loadAll('operator')">运营商报告</a></li>
+			<li id="li_bond"><a href="javascript:void(0)" onclick="loadAll('bond')">贷后邦报告</a></li>
 		</ul>
 
 		<!-- 征信报告 -->
@@ -573,6 +575,7 @@
 
     });
 
+    var ctxStr = "${ctx}";
     var baseData = document.getElementById("baseData");
     var credit = document.getElementById("credit");
     var operator = document.getElementById("operator");
@@ -594,6 +597,7 @@
     }
 
     function loadAll(type) {
+        debugger;
         removeClassAddHidden();
         if(type=='base'){//基本资料
             baseData.removeAttribute("hidden");
@@ -672,7 +676,7 @@
         }
         $.ajax({
             type:"post",
-            url:"${ctx}/admin/data/acquire/getData",
+            url:"${ctx}/backend/data/acquire/getData",
             async:false,
             data:{cardId:"${card.id}",type:source},
             dataType: "json",
@@ -708,7 +712,7 @@
                     dataType: "html",
                     success: function(data){
                         var render = template.compile(data);
-                        template.helper("getCtx",function (${ctx}) {
+                        template.helper("getCtx",function (ctxStr) {
                             return ctx;
                         });
                         //人行时间格式化
