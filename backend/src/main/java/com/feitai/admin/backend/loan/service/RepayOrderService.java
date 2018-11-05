@@ -1,6 +1,7 @@
 package com.feitai.admin.backend.loan.service;
 
 import com.feitai.admin.backend.loan.entity.RepayOrderMore;
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
-public class RepayOrderService extends DynamitSupportService<RepayOrderMore> {
+public class RepayOrderService extends ClassPrefixDynamicSupportService<RepayOrderMore> {
 
 }

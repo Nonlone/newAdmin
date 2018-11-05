@@ -107,7 +107,7 @@
         window.open('${IP}'+'${ctx}/backend/opencard/detail/'+id);
     }
 
-    BUI.use(['bui/ux/crudgrid','bui/common/search','bui/common/page','bui/select','bui/data'],function (CrudGrid,Search,Grid,Select,Data) {
+    BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
 
 
         var selectStatusStore = new Data.Store({

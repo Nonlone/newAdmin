@@ -119,7 +119,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
 
 
-    @RequiresPermissions("/admin/loan/loanOrder:list")
+    @RequiresPermissions("/backend/loan/loanOrder:list")
     @RequestMapping(value = "list")
     @ResponseBody
     public Map<String, Object> listPage(ServletRequest request) {
@@ -141,7 +141,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
      * @return
      */
     @RequestMapping(value = "stopLoan/{id}", method = RequestMethod.POST)
-    @RequiresPermissions("/admin/loan/loanOrder:auth")
+    @RequiresPermissions("/backend/loan/loanOrder:auth")
     @ResponseBody
     public Object auth(@PathVariable("id") String id) {
         //String url = "http://10.168.2.207:9090/cash/reject";

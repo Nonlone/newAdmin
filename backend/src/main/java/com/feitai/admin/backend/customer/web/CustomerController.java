@@ -140,7 +140,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         //根据request获取page
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
-        Page<IdCardDataExtend> idCardPage = list(getSqls(request), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        Page<IdCardDataExtend> idCardPage = list(getCommonSqls(request, getSelectMultiTable().buildSqlString()), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
         List<IdCardDataExtend> idCardDataExtendList = idCardPage.getContent();
         List<JSONObject> resultList = new ArrayList();
         for (IdCardDataExtend idCardDataExtend : idCardDataExtendList) {
@@ -168,10 +168,9 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         Long userId = idCardDataExtend.getUserId();
 
         //年龄
-        int year = new Date().getYear() - idCardDataExtend.getBirthday().getYear();
-        model.addAttribute("year", year);
+        int ageByIdCard = IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard());
+        model.addAttribute("year", ageByIdCard);
         //生日
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         PersonData person = personService.findByUserId(userId);
 
         //婚姻状况最高学历
@@ -210,7 +209,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         }
         //model.addAttribute("huoti", livenessSelfieVerification.getVerifyScore());
 
-        model.addAttribute("birthday", format.format(idCardDataExtend.getBirthday()));
+        model.addAttribute("birthday", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
         model.addAttribute("person", person);
         model.addAttribute("marital", marital);
         model.addAttribute("educationLevel", educationLevel);
@@ -233,40 +232,13 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
                 });
     }
 
-    private String getSqls(ServletRequest request) {
-        StringBuffer sbSql = new StringBuffer();
-        sbSql.append(getSelectMultiTable().buildSqlString());
-        List<SearchParams> searchParamsList = bulidSearchParamsList(request);
-        searchParamsList.add(new SearchParams(IdCardData::getCertified, Operator.EQ, true));
-        sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
-        return sbSql.toString();
-    }
-
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
-        sbSql.append(getSelectMultiTable().buildCountSqlString());
+        sbSql.append((SelectMultiTable.builder(IdCardData.class)).buildCountSqlString());
         List<SearchParams> searchParamsList = bulidSearchParamsList(request);
         searchParamsList.add(new SearchParams(IdCardData::getCertified, Operator.EQ, Boolean.TRUE.toString()));
         sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
         return sbSql.toString();
     }
-
-
-    protected String getFindByIdSql(Object id) {
-        String sql = SelectMultiTable.builder(IdCardData.class)
-                .leftJoin(User.class, "user_in", new OnCondition[]{
-                        new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "id"),
-                }).buildSqlString() + " where maintable.id = '" + id + "'" + " GROUP BY maintable.id";
-        return sql;
-    }
-
-    protected String getFindByUserIdSql(Object userId) {
-        String sql = SelectMultiTable.builder(IdCardData.class)
-                .leftJoin(User.class, "user_in", new OnCondition[]{
-                        new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "id"),
-                }).buildSqlString() + " where maintable.user_id = '" + userId + "'" + " GROUP BY maintable.id";
-        return sql;
-    }
-
 
 }
