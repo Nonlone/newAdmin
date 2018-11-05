@@ -8,8 +8,6 @@
 	<title><spring:eval expression="@webConf['admin.title']" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<%@include file="../../common/import-static.jsp"%>
-	<script type="text/javascript" src="${ctx}/static/artTemplate/dist/template.js"></script>
-	<script type="text/javascript" src="${ctx}/static/artTemplate/dist/template-native.js"></script>
 </head>
 <style type="text/css">
 	.photo-idcard{
@@ -229,7 +227,7 @@
 		<!-- 征信报告 -->
 		<div id="credit" hidden="true">
 
-			<script type="text/html" src="${ctx}/static/artTemplate/templateTest.tpl"></script>
+			<script type="text/html" src="${ctx}/static/artTemplate/template/creditTemplate.tpl"></script>
 
 		</div>
 
@@ -241,7 +239,7 @@
 		<!-- 贷后邦报告 -->
 		<div id="bond" hidden="true">
 
-			<script type="text/html" src="${ctx}/static/artTemplate/templateTest2.tpl"></script>
+			<script type="text/html" src="${ctx}/static/artTemplate/template/templateTest.tpl"></script>
 
 		</div>
 

@@ -35,7 +35,7 @@ public class CommonController {
      */
     @RequestMapping(value = "getData",method = RequestMethod.POST)
     @ResponseBody
-    public String getBond(ServletRequest request) {
+    public Object getData(ServletRequest request) {
         String cardId = request.getParameter("cardId");
         String type = request.getParameter("type");
         String source = "";
@@ -43,7 +43,7 @@ public class CommonController {
             case "bond"://贷后邦
                 source = "DAIHOUBANG";
                 break;
-            case "creditdata"://征信
+            case "credit"://征信
                 source = "SUANHUA";
                 break;
         }
@@ -52,7 +52,7 @@ public class CommonController {
            String message = AuthdataMoxieService.getMessageByCardId(cardId);
             JSONObject object = new JSONObject();
             object.put("message",message);
-            return object.toJSONString();
+            return object;
         } else {
             json = creditDataService.findByCardIdAndSource(Long.parseLong(cardId), source);
 
@@ -66,10 +66,9 @@ public class CommonController {
                 String user_idcard = (String) map.get("user_idcard");
                 String hyIdcard = Desensitization.idCard(user_idcard);
                 map.replace("user_idcard", user_idcard, hyIdcard);
-                json = JSON.toJSONString(map);
+                return map;
             }
-
         }
-        return json;
+        return JSON.parseObject(json, Map.class);
     }
 }

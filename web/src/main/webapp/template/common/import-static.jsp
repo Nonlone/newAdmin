@@ -5,6 +5,7 @@
 <link href="${ctx}/static/bui/css/${skin}/page-min.css" rel="stylesheet" type="text/css"/>
 <link href="${ctx}/static/iconfont/css/iconfont.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="${ctx}/static/common/js/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" src="${ctx}/static/artTemplate/dist/template.js"></script>
 <script type="text/javascript" src="${ctx}/static/bui/bui-min.js"></script>
 
 <script>
