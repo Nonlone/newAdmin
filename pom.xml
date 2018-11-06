@@ -23,7 +23,7 @@
         <repository>
             <id>feitai-maven</id>
             <name>feitai-maven</name>
-            <url>http://10.168.2.202:8081/nexus/content/groups/public/</url>
+            <url>http://maven.feitai.info/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -31,7 +31,6 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-
     </repositories>
 
     <properties>
