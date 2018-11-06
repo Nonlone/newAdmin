@@ -1,5 +1,6 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<base href="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/">
 <link href="${ctx}/static/bui/css/${skin}/bs3/dpl-min.css" rel="stylesheet" type="text/css"/>
 <link href="${ctx}/static/bui/css/${skin}/bs3/bui-min.css" rel="stylesheet" type="text/css"/>
 <link href="${ctx}/static/bui/css/${skin}/page-min.css" rel="stylesheet" type="text/css"/>
@@ -7,7 +8,6 @@
 <script type="text/javascript" src="${ctx}/static/common/js/jquery-1.8.1.min.js"></script>
 <script type="text/javascript" src="${ctx}/static/artTemplate/dist/template.js"></script>
 <script type="text/javascript" src="${ctx}/static/bui/bui-min.js"></script>
-
 <script>
     var ctx = '${pageContext.request.contextPath}';
     BUI.actions = {};
