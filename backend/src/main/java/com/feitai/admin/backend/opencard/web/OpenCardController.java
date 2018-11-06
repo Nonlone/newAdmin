@@ -16,7 +16,6 @@ import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
-import com.feitai.admin.backend.product.entity.ProductMore;
 import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.backend.service.AttachPhotoService;
 import com.feitai.admin.core.annotation.LogAnnotation;
@@ -211,7 +210,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
         }
 
         //相片地址
-        List<PhotoAttach> photos = attachPhotoService.findByUserId(userId);
+        List<PhotoAttach> photos = attachPhotoService.findUserPhotoByUserId(userId);
         for (PhotoAttach attachPhoto : photos) {
             model.addAttribute("photo" + attachPhoto.getType(), attachPhoto.getPath());
         }
@@ -234,7 +233,6 @@ public class OpenCardController extends BaseListableController<CardMore> {
             model.addAttribute("gongan", livenessIdnumberVerification.getVerifyScore() * 100);
         }
         if (livenessSelfieVerification == null) {
-
             model.addAttribute("huoti", "未对比");
         } else {
 
@@ -267,11 +265,9 @@ public class OpenCardController extends BaseListableController<CardMore> {
         Date createdTime = card.getCreatedTime();
         String cardStartTm = formatDate.format(createdTime);
 
-
         //提交审批时间
         String submitTime = " ";
         if (card.getSubmitTime() != null) {
-
             Date submitData = card.getSubmitTime();
             submitTime = formatDate.format(submitData);
         }
