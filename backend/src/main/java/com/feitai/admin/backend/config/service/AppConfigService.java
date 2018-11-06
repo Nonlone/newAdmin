@@ -7,6 +7,7 @@
 
 package com.feitai.admin.backend.config.service;
 
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.appconfig.mapper.AppConfigMapper;
 import com.feitai.jieya.server.dao.appconfig.model.AppConfig;
@@ -19,7 +20,7 @@ import tk.mybatis.mapper.util.Sqls;
 
 @Service
 @Slf4j
-public class AppConfigService extends DynamitSupportService<AppConfig> {
+public class AppConfigService extends ClassPrefixDynamicSupportService<AppConfig> {
 
     @Autowired
     private AppConfigMapper appConfigMapper;

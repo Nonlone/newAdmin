@@ -17,6 +17,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -231,7 +232,8 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
         }
         for (SearchParams searchParams : searchParamsList) {
             if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                sql.append(" where 1=1 ");
+                long code = System.currentTimeMillis();
+                sql.append(" where "+code+"="+code+" ");
                 break;
             }
         }

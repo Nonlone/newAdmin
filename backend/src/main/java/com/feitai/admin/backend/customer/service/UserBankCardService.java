@@ -7,6 +7,7 @@
 
 package com.feitai.admin.backend.customer.service;
 
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.bank.model.UserBankCard;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class UserBankCardService extends DynamitSupportService<UserBankCard> {
+public class UserBankCardService extends ClassPrefixDynamicSupportService<UserBankCard> {
 
     public List<UserBankCard> findByUserIdAndPay(Long id) {
 		Example example = Example.builder(UserBankCard.class).andWhere(Sqls.custom().andEqualTo("id",id).andEqualTo("pay","1")).build();

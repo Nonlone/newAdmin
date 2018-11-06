@@ -27,13 +27,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 @Controller
-@RequestMapping(value = "/backend/config")
+@RequestMapping(value = "/backend/appConfig")
 @Slf4j
 public class AppConfigController extends BaseListableController<AppConfig> {
 
@@ -43,7 +44,7 @@ public class AppConfigController extends BaseListableController<AppConfig> {
     private AppConfigTypeService appConfigTypeService;
 
 
-    @RequestMapping(value = "index")
+    @RequestMapping(value = "")
     public String index(Model model) {
         Map<String, String> configTypeMap = new HashMap<String, String>();
         List<AppConfigType> allAppConfigType = appConfigTypeService.findAll();//所以的app配置类型
@@ -58,18 +59,18 @@ public class AppConfigController extends BaseListableController<AppConfig> {
         configTypeMapJson = JSON.toJSONString(configTypeMap);
         configTypeMapJsonSingle = configTypeMapJson.replaceAll("\"", "\'");
         model.addAttribute("configTypeMapSearch", configTypeMapJsonSingle);
-        return "/admin/config/appConfig/index";
+        return "/backend/appConfig/index";
     }
 
     @Override
-    @RequiresPermissions("/admin/config/appConfig:list")
+    @RequiresPermissions("/backend/appConfig:list")
     @RequestMapping(value = "list")
     @ResponseBody
     public Page<AppConfig> list(ServletRequest request) {
         return super.list(request);
     }
 
-    @RequiresPermissions("/admin/config/appConfig:update")
+    @RequiresPermissions("/backend/appConfig:update")
     @RequestMapping(value = "update/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Object editFrom(@PathVariable("id") Long id) {
@@ -77,16 +78,17 @@ public class AppConfigController extends BaseListableController<AppConfig> {
         return appConfig;
     }
 
-    @RequiresPermissions("/admin/config/appConfig:add")
+    @RequiresPermissions("/backend/appConfig:add")
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(@Valid AppConfig appConfig) {
         appConfig.setId(SnowFlakeIdGenerator.getDefaultNextId());
+        appConfig.setUpdateTime(new Date());
         this.appConfigService.save(appConfig);
         return BaseListableController.successResult;
     }
 
-    @RequiresPermissions("/admin/config/appConfig:update")
+    @RequiresPermissions("/backend/appConfig:update")
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
     public Object update(@Valid @ModelAttribute AppConfig appConfig) {
@@ -94,7 +96,7 @@ public class AppConfigController extends BaseListableController<AppConfig> {
         return BaseListableController.successResult;
     }
 
-    @RequiresPermissions("/admin/config/appConfig:del")
+    @RequiresPermissions("/backend/appConfig:del")
     @RequestMapping(value = "del")
     @ResponseBody
     public Object del(@RequestParam(value = "ids[]") Long[] ids) {
@@ -117,12 +119,6 @@ public class AppConfigController extends BaseListableController<AppConfig> {
     @Override
     protected DynamitSupportService<AppConfig> getService() {
         return this.appConfigService;
-    }
-
-    @InitBinder
-    public void initDate(WebDataBinder webDataBinder) {
-        webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-        webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
     }
 
 }

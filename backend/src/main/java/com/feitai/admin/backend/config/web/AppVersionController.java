@@ -7,6 +7,7 @@
 
 package com.feitai.admin.backend.config.web;
 
+import com.alibaba.fastjson.JSON;
 import com.feitai.admin.backend.config.service.AppVersionService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
@@ -24,10 +25,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
-@RequestMapping(value = "/admin/config/appVersion")
+@RequestMapping(value = "/backend/appVersion")
 @Slf4j
 public class AppVersionController extends BaseListableController<AppVersion> {
 
@@ -35,11 +39,27 @@ public class AppVersionController extends BaseListableController<AppVersion> {
 	private AppVersionService appVersionService;
 	
 	@RequestMapping(value = "")
-	public String index() {
-		return "/admin/config/appVersion/index";
+	public String index(Model model) {
+		List<AppVersion> appVersions = appVersionService.findAll();
+		Map<String,String> osTypeMap = new HashMap<>();
+		Map<String,String> versionMap = new HashMap<>();
+		Map<String,String> versionNumMap = new HashMap<>();
+		for (AppVersion appVersion:appVersions){
+			osTypeMap.put(appVersion.getOsType(),appVersion.getOsType());
+			versionMap.put(appVersion.getVersion(),appVersion.getVersion());
+			versionNumMap.put(appVersion.getVersionNum().toString(),appVersion.getVersionNum().toString());
+		}
+		String osTypes = JSON.toJSONString(osTypeMap);
+		String versions = JSON.toJSONString(versionMap);
+		String versionNums = JSON.toJSONString(versionNumMap);
+
+		model.addAttribute("osTypes",osTypes);
+		model.addAttribute("versions",versions);
+		model.addAttribute("versionNums",versionNums);
+		return "/backend/appVersion/index";
 	}
 	
-	@RequiresPermissions("/admin/config/appVersion:list")
+	@RequiresPermissions("/backend/appVersion:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
@@ -47,7 +67,7 @@ public class AppVersionController extends BaseListableController<AppVersion> {
 		return listPage;
 	}
 	
-	@RequiresPermissions("/admin/config/appVersion:update")
+	@RequiresPermissions("/backend/appVersion:update")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("id") Long id) {
@@ -55,7 +75,7 @@ public class AppVersionController extends BaseListableController<AppVersion> {
 		return appVersion;
 	}
 	
-	@RequiresPermissions("/admin/config/appVersion:add")
+	@RequiresPermissions("/backend/appVersion:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid AppVersion appVersion){
@@ -64,7 +84,7 @@ public class AppVersionController extends BaseListableController<AppVersion> {
 		return BaseListableController.successResult;
 	}
 	
-	@RequiresPermissions("/admin/config/appVersion:update")
+	@RequiresPermissions("/backend/appVersion:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("appVersion") AppVersion appVersion){
@@ -72,7 +92,7 @@ public class AppVersionController extends BaseListableController<AppVersion> {
 		return BaseListableController.successResult;
 	}
 	
-	@RequiresPermissions("/admin/config/appVersion:del")
+	@RequiresPermissions("/backend/appVersion:del")
 	@RequestMapping(value = "del")
 	@ResponseBody
 	public Object del(@RequestParam(value = "ids[]") Long[] ids){
@@ -101,9 +121,4 @@ public class AppVersionController extends BaseListableController<AppVersion> {
 		return null;
 	}
 
-	@InitBinder
-	public void initDate(WebDataBinder webDataBinder){
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-	}
 }

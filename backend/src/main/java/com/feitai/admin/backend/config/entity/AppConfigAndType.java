@@ -14,7 +14,7 @@ import java.util.List;
  * date:2018/10/12
  */
 @Data
-public class AppConfigAndType extends AppConfigType {
+public class AppConfigAndType extends AppConfigType{
 
     @Transient
     @Many(classOfEntity = AppConfig.class, classOfMapper = AppConfigMapper.class, sourceField = "typeCode", targetField = "typeCode")

@@ -31,7 +31,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping(value = "/admin/config/appConfigType")
+@RequestMapping(value = "/backend/appConfigType")
 @Slf4j
 public class AppConfigTypeController extends BaseListableController<AppConfigType> {
 
@@ -40,18 +40,18 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	
 	@RequestMapping(value = "")
 	public String index() {
-		return "/admin/config/appConfigType/index";
+		return "/backend/appConfigType/index";
 	}
 	
-	@RequiresPermissions("/admin/config/appConfigType:list")
+	@RequiresPermissions("/backend/appConfigType:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
-		Page<AppConfigType> listPage = super.list(request,getSql());
+		Page<AppConfigType> listPage = super.listBySql(request,getSql());
 		return listPage;
 	}
 	
-	@RequiresPermissions("/admin/sys/dictionary:list")
+	@RequiresPermissions("/backend/appConfigType:list")
 	@RequestMapping(value = "listAll")
 	@ResponseBody
 	@LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
@@ -60,7 +60,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 		return list;
 	}
 	
-	@RequiresPermissions("/admin/config/appConfigType:update")
+	@RequiresPermissions("/backend/appConfigType:update")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("typeCode") String typeCode) {
@@ -69,7 +69,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 		return appConfigType;
 	}
 
-	@RequiresPermissions("/admin/config/appConfigType:add")
+	@RequiresPermissions("/backend/appConfigType:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(HttpServletRequest request,HttpServletResponse response){
@@ -86,7 +86,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 		return BaseListableController.successResult;
 	}
 
-	@RequiresPermissions("/admin/config/appConfigType:update")
+	@RequiresPermissions("/backend/appConfigType:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(HttpServletRequest request,HttpServletResponse response){
@@ -102,7 +102,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 		return BaseListableController.successResult;
 	}
 
-	@RequiresPermissions("/admin/config/appConfigType:del")
+	@RequiresPermissions("/backend/appConfigType:del")
 	@RequestMapping(value = "del")
 	@ResponseBody
 	public Object del(@RequestParam(value = "typeCodes[]") String[] ids){
@@ -141,12 +141,6 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 						new OnCondition(SelectMultiTable.ConnectType.AND, "typeCode", Operator.EQ, "typeCode"),
 				}).buildSqlString()+"where maintable.type_Code = '"+typeCode+"' GROUP BY type_code";
 		return sql;
-	}
-
-	@InitBinder
-	public void initDate(WebDataBinder webDataBinder){
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
 	}
 
 }

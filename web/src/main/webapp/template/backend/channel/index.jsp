@@ -143,7 +143,7 @@
         var channelIdValue,channelSortValue,code;
         if(primaryName!=null||primaryName!=""){
             $.ajax({
-                url: "${ctx}/admin/app/channel/getPrimaryChannel/"+primaryName,
+                url: "${ctx}/backend/channel/getPrimaryChannel/"+primaryName,
                 type:"GET",
                 async:false,
                 success:function (data) {
@@ -189,11 +189,11 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 	//定义页面权限
 	var add=false,update=false,del=false,list=false;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-	<framwork:crudPermission resource="/admin/app/channel"/>
+	<framwork:crudPermission resource="/backend/channel"/>
 
     //一级渠道选择框
     var selectStore = new Data.Store({
-        url : '${ctx}/admin/app/channel/primaryList',
+        url : '${ctx}/backend/channel/primaryList',
         autoLoad : true
     });
 
@@ -217,10 +217,10 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 	var crudGrid = new CrudGrid({
 		entityName : 'Channel',
     	pkColumn : 'id',//主键
-      	storeUrl : '${ctx}/admin/app/channel/list',
-        addUrl : '${ctx}/admin/app/channel/add',
-        updateUrl : '${ctx}/admin/app/channel/update',
-        removeUrl : '${ctx}/admin/app/channel/del',
+      	storeUrl : '${ctx}/backend/channel/list',
+        addUrl : '${ctx}/backend/channel/add',
+        updateUrl : '${ctx}/backend/channel/update',
+        removeUrl : '${ctx}/backend/channel/del',
         columns : columns,
 		showAddBtn : add,
 		showUpdateBtn : update,
@@ -249,12 +249,12 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
         mainPackageValue = "null";
 	}
     var subPackageValue = document.getElementById("subPackage").value;
-    var url = "${ctx}/admin/app/channel/checkChannelName/"+mainPackageValue;
+    var url = "${ctx}/backend/channel/checkChannelName/"+mainPackageValue;
 
     mainPackgage.on('change',function(){
         debugger;
         mainPackageValue = document.getElementById("mainPackgage").value;
-        url = "${ctx}/admin/app/channel/checkChannelName/"+mainPackageValue;
+        url = "${ctx}/backend/channel/checkChannelName/"+mainPackageValue;
         subPackage.set('remote',{
             url:url,
             type:"POST",

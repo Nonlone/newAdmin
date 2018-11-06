@@ -7,6 +7,7 @@
 
 package com.feitai.admin.backend.customer.service;
 
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
 import com.feitai.jieya.server.dao.data.model.PersonData;
@@ -20,7 +21,7 @@ import tk.mybatis.mapper.util.Sqls;
 
 @Service
 @Slf4j
-public class PersonService extends DynamitSupportService<PersonData> {
+public class PersonService extends ClassPrefixDynamicSupportService<PersonData> {
 
 
 	public PersonData findByUserId(Long id) {

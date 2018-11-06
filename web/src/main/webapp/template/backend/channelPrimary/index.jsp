@@ -63,7 +63,7 @@
 				<div class="control-group span8">
 					<label class="control-label"><s>*</s>渠道名称:</label>
 					<div class="controls">
-						<input name="primaryChannelName" type="text" data-rules="{required:true}" data-remote="${ctx}/admin/app/channelPrimary/checkChannelName" class="input-normal control-text">
+						<input name="primaryChannelName" type="text" data-rules="{required:true}" data-remote="${ctx}/backend/channelPrimary/checkChannelName" class="input-normal control-text">
 					</div>
 				</div>
 			</div>
@@ -91,7 +91,7 @@
     function getNextCode(){
         var nextCode;
         $.ajax({
-            url: "${ctx}/admin/app/channelPrimary/getNextCode",
+            url: "${ctx}/backend/channelPrimary/getNextCode",
             type:"GET",
 			async:false,
             cache:false,
@@ -115,7 +115,7 @@ BUI.use(['bui/ux/crudgrid'],function (CrudGrid) {
 	//定义页面权限
 	var add=false,update=false,del=false,list=false;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-	<framwork:crudPermission resource="/admin/app/channelPrimary"/>
+	<framwork:crudPermission resource="/backend/channelPrimary"/>
 
     var columns = [
 		 {title:'id',dataIndex:'id',width:'10%'},
@@ -129,10 +129,10 @@ BUI.use(['bui/ux/crudgrid'],function (CrudGrid) {
 	var crudGrid = new CrudGrid({
 		entityName : '一级渠道',
     	pkColumn : 'id',//主键
-      	storeUrl : '${ctx}/admin/app/channelPrimary/list',
-        addUrl : '${ctx}/admin/app/channelPrimary/add',
-        updateUrl : '${ctx}/admin/app/channelPrimary/update',
-        removeUrl : '${ctx}/admin/app/channelPrimary/del',
+      	storeUrl : '${ctx}/backend/channelPrimary/list',
+        addUrl : '${ctx}/backend/channelPrimary/add',
+        updateUrl : '${ctx}/backend/channelPrimary/update',
+        removeUrl : '${ctx}/backend/channelPrimary/del',
         columns : columns,
 		showAddBtn : add,
 		showUpdateBtn : update,

@@ -29,7 +29,7 @@ import java.util.Date;
 
 
 @Controller
-@RequestMapping(value = "/admin/content/notice")
+@RequestMapping(value = "/backend/notice")
 @Slf4j
 public class NoticeController extends BaseListableController<Notice> {
 	@Autowired
@@ -37,10 +37,10 @@ public class NoticeController extends BaseListableController<Notice> {
 	
 	@RequestMapping(value = "")
 	public String index() {
-		return "/admin/content/notice/index";
+		return "/backend/notice/index";
 	}
 	
-	@RequiresPermissions("/admin/content/notice:list")
+	@RequiresPermissions("/backend/notice:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
@@ -48,7 +48,7 @@ public class NoticeController extends BaseListableController<Notice> {
 		return listPage;
 	}
 	
-	@RequiresPermissions("/admin/content/notice:update")
+	@RequiresPermissions("/backend/notice:update")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("id") Long id) {
@@ -56,7 +56,7 @@ public class NoticeController extends BaseListableController<Notice> {
 		return notice;
 	}
 	
-	@RequiresPermissions("/admin/content/notice:add")
+	@RequiresPermissions("/backend/notice:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid Notice notice){
@@ -67,7 +67,7 @@ public class NoticeController extends BaseListableController<Notice> {
 		return successResult;
 	}
 	
-	@RequiresPermissions("/admin/content/notice:update")
+	@RequiresPermissions("/backend/notice:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute Notice notice, Model model){
@@ -75,7 +75,7 @@ public class NoticeController extends BaseListableController<Notice> {
 		return successResult;
 	}
 	
-	@RequiresPermissions("/admin/content/notice:del")
+	@RequiresPermissions("/backend/notice:del")
 	@RequestMapping(value = "del")
 	@ResponseBody
 	public Object del(@RequestParam(value = "ids[]") Long[] ids){
@@ -100,10 +100,4 @@ public class NoticeController extends BaseListableController<Notice> {
 		return this.noticeService;
 	}
 
-
-	@InitBinder
-	public void initDate(WebDataBinder webDataBinder){
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-	}
 }

@@ -28,7 +28,7 @@ import java.util.Date;
 
 
 @Controller
-@RequestMapping(value = "/admin/config/channelPrimary")
+@RequestMapping(value = "/backend/channelPrimary")
 @Slf4j
 public class ChannelPrimaryController extends BaseListableController<ChannelPrimary> {
 
@@ -37,10 +37,10 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 	
 	@RequestMapping(value = "")
 	public String index() {
-		return "/admin/config/channelPrimary/index";
+		return "/backend/channelPrimary/index";
 	}
 	
-	@RequiresPermissions("/admin/config/channelPrimary:list")
+	@RequiresPermissions("/backend/channelPrimary:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request, Model model) {
@@ -57,7 +57,7 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 		return successResult;
 	}
 
-	@RequiresPermissions("/admin/config/channelPrimary:update")
+	@RequiresPermissions("/backend/channelPrimary:update")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("id") Long id) {
@@ -65,7 +65,7 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 		return channelPrimary;
 	}
 
-	@RequiresPermissions("/admin/config/channelPrimary:update")
+	@RequiresPermissions("/backend/channelPrimary:update")
 	@RequestMapping(value = "checkChannelName")
 	@ResponseBody
 	public Object checkChannelName(@RequestParam String primaryChannelName) {
@@ -77,7 +77,7 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 		}
 	}
 
-	@RequiresPermissions("/admin/config/channelPrimary:add")
+	@RequiresPermissions("/backend/channelPrimary:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid ChannelPrimary channelPrimary){
@@ -88,7 +88,7 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 
 	}
 
-	@RequiresPermissions("/admin/config/channelPrimary:update")
+	@RequiresPermissions("/backend/channelPrimary:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("channelPrimary") ChannelPrimary channelPrimary){
@@ -97,7 +97,7 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 		return this.successResult;
 	}
 	
-	@RequiresPermissions("/admin/config/channelPrimary:del")
+	@RequiresPermissions("/backend/channelPrimary:del")
 	@RequestMapping(value = "del")
 	@ResponseBody
 	public Object del(@RequestParam(value = "ids[]") Long[] ids){
@@ -120,12 +120,6 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 	@Override
 	protected DynamitSupportService<ChannelPrimary> getService() {
 		return this.channelPrimaryService;
-	}
-
-	@InitBinder
-	public void initDate(WebDataBinder webDataBinder){
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
 	}
 
 }

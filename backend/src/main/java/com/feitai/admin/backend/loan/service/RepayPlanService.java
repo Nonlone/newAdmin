@@ -1,5 +1,6 @@
 package com.feitai.admin.backend.loan.service;
 
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.loan.model.RepayPlan;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class RepayPlanService extends DynamitSupportService<RepayPlan> {
+public class RepayPlanService extends ClassPrefixDynamicSupportService<RepayPlan> {
 
 	public List<RepayPlan> findByLoanOrderId(Long loanOrderId){
 		Example example = Example.builder(RepayPlan.class).andWhere(Sqls.custom().andEqualTo("loanOrderId",loanOrderId)).build();

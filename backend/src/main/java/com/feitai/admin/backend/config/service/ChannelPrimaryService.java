@@ -2,6 +2,7 @@ package com.feitai.admin.backend.config.service;
 
 import com.feitai.admin.backend.config.entity.ChannelPrimary;
 import com.feitai.admin.backend.config.mapper.ChannelPrimaryMapper;
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class ChannelPrimaryService extends DynamitSupportService<ChannelPrimary> {
+public class ChannelPrimaryService extends ClassPrefixDynamicSupportService<ChannelPrimary> {
 
     private final Integer startCode = 1000;
 

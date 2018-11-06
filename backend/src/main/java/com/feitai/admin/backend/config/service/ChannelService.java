@@ -7,6 +7,9 @@
 
 package com.feitai.admin.backend.config.service;
 
+import com.feitai.admin.backend.config.entity.ChannelCms;
+import com.feitai.admin.backend.config.mapper.ChannelCmsMapper;
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.channel.mapper.ChannelMapper;
 import com.feitai.jieya.server.dao.channel.model.Channel;
@@ -18,13 +21,13 @@ import tk.mybatis.mapper.util.Sqls;
 
 @Service
 @Slf4j
-public class ChannelService extends DynamitSupportService<Channel> {
+public class ChannelService extends ClassPrefixDynamicSupportService<Channel> {
 
     @Autowired
-    private ChannelMapper channelMapper;
+    private ChannelCmsMapper channelCmsMapper;
 
-    public Channel findBySubPackage(String subPackage) {
-        Example example = Example.builder(Channel.class).andWhere(Sqls.custom().andEqualTo("subPackage",subPackage)).build();
-        return channelMapper.selectOneByExample(example);
+    public ChannelCms findBySubPackageAndMainPackage(String subPackage, String mainPackage) {
+        Example example = Example.builder(ChannelCms.class).andWhere(Sqls.custom().andEqualTo("subPackage",subPackage).andEqualTo("mainPackgage",mainPackage)).build();
+        return channelCmsMapper.selectOneByExample(example);
     }
 }

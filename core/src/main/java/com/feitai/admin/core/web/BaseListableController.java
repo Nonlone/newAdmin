@@ -54,6 +54,12 @@ public abstract class BaseListableController<T> extends BaseController {
         return buildSearchParams(WebUtils.getParametersStartingWith(request, prefix));
     }
 
+    protected Page<T> listBySql(ServletRequest request, String sql){
+        int pageNo = PageBulider.getPageNo(request);
+        int pageSize = PageBulider.getPageSize(request);
+        return buildPage(getService().findAllBySqls(sql, pageNo, pageSize), pageNo, pageSize);
+    }
+
     /***
      * 多表搜索，需提供select语句主体
      * @param request

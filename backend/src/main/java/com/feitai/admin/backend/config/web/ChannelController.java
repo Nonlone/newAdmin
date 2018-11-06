@@ -31,7 +31,7 @@ import java.util.*;
 
 
 @Controller
-@RequestMapping(value = "/admin/config/channel")
+@RequestMapping(value = "/backend/channel")
 @Slf4j
 public class ChannelController extends BaseListableController<Channel> {
 
@@ -43,13 +43,16 @@ public class ChannelController extends BaseListableController<Channel> {
 	
 	@RequestMapping(value = "")
 	public String index() {
-		return "/admin/config/channel/index";
+		return "/backend/channel/index";
 	}
 
-	@RequestMapping(value = "checkChannelName")
+	@RequestMapping(value = "checkChannelName/{mainPackage}", method = RequestMethod.POST)
 	@ResponseBody
-	public Object checkChannelName(@RequestParam String subPackage) {
-		Channel channel = this.channelService.findBySubPackage(subPackage);
+	public Object checkChannelName(@RequestParam String subPackage, @PathVariable String mainPackage) {
+		if(mainPackage.equals("null")){
+			return "请先选择一级渠道";
+		}
+		Channel channel = this.channelService.findBySubPackageAndMainPackage(subPackage,mainPackage);
 		if (channel == null) {
 			return null;
 		} else {
@@ -79,7 +82,7 @@ public class ChannelController extends BaseListableController<Channel> {
 		return list;
 	}
 
-	@RequiresPermissions("/admin/config/channel:list")
+	@RequiresPermissions("/backend/channel:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
@@ -87,7 +90,7 @@ public class ChannelController extends BaseListableController<Channel> {
 		return listPage;
 	}
 	
-	@RequiresPermissions("/admin/config/channel:update")
+	@RequiresPermissions("/backend/channel:update")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("id") Long id) {
@@ -95,7 +98,7 @@ public class ChannelController extends BaseListableController<Channel> {
 		return channel;
 	}
 	
-	@RequiresPermissions("/admin/config/channel:add")
+	@RequiresPermissions("/backend/channel:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid Channel channel){
@@ -105,7 +108,7 @@ public class ChannelController extends BaseListableController<Channel> {
 		return BaseListableController.successResult;
 	}
 	
-	@RequiresPermissions("/admin/config/channel:update")
+	@RequiresPermissions("/backend/channel:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("channel") Channel channel){
@@ -114,7 +117,7 @@ public class ChannelController extends BaseListableController<Channel> {
 		return BaseListableController.successResult;
 	}
 	
-	@RequiresPermissions("/admin/config/channel:del")
+	@RequiresPermissions("/backend/channel:del")
 	@RequestMapping(value = "del")
 	@ResponseBody
 	public Object del(@RequestParam(value = "ids[]") Long[] ids){
@@ -139,10 +142,4 @@ public class ChannelController extends BaseListableController<Channel> {
 		return this.channelService;
 	}
 
-	@InitBinder
-	public void initDate(WebDataBinder webDataBinder){
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-	}
-	
 }

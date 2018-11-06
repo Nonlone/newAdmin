@@ -26,7 +26,7 @@ import javax.validation.Valid;
 
 
 @Controller
-@RequestMapping(value = "/admin/content/advertise")
+@RequestMapping(value = "/backend/advertise")
 @Slf4j
 public class AdvertiseController extends BaseListableController<Advertise> {
     @Autowired
@@ -34,17 +34,17 @@ public class AdvertiseController extends BaseListableController<Advertise> {
 
     @RequestMapping(value = "")
     public String index() {
-        return "/admin/content/advertise/index";
+        return "/backend/advertise/index";
     }
 
-    @RequiresPermissions("/admin/content/advertise:list")
+    @RequiresPermissions("/backend/advertise:list")
     @RequestMapping(value = "list")
     @ResponseBody
     public Object listPage(ServletRequest request) {
         return list(request);
     }
 
-    @RequiresPermissions("/admin/content/advertise:update")
+    @RequiresPermissions("/backend/advertise:update")
     @RequestMapping(value = "update/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Object editFrom(@PathVariable("id") Long id) {
@@ -52,7 +52,7 @@ public class AdvertiseController extends BaseListableController<Advertise> {
         return advertise;
     }
 
-    @RequiresPermissions("/admin/content/advertise:add")
+    @RequiresPermissions("/backend/advertise:add")
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(@Valid @ModelAttribute Advertise advertise) {
@@ -61,7 +61,7 @@ public class AdvertiseController extends BaseListableController<Advertise> {
         return successResult;
     }
 
-    @RequiresPermissions("/admin/content/advertise:update")
+    @RequiresPermissions("/backend/advertise:update")
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
     public Object update(@Valid @ModelAttribute Advertise advertise) {
@@ -69,7 +69,7 @@ public class AdvertiseController extends BaseListableController<Advertise> {
         return successResult;
     }
 
-    @RequiresPermissions("/admin/content/advertise:del")
+    @RequiresPermissions("/backend/advertise:del")
     @RequestMapping(value = "del")
     @ResponseBody
     public Object del(@RequestParam(value = "ids[]") Long[] ids) {
@@ -96,9 +96,4 @@ public class AdvertiseController extends BaseListableController<Advertise> {
     }
 
 
-    @InitBinder
-    public void initDate(WebDataBinder webDataBinder) {
-        webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-        webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-    }
 }

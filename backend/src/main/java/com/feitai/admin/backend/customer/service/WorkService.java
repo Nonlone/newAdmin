@@ -7,6 +7,7 @@
 
 package com.feitai.admin.backend.customer.service;
 
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.data.model.WorkData;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ import tk.mybatis.mapper.util.Sqls;
 
 @Service
 @Slf4j
-public class WorkService extends DynamitSupportService<WorkData> {
+public class WorkService extends ClassPrefixDynamicSupportService<WorkData> {
 
 	public WorkData findByUserId(Long userId) {
 		Example example = Example.builder(WorkData.class).andWhere(Sqls.custom().andEqualTo("userId",userId)).build();

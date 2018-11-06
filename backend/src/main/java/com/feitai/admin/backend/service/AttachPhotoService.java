@@ -1,5 +1,6 @@
 package com.feitai.admin.backend.service;
 
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.attach.model.PhotoAttach;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class AttachPhotoService extends DynamitSupportService<PhotoAttach> {
+public class AttachPhotoService extends ClassPrefixDynamicSupportService<PhotoAttach> {
 
 	public List<PhotoAttach> findByUserId(long userId) {
 		// TODO Auto-generated method stub

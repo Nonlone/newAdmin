@@ -1,5 +1,6 @@
 package com.feitai.admin.backend.auth.service;
 
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.callback.model.linkface.LinkfaceLivenessSelfieVerification;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,7 @@ import tk.mybatis.mapper.util.Sqls;
 
 @Service
 @Slf4j
-public class AuthdataLinkfaceLivenessSelfieVerificationService extends DynamitSupportService<LinkfaceLivenessSelfieVerification> {
+public class AuthdataLinkfaceLivenessSelfieVerificationService extends ClassPrefixDynamicSupportService<LinkfaceLivenessSelfieVerification> {
 
 
 	public LinkfaceLivenessSelfieVerification findByCardId(Long cardId) {
