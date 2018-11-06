@@ -42,11 +42,11 @@ public abstract class ClassPrefixDynamicSupportService<T> extends DynamitSupport
 
     @Override
     public void init() {
-        this.sqlMapper = doGetSqlMapper();
+        this.sqlMapper = getSqlMapper();
     }
 
     @Override
-    public SqlMapper doGetSqlMapper() {
+    public SqlMapper getSqlMapper() {
         try {
             DataSource dataSource = classPrefixMultiDataSourceSelector.getDataSource(getMapperClass(getMapper()));
             MybatisProperties properties = (MybatisProperties) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "properties");

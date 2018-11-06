@@ -324,8 +324,6 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 
 });
 
-
-
 </script>
  
 </body>

@@ -46,16 +46,7 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
 
     @PostConstruct
     public void init() {
-        this.sqlMapper = doGetSqlMapper();
-    }
-
-    /**
-     * 默认数据源构建SqlMapper
-     *
-     * @return
-     */
-    protected SqlMapper doGetSqlMapper() {
-        return new SqlMapper(sqlSession);
+        this.sqlMapper = getSqlMapper();
     }
 
     /**
@@ -64,14 +55,7 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
      * @return
      */
     public SqlMapper getSqlMapper() {
-        if (Objects.isNull(sqlMapper)) {
-            synchronized (DynamitSupportService.class) {
-                if (Objects.isNull(this.sqlMapper)) {
-                    this.sqlMapper = doGetSqlMapper();
-                }
-            }
-        }
-        return this.sqlMapper;
+        return new SqlMapper(sqlSession);
     }
 
 
@@ -232,8 +216,7 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
         }
         for (SearchParams searchParams : searchParamsList) {
             if (!ArrayUtils.isEmpty(searchParams.getValues())) {
-                long code = System.currentTimeMillis();
-                sql.append(" where "+code+"="+code+" ");
+                sql.append(" where 1=1 ");
                 break;
             }
         }
