@@ -95,41 +95,6 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
     }
 
 
-    /***
-     * 根据银行卡号获取资金方及其状态
-     * @param bankCardNo
-     * @return
-     */
-    private String getFunds(String bankCardNo) {
-        List<UserBankCardBind> userBankCardBinds = userBankCardBindService.findByBankCardNo(bankCardNo);
-        String funds = "";
-        for (UserBankCardBind userBankCardBind :
-                userBankCardBinds) {
-            Fund fund = fundService.findOne(userBankCardBind.getSeqNo());
-            String status = userBankCardBind.getStatus();
-            switch (status) {
-                case "NONE":
-                    funds += fund.getFundName() + "（未绑卡）,";
-                    break;
-                case "AUDIT":
-                    funds += fund.getFundName() + "（审核中）,";
-                    break;
-                case "PASSED":
-                    funds += fund.getFundName() + "（审核通过）,";
-                    break;
-                case "BACK":
-                    funds += fund.getFundName() + "（审核回退）,";
-                    break;
-                case "REFUSED":
-                    funds += fund.getFundName() + "（审核拒绝）,";
-                    break;
-            }
-        }
-        if (funds.length() != 0) {
-            funds = funds.substring(0, funds.length() - 1);
-        }
-        return funds;
-    }
 
 
     @RequiresUser

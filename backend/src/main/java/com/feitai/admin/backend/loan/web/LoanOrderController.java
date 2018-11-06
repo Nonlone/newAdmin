@@ -25,6 +25,7 @@ import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.product.entity.ProductMore;
 import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
+import com.feitai.admin.backend.properties.AppProperties;
 import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
@@ -93,12 +94,15 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private MapProperties mapProperties;
 
     @Autowired
+    private AppProperties appProperties;
+
+    @Autowired
     private FundService fundService;
 
 
     @RequestMapping(value = "")
     public String index(Model model) {
-        String rejectCash = mapProperties.getRejectCash();
+        String rejectCash = appProperties.getRejectCash();
         model.addAttribute("rejectCash", rejectCash);
         model.addAttribute("isOut", false);
         return "backend/loanOrder/index";

@@ -65,6 +65,7 @@
         <module>web</module>
         <module>system</module>
         <module>backend</module>
+        <module>wisdomTooth</module>
     </modules>
 
     <build>

@@ -63,6 +63,7 @@ public class DataSourceConfiguration implements EnvironmentAware {
         ));
         classPrefixMap.put("com.feitai.jieya.server.dao", BACKEND_DATASOURCE);
         classPrefixMap.put("com.feitai.admin.backend.creditdata", ORDER_CENTER_DATASOURCE);
+        classPrefixMap.put("com.feitai.admin.wisdomTooth",ADMIN_DATASOURCE);
         return classPrefixMap;
     }
 

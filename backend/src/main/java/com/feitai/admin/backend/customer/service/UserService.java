@@ -21,9 +21,14 @@ import tk.mybatis.mapper.util.Sqls;
 @Slf4j
 public class UserService extends ClassPrefixDynamicSupportService<User> {
 
-    public User findUserIdByPhone(String phone) {
+    public Long findUserIdByPhone(String phone) {
 		Example example = Example.builder(User.class).andWhere(Sqls.custom().andEqualTo("phone",phone)).build();
-		return getMapper().selectOneByExample(example);
+        User user = getMapper().selectOneByExample(example);
+        if (user!=null){
+            return user.getId();
+        }else {
+            return null;
+        }
     }
 
 }

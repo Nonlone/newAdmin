@@ -53,11 +53,6 @@ public class MapProperties {
     private static Map<String,String> loanStatusMap;
 
 
-    //取消放款
-    @Value("${reject.cash.url}")
-    private String rejectCash;
-
-
     /**
      * 获取授权项Map
      * @param key
