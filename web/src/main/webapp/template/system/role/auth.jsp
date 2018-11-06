@@ -116,7 +116,6 @@
                     cache : false,
                     dataType : 'json',
                     success : function(role){
-                        debugger;
                         var roleAuths = role.roleAuths;
                         if(roleAuths){
                             $.each(roleAuths,function(index, roleAuth){
@@ -218,7 +217,6 @@
                             var json = JSON.stringify(role)
                             //var a =decodeURIComponent(param);
                             $.post('${ctx}/system/role/auth/'+roleId,{jsonRole: json},function(result){
-                                debugger;
                                 if(result.success){
                                     BUI.Message.Alert('操作成功！',function(){
                                         top.topManager.closePage();

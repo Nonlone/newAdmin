@@ -123,7 +123,6 @@
     function stop(id) {
         BUI.use('bui/overlay',function (Overlay){
             BUI.Message.Confirm('确认要终止放款么？',function(){
-                debugger;
                 $.ajax({
                     url:'${rejectCash}',
                     dataType:'JSON',
@@ -284,7 +283,6 @@
             showUpdateBtn : update,
             showRemoveBtn : del,
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
-                debugger;
                 var editStr = '';
                 var id = String(obj.id);
                 var detail="";

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.creditdata.service.CreditDataService;
 import com.feitai.utils.Desensitization;
+import com.feitai.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,7 @@ public class CommonController {
     @Autowired
     private com.feitai.admin.backend.data.service.AuthdataMoxieService AuthdataMoxieService;
 
+    private static final String NULL_STRING = "nulldata";
 
     /***
      * 获取贷后邦/运营商/征信信息的数据
@@ -56,7 +58,7 @@ public class CommonController {
         } else {
             json = creditDataService.findByCardIdAndSource(Long.parseLong(cardId), source);
 
-            if (type.equals("bond") && !json.equals("nulldata")) {
+            if (type.equals("bond") && !json.equals(NULL_STRING)) {
                 Map map = JSON.parseObject(json, Map.class);
                 //脱敏手机
                 String user_phone = (String) map.get("user_phone");
@@ -69,6 +71,10 @@ public class CommonController {
                 return map;
             }
         }
-        return JSON.parseObject(json, Map.class);
+        if(json!=null&&StringUtils.isNotBlank(json)&&!json.equals(NULL_STRING)){
+            return JSON.parseObject(json, Map.class);
+        }else{
+            return "";
+        }
     }
 }

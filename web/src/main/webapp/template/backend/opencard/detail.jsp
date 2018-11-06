@@ -595,7 +595,6 @@
     }
 
     function loadAll(type) {
-        debugger;
         removeClassAddHidden();
         if(type=='base'){//基本资料
             baseData.removeAttribute("hidden");
@@ -689,7 +688,7 @@
      * 通用生产HTML方法
      */
     function produceHtml(url,jsonData,type) {
-        if(jsonData=="nulldata"||jsonData==""){
+        if(jsonData=="nulldata"||jsonData==""||jsonData==null){
             BUI.use('bui/overlay',function(Overlay){
                 var dialog = new Overlay.Dialog({
                     title:'提示窗口',

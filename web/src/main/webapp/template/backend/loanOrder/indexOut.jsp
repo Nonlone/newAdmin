@@ -45,7 +45,6 @@ function openout(id) {
 function stop(id) {
     BUI.use('bui/overlay',function (Overlay){
         BUI.Message.Confirm('确认要终止放款么？',function(){
-            debugger;
             $.ajax({
                 url:'${rejectCash}',
                 dataType:'JSON',
@@ -56,7 +55,6 @@ function stop(id) {
                 //contentType: 'application/json;charset=utf-8',
                 success:function(result){
                     if(result.code=="SUC000"){
-                        debugger;
                         BUI.Message.Alert('操作成功！',function(){
                             $.post('${ctx}/admin/order/loanOrder/stopLoan/'+id,function(result){
                                 if(result.success){

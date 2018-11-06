@@ -138,7 +138,6 @@
 
     function findPrimary(primaryName) {
 
-        debugger;
         document.getElementById("mainPackgage").value = primaryName;
         var channelIdValue,channelSortValue,code;
         if(primaryName!=null||primaryName!=""){
@@ -252,7 +251,6 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     var url = "${ctx}/backend/channel/checkChannelName/"+mainPackageValue;
 
     mainPackgage.on('change',function(){
-        debugger;
         mainPackageValue = document.getElementById("mainPackgage").value;
         url = "${ctx}/backend/channel/checkChannelName/"+mainPackageValue;
         subPackage.set('remote',{
@@ -316,7 +314,6 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 
 
     var beforeUpdateShow = function(dialog,form,record){
-        debugger;
         update = true;
         select.setSelectedValue('');
         select.setSelectedValue(record.mainPackgage);
