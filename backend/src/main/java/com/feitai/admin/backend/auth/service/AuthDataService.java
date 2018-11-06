@@ -6,12 +6,14 @@ import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.jieya.server.dao.authdata.mapper.AuthDataMapper;
 import com.feitai.jieya.server.dao.authdata.model.AuthData;
 import com.feitai.jieya.server.dao.authdata.model.BaseAuthData;
+import com.feitai.jieya.server.dao.base.constant.AuthStatus;
 import com.feitai.utils.CollectionUtils;
 import com.feitai.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
+import tk.mybatis.mapper.weekend.WeekendSqls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,23 +31,34 @@ public class AuthDataService {
     @Autowired
     private MapProperties mapProperties;
 
-
+    /**
+     * 获取已认证数据
+     *
+     * @param cardId
+     * @return
+     */
     public List<String> getAuthValueString(Long cardId) {
         List<String> resultList = new ArrayList();
-        List<AuthData> authDataList = authDataMapper.selectByExample(Example.builder(AuthData.class).andWhere(Sqls.custom().andEqualTo("cardId", cardId)).build());
+        List<AuthData> authDataList = authDataMapper.selectByExample(Example.builder(AuthData.class)
+                .andWhere(WeekendSqls.<AuthData>custom()
+                        .andEqualTo(AuthData::getCardId, cardId)
+                        .andEqualTo(AuthData::getStatus, AuthStatus.AUTHORIZED.getValue())).build());
         if (!CollectionUtils.isEmpty(authDataList)) {
             for (AuthData auth : authDataList) {
                 resultList.add(buildAuthValue(auth));
             }
         } else {
-            List<AuthDataTempAuth> authDataTempAuthList = authdataTempAuthMapper.selectByExample(Example.builder(AuthDataTempAuth.class).andWhere(Sqls.custom().andEqualTo("cardId", cardId)).build());
+            List<AuthDataTempAuth> authDataTempAuthList = authdataTempAuthMapper.selectByExample(Example.builder(AuthDataTempAuth.class)
+                    .andWhere(WeekendSqls.<AuthDataTempAuth>custom()
+                            .andEqualTo(AuthDataTempAuth::getCardId, cardId)
+                            .andEqualTo(AuthDataTempAuth::getStatus, AuthStatus.AUTHORIZED.getValue())).build());
             if (!CollectionUtils.isEmpty(authDataList)) {
                 for (AuthDataTempAuth authdataTempAuth : authDataTempAuthList) {
                     resultList.add(buildAuthValue(authdataTempAuth));
                 }
             }
         }
-       return resultList;
+        return resultList;
     }
 
 
