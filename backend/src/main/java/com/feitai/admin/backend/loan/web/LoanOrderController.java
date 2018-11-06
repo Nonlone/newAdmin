@@ -9,7 +9,6 @@ package com.feitai.admin.backend.loan.web;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.feitai.admin.backend.customer.service.BankSupportService;
 import com.feitai.admin.backend.customer.service.IdcardService;
 import com.feitai.admin.backend.customer.service.UserService;
@@ -20,7 +19,6 @@ import com.feitai.admin.backend.loan.service.LoanOrderService;
 import com.feitai.admin.backend.loan.service.RepayPlanComponentService;
 import com.feitai.admin.backend.loan.service.RepayPlanService;
 import com.feitai.admin.backend.loan.vo.OrderPlande;
-import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.product.entity.ProductMore;
 import com.feitai.admin.backend.product.service.ProductService;
@@ -43,14 +41,11 @@ import com.feitai.jieya.server.dao.user.model.User;
 import com.feitai.utils.Desensitization;
 import com.feitai.utils.ObjectUtils;
 import com.feitai.utils.datetime.DateUtils;
-import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
@@ -112,7 +107,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
     public Object getLoanStatusList(){
-        Map<String,String> map = JSONObject.parseObject(mapProperties.getLoanStatus(), Map.class);
+        Map<String,String> map = JSONObject.parseObject(mapProperties.getLoanStatusSource(), Map.class);
         List<ListItem> list = new ArrayList<ListItem>();
         list.add(new ListItem("全部"," "));
         for (String key : map.keySet()) {
