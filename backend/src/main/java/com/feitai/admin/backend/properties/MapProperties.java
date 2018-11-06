@@ -1,12 +1,11 @@
 package com.feitai.admin.backend.properties;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.feitai.jieya.server.dao.base.constant.PhotoType;
 import com.google.common.collect.ImmutableMap;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -24,13 +23,35 @@ public class MapProperties {
 
     @PostConstruct
     public void init() {
-        authdataSource = ImmutableMap.copyOf(JSONObject.parseObject(source,Map.class));
         authValueMap = ImmutableMap.copyOf(JSONObject.parseObject(authValueMapSource, Map.class));
-        loanStatusMap = ImmutableMap.copyOf(JSONObject.parseObject(loanStatus,Map.class));
+        loanStatusMap = ImmutableMap.copyOf(JSONObject.parseObject(loanStatusSource, Map.class));
+        photoTypeMap = ImmutableMap.copyOf(JSONObject.parseObject(photoTypeMapSource, Map.class));
     }
 
     @Value("${openCard.statusMap}")
     private String cardStatus;
+
+
+    @Value("${backend.photoTypeMap}")
+    private String photoTypeMapSource;
+
+    private Map<String, String> photoTypeMap;
+
+
+    /**
+     * 获取授权项Map
+     *
+     * @param key
+     * @return
+     */
+    public String getPhotoType(PhotoType key) {
+        if (!CollectionUtils.isEmpty(photoTypeMap)
+                && photoTypeMap.containsKey(key.toString().toUpperCase())) {
+            return photoTypeMap.get(key.toString().toUpperCase());
+        }
+        return null;
+    }
+
 
     /**
      * 认证数据项映射
@@ -59,11 +80,21 @@ public class MapProperties {
      * @return
      */
     public String getAuthValue(String key) {
-        if (!CollectionUtils.isEmpty(authValueMap)) {
+        if (!CollectionUtils.isEmpty(authValueMap)
+                && authValueMap.containsKey(key)) {
             return authValueMap.get(key);
         }
         return null;
     }
+
+
+    /**
+     * 放款状态
+     */
+    @Value("${backend.loanStatusMap}")
+    private String loanStatusSource;
+
+    private static Map<String, String> loanStatusMap;
 
 
     /***
@@ -71,8 +102,9 @@ public class MapProperties {
      * @param key
      * @return
      */
-    public String getloanStatus(String key){
-        if(!CollectionUtils.isEmpty(loanStatusMap)){
+    public String getloanStatus(String key) {
+        if (!CollectionUtils.isEmpty(loanStatusMap)
+                && loanStatusMap.containsKey(key)) {
             return loanStatusMap.get(key);
         }
         return null;
