@@ -24,6 +24,6 @@ public class UserBankCardBindService extends DynamitSupportService<UserBankCardB
 
 	public List<UserBankCardBind> findByBankCardNo(String bankCardNo) {
 		Example example = Example.builder(UserBankCardBind.class).andWhere(Sqls.custom().andEqualTo("bankCardNo",bankCardNo)).build();
-		return this.mapper.selectByExample(example);
+		return getMapper().selectByExample(example);
 	}
 }

@@ -20,7 +20,7 @@ public class AreaService extends ClassPrefixDynamicSupportService<LocationData> 
 
     public LocationData findByCardIdAndAuth(Long id) {
 		Example example = Example.builder(LocationData.class).andWhere(Sqls.custom().andEqualTo("cardId",id).andEqualTo("segment",0)).build();
-    	return this.mapper.selectOneByExample(example);
+    	return getMapper().selectOneByExample(example);
     }
 
 }

@@ -21,7 +21,7 @@ public class RatePlanService extends DynamitSupportService<RatePlanMore> {
 
     public RatePlanMore findByIdAndCurrentVersion(Long id, Integer currentVersion){
         Example example = Example.builder(RatePlanMore.class).andWhere(Sqls.custom().andEqualTo("id",id).andEqualTo("currentVersion",currentVersion)).build();
-        return this.mapper.selectOneByExample(example);
+        return getMapper().selectOneByExample(example);
     }
 
 

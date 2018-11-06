@@ -25,17 +25,17 @@ public class UserBankCardService extends ClassPrefixDynamicSupportService<UserBa
 
     public List<UserBankCard> findByUserIdAndPay(Long id) {
 		Example example = Example.builder(UserBankCard.class).andWhere(Sqls.custom().andEqualTo("id",id).andEqualTo("pay","1")).build();
-		return this.mapper.selectByExample(example);
+		return getMapper().selectByExample(example);
     }
 
 	public List<UserBankCard> findByUserIdAndRepay(Long id) {
 		Example example = Example.builder(UserBankCard.class).andWhere(Sqls.custom().andEqualTo("id",id).andEqualTo("repay","1")).build();
-		return this.mapper.selectByExample(example);
+		return getMapper().selectByExample(example);
 	}
 
 	public List<UserBankCard> findByUserId(Long id) {
 		Example example = Example.builder(UserBankCard.class).andWhere(Sqls.custom().andEqualTo("userId",id)).build();
-		return this.mapper.selectByExample(example);
+		return getMapper().selectByExample(example);
 	}
 
 }

@@ -25,7 +25,7 @@ public class ChannelPrimaryService extends ClassPrefixDynamicSupportService<Chan
 
     public Integer findLastCode() {
         Example example = Example.builder(ChannelPrimary.class).orderByDesc("channelCode").build();
-        List<ChannelPrimary> channelPrimaries = this.mapper.selectByExample(example);
+        List<ChannelPrimary> channelPrimaries = getMapper().selectByExample(example);
         if (channelPrimaries.size() == 0) {
             return startCode;
         } else {

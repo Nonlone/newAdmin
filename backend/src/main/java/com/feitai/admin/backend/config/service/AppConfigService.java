@@ -37,7 +37,7 @@ public class AppConfigService extends ClassPrefixDynamicSupportService<AppConfig
             if (appConfig != null) {
                 return appConfig.getName();
             }
-            return String.format("typeCode[%s],code[%s]不存在", typeCode, code);
+            return String.format("typeCode[ %s], code[ %s ] 不存在", typeCode, code);
         }else{
             return "";
         }

@@ -17,7 +17,7 @@ public class AuthdataLinkfaceLivenessIdnumberVerificationService extends ClassPr
 
 	public LinkfaceLivenessIdNumberVerifcation findByUserId(Long userId) {
 		Example example = Example.builder(LinkfaceLivenessIdNumberVerifcation.class).andWhere(Sqls.custom().andEqualTo("userId",userId)).build();
-		return this.mapper.selectOneByExample(example);
+		return getMapper().selectOneByExample(example);
 	}
 
 }
