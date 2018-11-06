@@ -35,10 +35,10 @@ public class SupportStaffController extends BaseListableController<SupportStaff>
 	
 	@RequestMapping(value = "")
 	public String index() {
-		return "/admin/sys/supportStaff/index";
+		return "/wisdomTooth/supportStaff/index";
 	}
 	
-	@RequiresPermissions("/admin/sys/supportStaff:list")
+	@RequiresPermissions("/wisdomTooth/supportStaff:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
@@ -46,7 +46,7 @@ public class SupportStaffController extends BaseListableController<SupportStaff>
 		return listPage;
 	}
 	
-	@RequiresPermissions("/admin/sys/supportStaff:update")
+	@RequiresPermissions("/wisdomTooth/supportStaff:update")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("id") Long id) {
@@ -54,7 +54,7 @@ public class SupportStaffController extends BaseListableController<SupportStaff>
 		return supportStaff;
 	}
 	
-	@RequiresPermissions("/admin/sys/supportStaff:add")
+	@RequiresPermissions("/wisdomTooth/supportStaff:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid SupportStaff supportStaff){
@@ -63,7 +63,7 @@ public class SupportStaffController extends BaseListableController<SupportStaff>
 		return BaseListableController.successResult;
 	}
 	
-	@RequiresPermissions("/admin/sys/supportStaff:update")
+	@RequiresPermissions("/wisdomTooth/supportStaff:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("supportStaff") SupportStaff supportStaff){
@@ -71,7 +71,7 @@ public class SupportStaffController extends BaseListableController<SupportStaff>
 		return BaseListableController.successResult;
 	}
 	
-	@RequiresPermissions("/admin/sys/supportStaff:del")
+	@RequiresPermissions("/wisdomTooth/supportStaff:del")
 	@RequestMapping(value = "del")
 	@ResponseBody
 	public Object del(@RequestParam(value = "ids[]") Long[] ids){
@@ -89,14 +89,6 @@ public class SupportStaffController extends BaseListableController<SupportStaff>
 		if (id != -1) {
 			model.addAttribute("supportStaff", this.supportStaffService.findOne(id));
 		}
-	}
-
-
-
-	@InitBinder
-	public void initDate(WebDataBinder webDataBinder){
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
 	}
 
 	@Override
