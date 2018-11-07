@@ -121,7 +121,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
 
                 resultList.add(json);
             } catch (Exception e) {
-                log.error("this json handle fail:[{}]! message:{}", json, e.getMessage());
+                log.error(String.format("this json handle fail:[{}]! message:{}", json, e.getMessage()),e);
                 continue;
             }
         }

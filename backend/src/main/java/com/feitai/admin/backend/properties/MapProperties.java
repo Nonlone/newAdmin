@@ -37,7 +37,6 @@ public class MapProperties {
 
     private Map<String, String> photoTypeMap;
 
-
     /**
      * 获取授权项Map
      *
@@ -53,25 +52,12 @@ public class MapProperties {
     }
 
 
-    /**
-     * 认证数据项映射
-     */
-    @Value("${authdata.sourceMap}")
-    private String source;
-
-    private static Map<String,String> authdataSource;
-
 
     @Value("${backend.authValueMap}")
     private String authValueMapSource;
 
     private static Map<String, String> authValueMap;
 
-    //放款状态
-    @Value("${loanOrder.statusMap}")
-    private String loanStatus;
-
-    private static Map<String,String> loanStatusMap;
 
 
     /**
@@ -86,7 +72,6 @@ public class MapProperties {
         }
         return null;
     }
-
 
     /**
      * 放款状态
