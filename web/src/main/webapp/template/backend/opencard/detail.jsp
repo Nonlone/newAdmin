@@ -17,7 +17,7 @@
 </style>
 <body>
 <div style="background-color:#FFFFFF">
-	<div style="background-color:#FFFFFF;width:1300px;position:relative;left: 10%">
+	<div style="background-color:#FFFFFF;width:1500px;position:relative;left: 10%">
 
 		<div>
 			<h3 style="background-color:#ADADAD" ><span style="font-size:20px">订单信息</span></h3>
@@ -246,7 +246,7 @@
 
 		<!-- 基本资料 -->
 		<div id="baseData">
-			<iframe frameborder="0" scrolling="auto" src="${ctx}/backend/customer/detail/${idcard.id}" style="width: 1300px;min-height: 1320px"></iframe>
+			<iframe frameborder="0" scrolling="auto" src="${ctx}/backend/customer/detail/${idcard.id}" style="width: 1500px;min-height: 1320px"></iframe>
 		</div>
 
 

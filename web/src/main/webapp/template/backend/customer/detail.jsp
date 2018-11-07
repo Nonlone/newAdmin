@@ -11,7 +11,7 @@
 </head>
 <body data-userId="${user.id}">
 <div style="background-color:#FFFFFF">
-    <div style="background-color:#FFFFFF;width:1300px;position:relative;left: 10%;margin-top: 10px;">
+    <div style="background-color:#FFFFFF;width:1300px;position:relative;left: 1%;margin-top: 10px;">
         <div>
             <h3 style="background-color:#ADADAD"><span style="font-size:20px;padding: 5px;">身份信息</span></h3>
             <div>

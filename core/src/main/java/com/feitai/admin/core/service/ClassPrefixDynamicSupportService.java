@@ -40,29 +40,30 @@ public abstract class ClassPrefixDynamicSupportService<T> extends DynamitSupport
 
     private DatabaseIdProvider databaseIdProvider = new VendorDatabaseIdProvider();
 
-    private SqlSessionFactory sqlSessionFactory;
 
     @Override
     public void init() {
-        try {
-            DataSource dataSource = classPrefixMultiDataSourceSelector.getDataSource(getMapperClass(getMapper()));
-            MybatisProperties properties = (MybatisProperties) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "properties");
-            ResourceLoader resourceLoader = (ResourceLoader) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "resourceLoader");
-            List<ConfigurationCustomizer> configurationCustomizers = (List) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "configurationCustomizers");
-            Interceptor[] interceptors = (Interceptor[]) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "interceptors");
-            sqlSessionFactory = buildSqlSessionFactory(dataSource, properties, resourceLoader, configurationCustomizers, interceptors);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.sqlMapper = doGetSqlMapper();
     }
 
     @Override
-    public SqlMapper getSqlMapper() {
-        return new SqlMapper(sqlSessionFactory.openSession());
-    }
+    public SqlMapper doGetSqlMapper() {
+            try {
+                DataSource dataSource = classPrefixMultiDataSourceSelector.getDataSource(getMapperClass(getMapper()));
+                MybatisProperties properties = (MybatisProperties) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "properties");
+                ResourceLoader resourceLoader = (ResourceLoader) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "resourceLoader");
+                List<ConfigurationCustomizer> configurationCustomizers = (List) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "configurationCustomizers");
+                Interceptor[] interceptors = (Interceptor[]) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "interceptors");
+                SqlSessionFactory sqlSessionFactory = buildSqlSessionFactory(dataSource, properties, resourceLoader, configurationCustomizers, interceptors);
+                return new SqlMapper(sqlSessionFactory.openSession());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+        }
 
 
-    public SqlSessionFactory buildSqlSessionFactory(DataSource dataSource,
+        public SqlSessionFactory buildSqlSessionFactory(DataSource dataSource,
                                                     MybatisProperties properties,
                                                     ResourceLoader resourceLoader,
                                                     List<ConfigurationCustomizer> configurationCustomizers,

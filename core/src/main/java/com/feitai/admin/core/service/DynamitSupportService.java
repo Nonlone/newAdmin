@@ -9,7 +9,11 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.base.Joiner;
 import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.SqlSessionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -46,7 +50,16 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
 
     @PostConstruct
     public void init() {
-        this.sqlMapper = getSqlMapper();
+        this.sqlMapper = doGetSqlMapper();
+    }
+
+    /**
+     * 默认数据源构建SqlMapper
+     *
+     * @return
+     */
+    protected SqlMapper doGetSqlMapper() {
+        return new SqlMapper(sqlSession);
     }
 
     /**
@@ -55,8 +68,17 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
      * @return
      */
     public SqlMapper getSqlMapper() {
-        return new SqlMapper(sqlSession);
+        if (Objects.isNull(sqlMapper)) {
+            synchronized (DynamitSupportService.class) {
+                if (Objects.isNull(this.sqlMapper)) {
+                    this.sqlMapper = doGetSqlMapper();
+                }
+            }
+        }
+        sqlMapper.clearCache();
+        return this.sqlMapper;
     }
+
 
 
     @Override
@@ -216,6 +238,8 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
         }
         for (SearchParams searchParams : searchParamsList) {
             if (!ArrayUtils.isEmpty(searchParams.getValues())) {
+                long code = System.currentTimeMillis();
+                //sql.append(" where "+code+"="+code+" ");
                 sql.append(" where 1=1 ");
                 break;
             }
