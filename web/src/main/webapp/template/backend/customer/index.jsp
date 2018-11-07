@@ -15,8 +15,7 @@
             <div class="control-group span7">
                 <label class="control-label">客户Id:</label>
                 <div class="controls">
-                    <input type="text" class="input-normal c
-					ontrol-text" name="search_EQ_userId" value="${userId}">
+                    <input type="text" class="input-normal control-text" name="search_EQ_userId" value="${userId}">
                 </div>
             </div>
 
@@ -94,8 +93,6 @@
         var add = false, update = false, del = false, list = false;
         <framwork:crudPermission resource="/backend/customer"/>
 
-        var enumObj = {"true": "是", "false": "否"};
-
         var columns = [
             {title: '客户Id', dataIndex: 'userId', width: '13%'},
             {title: '姓名', dataIndex: 'name', width: '10%'},
@@ -106,10 +103,10 @@
             {title: '民族', dataIndex: 'nation', width: '10%'},
             {title: '注册时间', dataIndex: 'createdTime', width: '15%', renderer: BUI.Grid.Format.datetimeRenderer},
             {title: '签发机关', dataIndex: 'orgination', width: '15%'},
-            {title:'是否实名',dataIndex:'certified',width:'10%',renderer:BUI.Grid.Format.enumRenderer(enumObj)}
+            {title:'是否实名',dataIndex:'certified',width:'10%',renderer:BUI.Grid.Format.enumRenderer(booleanEnumRender)}
         ];
 
-        var detailUrl = "${ctx}/backend/customer/detail/";
+        var detailUrl =  ctx + "/backend/customer/detail/";
 
         var crudGrid = new CrudGrid({
             entityName: '用户信息',
@@ -129,7 +126,7 @@
                         id: obj.id,
                         title: obj.name + '--查看详细信息',
                         text: '<li class="icon icon-list-alt"></li>',
-                        href: detailUrl + obj.id
+                        href: ctx+"/backend/customer/detail/" + obj.userId
                     });
             },
             storeCfg: {//定义store的排序，如果是复合主键一定要修改

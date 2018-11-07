@@ -1,6 +1,7 @@
 package com.feitai.admin.core.web;
 
 import com.feitai.admin.core.service.*;
+import com.feitai.utils.CollectionUtils;
 import com.feitai.utils.ObjectUtils;
 import com.feitai.utils.StringUtils;
 import com.github.pagehelper.PageInfo;
@@ -26,7 +27,39 @@ public abstract class BaseListableController<T> extends BaseController {
         return list(request, SelectMultiTable.builder(entityClass));
     }
 
-    public String getCommonSqls(ServletRequest request,String selectMultiTableSql) {
+    protected String getSql(ServletRequest request, SelectMultiTable selectMultiTable) {
+        return getSql(request, selectMultiTable, null);
+    }
+
+    protected String getSql(ServletRequest request, SelectMultiTable selectMultiTable, List<SearchParams> extraSearchParamsList) {
+        StringBuffer sbSql = new StringBuffer();
+        sbSql.append(selectMultiTable.buildSqlString());
+        List<SearchParams> searchParamsList = bulidSearchParamsList(request);
+        if (!CollectionUtils.isEmpty(extraSearchParamsList)) {
+            searchParamsList.addAll(extraSearchParamsList);
+        }
+        sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
+        sbSql.append(" GROUP BY " + SelectMultiTable.MAIN_ALAIS + ".id");
+        return sbSql.toString();
+    }
+
+    protected String getCountSql(ServletRequest request, SelectMultiTable selectMultiTable) {
+        return getCountSql(request, selectMultiTable, null);
+    }
+
+    protected String getCountSql(ServletRequest request, SelectMultiTable selectMultiTable, List<SearchParams> extraSearchParamsList) {
+        StringBuffer sbSql = new StringBuffer();
+        sbSql.append(selectMultiTable.buildCountSqlString());
+        List<SearchParams> searchParamsList = bulidSearchParamsList(request);
+        if (!CollectionUtils.isEmpty(extraSearchParamsList)) {
+            searchParamsList.addAll(extraSearchParamsList);
+        }
+        sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
+        return sbSql.toString();
+    }
+
+
+    public String getCommonSqls(ServletRequest request, String selectMultiTableSql) {
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(selectMultiTableSql);
         sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
@@ -54,7 +87,7 @@ public abstract class BaseListableController<T> extends BaseController {
         return buildSearchParams(WebUtils.getParametersStartingWith(request, prefix));
     }
 
-    protected Page<T> listBySql(ServletRequest request, String sql){
+    protected Page<T> listBySql(ServletRequest request, String sql) {
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
         return buildPage(getService().findAllBySqls(sql, pageNo, pageSize), pageNo, pageSize);

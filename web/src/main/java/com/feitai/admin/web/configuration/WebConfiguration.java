@@ -1,12 +1,12 @@
 package com.feitai.admin.web.configuration;
 
 import com.alibaba.druid.support.monitor.MonitorServlet;
-import com.alibaba.fastjson.serializer.SerializeConfig;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson.serializer.*;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.feitai.base.json.filter.KeyFilter;
+import com.feitai.base.json.serializer.BooleanSerializer;
+import com.feitai.base.json.serializer.DateSerializer;
 import com.feitai.utils.Desensitization;
 import com.google.code.kaptcha.servlet.KaptchaServlet;
 import org.apache.commons.lang3.StringUtils;
@@ -25,11 +25,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * web 配置类
@@ -147,6 +146,7 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         serializeConfig.put(BigInteger.class, ToStringSerializer.instance);
         serializeConfig.put(Long.class, ToStringSerializer.instance);
         serializeConfig.put(Long.TYPE, ToStringSerializer.instance);
+        serializeConfig.put(Date.class, DateSerializer.instance);
         fastJsonConfig.setSerializeConfig(serializeConfig);
 
         fastJsonConfig.setSerializeFilters(new KeyFilter(hyposensitizeHandlerMap));
@@ -170,3 +170,5 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         return resolver;
     }
 }
+
+

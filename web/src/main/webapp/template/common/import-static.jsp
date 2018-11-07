@@ -9,6 +9,8 @@
 <script type="text/javascript" src="${ctx}/static/artTemplate/dist/template.js"></script>
 <script type="text/javascript" src="${ctx}/static/bui/bui-min.js"></script>
 <script>
+    var booleanEnumRender = {"true": "是", "false": "否"};
+
     var ctx = '${pageContext.request.contextPath}';
     BUI.actions = {};
     BUI.setDebug(<spring:eval expression="@webConf['bui.debug']" />);

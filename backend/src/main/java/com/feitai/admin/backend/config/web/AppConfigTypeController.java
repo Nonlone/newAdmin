@@ -47,7 +47,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
-		Page<AppConfigType> listPage = super.listBySql(request,getSql());
+		Page<AppConfigType> listPage = listBySql(request,getSql());
 		return listPage;
 	}
 	

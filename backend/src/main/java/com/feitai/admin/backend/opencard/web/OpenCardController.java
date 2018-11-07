@@ -17,7 +17,7 @@ import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.properties.MapProperties;
-import com.feitai.admin.backend.service.AttachPhotoService;
+import com.feitai.admin.backend.customer.service.PhotoService;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
@@ -66,7 +66,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
     private AuthDataService authDataService;
 
     @Autowired
-    private IdcardService idcardService;
+    private IdCardService idcardService;
 
     @Autowired
     private UserService userService;
@@ -93,7 +93,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
     private MapProperties mapProperties;
 
     @Autowired
-    private AttachPhotoService attachPhotoService;
+    private PhotoService photoService;
 
 
     @RequestMapping("/index")
@@ -210,7 +210,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
         }
 
         //相片地址
-        List<PhotoAttach> photos = attachPhotoService.findUserPhotoByUserId(userId);
+        List<PhotoAttach> photos = photoService.findUserPhotoByUserId(userId);
         for (PhotoAttach attachPhoto : photos) {
             model.addAttribute("photo" + attachPhoto.getType(), attachPhoto.getPath());
         }

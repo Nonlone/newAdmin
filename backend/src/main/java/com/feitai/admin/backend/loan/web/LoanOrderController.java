@@ -10,7 +10,7 @@ package com.feitai.admin.backend.loan.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.customer.service.BankSupportService;
-import com.feitai.admin.backend.customer.service.IdcardService;
+import com.feitai.admin.backend.customer.service.IdCardService;
 import com.feitai.admin.backend.customer.service.UserService;
 import com.feitai.admin.backend.fund.service.FundService;
 import com.feitai.admin.backend.loan.entity.LoanOrderMore;
@@ -65,7 +65,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private ProductTermFeeFeatureService productTermFeeFeatureService;
 
     @Autowired
-    private IdcardService idcardService;
+    private IdCardService idcardService;
 
     @Autowired
     private UserService userService;

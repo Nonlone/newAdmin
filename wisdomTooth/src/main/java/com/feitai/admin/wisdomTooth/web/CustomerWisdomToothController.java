@@ -1,7 +1,7 @@
 package com.feitai.admin.wisdomTooth.web;
 
 import com.feitai.admin.backend.customer.entity.IdCardDataExtend;
-import com.feitai.admin.backend.customer.service.IdcardService;
+import com.feitai.admin.backend.customer.service.IdCardService;
 import com.feitai.admin.backend.customer.service.PersonService;
 import com.feitai.admin.backend.customer.service.UserBankCardService;
 import com.feitai.admin.backend.customer.service.UserService;
@@ -44,7 +44,7 @@ import java.util.List;
 public class CustomerWisdomToothController extends BaseListableController<IdCardDataExtend> {
 
     @Autowired
-    private IdcardService idcardService;
+    private IdCardService idcardService;
 
     @Autowired
     private PersonService personService;

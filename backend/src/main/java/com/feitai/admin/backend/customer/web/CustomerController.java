@@ -14,21 +14,18 @@ import com.feitai.admin.backend.auth.service.AuthdataLinkfaceLivenessSelfieVerif
 import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.customer.entity.IdCardDataExtend;
 import com.feitai.admin.backend.customer.service.*;
-import com.feitai.admin.backend.fund.service.FundService;
-import com.feitai.admin.backend.fund.service.UserBankCardBindService;
 import com.feitai.admin.backend.properties.MapProperties;
-import com.feitai.admin.backend.service.AttachPhotoService;
+import com.feitai.admin.backend.customer.service.PhotoService;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.attach.model.PhotoAttach;
-import com.feitai.jieya.server.dao.bank.model.UserBankCardBind;
 import com.feitai.jieya.server.dao.callback.model.linkface.LinkfaceLivenessIdNumberVerifcation;
 import com.feitai.jieya.server.dao.callback.model.linkface.LinkfaceLivenessSelfieVerification;
+import com.feitai.jieya.server.dao.data.model.ContactData;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
 import com.feitai.jieya.server.dao.data.model.PersonData;
 import com.feitai.jieya.server.dao.data.model.WorkData;
-import com.feitai.jieya.server.dao.fund.model.Fund;
 import com.feitai.jieya.server.dao.user.model.User;
 import com.feitai.utils.Desensitization;
 import com.feitai.utils.IdCardUtils;
@@ -57,7 +54,7 @@ import java.util.Objects;
 public class CustomerController extends BaseListableController<IdCardDataExtend> {
 
     @Autowired
-    private IdcardService idcardService;
+    private IdCardService idcardService;
 
     @Autowired
     private PersonService personService;
@@ -72,7 +69,10 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
     private WorkService workService;
 
     @Autowired
-    private AttachPhotoService attachPhotoService;
+    private ContactService contactService;
+
+    @Autowired
+    private PhotoService photoService;
 
     @Autowired
     private MapProperties mapProperties;
@@ -83,21 +83,10 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
     @Autowired
     private AuthdataLinkfaceLivenessSelfieVerificationService authdataLinkfaceLivenessSelfieVerificationService;
 
-    @Autowired
-    private UserBankCardBindService userBankCardBindService;
-
-    @Autowired
-    private FundService fundService;
-
-    @Autowired
-    private UserBankCardService userBankCardService;
-
     @RequestMapping(value = "/index")
     public String index() {
         return "/backend/customer/index";
     }
-
-
 
 
     @RequiresUser
@@ -108,7 +97,10 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         //根据request获取page
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
-        Page<IdCardDataExtend> idCardPage = list(getCommonSqls(request, getSelectMultiTable().buildSqlString()), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        List<SearchParams> extraSearchParamList = new ArrayList<SearchParams>() {{
+            this.add(new SearchParams(IdCardData::getCertified, Operator.EQ, Boolean.TRUE.toString()));
+        }};
+        Page<IdCardDataExtend> idCardPage = list(getSql(request, getSelectMultiTable(), extraSearchParamList), pageNo, pageSize, getCountSql(request, getSelectMultiTable(), extraSearchParamList), SelectMultiTable.COUNT_ALIAS);
         List<IdCardDataExtend> idCardDataExtendList = idCardPage.getContent();
         List<JSONObject> resultList = new ArrayList();
         for (IdCardDataExtend idCardDataExtend : idCardDataExtendList) {
@@ -121,7 +113,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
 
                 resultList.add(json);
             } catch (Exception e) {
-                log.error(String.format("this json handle fail:[{}]! message:{}", json, e.getMessage()),e);
+                log.error(String.format("this json handle fail:[{}]! message:{}", json, e.getMessage()), e);
                 continue;
             }
         }
@@ -129,28 +121,34 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
     }
 
 
-    @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
-    public ModelAndView detail(@PathVariable("id") String id) {
+    @RequiresUser
+    @RequestMapping(value = "detail/{userId}", method = RequestMethod.GET)
+    public ModelAndView detail(@PathVariable("userId") Long userId) {
         ModelAndView model = new ModelAndView("backend/customer/detail");
-        // 身份证信息
-        IdCardDataExtend idCardDataExtend = getService().findOne(id);
-        model.addObject("idCardDataExtend", idCardDataExtend);
-        Long userId = idCardDataExtend.getUserId();
-        // 年龄
-        model.addObject("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
-        // 生日
-        model.addObject("birthday", DateUtils.format(IdCardUtils.getBirthdayByIdCard(idCardDataExtend.getIdCard()), DateTimeStyle.DEFAULT_YYYY_MM_DD));
-        //脱敏处理
-        if (idCardDataExtend != null) {
-            String hyIdcard = Desensitization.idCard(idCardDataExtend.getIdCard());
-            model.addObject("hyIdcard", hyIdcard);
-        }
         //用户基本信息
         User user = userService.findOne(userId);
         model.addObject("user", user);
         if (user != null) {
             String hyPhone = Desensitization.phone(user.getPhone());
             model.addObject("hyPhone", hyPhone);
+        }
+
+        // 身份证信息
+        IdCardDataExtend idCardDataExtend = idcardService.findByUserId(userId);
+        model.addObject("idCardDataExtend", idCardDataExtend);
+        // 年龄
+        model.addObject("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
+        // 生日
+        model.addObject("birthday", DateUtils.format(IdCardUtils.getBirthdayByIdCard(idCardDataExtend.getIdCard()), DateTimeStyle.DEFAULT_YYYY_MM_DD));
+        //脱敏处理
+        if (idCardDataExtend != null) {
+            model.addObject("hyIdcard", Desensitization.idCard(idCardDataExtend.getIdCard()));
+            model.addObject("startTime", DateUtils.format(idCardDataExtend.getStartTime(),DateTimeStyle.DEFAULT_YYYY_MM_DD));
+            model.addObject("endTime", DateUtils.format(idCardDataExtend.getEndTime(),DateTimeStyle.DEFAULT_YYYY_MM_DD));
+        }else{
+            model.addObject("hyIdcard", "无");
+            model.addObject("startTime","无");
+            model.addObject("endTime", "无");
         }
 
         //商汤
@@ -163,14 +161,12 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         }
         if (livenessSelfieVerification == null) {
             model.addObject("livingVerify", "未对比");
-            model.addObject("hackScore", "未对比");
         } else {
             model.addObject("livingVerify", Objects.isNull(livenessSelfieVerification.getVerifyScore()) ? "没对比" : livenessSelfieVerification.getVerifyScore() * 100);
-            model.addObject("hackScore", Objects.isNull(livenessSelfieVerification.getHackScore()) ? "没对比" : livenessSelfieVerification.getHackScore() * 100);
         }
 
         // 相片地址
-        List<PhotoAttach> photos = attachPhotoService.findUserPhotoByUserId(userId);
+        List<PhotoAttach> photos = photoService.findUserPhotoByUserId(userId);
         List<JSONObject> customerPhotos = new ArrayList<>();
         for (PhotoAttach photo : photos) {
             model.addObject("photo" + photo.getType(), photo.getPath());
@@ -188,29 +184,42 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         // 婚姻状况最高学历
         if (person != null) {
             model.addObject("maritalStatus", appConfigService.findByTypeCodeAndCode("maritalStatus", person.getMaritalStatus()));
-            model.addObject("fertilityStatus", appConfigService.findByTypeCodeAndCode("fertilityStatus", person.getFertilityStatus()));
+            model.addObject("fertilityStatus", appConfigService.findByTypeCodeAndCode("fertilityStatus", person.getFertilityStatus())+" 子女");
             model.addObject("educationLevel", appConfigService.findByTypeCodeAndCode("educationLevel", person.getEducationLevel()));
             model.addObject("residentialType", appConfigService.findByTypeCodeAndCode("residentialType", person.getResidentialType()));
         } else {
-            model.addObject("marital", "无");
+            model.addObject("maritalStatus", "无");
+            model.addObject("fertilityStatus", "无");
             model.addObject("educationLevel", "无");
             model.addObject("residentialType", "无");
-            model.addObject("fertilityStatus", "无");
         }
 
         // 工作信息
         WorkData work = workService.findByUserId(userId);
         model.addObject("work", work);
-        if(work!=null){
-            model.addObject("hyWorkContactPhone",Desensitization.phone(work.getContactPhone()));
+        if (work != null) {
+            model.addObject("hyWorkContactPhone", Desensitization.phone(work.getContactPhone()));
             model.addObject("belongIndustry", appConfigService.findByTypeCodeAndCode("belongIndustry", work.getBelongIndustry()));
             model.addObject("jobsType", appConfigService.findByTypeCodeAndCode("jobsType", work.getJobsType()));
-        }else{
+        } else {
             model.addObject("belongIndustry", "无");
             model.addObject("jobsType", "无");
         }
 
-
+        // 联系人信息
+        ContactData contact = contactService.findByUserId(userId);
+        if(contact!=null){
+            model.addObject("relativeRelationship", appConfigService.findByTypeCodeAndCode("relativeRelations", contact.getRelativeRelationship()));
+            model.addObject("hyRelativeContactPhone", Desensitization.phone(contact.getRelativeContactPhone()));
+            model.addObject("otherRelationship", appConfigService.findByTypeCodeAndCode("normalRelations", contact.getOtherRelationship()));
+            model.addObject("hyOtherContactPhone", Desensitization.phone(contact.getOtherContactPhone()));
+        }else{
+            model.addObject("relativeRelationship", "无");
+            model.addObject("hyRelativeContactPhone", "无");
+            model.addObject("otherRelationship", "无");
+            model.addObject("hyOtherContactPhone", "无");
+        }
+        model.addObject("contact",contact);
 
         return model;
     }
@@ -221,6 +230,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         return this.idcardService;
     }
 
+
     private SelectMultiTable getSelectMultiTable() {
         return SelectMultiTable.builder(IdCardData.class)
                 .rightJoin(User.class, "user", new OnCondition[]{
@@ -228,13 +238,5 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
                 });
     }
 
-    private String getCountSqls(ServletRequest request) {
-        StringBuffer sbSql = new StringBuffer();
-        sbSql.append((SelectMultiTable.builder(IdCardData.class)).buildCountSqlString());
-        List<SearchParams> searchParamsList = bulidSearchParamsList(request);
-        searchParamsList.add(new SearchParams(IdCardData::getCertified, Operator.EQ, Boolean.TRUE.toString()));
-        sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
-        return sbSql.toString();
-    }
 
 }

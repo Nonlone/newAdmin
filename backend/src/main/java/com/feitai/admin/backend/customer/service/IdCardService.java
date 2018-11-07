@@ -10,11 +10,11 @@ import tk.mybatis.mapper.util.Sqls;
 
 @Service
 @Slf4j
-public class IdcardService extends ClassPrefixDynamicSupportService<IdCardDataExtend> {
+public class IdCardService extends ClassPrefixDynamicSupportService<IdCardDataExtend> {
 
-	public IdCardData findByUserId(Long userId) {
-		Example example = Example.builder(IdCardData.class).andWhere(Sqls.custom().andEqualTo("userId",userId)).build();
-		return getMapper().selectOneByExample(example);
+	public IdCardDataExtend findByUserId(Long userId) {
+		Example example = Example.builder(IdCardDataExtend.class).andWhere(Sqls.custom().andEqualTo("userId",userId)).build();
+		return walkProcess(getMapper().selectOneByExample(example));
 	}
 
 }
