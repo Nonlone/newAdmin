@@ -90,7 +90,7 @@ public class FundController extends BaseListableController<Fund> {
     public ModelAndView detail(
             @Valid FundDetailRequest fundDetailRequest
     ) {
-        ModelAndView modelAndView = new ModelAndView("/admin/fund/fund/detail");
+        ModelAndView modelAndView = new ModelAndView("/backend/fund/detail");
         if (StringUtils.isNotBlank(fundDetailRequest.getType())) {
             Page<FundAmountDetail> fundAmountDetails = buildPage(fundAmountDetailService.queryFundChargeByFundId(fundDetailRequest.getPage(), fundDetailRequest.getSize(), fundDetailRequest.getFundId(), new Byte(fundDetailRequest.getType())), fundDetailRequest.getPage(), fundDetailRequest.getSize());
             modelAndView.addObject("fundAmountDetails", fundAmountDetails);
@@ -104,7 +104,7 @@ public class FundController extends BaseListableController<Fund> {
     }
 
 
-    @RequiresPermissions(value = {"/admin/fund/fund:update", "/admin/fund/fund:add"}, logical = Logical.OR)
+    @RequiresPermissions(value = {"/backend/fund:update", "/backend/fund:add"}, logical = Logical.OR)
     @RequestMapping(value = "items")
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
@@ -123,17 +123,17 @@ public class FundController extends BaseListableController<Fund> {
 
     @RequestMapping(value = "")
     public String index() {
-        return "/admin/fund/fund/index";
+        return "/backend/fund/index";
     }
 
-    @RequiresPermissions("/admin/fund/fund:list")
+    @RequiresPermissions("/backend/fund:list")
     @RequestMapping(value = "list")
     @ResponseBody
     public Object listPage(ServletRequest request) {
         return super.list(request);
     }
 
-    @RequiresPermissions("/admin/fund/fund:update")
+    @RequiresPermissions("/backend/fund:update")
     @RequestMapping(value = "update/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Object editFrom(@PathVariable("id") Long id) {
@@ -141,7 +141,7 @@ public class FundController extends BaseListableController<Fund> {
         return fund;
     }
 
-    @RequiresPermissions("/admin/fund/fund:add")
+    @RequiresPermissions("/backend/fund:add")
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(@Valid FundRequest fundRequest) {
@@ -157,7 +157,7 @@ public class FundController extends BaseListableController<Fund> {
         return BaseListableController.successResult;
     }
 
-    @RequiresPermissions("/admin/fund/fund:update")
+    @RequiresPermissions("/backend/fund:update")
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
     public Object update(@Valid FundRequest fundRequest) {
@@ -173,7 +173,7 @@ public class FundController extends BaseListableController<Fund> {
         return BaseListableController.failResult;
     }
 
-    @RequiresPermissions("/admin/fund/fund:update")
+    @RequiresPermissions("/backend/fund:update")
     @RequestMapping(value = "disable")
     @ResponseBody
     public Object disable(@RequestParam(value = "id") Long id) {
@@ -187,7 +187,7 @@ public class FundController extends BaseListableController<Fund> {
         return BaseListableController.failResult;
     }
 
-    @RequiresPermissions("/admin/fund/fund:update")
+    @RequiresPermissions("/backend/fund:update")
     @RequestMapping(value = "enable")
     @ResponseBody
     public Object enable(@RequestParam(value = "id") Long id) {
@@ -236,9 +236,4 @@ public class FundController extends BaseListableController<Fund> {
         return this.fundService;
     }
 
-    @InitBinder
-    public void initDate(WebDataBinder webDataBinder) {
-        webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-        webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-    }
 }

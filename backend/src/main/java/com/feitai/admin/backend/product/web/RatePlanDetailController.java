@@ -25,7 +25,7 @@ import javax.validation.Valid;
 
 
 @Controller
-@RequestMapping(value = "/admin/product/ratePlanDetail")
+@RequestMapping(value = "/backend/ratePlanDetail")
 public class RatePlanDetailController extends BaseListableController<RatePlanDetail> {
 
 	@Autowired
@@ -33,17 +33,17 @@ public class RatePlanDetailController extends BaseListableController<RatePlanDet
 	
 	@RequestMapping(value = "")
 	public String index() {
-		return "/admin/product/ratePlanDetail/index";
+		return "/backend/ratePlanDetail/index";
 	}
 	
-	@RequiresPermissions("/admin/product/ratePlanDetail:list")
+	@RequiresPermissions("/backend/ratePlanDetail:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
 		return super.list(request);
 	}
 	
-	@RequiresPermissions("/admin/product/ratePlanDetail:update")
+	@RequiresPermissions("/backend/ratePlanDetail:update")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("id") Long id) {
@@ -51,7 +51,7 @@ public class RatePlanDetailController extends BaseListableController<RatePlanDet
 		return ratePlanDetail;
 	}
 	
-	@RequiresPermissions("/admin/product/ratePlanDetail:add")
+	@RequiresPermissions("/backend/ratePlanDetail:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid RatePlanDetail ratePlanDetail){
@@ -59,7 +59,7 @@ public class RatePlanDetailController extends BaseListableController<RatePlanDet
 		return successResult;
 	}
 	
-	@RequiresPermissions("/admin/product/ratePlanDetail:update")
+	@RequiresPermissions("/backend/ratePlanDetail:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("ratePlanDetail") RatePlanDetail ratePlanDetail){
@@ -67,7 +67,7 @@ public class RatePlanDetailController extends BaseListableController<RatePlanDet
 		return successResult;
 	}
 	
-	@RequiresPermissions("/admin/product/ratePlanDetail:del")
+	@RequiresPermissions("/backend/ratePlanDetail:del")
 	@RequestMapping(value = "del")
 	@ResponseBody
 	public Object del(@RequestParam(value = "ids[]") Long[] ids){

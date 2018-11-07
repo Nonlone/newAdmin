@@ -29,6 +29,7 @@ public class RatePlanMore extends com.feitai.jieya.server.dao.rateplan.model.Rat
     @Transient
     private Fund fund;
 
+    @Transient
     private Product product;
 
 }

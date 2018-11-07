@@ -8,6 +8,7 @@
 package com.feitai.admin.backend.product.service;
 
 import com.feitai.admin.backend.product.entity.ProductMore;
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.product.mapper.ProductMapper;
 import com.feitai.jieya.server.dao.product.model.Product;
@@ -15,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class  ProductService extends DynamitSupportService<ProductMore> {
+public class  ProductService extends ClassPrefixDynamicSupportService<ProductMore> {
 
     public ProductMore getProduct (Object id){
         return getMapper().selectByPrimaryKey(id);

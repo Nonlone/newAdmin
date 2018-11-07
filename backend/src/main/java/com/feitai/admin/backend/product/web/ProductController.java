@@ -32,7 +32,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping(value = "/admin/product/product")
+@RequestMapping(value = "/backend/product")
 public class ProductController extends BaseListableController<ProductMore> {
 	@Autowired
 	private ProductService productService;
@@ -50,7 +50,7 @@ public class ProductController extends BaseListableController<ProductMore> {
 		return list;
 	}
 
-	@RequiresPermissions(value = {"/admin/product/product:update", "/admin/product/product:add"}, logical = Logical.OR)
+	@RequiresPermissions(value = {"/backend/product:update", "/backend/product:add"}, logical = Logical.OR)
 	@RequestMapping(value = "items")
 	@ResponseBody
 	@LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
@@ -68,17 +68,17 @@ public class ProductController extends BaseListableController<ProductMore> {
 	
 	@RequestMapping(value = "")
 	public String index() {
-		return "/admin/product/product/index";
+		return "/backend/product/index";
 	}
 	
-	@RequiresPermissions("/admin/product/product:list")
+	@RequiresPermissions("/backend/product:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
 		return super.list(request);
 	}
 	
-	@RequiresPermissions("/admin/product/product:update")
+	@RequiresPermissions("/backend/product:update")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("id") Long id) {
@@ -86,7 +86,7 @@ public class ProductController extends BaseListableController<ProductMore> {
 		return product;
 	}
 	
-	@RequiresPermissions("/admin/product/product:add")
+	@RequiresPermissions("/backend/product:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid ProductMore product){
@@ -97,7 +97,7 @@ public class ProductController extends BaseListableController<ProductMore> {
 		return successResult;
 	}
 	
-	@RequiresPermissions("/admin/product/product:update")
+	@RequiresPermissions("/backend/product:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("product") ProductMore product){
@@ -106,7 +106,7 @@ public class ProductController extends BaseListableController<ProductMore> {
 		return successResult;
 	}
 	
-	@RequiresPermissions("/admin/product/product:del")
+	@RequiresPermissions("/backend/product:del")
 	@RequestMapping(value = "del")
 	@ResponseBody
 	public Object del(@RequestParam(value = "ids[]") Long[] ids){

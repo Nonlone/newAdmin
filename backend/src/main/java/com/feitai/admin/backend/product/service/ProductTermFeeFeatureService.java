@@ -7,6 +7,7 @@
 
 package com.feitai.admin.backend.product.service;
 
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.product.model.ProductTermFeeFeature;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import tk.mybatis.mapper.util.Sqls;
 import java.util.List;
 
 @Service
-public class ProductTermFeeFeatureService extends DynamitSupportService<ProductTermFeeFeature> {
+public class ProductTermFeeFeatureService extends ClassPrefixDynamicSupportService<ProductTermFeeFeature> {
 
 	public List<ProductTermFeeFeature> findByProductIdAndTerm(Long productId, Short term){
 		Example example = Example.builder(ProductTermFeeFeature.class).andWhere(Sqls.custom().andEqualTo("productId",productId).andEqualTo("term",term)).build();

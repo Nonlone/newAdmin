@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = "/admin/product/ratePlan")
+@RequestMapping(value = "/backend/ratePlan")
 public class RatePlanController extends BaseListableController<RatePlanMore> {
 
     /**
@@ -83,10 +83,10 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
 
     @RequestMapping(value = "")
     public String index() {
-        return "/admin/product/ratePlan/index";
+        return "/backend/ratePlan/index";
     }
 
-    @RequiresPermissions("/admin/product/ratePlan:list")
+    @RequiresPermissions("/backend/ratePlan:list")
     @RequestMapping(value = "list")
     @ResponseBody
     public Object listPage(ServletRequest request) {
@@ -115,18 +115,18 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
         return null;
     }
 
-    @RequiresPermissions("/admin/product/ratePlan:update")
+    @RequiresPermissions("/backend/ratePlan:update")
     @RequestMapping(value = "addOrUpdate", method = RequestMethod.GET)
     public String addOrUpdate(
             @RequestParam(value = "id", defaultValue = "-1") Long id,
             Model model
     ) {
         model.addAttribute("id", id);
-        return "/admin/product/ratePlan/addOrUpdate";
+        return "/backend/ratePlan/addOrUpdate";
     }
 
 
-    @RequiresPermissions("/admin/product/ratePlan:add")
+    @RequiresPermissions("/backend/ratePlan:add")
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(@Valid @RequestBody RatePlanRequest ratePlanRequest) {
@@ -190,7 +190,7 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
         return successResult;
     }
 
-    @RequiresPermissions("/admin/product/ratePlan:update")
+    @RequiresPermissions("/backend/ratePlan:update")
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
     public Object update(@RequestBody RatePlanRequest ratePlanRequest) {
@@ -264,7 +264,7 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
         return successResult;
     }
 
-    @RequiresPermissions("/admin/product/ratePlan:del")
+    @RequiresPermissions("/backend/ratePlan:del")
     @RequestMapping(value = "del")
     @ResponseBody
     public Object del(@RequestParam(value = "ids[]") Long[] ids) {
@@ -297,7 +297,7 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
     @ModelAttribute
     public void getratePlan(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
         if (id != -1) {
-            model.addAttribute("ratePlan", this.ratePlanService.findOne(id));
+            model.addAttribute("ratePlan", this.ratePlanService.findById(id));
         }
     }
 

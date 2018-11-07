@@ -25,24 +25,24 @@ import javax.validation.Valid;
 
 
 @Controller
-@RequestMapping(value = "/admin/product/ratePlanTerm")
+@RequestMapping(value = "/backend/ratePlanTerm")
 public class RatePlanTermController extends BaseListableController<RatePlanTermMore> {
 	@Autowired
 	private RatePlanTermService ratePlanTermService;
 	
 	@RequestMapping(value = "")
 	public String index() {
-		return "/admin/product/ratePlanTerm/index";
+		return "/backend/ratePlanTerm/index";
 	}
 	
-	@RequiresPermissions("/admin/product/ratePlanTerm:list")
+	@RequiresPermissions("/backend/ratePlanTerm:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
 		return super.list(request);
 	}
 	
-	@RequiresPermissions("/admin/product/ratePlanTerm:update")
+	@RequiresPermissions("/backend/ratePlanTerm:update")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("id") Long id) {
@@ -50,7 +50,7 @@ public class RatePlanTermController extends BaseListableController<RatePlanTermM
 		return ratePlanTerm;
 	}
 	
-	@RequiresPermissions("/admin/product/ratePlanTerm:add")
+	@RequiresPermissions("/backend/ratePlanTerm:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid RatePlanTermMore ratePlanTerm){
@@ -58,7 +58,7 @@ public class RatePlanTermController extends BaseListableController<RatePlanTermM
 		return successResult;
 	}
 	
-	@RequiresPermissions("/admin/product/ratePlanTerm:update")
+	@RequiresPermissions("/backend/ratePlanTerm:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("ratePlanTerm") RatePlanTermMore ratePlanTerm){
@@ -66,7 +66,7 @@ public class RatePlanTermController extends BaseListableController<RatePlanTermM
 		return successResult;
 	}
 	
-	@RequiresPermissions("/admin/product/ratePlanTerm:del")
+	@RequiresPermissions("/backend/ratePlanTerm:del")
 	@RequestMapping(value = "del")
 	@ResponseBody
 	public Object del(@RequestParam(value = "ids[]") Long[] ids){

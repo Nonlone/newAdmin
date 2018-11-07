@@ -7,6 +7,7 @@
 
 package com.feitai.admin.backend.product.service;
 
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.rateplan.model.RatePlanDetailSnapshot;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class SnapshotRatePlanDetailService extends DynamitSupportService<RatePlanDetailSnapshot> {
+public class SnapshotRatePlanDetailService extends ClassPrefixDynamicSupportService<RatePlanDetailSnapshot> {
 
 }

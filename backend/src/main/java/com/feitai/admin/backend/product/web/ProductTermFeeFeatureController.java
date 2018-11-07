@@ -25,24 +25,24 @@ import java.util.Date;
 
 
 @Controller
-@RequestMapping(value = "/admin/product/productTermFeeFeature")
+@RequestMapping(value = "/backend/productTermFeeFeature")
 public class ProductTermFeeFeatureController extends BaseListableController<ProductTermFeeFeature> {
 	@Autowired
 	private ProductTermFeeFeatureService productTermFeeFeatureService;
 	
 	@RequestMapping(value = "")
 	public String index() {
-		return "/admin/product/productTermFeeFeature/index";
+		return "/backend/productTermFeeFeature/index";
 	}
 	
-	@RequiresPermissions("/admin/product/productTermFeeFeature:list")
+	@RequiresPermissions("/backend/productTermFeeFeature:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
 		return super.list(request);
 	}
 	
-	@RequiresPermissions("/admin/product/productTermFeeFeature:update")
+	@RequiresPermissions("/backend/productTermFeeFeature:update")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("id") Long id) {
@@ -50,7 +50,7 @@ public class ProductTermFeeFeatureController extends BaseListableController<Prod
 		return productTermFeeFeature;
 	}
 	
-	@RequiresPermissions("/admin/product/productTermFeeFeature:add")
+	@RequiresPermissions("/backend/productTermFeeFeature:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid ProductTermFeeFeature productTermFeeFeature){
@@ -60,7 +60,7 @@ public class ProductTermFeeFeatureController extends BaseListableController<Prod
 		return successResult;
 	}
 	
-	@RequiresPermissions("/admin/product/productTermFeeFeature:update")
+	@RequiresPermissions("/backend/productTermFeeFeature:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("productTermFeeFeature") ProductTermFeeFeature productTermFeeFeature){
@@ -69,7 +69,7 @@ public class ProductTermFeeFeatureController extends BaseListableController<Prod
 		return successResult;
 	}
 	
-	@RequiresPermissions("/admin/product/productTermFeeFeature:del")
+	@RequiresPermissions("/backend/productTermFeeFeature:del")
 	@RequestMapping(value = "del")
 	@ResponseBody
 	public Object del(@RequestParam(value = "ids[]") Long[] ids){

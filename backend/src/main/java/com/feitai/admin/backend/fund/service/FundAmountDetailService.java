@@ -1,5 +1,6 @@
 package com.feitai.admin.backend.fund.service;
 
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.fund.model.FundAmountDetail;
 import com.github.pagehelper.PageHelper;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class FundAmountDetailService extends DynamitSupportService<FundAmountDetail> {
+public class FundAmountDetailService extends ClassPrefixDynamicSupportService<FundAmountDetail> {
 
 	public List<FundAmountDetail> queryFundChargeByFundId(Integer pageNo, Integer pageSize, Long fundId, Byte type){
 		if (Objects.isNull(pageNo) || Objects.isNull(pageSize)){

@@ -6,6 +6,7 @@
  */
 
 package com.feitai.admin.backend.fund.service;
+import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.bank.model.UserBankCardBind;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ import java.util.List;
 @Component
 @Transactional
 @Slf4j
-public class UserBankCardBindService extends DynamitSupportService<UserBankCardBind> {
+public class UserBankCardBindService extends ClassPrefixDynamicSupportService<UserBankCardBind> {
 
 	public List<UserBankCardBind> findByBankCardNo(String bankCardNo) {
 		Example example = Example.builder(UserBankCardBind.class).andWhere(Sqls.custom().andEqualTo("bankCardNo",bankCardNo)).build();
