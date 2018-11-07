@@ -19,6 +19,9 @@ import com.feitai.admin.backend.product.vo.RatePlanRequest;
 import com.feitai.admin.backend.product.vo.Weight;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.web.BaseListableController;
+import com.feitai.jieya.server.dao.base.constant.CalculationMode;
+import com.feitai.jieya.server.dao.base.constant.FeeBaseType;
+import com.feitai.jieya.server.dao.base.constant.PaymentType;
 import com.feitai.jieya.server.dao.rateplan.model.RatePlanDetail;
 import com.feitai.jieya.server.dao.rateplan.model.RatePlanDetailSnapshot;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -43,15 +46,6 @@ import java.util.Map;
 @RequestMapping(value = "/backend/ratePlan")
 public class RatePlanController extends BaseListableController<RatePlanMore> {
 
-    /**
-     * 默认计费基数
-     */
-    private static final byte DEFAULT_FEE_BASE_TYPE = 0;
-
-    /**
-     * 默认还款方式
-     */
-    private static final byte DEFAULT_PAYMENT_TYPE = 0;
 
     /**
      * 科目映射
@@ -103,7 +97,7 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
                     if (!CollectionUtils.isEmpty(ratePlanTerm.getRatePlanDetails())) {
                         for (RatePlanDetail ratePlanDetail : ratePlanTerm.getRatePlanDetails()) {
                             // 利率展示乘以100
-                            if (ratePlanDetail.getCalculationMode() != 1) {
+                            if (ratePlanDetail.getCalculationMode() !=CalculationMode.FIXED_AMOUNT) {
                                 ratePlanDetail.setFee(ratePlanDetail.getFee().multiply(new BigDecimal("100")));
                             }
                         }
@@ -165,15 +159,15 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
                         ratePlanDetail.setName(subjectMap.get(ratePlanDetail.getSubjectId()));
                         ratePlanDetail.setVersion(0);
                         // 利率除以100
-                        if (ratePlanDetail.getCalculationMode() != 1) {
+                        if (ratePlanDetail.getCalculationMode() != CalculationMode.FIXED_AMOUNT) {
                             ratePlanDetail.setFee(ratePlanDetail.getFee().multiply(new BigDecimal("100")));
                         }
                         // 默认回写
                         if (ratePlanDetail.getFeeBaseType() == null) {
-                            ratePlanDetail.setFeeBaseType(DEFAULT_FEE_BASE_TYPE);
+                            ratePlanDetail.setFeeBaseType(FeeBaseType.DEFAULT);
                         }
                         if (ratePlanDetail.getPaymentType() == null) {
-                            ratePlanDetail.setPaymentType(DEFAULT_PAYMENT_TYPE);
+                            ratePlanDetail.setPaymentType(PaymentType.DEFAULT);
                         }
                         ratePlanDetail.setUpdateTime(date);
                         ratePlanDetail.setCreatedTime(date);
@@ -239,15 +233,15 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
                             ratePlanDetail.setName(subjectMap.get(ratePlanDetail.getSubjectId()));
                            //ratePlanDetail.setVersion(currentVersion);
                             // 利率除以100
-                            if (ratePlanDetail.getCalculationMode() != 1) {
+                            if (ratePlanDetail.getCalculationMode() != CalculationMode.FIXED_AMOUNT) {
                                 ratePlanDetail.setFee(ratePlanDetail.getFee().multiply(new BigDecimal("100")));
                             }
                             // 默认回写
                             if (ratePlanDetail.getFeeBaseType() == null) {
-                                ratePlanDetail.setFeeBaseType(DEFAULT_FEE_BASE_TYPE);
+                                ratePlanDetail.setFeeBaseType(FeeBaseType.DEFAULT);
                             }
                             if (ratePlanDetail.getPaymentType() == null) {
-                                ratePlanDetail.setPaymentType(DEFAULT_PAYMENT_TYPE);
+                                ratePlanDetail.setPaymentType(PaymentType.DEFAULT);
                             }
                             ratePlanDetail.setCreatedTime(date);
                             ratePlanDetail.setUpdateTime(date);

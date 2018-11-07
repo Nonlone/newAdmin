@@ -75,7 +75,7 @@ public abstract class BaseSupportService<T> {
                 return entity;
             }
         }catch (Exception e){
-            log.warn("save fail,try to update because:{}",e.getMessage());
+            log.warn(String.format("save fail,try to update because:{%s}",e.getMessage()),e);
             mapper.updateByPrimaryKey(entity);
             return entity;
         }
