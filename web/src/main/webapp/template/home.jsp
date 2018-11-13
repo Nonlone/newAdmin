@@ -88,7 +88,7 @@
         });
 
         $.ajax({
-            url: ctx + '/home/loadMenu',
+            url: '/home/loadMenu',
             cache: false,
             success: function (data) {
                 var navs = data;

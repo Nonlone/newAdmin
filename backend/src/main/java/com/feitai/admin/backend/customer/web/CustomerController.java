@@ -136,18 +136,37 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         // 身份证信息
         IdCardDataExtend idCardDataExtend = idcardService.findByUserId(userId);
         model.addObject("idCardDataExtend", idCardDataExtend);
-        // 年龄
-        model.addObject("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
-        // 生日
-        model.addObject("birthday", DateUtils.format(IdCardUtils.getBirthdayByIdCard(idCardDataExtend.getIdCard()), DateTimeStyle.DEFAULT_YYYY_MM_DD));
         //脱敏处理
         if (idCardDataExtend != null) {
-            model.addObject("hyIdcard", Desensitization.idCard(idCardDataExtend.getIdCard()));
-            model.addObject("startTime", DateUtils.format(idCardDataExtend.getStartTime(),DateTimeStyle.DEFAULT_YYYY_MM_DD));
-            model.addObject("endTime", DateUtils.format(idCardDataExtend.getEndTime(),DateTimeStyle.DEFAULT_YYYY_MM_DD));
-        }else{
+            if (StringUtils.isNotBlank(idCardDataExtend.getIdCard())) {
+                // 年龄
+                model.addObject("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
+                // 生日
+                model.addObject("birthday", DateUtils.format(IdCardUtils.getBirthdayByIdCard(idCardDataExtend.getIdCard()), DateTimeStyle.DEFAULT_YYYY_MM_DD));
+                // 身份证
+                model.addObject("hyIdcard", Desensitization.idCard(idCardDataExtend.getIdCard()));
+            } else {
+                // 年龄
+                model.addObject("age", "无");
+                // 生日
+                model.addObject("birthday", "无");
+                // 身份证
+                model.addObject("hyIdcard", "无");
+            }
+            if (!Objects.isNull(idCardDataExtend.getStartTime()) && !Objects.isNull(idCardDataExtend.getEndTime())) {
+                model.addObject("startTime", DateUtils.format(idCardDataExtend.getStartTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD));
+                model.addObject("endTime", DateUtils.format(idCardDataExtend.getEndTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD));
+            } else {
+                model.addObject("startTime", "无");
+                model.addObject("endTime", "无");
+            }
+        } else {
+            // 年龄
+            model.addObject("age", "无");
+            // 生日
+            model.addObject("birthday", "无");
             model.addObject("hyIdcard", "无");
-            model.addObject("startTime","无");
+            model.addObject("startTime", "无");
             model.addObject("endTime", "无");
         }
 
@@ -184,7 +203,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         // 婚姻状况最高学历
         if (person != null) {
             model.addObject("maritalStatus", appConfigService.findByTypeCodeAndCode("maritalStatus", person.getMaritalStatus()));
-            model.addObject("fertilityStatus", appConfigService.findByTypeCodeAndCode("fertilityStatus", person.getFertilityStatus())+" 子女");
+            model.addObject("fertilityStatus", appConfigService.findByTypeCodeAndCode("fertilityStatus", person.getFertilityStatus()) + " 子女");
             model.addObject("educationLevel", appConfigService.findByTypeCodeAndCode("educationLevel", person.getEducationLevel()));
             model.addObject("residentialType", appConfigService.findByTypeCodeAndCode("residentialType", person.getResidentialType()));
         } else {
@@ -208,18 +227,18 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
 
         // 联系人信息
         ContactData contact = contactService.findByUserId(userId);
-        if(contact!=null){
+        if (contact != null) {
             model.addObject("relativeRelationship", appConfigService.findByTypeCodeAndCode("relativeRelations", contact.getRelativeRelationship()));
             model.addObject("hyRelativeContactPhone", Desensitization.phone(contact.getRelativeContactPhone()));
             model.addObject("otherRelationship", appConfigService.findByTypeCodeAndCode("normalRelations", contact.getOtherRelationship()));
             model.addObject("hyOtherContactPhone", Desensitization.phone(contact.getOtherContactPhone()));
-        }else{
+        } else {
             model.addObject("relativeRelationship", "无");
             model.addObject("hyRelativeContactPhone", "无");
             model.addObject("otherRelationship", "无");
             model.addObject("hyOtherContactPhone", "无");
         }
-        model.addObject("contact",contact);
+        model.addObject("contact", contact);
 
         return model;
     }

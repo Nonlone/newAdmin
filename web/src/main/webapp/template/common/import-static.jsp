@@ -10,17 +10,53 @@
 <script type="text/javascript" src="${ctx}/static/bui/bui-min.js"></script>
 <script>
     var booleanEnumRender = {"true": "是", "false": "否"};
+    var $ctx = '${pageContext.request.contextPath}';
 
-    var ctx = '${pageContext.request.contextPath}';
     BUI.actions = {};
     BUI.setDebug(<spring:eval expression="@webConf['bui.debug']" />);
 
-    //ajax 设置 application/json
+    //ajax
+    // 设置 application/json
+    // 设置添加contextPath前缀
     $(function () {
         $.ajaxSetup({
             dataType: "json",
-        })
+            beforeSend:function(request,object){
+                var url = object.url;
+                console.log($ctx,url,url.startsWith("http"),url.startsWith($ctx));
+                if(!url.startsWith("http")&&!url.startsWith($ctx)){
+                    object.url = $ctx + url;
+                }
+            }
+        });
+
+        //放大图片
+        $('img.dialog').on('click', function () {
+            var large_image = '<img class=\'closeImg\' src= ' + $(this).attr("src") + '></img>';
+            BUI.use('bui/overlay', function (Overlay) {
+                var width = this.width;
+                var height = this.height;
+                var dialog = new Overlay.Dialog({
+                    title: '图片放大',
+                    width: width,
+                    height: height,
+                    mask: false,
+                    buttons: [],
+                    bodyContent: large_image
+                });
+                dialog.show();
+            });
+        });
     })
+</script>
+<script type="text/javascript" >
+    function autoSetIframeHeight(id) {
+        var ifm= document.getElementById(id);
+        var subWeb = document.frames ? document.frames[id].document :ifm.contentDocument;
+        if(ifm != null && subWeb != null) {
+            ifm.height = subWeb.body.scrollHeight;
+        }
+    }
 </script>
 <script type="text/javascript" src="${ctx}/static/bui/ux/crudgrid.js"></script>
 <script type="text/javascript" src="${ctx}/static/bui/ux/savedialog.js"></script>

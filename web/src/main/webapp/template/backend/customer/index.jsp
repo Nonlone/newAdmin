@@ -106,15 +106,15 @@
             {title:'是否实名',dataIndex:'certified',width:'10%',renderer:BUI.Grid.Format.enumRenderer(booleanEnumRender)}
         ];
 
-        var detailUrl =  ctx + "/backend/customer/detail/";
+        var detailUrl =  "/backend/customer/detail/";
 
         var crudGrid = new CrudGrid({
             entityName: '用户信息',
             pkColumn: 'id',//主键
-            storeUrl: '${ctx}/backend/customer/list',
-            addUrl: '${ctx}/backend/customer/add',
-            updateUrl: '${ctx}/backend/customer/update',
-            removeUrl: '${ctx}/backend/customer/del',
+            storeUrl: '/backend/customer/list',
+            addUrl: '/backend/customer/add',
+            updateUrl: '/backend/customer/update',
+            removeUrl: '/backend/customer/del',
             columns: columns,
             showAddBtn: add,
             showUpdateBtn: update,
@@ -124,9 +124,9 @@
             operationColumnRenderer: function (value, obj) {//操作列最追加按钮
                 return CrudGrid.createLink({
                         id: obj.id,
-                        title: obj.name + '--查看详细信息',
+                        title: obj.name + '—客户信息',
                         text: '<li class="icon icon-list-alt"></li>',
-                        href: ctx+"/backend/customer/detail/" + obj.userId
+                        href: $ctx+"/backend/customer/detail/" + obj.userId
                     });
             },
             storeCfg: {//定义store的排序，如果是复合主键一定要修改

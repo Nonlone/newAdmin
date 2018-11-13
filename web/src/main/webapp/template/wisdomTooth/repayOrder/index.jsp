@@ -75,7 +75,7 @@
 
     var columns = [
         {title:'订单号',dataIndex:'id',width:'8%'},
-        {title:'姓名',dataIndex:'idcard',width:"8%",renderer: function (value) {
+        {title:'姓名',dataIndex:'idCard',width:"8%",renderer: function (value) {
                 if(value){
                     return value.name;
                 }else{
@@ -83,7 +83,7 @@
                 }
             }},
         {title:'注册手机号',dataIndex:'phone',width:"9%"},
-        {title:'身份证号',dataIndex:'idcard',width:"8%",renderer: function (value) {
+        {title:'身份证号',dataIndex:'idCard',width:"8%",renderer: function (value) {
                 if(value){
                     return value.idCard;
                 }else{

@@ -61,7 +61,7 @@
                 <label class="control-label">提交审批时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_submitTime_D" data-tip="{text : '开始日期'}"> <span>
+                    <input type="text" class="calendar" name="search_GTE_submitTime" data-tip="{text : '开始日期'}"> <span>
              - </span><input name="search_LTE_submitTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
                 </div>
             </div>
@@ -69,7 +69,7 @@
                 <label class="control-label">订单创建时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_createdTime_D" data-tip="{text : '开始日期'}"> <span>
+                    <input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}"> <span>
              - </span><input name="search_LTE_createdTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
                 </div>
             </div>
@@ -104,14 +104,14 @@
     }
 
     function openout(id) {
-        window.open('${IP}'+'${ctx}/backend/opencard/detail/'+id);
+        window.open('${IP}'+'/backend/opencard/detail/'+id);
     }
 
     BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
 
 
         var selectStatusStore = new Data.Store({
-            url: '${ctx}/backend/opencard/getCardStatusList',
+            url: '/backend/opencard/getCardStatusList',
             autoLoad: true
         });
 
@@ -122,9 +122,7 @@
         });
         selectStatus.render();
 
-        var objEmun = {'true': '是', 'false': '否'};
         var ViewBtn = true;
-        var detailUrl = "${ctx}/backend/opencard/detail/";
         var spantrue = "<span style='color:#32CD32'>";
         var spanfalse = "<span style='color:#FF4500'>";
         var statusEmun = {
@@ -155,7 +153,7 @@
         <framwork:crudPermission resource="/backend/opencard"/>
 
         var selectProductStore = new Data.Store({
-            url: '${ctx}/admin/product/product/productNameList',
+            url: '/admin/product/product/productNameList',
             autoLoad: true
         });
 
@@ -167,28 +165,22 @@
         selectProduct.render();
 
         var columns = [
-            {title:'订单号',dataIndex:'id',width:'10%',renderer: function (value) {
-                    if(value){
-                        return String(value);
-                    }else{
-                        return '';
-                    }
-                }},
-            {title:'客户姓名',dataIndex:'idcard',width:'10%',renderer: function (value) {
+            {title:'订单号',dataIndex:'id',width:'10%'},
+            {title:'客户ID',dataIndex:'userId',width:'130px'},
+            {title:'客户姓名',dataIndex:'idCard',width:'80px',renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '<span style="color:#ff9955">未填写</span>';
                     }
                 }},
-            {title:'身份证',dataIndex:'idcard',width:'10%',renderer: function (value) {
+            {title:'身份证',dataIndex:'idCard',width:'120px',renderer: function (value) {
                     if(value){
                         return value.idCard;
                     }else{
                         return '<span style="color:#ff9955">未填写</span>';
                     }
                 }},
-            {title:'客户ID',dataIndex:'userId',width:'10%'},
             {title:'注册手机号',dataIndex:'user',width:'10%',renderer:function (value) {
                     if(value){
                         return value.phone;
@@ -196,40 +188,34 @@
                         return "";
                     }
                 }},
-            {title:'授信状态',dataIndex:'status',width:'10%',renderer:BUI.Grid.Format.enumRenderer(statusEmun)},
-            {title:'授信额度',dataIndex:'creditSum',width:'10%'},
-            {title:"授权项",dataIndex:'auths',width:'10%'},
-            {title:'进件渠道',dataIndex:'applyChannelId',width:'10%'},
-            {title:'注册渠道',dataIndex:'registChannelId',width:'10%'},
             {title:'产品名称',dataIndex:'product',width:'10%',renderer:function(value){
                     if(value){
                         return value.name;
-                    }else{
-                        return "";
                     }
+                    return "";
                 }},
-            {title:'订单创建时间',dataIndex:'createdTime',width:'10%',renderer:BUI.Grid.Format.datetimeRenderer},
-            //{title:'过期时间',dataIndex:'expiredTime',width:'10%',renderer:BUI.Grid.Format.dateRenderer},
-            {title:'提交审批时间',dataIndex:'submitTime',width:'10%',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'注册客户端',dataIndex:'user',width:'10%',renderer:function(value){
-                    if(value){
+            {title:'授信状态',dataIndex:'cardStatusName',width:'10%'},
+            {title:"授权项",dataIndex:'auths',width:'150px'},
+            {title:'授信额度',dataIndex:'creditSum',width:'10%'},
+            {title:'注册渠道',dataIndex:'registChannelId',width:'10%'},
+            {title:'创建时间',dataIndex:'createdTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'进件渠道',dataIndex:'applyChannelId',width:'10%'},
+            {title:'提交审批时间',dataIndex:'submitTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'注册客户端',dataIndex:'user',width:'10%',renderer:function(value) {
+                    if (value) {
                         return value.osType;
-                    }else{
-                        return "";
                     }
-                }},
-            {title:'是否新客户',dataIndex:'id',width:'10%',renderer: function (value) {
-                    return '是';
+                    return "";
                 }}
         ];
 
         var crudGrid = new CrudGrid({
             entityName : '用户持有对应信用产品记录',
             pkColumn : 'id',//主键
-            storeUrl : '${ctx}/backend/opencard/list',
-            addUrl : '${ctx}/backend/opencard/add',
-            updateUrl : '${ctx}/backend/opencard/update',
-            removeUrl : '${ctx}/backend/opencard/del',
+            storeUrl : '/backend/opencard/list',
+            addUrl : '/backend/opencard/add',
+            updateUrl : '/backend/opencard/update',
+            removeUrl : '/backend/opencard/del',
             columns : columns,
             showAddBtn : add,
             showUpdateBtn : update,
@@ -240,13 +226,17 @@
                 innerBorder:true
             },
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
-                var viewStr = "";
-                var id = obj.id;
-                if(ViewBtn&&obj.idcard!=null){
-                    viewStr = '<span class="x-icon x-icon-info" title="'+'详细信息'+'"><i class="icon icon-list-alt icon-white"  onclick="openout(\''+id+'\');"></i></span>';
-
+                var title = obj.id+"—授信信息";
+                console.log(jQuery.isEmptyObject(obj.idCard),obj.idCard);
+                if(!jQuery.isEmptyObject(obj.idCard)){
+                    title = obj.idCard.name + "—授信信息"
                 }
-                return viewStr;
+                return CrudGrid.createLink({
+                    id : obj.id,
+                    title : title,
+                    text : '<li class="icon-user"></li>',
+                    href : $ctx+"/backend/opencard/detail/" +obj.id
+                });
             },
             storeCfg:{//定义store的排序，如果是复合主键一定要修改
                 sortInfo : {

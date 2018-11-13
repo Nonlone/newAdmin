@@ -9,8 +9,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <%@include file="../../common/import-static.jsp" %>
 </head>
-<body data-userId="${user.id}">
-<div style="background-color:#FFFFFF;width:1300px;position:relative;left: 1%;margin: 10px auto;">
+<body data-userId="${user.id}" style="width:1500px;max-width:1500px;">
+<div style="background-color:#FFFFFF;margin: 10px auto;">
     <div>
         <h3 style="background-color:#ADADAD"><span style="font-size:20px;padding: 5px;">身份信息</span></h3>
         <div>

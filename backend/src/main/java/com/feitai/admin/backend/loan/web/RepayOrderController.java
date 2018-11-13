@@ -118,7 +118,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         }
         model.addAttribute("repayOrder", repayOrder);
         model.addAttribute("userIn", userIn);
-        model.addAttribute("idcard", idcard);
+        model.addAttribute("idCard", idcard);
 
         int ageByIdCard = IdCardUtils.getAgeByIdCard(idcard.getIdCard());
         model.addAttribute("year", ageByIdCard);
@@ -193,11 +193,11 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
             json.put("termPre", repayPlan.get("term").toString() + "/" + loanTerm);
             //脱敏处理
             //TODO-日后处理idcard/payAccount的脱敏处理
-            JSONObject idcard = (JSONObject)json.get("idcard");
+            JSONObject idcard = (JSONObject)json.get("idCard");
             String hyIdcard = Desensitization.idCard((String)idcard.get("idCard"));
             idcard.put("idCard",hyIdcard);
-            json.remove("idcard");
-            json.put("idcard", idcard);
+            json.remove("idCard");
+            json.put("idCard", idcard);
 
             String hyCard = Desensitization.bankCardNo((String)json.get("payAccount"));
             json.put("payAccount", hyCard);
@@ -224,7 +224,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         return  SelectMultiTable.builder(RepayOrder.class)
                 .leftJoin(RepayPlan.class,"repay_plan",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "repayPlanId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class,"idcard",new OnCondition[]{
+                }).leftJoin(IdCardData.class,"idCard",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"userId")
                 }).leftJoin(LoanOrder.class,"loan_order",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"loanOrderId",Operator.EQ,"id")
@@ -237,7 +237,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         String sql = SelectMultiTable.builder(RepayOrder.class)
                 .leftJoin(RepayPlan.class,"repay_plan",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "repayPlanId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class,"idcard",new OnCondition[]{
+                }).leftJoin(IdCardData.class,"idCard",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"userId")
                 }).leftJoin(LoanOrder.class,"loan_order",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"loanOrderId",Operator.EQ,"id")

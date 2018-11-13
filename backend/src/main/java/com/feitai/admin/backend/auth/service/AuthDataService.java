@@ -15,9 +15,7 @@ import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 import tk.mybatis.mapper.weekend.WeekendSqls;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class AuthDataService {
@@ -37,15 +35,19 @@ public class AuthDataService {
      * @param cardId
      * @return
      */
-    public List<String> getAuthValueString(Long cardId) {
-        List<String> resultList = new ArrayList();
+    public List<BaseAuthData> getAuthValueString(Long cardId) {
+        List<BaseAuthData> resultList = new ArrayList();
+        Set<String> checkSet = new HashSet<>();
         List<AuthData> authDataList = authDataMapper.selectByExample(Example.builder(AuthData.class)
                 .andWhere(WeekendSqls.<AuthData>custom()
                         .andEqualTo(AuthData::getCardId, cardId)
                         .andEqualTo(AuthData::getStatus, AuthStatus.AUTHORIZED.getValue())).build());
         if (!CollectionUtils.isEmpty(authDataList)) {
             for (AuthData auth : authDataList) {
-                resultList.add(buildAuthValue(auth));
+                if (!checkSet.contains(auth.getCode().getValue() + "-" + auth.getSource().getValue())) {
+                    checkSet.add(auth.getCode().getValue() + "-" + auth.getSource().getValue());
+                    resultList.add(auth);
+                }
             }
         } else {
             List<AuthDataTempAuth> authDataTempAuthList = authdataTempAuthMapper.selectByExample(Example.builder(AuthDataTempAuth.class)
@@ -54,13 +56,31 @@ public class AuthDataService {
                             .andEqualTo(AuthDataTempAuth::getStatus, AuthStatus.AUTHORIZED.getValue())).build());
             if (!CollectionUtils.isEmpty(authDataList)) {
                 for (AuthDataTempAuth authdataTempAuth : authDataTempAuthList) {
-                    resultList.add(buildAuthValue(authdataTempAuth));
+                    if (!checkSet.contains(authdataTempAuth.getCode().getValue() + "-" + authdataTempAuth.getSource().getValue())) {
+                        checkSet.add(authdataTempAuth.getCode().getValue() + "-" + authdataTempAuth.getSource().getValue());
+                        resultList.add(authdataTempAuth);
+                    }
                 }
             }
         }
         return resultList;
     }
 
+    /**
+     * 转换
+     *
+     * @param authDataList
+     * @return
+     */
+    public List<String> convertBaseAuthDataListToString(List<BaseAuthData> authDataList) {
+        Set<String> resultSet = new HashSet<>();
+        if (!CollectionUtils.isEmpty(authDataList)) {
+            for (BaseAuthData baseAuthData : authDataList) {
+                resultSet.add(buildAuthValue(baseAuthData));
+            }
+        }
+        return new ArrayList<>(resultSet);
+    }
 
     private String buildAuthValue(BaseAuthData authData) {
         StringBuffer sbValue = new StringBuffer();

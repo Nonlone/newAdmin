@@ -226,11 +226,11 @@ body {
 			var loginForm = new Form.Form({
 				srcNode : '#loginForm',
 				submitType : 'ajax',
-				action : ctx + '/loginForm',
+				action : '/loginForm',
 				method : 'post',
 				callback : function(data) {
 					if (data.success) {
-						location.href = ctx + '/home';
+						location.href = $ctx + '/home';
 					} else {
 						$('#errorDiv span').text(data.msg);
 						$('#errorDiv').show();
@@ -246,7 +246,7 @@ body {
 			
 			function changeCode(){
 				var time = new Date().getTime();
-				$('#code').attr('src','${ctx}/kaptcha?_t='+time);
+				$('#code').attr('src',$ctx+'/kaptcha?_t='+time);
 			}
 			
 		      //使用模板右边显示

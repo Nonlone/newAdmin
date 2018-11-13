@@ -27,7 +27,7 @@ public class CardMore extends Card {
 
 	@Transient
 	@One(classOfMapper = IdCardDataMapper.class, sourceField = "userId", targetField = "userId")
-	private IdCardData idcard;
+	private IdCardData idCard;
 
 	@Transient
 	@One(classOfMapper = ProductMapper.class, sourceField =  "productId" )
