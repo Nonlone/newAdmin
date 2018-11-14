@@ -9,6 +9,7 @@ package com.feitai.admin.backend.config.web;
 
 import com.feitai.admin.backend.config.entity.ChannelPrimary;
 import com.feitai.admin.backend.config.service.ChannelPrimaryService;
+import com.feitai.admin.backend.config.service.ChannelService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.web.BaseListableController;
@@ -34,6 +35,9 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 
 	@Autowired
 	private ChannelPrimaryService channelPrimaryService;
+
+	@Autowired
+	private ChannelService channelService;
 	
 	@RequestMapping(value = "")
 	public String index() {
@@ -101,6 +105,12 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 	@RequestMapping(value = "del")
 	@ResponseBody
 	public Object del(@RequestParam(value = "ids[]") Long[] ids){
+		boolean delAllow = true;
+		for(Long id:ids){
+			if(channelService.findByPrimaryId(id).size()!=0) {
+				return new AjaxResult(false, "id为：[" + id + "] 的一级渠道尚有对应二级渠道未删除");
+			}
+		}
 		this.channelPrimaryService.delete(ids);
 		return this.successResult;
 	}

@@ -94,7 +94,7 @@
 				<div class="control-group span8">
 					<label class="control-label"><s>*</s>二级渠道名称:</label>
 					<div class="controls">
-                        <input id="subPackage" name="subPackage" type="text" data-rules="{required:true}" class="input-normal control-text">
+                        <input id="subPackage" name="subPackage" type="text" data-rules="{required:true}"  data-remote="${ctx}/backend/channel/checkChannelName">
 					</div>
 				</div>
 				<div class="control-group span8">
@@ -243,38 +243,14 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 
     var subPackage = addOrUpdateForm.getField("subPackage");
     var mainPackgage = addOrUpdateForm.getField("mainPackgage");
-    var mainPackageValue = document.getElementById("mainPackgage").value;
-    if(mainPackageValue==""||mainPackageValue==null){
-        mainPackageValue = "null";
-	}
-    var subPackageValue = document.getElementById("subPackage").value;
-    var url = "${ctx}/backend/channel/checkChannelName/"+mainPackageValue;
+    var subPackageValue,mainPackageValue;
+    // if(mainPackageValue==""||mainPackageValue==null){
+    //     mainPackageValue = "null";
+    // }
 
-    mainPackgage.on('change',function(){
-        mainPackageValue = document.getElementById("mainPackgage").value;
-        url = "${ctx}/backend/channel/checkChannelName/"+mainPackageValue;
-        subPackage.set('remote',{
-            url:url,
-            type:"POST",
-            data:{"subPackage":subPackageValue},
-            dataType:'json',//默认为字符串
-            callback : function(data){
-                return data;
-            }
-        });
-    });
-
-	subPackage.on('change',function(){
-        subPackageValue = document.getElementById("subPackage").value;
-        subPackage.set('remote',{
-            url:url,
-            type:"POST",
-            data:{"subPackage":subPackageValue},
-            dataType:'json',//默认为字符串
-            callback : function(data){
-                return data;
-            }
-        });
+	subPackage.on('remotestart',function(ev){
+        var data = ev.data;
+        data.mainPackage = document.getElementById("mainPackgage").value;
     });
 
 

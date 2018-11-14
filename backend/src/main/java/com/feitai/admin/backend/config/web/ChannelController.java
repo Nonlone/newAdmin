@@ -17,6 +17,7 @@ import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.jieya.server.dao.channel.model.Channel;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.datetime.DateFormatter;
@@ -46,10 +47,10 @@ public class ChannelController extends BaseListableController<Channel> {
 		return "/backend/channel/index";
 	}
 
-	@RequestMapping(value = "checkChannelName/{mainPackage}", method = RequestMethod.POST)
+	@RequestMapping(value = "/checkChannelName", method = RequestMethod.GET)
 	@ResponseBody
-	public Object checkChannelName(@RequestParam String subPackage, @PathVariable String mainPackage) {
-		if(mainPackage.equals("null")){
+	public Object checkChannelName(@RequestParam String subPackage, @RequestParam String mainPackage) {
+		if(StringUtils.isBlank(mainPackage)){
 			return "请先选择一级渠道";
 		}
 		Channel channel = this.channelService.findBySubPackageAndMainPackage(subPackage,mainPackage);
@@ -60,7 +61,7 @@ public class ChannelController extends BaseListableController<Channel> {
 		}
 	}
 
-	@RequestMapping(value = "getPrimaryChannel/{channelName}", method = RequestMethod.GET)
+	@RequestMapping(value = "/getPrimaryChannel/{channelName}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object getPrimaryChannel(@PathVariable("channelName") String channelName) {
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channelName);
@@ -70,7 +71,7 @@ public class ChannelController extends BaseListableController<Channel> {
 		return map;
 	}
 
-	@RequestMapping(value = "primaryList")
+	@RequestMapping(value = "/primaryList")
 	@ResponseBody
 	@LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
 	public Object primaryList(){

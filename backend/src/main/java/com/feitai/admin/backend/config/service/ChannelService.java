@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class ChannelService extends ClassPrefixDynamicSupportService<Channel> {
@@ -29,5 +31,10 @@ public class ChannelService extends ClassPrefixDynamicSupportService<Channel> {
     public ChannelCms findBySubPackageAndMainPackage(String subPackage, String mainPackage) {
         Example example = Example.builder(ChannelCms.class).andWhere(Sqls.custom().andEqualTo("subPackage",subPackage).andEqualTo("mainPackgage",mainPackage)).build();
         return channelCmsMapper.selectOneByExample(example);
+    }
+
+    public List<ChannelCms> findByPrimaryId(Long id) {
+        Example example = Example.builder(ChannelCms.class).andWhere(Sqls.custom().andEqualTo("primaryId",id)).build();
+        return channelCmsMapper.selectByExample(example);
     }
 }
