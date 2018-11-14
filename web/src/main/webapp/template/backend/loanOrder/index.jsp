@@ -202,14 +202,14 @@
         var columns = [
             {title:'订单编号',dataIndex:'id',width:'8%'},
 
-            {title:'客户姓名',dataIndex:'idcard',width:"5%",renderer: function (value) {
+            {title:'客户姓名',dataIndex:'idCard',width:"5%",renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '';
                     }
                 }},
-            {title:'身份证',dataIndex:'idcard',width:"9%",renderer: function (value) {
+            {title:'身份证',dataIndex:'idCard',width:"9%",renderer: function (value) {
                     if(value){
                         return value.idCard;
                     }else{

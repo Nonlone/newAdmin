@@ -1,4 +1,4 @@
-package com.feitai.admin.backend.service;
+package com.feitai.admin.backend.customer.service;
 
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class AttachPhotoService extends ClassPrefixDynamicSupportService<PhotoAttach> {
+public class PhotoService extends ClassPrefixDynamicSupportService<PhotoAttach> {
 
     public List<PhotoAttach> findUserPhotoByUserId(long userId) {
         Example example = Example.builder(PhotoAttach.class).andWhere(
@@ -29,7 +29,7 @@ public class AttachPhotoService extends ClassPrefixDynamicSupportService<PhotoAt
                                 PhotoType.SHAKE.getValue(),
                                 PhotoType.MOUTH.getValue()
                         }))
-        ).build();
+        ).orderByAsc("type").build();
         return mapper.selectByExample(example);
     }
 }

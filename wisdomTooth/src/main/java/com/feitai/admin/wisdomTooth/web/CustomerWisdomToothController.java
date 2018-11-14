@@ -1,7 +1,7 @@
 package com.feitai.admin.wisdomTooth.web;
 
 import com.feitai.admin.backend.customer.entity.IdCardDataExtend;
-import com.feitai.admin.backend.customer.service.IdcardService;
+import com.feitai.admin.backend.customer.service.IdCardService;
 import com.feitai.admin.backend.customer.service.PersonService;
 import com.feitai.admin.backend.customer.service.UserBankCardService;
 import com.feitai.admin.backend.customer.service.UserService;
@@ -39,12 +39,12 @@ import java.util.List;
  * date:2018/11/6
  */
 @Controller
-@RequestMapping(value = "/wisdomTooth/idcard")
+@RequestMapping(value = "/wisdomTooth/idCard")
 @Slf4j
 public class CustomerWisdomToothController extends BaseListableController<IdCardDataExtend> {
 
     @Autowired
-    private IdcardService idcardService;
+    private IdCardService idcardService;
 
     @Autowired
     private PersonService personService;
@@ -115,7 +115,7 @@ public class CustomerWisdomToothController extends BaseListableController<IdCard
             //脱敏处理
             if(idcard!=null){
                 model.addAttribute("hyIdcard",Desensitization.idCard(idcard.getIdCard()));
-                //idcard.setIdCard(hyIdcard);
+                //idCard.setIdCard(hyIdcard);
             }
             if(user!=null){
                 model.addAttribute("hyPhone",Desensitization.phone(user.getPhone()));
@@ -127,11 +127,11 @@ public class CustomerWisdomToothController extends BaseListableController<IdCard
             model.addAttribute("repayCard",repayCardrea);
             model.addAttribute("birthday",format.format(idcard.getBirthday()));
             model.addAttribute("person", person);
-            model.addAttribute("idcard",idcard);
+            model.addAttribute("idCard",idcard);
             model.addAttribute("user", user);
 
             //model.addAttribute("userId", "2481652236288");
-            return "/admin/appUser/idcard/out";
+            return "/admin/appUser/idCard/out";
         }catch (Exception e){
             log.error("", e);
             return "/noUser";

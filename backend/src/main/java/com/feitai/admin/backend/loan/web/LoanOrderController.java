@@ -10,7 +10,7 @@ package com.feitai.admin.backend.loan.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.customer.service.BankSupportService;
-import com.feitai.admin.backend.customer.service.IdcardService;
+import com.feitai.admin.backend.customer.service.IdCardService;
 import com.feitai.admin.backend.customer.service.UserService;
 import com.feitai.admin.backend.fund.service.FundService;
 import com.feitai.admin.backend.loan.entity.LoanOrderMore;
@@ -65,7 +65,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private ProductTermFeeFeatureService productTermFeeFeatureService;
 
     @Autowired
-    private IdcardService idcardService;
+    private IdCardService idcardService;
 
     @Autowired
     private UserService userService;
@@ -102,20 +102,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         model.addAttribute("isOut", false);
         return "backend/loanOrder/index";
     }
-
-    @RequestMapping(value = "getLoanStatusList")
-    @ResponseBody
-    @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
-    public Object getLoanStatusList(){
-        Map<String,String> map = JSONObject.parseObject(mapProperties.getLoanStatusSource(), Map.class);
-        List<ListItem> list = new ArrayList<ListItem>();
-        list.add(new ListItem("全部"," "));
-        for (String key : map.keySet()) {
-            list.add(new ListItem(map.get(key),key));
-        }
-        return list;
-    }
-
 
 
     @RequiresPermissions("/backend/loan/loanOrder:list")
@@ -179,7 +165,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
         model.addAttribute("loanOrder",loanOrder);
         model.addAttribute("user",userIn);
-        model.addAttribute("idcard",idcard);
+        model.addAttribute("idCard",idcard);
         model.addAttribute("product",product);
         if(byProductIdAndTerm.size()!=0){
             model.addAttribute("productIdAndTerm",byProductIdAndTerm.get(0));
@@ -305,7 +291,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         return SelectMultiTable.builder(LoanOrderMore.class)
                 .leftJoin(RepayOrderMore.class, "repay_order", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "id", Operator.EQ, "loanOrderId"),
-                }).leftJoin(IdCardData.class, "idcard", new OnCondition[]{
+                }).leftJoin(IdCardData.class, "idCard", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "userId")
                 }).leftJoin(Product.class, "product", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "productId", Operator.EQ, "id")
@@ -326,7 +312,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         String sql = SelectMultiTable.builder(LoanOrderMore.class)
                 .leftJoin(RepayOrderMore.class, "repay_order", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "id", Operator.EQ, "loanOrderId"),
-                }).leftJoin(IdCardData.class, "idcard", new OnCondition[]{
+                }).leftJoin(IdCardData.class, "idCard", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "userId")
                 }).leftJoin(Product.class, "product", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "productId", Operator.EQ, "id")

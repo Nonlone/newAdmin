@@ -9,10 +9,8 @@ package com.feitai.admin.backend.loan.web;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
-import com.feitai.admin.backend.customer.service.IdcardService;
+import com.feitai.admin.backend.customer.service.IdCardService;
 import com.feitai.admin.backend.customer.service.UserService;
-import com.feitai.admin.backend.loan.entity.LoanOrderMore;
 import com.feitai.admin.backend.loan.entity.RepayOrderMore;
 import com.feitai.admin.backend.loan.service.RepayOrderService;
 import com.feitai.admin.backend.loan.service.RepayPlanComponentService;
@@ -25,7 +23,6 @@ import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
-import com.feitai.jieya.server.dao.card.model.Card;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
 import com.feitai.jieya.server.dao.loan.model.LoanOrder;
 import com.feitai.jieya.server.dao.loan.model.RepayOrder;
@@ -39,10 +36,8 @@ import com.feitai.utils.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
@@ -59,7 +54,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     private RepayOrderService repayOrderService;
 
     @Autowired
-    private IdcardService idcardService;
+    private IdCardService idcardService;
 
     @Autowired
     private CardService cardService;
@@ -123,7 +118,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         }
         model.addAttribute("repayOrder", repayOrder);
         model.addAttribute("userIn", userIn);
-        model.addAttribute("idcard", idcard);
+        model.addAttribute("idCard", idcard);
 
         int ageByIdCard = IdCardUtils.getAgeByIdCard(idcard.getIdCard());
         model.addAttribute("year", ageByIdCard);
@@ -198,11 +193,11 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
             json.put("termPre", repayPlan.get("term").toString() + "/" + loanTerm);
             //脱敏处理
             //TODO-日后处理idcard/payAccount的脱敏处理
-            JSONObject idcard = (JSONObject)json.get("idcard");
+            JSONObject idcard = (JSONObject)json.get("idCard");
             String hyIdcard = Desensitization.idCard((String)idcard.get("idCard"));
             idcard.put("idCard",hyIdcard);
-            json.remove("idcard");
-            json.put("idcard", idcard);
+            json.remove("idCard");
+            json.put("idCard", idcard);
 
             String hyCard = Desensitization.bankCardNo((String)json.get("payAccount"));
             json.put("payAccount", hyCard);
@@ -229,7 +224,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         return  SelectMultiTable.builder(RepayOrder.class)
                 .leftJoin(RepayPlan.class,"repay_plan",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "repayPlanId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class,"idcard",new OnCondition[]{
+                }).leftJoin(IdCardData.class,"idCard",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"userId")
                 }).leftJoin(LoanOrder.class,"loan_order",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"loanOrderId",Operator.EQ,"id")
@@ -242,7 +237,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         String sql = SelectMultiTable.builder(RepayOrder.class)
                 .leftJoin(RepayPlan.class,"repay_plan",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "repayPlanId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class,"idcard",new OnCondition[]{
+                }).leftJoin(IdCardData.class,"idCard",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"userId")
                 }).leftJoin(LoanOrder.class,"loan_order",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"loanOrderId",Operator.EQ,"id")

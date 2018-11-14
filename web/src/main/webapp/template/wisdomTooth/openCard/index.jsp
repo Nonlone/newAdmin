@@ -88,14 +88,14 @@ BUI.use(['bui/ux/crudgrid','bui/common/search','bui/common/page'],function (Crud
                     return '';
                 }
             }},
-        {title:'客户姓名',dataIndex:'idcard',width:'10%',renderer: function (value) {
+        {title:'客户姓名',dataIndex:'idCard',width:'10%',renderer: function (value) {
                 if(value){
                     return value.name;
                 }else{
                     return '<span style="color:#ff9955">未填写</span>';
                 }
             }},
-        {title:'身份证',dataIndex:'idcard',width:'10%',renderer: function (value) {
+        {title:'身份证',dataIndex:'idCard',width:'10%',renderer: function (value) {
                 if(value){
                     return value.idCard;
                 }else{
