@@ -5,7 +5,6 @@ import com.alibaba.fastjson.serializer.*;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.feitai.base.json.filter.KeyFilter;
-import com.feitai.base.json.serializer.BooleanSerializer;
 import com.feitai.base.json.serializer.DateSerializer;
 import com.feitai.utils.Desensitization;
 import com.google.code.kaptcha.servlet.KaptchaServlet;
