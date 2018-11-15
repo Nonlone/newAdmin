@@ -84,6 +84,7 @@
                     <tagNameFormat>${project.version}</tagNameFormat>
                     <!--因为是聚合工程，设置这个参数免去为每个子模块设置版本号的动作，统一使用聚合模块的版本号-->
                     <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
                     <!--git 账号密码-->
                     <username>linguocheng</username>
                     <password>Feitai1234</password>
