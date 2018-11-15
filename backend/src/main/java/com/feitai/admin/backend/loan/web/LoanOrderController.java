@@ -20,14 +20,11 @@ import com.feitai.admin.backend.loan.service.RepayPlanComponentService;
 import com.feitai.admin.backend.loan.service.RepayPlanService;
 import com.feitai.admin.backend.loan.vo.OrderPlande;
 import com.feitai.admin.backend.opencard.service.CardService;
-import com.feitai.admin.backend.product.entity.ProductMore;
 import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
 import com.feitai.admin.backend.properties.AppProperties;
 import com.feitai.admin.backend.properties.MapProperties;
-import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
-import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.bank.model.BankSupport;
@@ -148,7 +145,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         Long userId = loanOrder.getUserId();
         User userIn = userService.findOne(userId);
         IdCardData idcard = idcardService.findByUserId(userId);
-        ProductMore product = productService.findOne(loanOrder.getProductId());
+        Product product = productService.findOne(loanOrder.getProductId());
 
         //获取产品详细信息，需要产品id和期数
         List<ProductTermFeeFeature> byProductIdAndTerm = productTermFeeFeatureService.findByProductIdAndTerm(loanOrder.getProductId(), loanOrder.getLoanTerm().shortValue());
