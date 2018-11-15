@@ -131,6 +131,22 @@
                         ${creditTime}
                     </td>
                 </tr>
+            <c:if test="${not empty tongDunData }"> 
+                <tr>
+                     <td bgcolor="#F2F2F2" width="30px" height="30px">
+                          同盾设备客户端
+                     </td>
+                     <td width="70px" height="30px">
+                         ${tongDunData.osType}
+                     </td>
+                     <td bgcolor="#F2F2F2" width="30px" height="30px">
+                          同盾设备指纹
+                     </td>
+                     <td width="70px" height="30px">
+                         <button blackBox="${tongDunData.blackBox}" id="btnShow" class="button button-primary">显示</button>                         
+                     </td>
+                </tr>
+           </c:if> 
                 </tbody>
             </table>
         </div>
@@ -204,7 +220,7 @@
             </div>
 
             <!-- 基本资料 -->
-            <div id="baseData">
+            <div  id="baseData">
                 <iframe  frameborder="no"  border="0"  src="${ctx}/backend/customer/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
         </div>
@@ -379,7 +395,20 @@
             }
         }
     }
+    BUI.use('bui/overlay',function(Overlay){
+        var dialog = new Overlay.Dialog({
+          title:'同盾设备指纹',
+          width:500,
+          height:300,
+          mask:false,
+          buttons:[],
+          bodyContent:'<div style="width:500px;word-wrap:break-word;">'+$("#btnShow").attr("blackBox")+'</div>'//'<p></p>'
+        });
 
+      $('#btnShow').on('click',function () {
+        dialog.show();
+      });
+    });
 
     // function setIframeHeight(iframe) {
     //     if (iframe) {
