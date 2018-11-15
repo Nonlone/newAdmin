@@ -151,7 +151,8 @@
                     <th width="150px">ip</th>
                 </thead>
                 <tbody>
-                <c:if test="${not empty areaList}">
+                <c:choose>
+                <c:when test="${not empty areaList}">
                     <c:forEach items="${areaList}" var="area">
                         <tr>
                             <td  width="150px">${area.segmentName}</td>
@@ -163,7 +164,13 @@
                         </tr>
 
                     </c:forEach>
-                </c:if>
+                 </c:when>
+                <c:otherwise>
+                         <tr>
+                            <td style="text-align: center;" colspan="6" width="900px">无</td>                    
+                        </tr>
+                </c:otherwise> 
+                </c:choose>
                 </tbody>
             </table>
         </div>
