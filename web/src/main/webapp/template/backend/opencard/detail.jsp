@@ -92,13 +92,7 @@
                 </tr>
                 <tr>
                     <td bgcolor="#F2F2F2" width="30px" height="30px">
-                        授信额度
-                    </td>
-                    <td width="70px" height="30px">
-                        ${card.creditSum}
-                    </td>
-                    <td bgcolor="#F2F2F2" width="30px" height="30px">
-                        客户端类型：
+                        注册客户端类型：
                     </td>
                     <td width="70px" height="30px">
                         ${user.osType}
@@ -109,6 +103,12 @@
                     <td width="70px" height="30px">
                         <c:if test="${card.approvalFlag ne null}">${card.approvalFlag}</c:if>
                         <c:if test="${card.approvalFlag eq null}">无</c:if>
+                    </td>
+                     <td bgcolor="#F2F2F2" width="30px" height="30px">
+                        授信额度
+                    </td>
+                    <td width="70px" height="30px">
+                        ${card.creditSum}
                     </td>
                 </tr>
                 <tr>
