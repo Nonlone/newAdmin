@@ -92,13 +92,7 @@
                 </tr>
                 <tr>
                     <td bgcolor="#F2F2F2" width="30px" height="30px">
-                        授信额度
-                    </td>
-                    <td width="70px" height="30px">
-                        ${card.creditSum}
-                    </td>
-                    <td bgcolor="#F2F2F2" width="30px" height="30px">
-                        客户端类型：
+                        注册客户端类型：
                     </td>
                     <td width="70px" height="30px">
                         ${user.osType}
@@ -109,6 +103,12 @@
                     <td width="70px" height="30px">
                         <c:if test="${card.approvalFlag ne null}">${card.approvalFlag}</c:if>
                         <c:if test="${card.approvalFlag eq null}">无</c:if>
+                    </td>
+                     <td bgcolor="#F2F2F2" width="30px" height="30px">
+                        授信额度
+                    </td>
+                    <td width="70px" height="30px">
+                        ${card.creditSum}
                     </td>
                 </tr>
                 <tr>
@@ -131,6 +131,22 @@
                         ${creditTime}
                     </td>
                 </tr>
+            <c:if test="${not empty tongDunData }"> 
+                <tr>
+                     <td bgcolor="#F2F2F2" width="30px" height="30px">
+                          同盾设备客户端
+                     </td>
+                     <td width="70px" height="30px">
+                         ${tongDunData.osType}
+                     </td>
+                     <td bgcolor="#F2F2F2" width="30px" height="30px">
+                          同盾设备指纹
+                     </td>
+                     <td width="70px" height="30px">
+                         <button blackBox="${tongDunData.blackBox}" id="btnShow" class="button button-primary">显示</button>                         
+                     </td>
+                </tr>
+           </c:if> 
                 </tbody>
             </table>
         </div>
@@ -151,7 +167,8 @@
                     <th width="150px">ip</th>
                 </thead>
                 <tbody>
-                <c:if test="${not empty areaList}">
+                <c:choose>
+                <c:when test="${not empty areaList}">
                     <c:forEach items="${areaList}" var="area">
                         <tr>
                             <td  width="150px">${area.segmentName}</td>
@@ -163,7 +180,13 @@
                         </tr>
 
                     </c:forEach>
-                </c:if>
+                 </c:when>
+                <c:otherwise>
+                         <tr>
+                            <td style="text-align: center;" colspan="6" width="900px">无</td>                    
+                        </tr>
+                </c:otherwise> 
+                </c:choose>
                 </tbody>
             </table>
         </div>
@@ -197,7 +220,7 @@
             </div>
 
             <!-- 基本资料 -->
-            <div id="baseData">
+            <div  id="baseData">
                 <iframe  frameborder="no"  border="0"  src="${ctx}/backend/customer/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
         </div>
@@ -372,7 +395,20 @@
             }
         }
     }
+    BUI.use('bui/overlay',function(Overlay){
+        var dialog = new Overlay.Dialog({
+          title:'同盾设备指纹',
+          width:500,
+          height:300,
+          mask:false,
+          buttons:[],
+          bodyContent:'<div style="width:500px;word-wrap:break-word;">'+$("#btnShow").attr("blackBox")+'</div>'//'<p></p>'
+        });
 
+      $('#btnShow').on('click',function () {
+        dialog.show();
+      });
+    });
 
     // function setIframeHeight(iframe) {
     //     if (iframe) {

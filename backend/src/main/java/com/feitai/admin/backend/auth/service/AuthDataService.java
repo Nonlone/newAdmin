@@ -40,8 +40,8 @@ public class AuthDataService {
         Set<String> checkSet = new HashSet<>();
         List<AuthData> authDataList = authDataMapper.selectByExample(Example.builder(AuthData.class)
                 .andWhere(WeekendSqls.<AuthData>custom()
-                        .andEqualTo(AuthData::getCardId, cardId)
-                        .andEqualTo(AuthData::getStatus, AuthStatus.AUTHORIZED.getValue())).build());
+                        .andEqualTo("cardId", cardId)
+                        .andEqualTo("status", AuthStatus.AUTHORIZED.getValue())).build());
         if (!CollectionUtils.isEmpty(authDataList)) {
             for (AuthData auth : authDataList) {
                 if (!checkSet.contains(auth.getCode().getValue() + "-" + auth.getSource().getValue())) {
@@ -52,8 +52,8 @@ public class AuthDataService {
         } else {
             List<AuthDataTempAuth> authDataTempAuthList = authdataTempAuthMapper.selectByExample(Example.builder(AuthDataTempAuth.class)
                     .andWhere(WeekendSqls.<AuthDataTempAuth>custom()
-                            .andEqualTo(AuthDataTempAuth::getCardId, cardId)
-                            .andEqualTo(AuthDataTempAuth::getStatus, AuthStatus.AUTHORIZED.getValue())).build());
+            .andEqualTo("cardId", cardId)
+            .andEqualTo("status", AuthStatus.AUTHORIZED.getValue())).build());
             if (!CollectionUtils.isEmpty(authDataList)) {
                 for (AuthDataTempAuth authdataTempAuth : authDataTempAuthList) {
                     if (!checkSet.contains(authdataTempAuth.getCode().getValue() + "-" + authdataTempAuth.getSource().getValue())) {

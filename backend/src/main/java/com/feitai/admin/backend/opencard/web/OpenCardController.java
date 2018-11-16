@@ -16,6 +16,7 @@ import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
+import com.feitai.admin.backend.opencard.service.TongDunDataService;
 import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.backend.customer.service.PhotoService;
 import com.feitai.admin.core.annotation.LogAnnotation;
@@ -98,6 +99,9 @@ public class OpenCardController extends BaseListableController<CardMore> {
 
     @Autowired
     private PhotoService photoService;
+    
+    @Autowired
+    private TongDunDataService tongDunDataService;
 
 
     @RequestMapping("/index")
@@ -187,8 +191,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
             JSONObject jsonObject = (JSONObject) JSON.toJSON(openCardArea);
             jsonObject.put("segmentName", mapProperties.getSegment(openCardArea.getSegment()));
             areaList.add(jsonObject);
-        }
-
+        }         
         // 提交审批时间
         if (!Objects.isNull(card.getSubmitTime())) {
             model.addObject("submitTime", DateUtils.format(card.getSubmitTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD_HH_MM_SS));
@@ -206,6 +209,13 @@ public class OpenCardController extends BaseListableController<CardMore> {
         model.addObject("createdTime", DateUtils.format(card.getCreatedTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD_HH_MM_SS));
 
         model.addObject("areaList", areaList);
+        //
+        if(card!=null){
+        TongDunData tongDunData=tongDunDataService.getTonDunData(card.getUserId(), card.getId());
+        if(tongDunData!=null){
+        	model.addObject("tongDunData",tongDunData);
+        }
+        }
         return model;
     }
 
