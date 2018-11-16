@@ -102,7 +102,7 @@
 					<div class="controls">
 						<input id="primaryCode" name="primaryCode" class="input-minimum" readonly="true" data-rules="{required:false,}" type="text">
 						<input id="channelId" name="channelId" type="text"
-							data-rules="{required:true,}"
+							data-remote="${ctx}/backend/channel/checkChannelId"
 							class="input-minimum control-text">
 					</div>
 				</div>
@@ -242,11 +242,16 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 
 
     var subPackage = addOrUpdateForm.getField("subPackage");
-    var mainPackgage = addOrUpdateForm.getField("mainPackgage");
-    var subPackageValue,mainPackageValue;
+    var channelId = addOrUpdateForm.getField("channelId");
     // if(mainPackageValue==""||mainPackageValue==null){
     //     mainPackageValue = "null";
     // }
+
+	channelId.on('remotestart',function (ev) {
+	    debugger;
+		var data = ev.data;
+		data.primaryCode = document.getElementById("primaryCode").value;
+    })
 
 	subPackage.on('remotestart',function(ev){
         var data = ev.data;

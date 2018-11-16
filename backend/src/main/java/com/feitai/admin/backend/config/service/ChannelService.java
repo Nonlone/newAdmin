@@ -23,7 +23,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class ChannelService extends ClassPrefixDynamicSupportService<Channel> {
+public class ChannelService extends ClassPrefixDynamicSupportService<ChannelCms> {
 
     @Autowired
     private ChannelCmsMapper channelCmsMapper;
@@ -36,5 +36,14 @@ public class ChannelService extends ClassPrefixDynamicSupportService<Channel> {
     public List<ChannelCms> findByPrimaryId(Long id) {
         Example example = Example.builder(ChannelCms.class).andWhere(Sqls.custom().andEqualTo("primaryId",id)).build();
         return channelCmsMapper.selectByExample(example);
+    }
+
+    public boolean checkChannel(String channelId) {
+        Example example = Example.builder(ChannelCms.class).andWhere(Sqls.custom().andEqualTo("channelId",channelId)).build();
+        List<ChannelCms> channelCms = getMapper().selectByExample(example);
+        if(channelCms.size()>0){
+            return false;
+        }
+        return true;
     }
 }

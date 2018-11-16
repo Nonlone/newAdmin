@@ -27,8 +27,8 @@ import com.feitai.jieya.server.dao.data.model.IdCardData;
 import com.feitai.jieya.server.dao.data.model.PersonData;
 import com.feitai.jieya.server.dao.data.model.WorkData;
 import com.feitai.jieya.server.dao.user.model.User;
+import com.feitai.jieya.server.utils.IdCardUtils;
 import com.feitai.utils.Desensitization;
-import com.feitai.utils.IdCardUtils;
 import com.feitai.utils.StringUtils;
 import com.feitai.utils.datetime.DateTimeStyle;
 import com.feitai.utils.datetime.DateUtils;
@@ -107,7 +107,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
             JSONObject json = (JSONObject) JSON.toJSON(idCardDataExtend);
             try {
                 if (StringUtils.isNotBlank(idCardDataExtend.getIdCard())) {
-                    json.put("birthday", DateUtils.format(IdCardUtils.getBirthdayByIdCard(idCardDataExtend.getIdCard()), DateTimeStyle.DEFAULT_YYYY_MM_DD));
+                    json.put("birthday",IdCardUtils.getBirthByIdCard(idCardDataExtend.getIdCard()));
                     json.put("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
                 }
 
@@ -142,7 +142,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
                 // 年龄
                 model.addObject("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
                 // 生日
-                model.addObject("birthday", DateUtils.format(IdCardUtils.getBirthdayByIdCard(idCardDataExtend.getIdCard()), DateTimeStyle.DEFAULT_YYYY_MM_DD));
+                model.addObject("birthday", IdCardUtils.getBirthByIdCard(idCardDataExtend.getIdCard()));
                 // 身份证
                 model.addObject("hyIdcard", Desensitization.idCard(idCardDataExtend.getIdCard()));
             } else {

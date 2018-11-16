@@ -5,8 +5,6 @@ import com.alibaba.fastjson.serializer.*;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.feitai.base.json.filter.KeyFilter;
-import com.feitai.base.json.serializer.BooleanSerializer;
-import com.feitai.base.json.serializer.DateSerializer;
 import com.feitai.utils.Desensitization;
 import com.google.code.kaptcha.servlet.KaptchaServlet;
 import org.apache.commons.lang3.StringUtils;
@@ -146,7 +144,7 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         serializeConfig.put(BigInteger.class, ToStringSerializer.instance);
         serializeConfig.put(Long.class, ToStringSerializer.instance);
         serializeConfig.put(Long.TYPE, ToStringSerializer.instance);
-        serializeConfig.put(Date.class, DateSerializer.instance);
+        //serializeConfig.put(Date.class, DateSerializer.instance);
         fastJsonConfig.setSerializeConfig(serializeConfig);
 
         fastJsonConfig.setSerializeFilters(new KeyFilter(hyposensitizeHandlerMap));

@@ -7,12 +7,14 @@
 
 package com.feitai.admin.backend.config.web;
 
+import com.feitai.admin.backend.config.entity.ChannelCms;
 import com.feitai.admin.backend.config.entity.ChannelPrimary;
 import com.feitai.admin.backend.config.service.ChannelPrimaryService;
 import com.feitai.admin.backend.config.service.ChannelService;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
+import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.jieya.server.dao.channel.model.Channel;
@@ -34,7 +36,7 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "/backend/channel")
 @Slf4j
-public class ChannelController extends BaseListableController<Channel> {
+public class ChannelController extends BaseListableController<ChannelCms> {
 
 	@Autowired
 	private ChannelService channelService;
@@ -58,6 +60,20 @@ public class ChannelController extends BaseListableController<Channel> {
 			return null;
 		} else {
 			return "该名称已经被使用";
+		}
+	}
+
+	@RequestMapping(value = "/checkChannelId", method = RequestMethod.GET)
+	@ResponseBody
+	public Object checkChannelId(@RequestParam String channelId,@RequestParam String primaryCode) {
+		if(StringUtils.isBlank(primaryCode)){
+			return "请先选择一级渠道";
+		}
+
+		if (channelService.checkChannel(primaryCode+channelId)) {
+			return null;
+		} else {
+			return "该渠道标识已经被使用";
 		}
 	}
 
@@ -87,7 +103,7 @@ public class ChannelController extends BaseListableController<Channel> {
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
-		Page<Channel> listPage = super.list(request);
+		Page<ChannelCms> listPage = super.list(request);
 		return listPage;
 	}
 	
@@ -95,14 +111,17 @@ public class ChannelController extends BaseListableController<Channel> {
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("id") Long id) {
-		Channel channel = this.channelService.findOne(id);
+		ChannelCms channel = this.channelService.findOne(id);
 		return channel;
 	}
 	
 	@RequiresPermissions("/backend/channel:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
-	public Object add(@Valid Channel channel){
+	public Object add(@Valid ChannelCms channel){
+		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
+		channel.setMainPackageCode(channelPrimary.getChannelCode().toString());
+		channel.setChannelId(channelPrimary.getChannelCode().toString()+"_"+channel.getChannelId());
 		channel.setCreatedTime(new Date());
 		channel.setUpdateTime(new Date());
 		this.channelService.save(channel);
@@ -112,7 +131,10 @@ public class ChannelController extends BaseListableController<Channel> {
 	@RequiresPermissions("/backend/channel:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
-	public Object update(@Valid @ModelAttribute("channel") Channel channel){
+	public Object update(@Valid @ModelAttribute("channel") ChannelCms channel){
+		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
+		channel.setMainPackageCode(channelPrimary.getChannelCode().toString());
+		channel.setChannelId(channelPrimary.getChannelCode().toString()+"_"+channel.getChannelId());
 		channel.setUpdateTime(new Date());
 		this.channelService.save(channel);
 		return BaseListableController.successResult;
@@ -139,7 +161,7 @@ public class ChannelController extends BaseListableController<Channel> {
 	}
 
 	@Override
-	protected DynamitSupportService<Channel> getService() {
+	protected DynamitSupportService<ChannelCms> getService() {
 		return this.channelService;
 	}
 
