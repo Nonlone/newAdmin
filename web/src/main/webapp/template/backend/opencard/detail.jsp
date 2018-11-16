@@ -144,7 +144,7 @@
                      </td>
                      <td width="70px" height="30px">
                         <div style="display: none" id="blackBox"> <div style="width: 450px;display:block;word-break: break-all;word-wrap: break-word;">${tongDunData.blackBox}</div></div>
-                         <button blackBox="${tongDunData.blackBox}" id="btnShow" class="button button-primary">显示</button>                         
+                         <button  id="btnShow" class="button button-primary">显示</button>                         
                      </td>
                 </tr>
            </c:if> 
