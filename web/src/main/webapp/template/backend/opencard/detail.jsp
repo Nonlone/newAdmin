@@ -193,37 +193,41 @@
         </div>
     </div>
     <div>
-        <ul class="nav-tabs">
-            <li id="li_base" class="active"><a href="javascript:void(0)" onclick="loadAll('base')">基本资料</a></li>
-            <li id="li_credit"><a href="javascript:void(0)" onclick="loadAll('credit')">征信报告</a></li>
-            <li id="li_operator"><a href="javascript:void(0)" onclick="loadAll('operator')">运营商报告</a></li>
-            <li id="li_bond"><a href="javascript:void(0)" onclick="loadAll('bond')">贷后邦报告</a></li>
+      <c:if test="${not empty authsList }">
+        <ul id="tabHeader" class="nav-tabs">
+            <li id="li_base" data-callback="" class="active"><a href="javascript:void(0)" onclick="load(this,'baseData')">基本资料</a></li>
+            <li id="li_credit" data-callback="creditHtml" ><a href="javascript:void(0)" onclick="load(this,'credit')">征信报告</a></li>
+            <li id="li_operator" data-callback="operatorHtml"><a href="javascript:void(0)" onclick="load(this,'operator')">运营商报告</a></li>
+            <li id="li_bond" data-callback="bondHtml"><a href="javascript:void(0)" onclick="load(this,'bond')">贷后邦报告</a></li>
         </ul>
-        <div style="margin-bottom: 10px;">
+       </c:if>
+        <div id="tabContext" style="margin-bottom: 10px;">
+             <!-- 基本资料 -->
+            <div  id="baseData" >
+                <iframe  frameborder="no"  border="0"  src="${ctx}/backend/customer/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
+            </div>
+            
             <!-- 征信报告 -->
-            <div id="credit" hidden="true">
+            <div id="credit" style="display:none;" >
 
                 <script type="text/html" src="${ctx}/static/artTemplate/template/creditTemplate.tpl"></script>
 
             </div>
 
             <!-- 运营商报告 -->
-            <div id="operator" hidden="true">
+            <div id="operator"  style="display:none;" >
                 <iframe name="operatorIframe" id="operatorIframe" width="100%" height='100%' scrolling="yes" frameborder="no"
                         border="0"></iframe>
             </div>
 
             <!-- 贷后邦报告 -->
-            <div id="bond" hidden="true">
+            <div id="bond"  style="display:none;"  >
 
                 <script type="text/html" src="${ctx}/static/artTemplate/template/templateTest.tpl"></script>
 
             </div>
 
-            <!-- 基本资料 -->
-            <div  id="baseData">
-                <iframe  frameborder="no"  border="0"  src="${ctx}/backend/customer/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
-            </div>
+            
         </div>
     </div>
 
@@ -234,51 +238,22 @@
 </body>
 <script type="text/javascript">
 
+    
 
-    var baseData = document.getElementById("baseData");
-    var credit = document.getElementById("credit");
-    var operator = document.getElementById("operator");
-    var bond = document.getElementById("bond");
-    var li_base = document.getElementById("li_base");
-    var li_credit = document.getElementById("li_credit");
-    var li_operator = document.getElementById("li_operator");
-    var li_bond = document.getElementById("li_bond");
-
-    function removeClassAddHidden() {
-        li_base.removeAttribute("class");
-        li_credit.removeAttribute("class");
-        li_operator.removeAttribute("class");
-        li_bond.removeAttribute("class");
-        baseData.setAttribute("hidden", "true");
-        credit.setAttribute("hidden", "true");
-        operator.setAttribute("hidden", "true");
-        bond.setAttribute("hidden", "true");
-    }
-
-    function loadAll(type) {
-        removeClassAddHidden();
-        if (type == 'base') {//基本资料
-            baseData.removeAttribute("hidden");
-            li_base.setAttribute("class", "active");
-        } else {
-            if (type == 'credit') {//征信报告
-                credit.removeAttribute("hidden");
-                li_credit.setAttribute("class", "active");
-                creditHtml();
-            }
-            if (type == 'operator') {//运营商报告
-                operator.removeAttribute("hidden");
-                li_operator.setAttribute("class", "active");
-                operatorHtml();
-            }
-            if (type == 'bond') {//贷后邦报告
-                bond.removeAttribute("hidden");
-                li_bond.setAttribute("class", "active");
-                bondHtml();
-            }
-        }
-
-    }
+      function load(ele,obj) {
+    	// 样式控制
+    	 var $ele = $(ele);
+    	 $ele.parent().addClass("active").siblings().removeClass("active");
+	     var $content = $("#"+obj);
+	     $content.show().siblings().hide();
+	   
+	 	// 调用对应渲染方法
+	   	var callbackFunName=$ele.parent().attr("data-callback");
+	   	if(callbackFunName==null || callbackFunName=="")
+	   		return;	
+	    var callbackFun=eval(callbackFunName);
+	   	new callbackFun();
+   	}  
 
     /***
      * 征信入口
@@ -410,24 +385,6 @@
         dialog.show();
       });
     });
-
-    // function setIframeHeight(iframe) {
-    //     if (iframe) {
-    //         var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
-    //         if (iframeWin.document) {
-    //             iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
-    //         }
-    //     }
-    // };
-
-    // function iFrameHeight() {
-    //     var ifm= document.getElementById("operatorIframe");
-    //     var subWeb = document.frames ? document.frames["operatorIframe"].document : ifm.contentDocument;
-    //     if(ifm != null && subWeb != null) {
-    //         ifm.style.height = 'auto';//关键这一句，先取消掉之前iframe设置的高度
-    //         ifm.style.height = subWeb.body.scrollHeight+'px';
-    //     }
-    // };
 
 </script>
 </html>
