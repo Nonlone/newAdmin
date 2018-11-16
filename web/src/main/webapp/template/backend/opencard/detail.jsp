@@ -143,6 +143,7 @@
                           同盾设备指纹
                      </td>
                      <td width="70px" height="30px">
+                        <div style="display: none" id="blackBox"> <div style="width: 450px;display:block;word-break: break-all;word-wrap: break-word;">${tongDunData.blackBox}</div></div>
                          <button blackBox="${tongDunData.blackBox}" id="btnShow" class="button button-primary">显示</button>                         
                      </td>
                 </tr>
@@ -402,7 +403,7 @@
           height:300,
           mask:false,
           buttons:[],
-          bodyContent:'<div style="width:500px;word-wrap:break-word;">'+$("#btnShow").attr("blackBox")+'</div>'//'<p></p>'
+          bodyContent:$("#blackBox").html()//'<div style="width:500px;word-wrap:break-word;">'+$("#btnShow").attr("blackBox")+'</div>'//'<p></p>'
         });
 
       $('#btnShow').on('click',function () {
