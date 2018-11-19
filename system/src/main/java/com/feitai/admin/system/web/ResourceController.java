@@ -7,6 +7,7 @@ import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.system.model.Resource;
 import com.feitai.admin.system.service.ResourceService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
@@ -70,8 +71,8 @@ public class ResourceController extends BaseListableController<Resource> {
     @ResponseBody
     public Object add(@Valid Resource resource) {
         //如果Parent的ID为空，则需要把Parent设置为空，否则会报错
-        if (resource.getParent() != null && (resource.getParent().getId() == null || resource.getParent().getId() == 0)) {
-            resource.setParent(null);
+        if (StringUtils.isBlank(resource.getParentId())) {
+            resource.setParentId(null);
         }
         this.resourceService.save(resource);
         return successResult;
