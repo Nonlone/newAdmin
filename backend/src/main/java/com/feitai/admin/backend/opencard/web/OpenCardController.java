@@ -108,7 +108,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
     public String index() {
         return "/backend/opencard/index";
     }
-
+  
 
     @RequiresPermissions("/backend/opencard:list")
     @RequestMapping(value = "list")
@@ -256,5 +256,18 @@ public class OpenCardController extends BaseListableController<CardMore> {
                 }).buildSqlString() + " where maintable.id = '" + id + "' ";
         return sql;
     }
-
+    
+    /**
+     * 获取授信状态
+     * @return
+     */
+    @RequestMapping(value="getCardStatusList")
+    @ResponseBody
+    public Object getCardStatusList(){
+    	List<ListItem> itemList = new ArrayList<>();
+    	for(CardStatus cs:CardStatus.values()){
+    	  itemList.add(new ListItem(mapProperties.getCardStatus(cs), cs.getValue().toString()));
+    	}
+    	return itemList;
+    }
 }

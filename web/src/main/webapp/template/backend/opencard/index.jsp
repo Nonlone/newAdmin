@@ -92,7 +92,8 @@
         <div id="grid"></div>
     </div>
 </div>
-
+<%-- <c:forEach var="item" items="${cardStatusList}">
+</c:forEach> --%>
 <script type="text/javascript">
 
     //清空按钮
@@ -110,11 +111,10 @@
     BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
 
 
-        var selectStatusStore = new Data.Store({
+         var selectStatusStore = new Data.Store({
             url: '/backend/opencard/getCardStatusList',
             autoLoad: true
-        });
-
+        });          
         selectStatus = new Select.Select({
             render:'#statusSelect',
             valueField:'#search_EQ_status',
