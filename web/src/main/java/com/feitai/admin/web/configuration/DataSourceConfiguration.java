@@ -7,6 +7,9 @@ import com.feitai.base.mybatis.interceptor.ClassPrefixMultiDataSourceSelector;
 import com.feitai.base.mybatis.interceptor.ConnectionSignature;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.EnvironmentAware;
@@ -14,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.util.CollectionUtils;
 
 import javax.sql.DataSource;
@@ -34,6 +38,8 @@ public class DataSourceConfiguration implements EnvironmentAware {
     private static final String BACKEND_DATASOURCE = "backend";
 
     private static final String ORDER_CENTER_DATASOURCE = "orderCenter";
+
+    private static final String MOP_DATASOURCE = "mop";
 
     private static final String DEFAULT_ADMIN_PACKAGE_PREFIX = DEFAULT_ADMIN_PACKAGE + ".";
 
@@ -64,6 +70,7 @@ public class DataSourceConfiguration implements EnvironmentAware {
         classPrefixMap.put("com.feitai.jieya.server.dao", BACKEND_DATASOURCE);
         classPrefixMap.put("com.feitai.admin.backend.creditdata", ORDER_CENTER_DATASOURCE);
         classPrefixMap.put("com.feitai.admin.wisdomTooth",ADMIN_DATASOURCE);
+        classPrefixMap.put("com.feitai.admin.mop",MOP_DATASOURCE);
         return classPrefixMap;
     }
 
@@ -200,4 +207,5 @@ public class DataSourceConfiguration implements EnvironmentAware {
         props.put(DruidDataSourceFactory.PROP_CONNECTIONPROPERTIES, connectionProperties);
         return DruidDataSourceFactory.createDataSource(props);
     }
+
 }

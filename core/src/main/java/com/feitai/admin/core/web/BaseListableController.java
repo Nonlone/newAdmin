@@ -199,4 +199,23 @@ public abstract class BaseListableController<T> extends BaseController {
         return page;
     }
 
+
+    protected <K> Page<K> buildPageByExemple(List<K> results, int pageNo, int pageSize) {
+        int totalSize = results.size();
+        List<K> resultsByPage = results.subList((pageNo - 1) * pageSize, (pageNo * pageSize)<=(results.size())?(pageNo * pageSize):results.size());
+        Page<K> page = new Page(resultsByPage);
+        if (pageNo >= 0 && pageSize > 0) {
+            page.setTotalPages(totalSize / pageSize + totalSize % pageSize > 0 ? 1 : 0);
+        } else {
+            page.setTotalPages(0);
+        }
+        page.setTotalElements(totalSize);
+        page.setNumber(pageNo);
+        page.setSize(pageSize);
+        page.setFirst(pageNo == 1);
+        page.setLast(pageNo == page.getTotalPages());
+        page.setNext(!page.isFirst());
+        page.setPrevious(!page.isLast());
+        return page;
+    }
 }
