@@ -3,9 +3,11 @@ package com.feitai.admin.mop.withdraworder.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.feitai.admin.core.service.DynamitSupportService;
+import com.feitai.admin.core.service.Page;
 import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.mop.base.dao.entity.OrderReceiverInfo;
+import com.feitai.admin.mop.base.dao.entity.Partner;
 import com.feitai.admin.mop.base.dao.entity.WithdrawOrder;
 import com.feitai.admin.mop.withdraworder.request.QueryRequest;
 import com.feitai.admin.mop.withdraworder.request.UpdateRequest;
@@ -64,8 +66,10 @@ public class WithdrawOrderController extends BaseListableController<WithdrawOrde
                 queryRequest.getOrderId(),
                 queryRequest.getStartTime(),
                 queryRequest.getEndTime());
-        return buildPage(withdrawOrders,queryRequest.getPageIndex(),
-                queryRequest.getLimit());
+        int pageNo = queryRequest.getPageIndex();
+        int pageSize = queryRequest.getLimit();
+        Page<WithdrawOrder> withdrawOrderPages = buildPageByExemple(withdrawOrders, queryRequest.getPageIndex(), queryRequest.getLimit());
+        return withdrawOrderPages;
     }
 
     //@RequiresPermissions("/admin/mop/partner/withdraywOrder:list")

@@ -44,9 +44,11 @@ public class PartnerController extends BaseListableController<Partner> {
     @RequestMapping("/list")
     @ResponseBody
     public Object listPartner(@ModelAttribute QueryRequest queryRequest){
-		List<Partner> pageInfo = partnerService.listPartner(
+		List<Partner> partners = partnerService.listPartner(
 				queryRequest.getUserId(), queryRequest.getType(), queryRequest.getPhone());
-		Page<Partner> partnerPage = buildPage(pageInfo, queryRequest.getPageIndex(), queryRequest.getLimit());
+		int pageNo = queryRequest.getPageIndex();
+		int pageSize = queryRequest.getLimit();
+		Page<Partner> partnerPage = buildPageByExemple(partners, queryRequest.getPageIndex(), queryRequest.getLimit());
 		convertPartner(partnerPage);
         return partnerPage;
     }
