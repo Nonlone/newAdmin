@@ -153,7 +153,7 @@
         <framwork:crudPermission resource="/backend/opencard"/>
 
         var selectProductStore = new Data.Store({
-            url: '/admin/product/product/productNameList',
+            url: '/admin/backend/product/productNameList',
             autoLoad: true
         });
 
