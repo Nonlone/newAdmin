@@ -239,7 +239,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
 
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
-        sbSql.append(SelectMultiTable.builder(CardMore.class).buildCountSqlString());
+        sbSql.append(getSelectMultiTable().buildCountSqlString());
         sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
         return sbSql.toString();
     }

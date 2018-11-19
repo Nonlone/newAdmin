@@ -27,7 +27,7 @@
             <div class="control-group span7">
                 <label class="control-label">注册手机号:</label>
                 <div class="controls">
-                    <input type="text" class="input-normal control-text" name="search_LIKE_userIn.phone">
+                    <input type="text" class="input-normal control-text" name="search_LIKE_user.phone">
                 </div>
             </div>
             <div class="control-group span7">
