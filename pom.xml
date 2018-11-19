@@ -39,6 +39,7 @@
         <java.version>1.8</java.version>
         <shiro.version>1.2.2</shiro.version>
         <druid.version>1.1.9</druid.version>
+        <okhttp.version>3.9.1</okhttp.version>
     </properties>
 
     <dependencies>
@@ -65,6 +66,7 @@
         <module>system</module>
         <module>backend</module>
         <module>wisdomTooth</module>
+        <module>mop</module>
     </modules>
 
     <build>
