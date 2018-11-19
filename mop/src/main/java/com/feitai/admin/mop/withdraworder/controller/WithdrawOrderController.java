@@ -66,8 +66,6 @@ public class WithdrawOrderController extends BaseListableController<WithdrawOrde
                 queryRequest.getOrderId(),
                 queryRequest.getStartTime(),
                 queryRequest.getEndTime());
-        int pageNo = queryRequest.getPageIndex();
-        int pageSize = queryRequest.getLimit();
         Page<WithdrawOrder> withdrawOrderPages = buildPageByExemple(withdrawOrders, queryRequest.getPageIndex(), queryRequest.getLimit());
         return withdrawOrderPages;
     }
