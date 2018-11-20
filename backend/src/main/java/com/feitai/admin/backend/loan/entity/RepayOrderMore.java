@@ -28,7 +28,7 @@ public class RepayOrderMore extends com.feitai.jieya.server.dao.loan.model.Repay
 
 	@Transient
 	@One(classOfMapper = IdCardDataMapper.class, sourceField = "userId", targetField = "userId")
-	private IdCardData idcard;
+	private IdCardData idCard;
 
 	@Transient
 	@One(classOfMapper = LoanOrderMapper.class, sourceField = "loanOrderId")
