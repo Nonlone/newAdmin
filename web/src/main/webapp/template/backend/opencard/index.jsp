@@ -110,15 +110,11 @@
 
     BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
 
-
-         var selectStatusStore = new Data.Store({
-            url: '/backend/opencard/getCardStatusList',
-            autoLoad: true
-        });          
+         
         selectStatus = new Select.Select({
             render:'#statusSelect',
             valueField:'#search_EQ_status',
-            store:selectStatusStore
+            items:JSON.parse('${itemList}')
         });
         selectStatus.render();
 

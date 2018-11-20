@@ -105,8 +105,17 @@ public class OpenCardController extends BaseListableController<CardMore> {
 
 
     @RequestMapping("/index")
-    public String index() {
-        return "/backend/opencard/index";
+    public ModelAndView index() {
+    	ModelAndView mav=new ModelAndView("/backend/opencard/index");
+    	List<ListItem> itemList = new ArrayList<>();
+    	for(CardStatus cs:CardStatus.values()){
+    	  String text=mapProperties.getCardStatus(cs);
+    	  if(!StringUtils.isEmpty(text)){
+    	   itemList.add(new ListItem(text, cs.getValue().toString()));
+    	  }
+    	}
+    	mav.addObject("itemList",JSONObject.toJSONString(itemList));
+        return mav;
     }
   
 
@@ -257,17 +266,4 @@ public class OpenCardController extends BaseListableController<CardMore> {
         return sql;
     }
     
-    /**
-     * 获取授信状态
-     * @return
-     */
-    @RequestMapping(value="getCardStatusList")
-    @ResponseBody
-    public Object getCardStatusList(){
-    	List<ListItem> itemList = new ArrayList<>();
-    	for(CardStatus cs:CardStatus.values()){
-    	  itemList.add(new ListItem(mapProperties.getCardStatus(cs), cs.getValue().toString()));
-    	}
-    	return itemList;
-    }
 }
