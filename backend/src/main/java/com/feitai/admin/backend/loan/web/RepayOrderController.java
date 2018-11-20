@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.customer.service.IdCardService;
 import com.feitai.admin.backend.customer.service.UserService;
+import com.feitai.admin.backend.fund.service.FundService;
 import com.feitai.admin.backend.loan.entity.RepayOrderMore;
 import com.feitai.admin.backend.loan.service.RepayOrderService;
 import com.feitai.admin.backend.loan.service.RepayPlanComponentService;
@@ -21,9 +22,11 @@ import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
 import com.feitai.admin.core.service.*;
+import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
+import com.feitai.jieya.server.dao.fund.model.Fund;
 import com.feitai.jieya.server.dao.loan.model.LoanOrder;
 import com.feitai.jieya.server.dao.loan.model.RepayOrder;
 import com.feitai.jieya.server.dao.loan.model.RepayPlan;
@@ -39,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletRequest;
 import java.math.BigDecimal;
@@ -73,13 +77,37 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
 
     @Autowired
     private ProductTermFeeFeatureService productTermFeeFeatureService;
+    
+    @Autowired
+    private FundService fundService;
 
     @RequestMapping(value = "")
     public String index(Model model) {
         model.addAttribute("isOut",false);
         return "/backend/repayOrder/index";
     }
+    
+    /**
+     * 首期还款列表页面
+     * @return
+     */
+    @RequestMapping(value = "/firstRepayOrder")
+    public ModelAndView firstRepayOrder() {
+    	ModelAndView modelAndView=new ModelAndView("/backend/repayOrder/firstRepayOrder");
+    	getProductList(modelAndView);
+        return modelAndView;
+    }
 
+	private void getProductList(ModelAndView modelAndView) {
+		List<Product> products = productService.findAll();
+		List<ListItem> list = new ArrayList<ListItem>();
+		list.add(new ListItem("全部"," "));
+		for(Product product:products){
+			list.add(new ListItem(product.getName(), product.getId().toString()));
+		}
+		modelAndView.addObject("productList",JSONObject.toJSONString(list));
+	}
+  
 
     @RequestMapping(value = "listOut")
     @ResponseBody
@@ -165,9 +193,9 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
             Long userId = (Long) json.get("userId");
 
             //product
-            HashMap loanOrder = (HashMap) json.get("loanOrder");
-            Integer productId = (Integer) loanOrder.get("productId");
-            Integer loanTerm = (Integer) loanOrder.get("loanTerm");
+            JSONObject loanOrder =  json.getJSONObject("loanOrder");
+            Integer productId = loanOrder.getInteger("productId");
+            Integer loanTerm = loanOrder.getInteger("loanTerm");
 
 
             //productTermFeeFeature
@@ -201,8 +229,18 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
 
             String hyCard = Desensitization.bankCardNo((String)json.get("payAccount"));
             json.put("payAccount", hyCard);
-
             resultList.add(json);
+            List<RepayPlan> byLoanOrderId = repayPlanService.findByLoanOrderIdAndTerm(repayOrderMore.getLoanOrderId(),(short)1);
+            List<OrderPlande> orderPlandes = repayPlanComponentService.findOrderPlandesByRepayPlans(byLoanOrderId);
+            if(orderPlandes.size()>0){
+            	json.put("orderPlande", JSONObject.toJSON(orderPlandes.get(0)));
+            }
+            if(repayOrderMore.getLoanOrder()!=null && repayOrderMore.getLoanOrder().getPayFundId()!=null){
+              Fund fund=fundService.getFund(repayOrderMore.getLoanOrder().getPayFundId());
+              json.put("fundName", Optional.ofNullable(fund).map(f ->f.getFundName()).orElse(""));
+            }
+            Product product=productService.findOne(productId);
+            json.put("product", product);
         }
         return switchContent(repayOrderMorePage,resultList);
 
@@ -210,7 +248,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
 
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
-        sbSql.append(SelectMultiTable.builder(RepayOrderMore.class).buildCountSqlString());
+        sbSql.append(getSelectMultiTable().buildCountSqlString());
         sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
         return sbSql.toString();
     }

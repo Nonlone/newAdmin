@@ -20,5 +20,10 @@ public class RepayPlanService extends ClassPrefixDynamicSupportService<RepayPlan
 		Example example = Example.builder(RepayPlan.class).andWhere(Sqls.custom().andEqualTo("loanOrderId",loanOrderId)).build();
 		return getMapper().selectByExample(example);
 	}
-
+    
+	public List<RepayPlan> findByLoanOrderIdAndTerm(Long loanOrderId,Short term){
+		Example example = Example.builder(RepayPlan.class).andWhere(Sqls.custom().andEqualTo("loanOrderId",loanOrderId)
+				.andEqualTo("term", term)).build();
+		return getMapper().selectByExample(example);
+	}
 }
