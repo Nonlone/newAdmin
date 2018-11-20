@@ -107,7 +107,16 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
 		}
 		modelAndView.addObject("productList",JSONObject.toJSONString(list));
 	}
-  
+	  /**
+     * 逾期还款列表页面
+     * @return
+     */
+    @RequestMapping(value = "/pastRepayOrder")
+    public ModelAndView pastRepayOrder() {
+    	ModelAndView modelAndView=new ModelAndView("/backend/repayOrder/pastRepayOrder");
+    	getProductList(modelAndView);
+        return modelAndView;
+    }
 
     @RequestMapping(value = "listOut")
     @ResponseBody
