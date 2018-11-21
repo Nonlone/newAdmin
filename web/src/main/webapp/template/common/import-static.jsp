@@ -64,29 +64,10 @@
             return formatedDate;
         }
 
-        /*
-
-       // template 注册渲染器
-       template.helper("getCtx", function () {
-           return $ctx;
-       });
-
-       //时间格式化
-       template.helper('dateFormat', function (data) {
-           var pattern = /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
-           var formatedDate = data.replace(pattern, '$1-$2-$3 $4:$5:$6');
-           return formatedDate;
-       });
-
-       template.helper("notEmpty",function(object){
-           console.log(object,!jQuery.isEmptyObject(object));
-          return !jQuery.isEmptyObject(object);
-       });
-       */
-
     })
 </script>
 <script type="text/javascript" >
+
     function autoSetIframeHeight(id) {
         var ifm= document.getElementById(id);
         var subWeb = document.frames ? document.frames[id].document :ifm.contentDocument;
@@ -94,6 +75,7 @@
             ifm.height = subWeb.body.scrollHeight;
         }
     }
+
 </script>
 <script type="text/javascript" src="${ctx}/static/bui/ux/crudgrid.js"></script>
 <script type="text/javascript" src="${ctx}/static/bui/ux/savedialog.js"></script>

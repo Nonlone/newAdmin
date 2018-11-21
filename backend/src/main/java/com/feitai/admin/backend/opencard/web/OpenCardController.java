@@ -20,6 +20,7 @@ import com.feitai.admin.backend.opencard.service.TongDunDataService;
 import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.backend.customer.service.PhotoService;
 import com.feitai.admin.core.service.*;
+import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.authdata.model.BaseAuthData;
@@ -54,6 +55,9 @@ import java.util.*;
 @Slf4j
 public class OpenCardController extends BaseListableController<CardMore> {
 
+    /**
+     * 展示征信项
+     */
     private Set<AuthCode> authListSet = new HashSet<AuthCode>(){{
         this.add(AuthCode.OPERATOR);
         this.add(AuthCode.PBCCRC);
