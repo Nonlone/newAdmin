@@ -19,23 +19,19 @@
 				</div>
 			</div>
            <div class="control-group span7">
-				<label class="control-label">产品名称:</label>
+				<label class="control-label">产品:</label>
 				<div id="selectProduct" class="controls">
 					<input id="searchProduct" type="hidden" name="search_LIKE_loanOrder.productId">
 				</div>
 			</div>
-			<div class="control-group span7">
-				<label class="control-label">还款日:</label>
-				<div id="selectRepayDay" class="controls">
-					<input id="searchRepayDay" type="hidden" name="">
+			<div class="control-group span_width">
+				<label class="control-label">时间T:</label>
+				<div class="controls bui-form-group height_auto" >
+					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
+					<input  type="text" class="calendar" onchange="changeDueDate(this)"  data-tip="{text : '还款日前5天'}">
+					<input id="repayPlan_dueDate" type="hidden" name="search_EQ_repay_plan.dueDate" >
 				</div>
 			</div>
-			
-			<%-- <div class="control-group span7" hidden="true">
-				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_EQ_userId" value="${userId}">
-				</div>
-			</div> --%>
 			<div class="span1 offset2">
 			  <button  type="button" id="btnSearch" class="button button-primary">搜索</button>
 			</div>
@@ -56,17 +52,50 @@
 
 <script type="text/javascript">
 
+    Date.prototype.format = function (format) {
+           var args = {
+               "M+": this.getMonth() + 1,
+               "d+": this.getDate(),
+               "h+": this.getHours(),
+               "m+": this.getMinutes(),
+               "s+": this.getSeconds(),
+               "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
+               "S": this.getMilliseconds()
+           };
+           if (/(y+)/.test(format))
+               format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+           for (var i in args) {
+               var n = args[i];
+               if (new RegExp("(" + i + ")").test(format))
+                   format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? n : ("00" + n).substr(("" + n).length));
+           }
+           return format;
+       };
+
     function openout(id) {
         window.open('${IP}'+'${ctx}/backend/loan/repayOrder/auth/'+id);
     }
 
-
+    var oneday = 1000 * 60 * 60 * 24;
+    var today=Date.now();
+    var date=new Date(today+oneday*5);
+    $("#repayPlan_dueDate").val(date.format("yyyy-MM-dd"));
+    function changeDueDate(obj){
+    	var tDate=new Date($(obj).val());
+    	var dueDate=new Date(tDate.getTime()+oneday*5);
+    	$("#repayPlan_dueDate").val(dueDate.format("yyyy-MM-dd"));
+    }
+    
+    
     function flushall(){
 	    var elementsByTagName = document.getElementsByTagName("input");
 	    for(var i = 0;i<elementsByTagName.length;i++){
             elementsByTagName[i].innerText = "";
 		}
+	    $("#repayPlan_dueDate").val(new Date(today+oneday*5));
 	}
+    
+    
 
     BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
 
@@ -76,14 +105,7 @@
             items:JSON.parse('${productList}')
         });
         selectProduct.render();
-        
-        
-        selectRepayDay = new Select.Select({
-            render: '#selectRepayDay',
-            valueField: '#searchRepayDay',
-            items:[{text:'全部',value:''},{text:'大于首个还款日',value:''},{text:'小于首个还款日',value:''}]
-        });
-        selectRepayDay.render();
+       
 
 
         //定义页面权限
@@ -121,7 +143,7 @@
 				 }else{
 					 return '';
 				 }
-	        }},//renderer:BUI.Grid.Format.dateRenderer
+	        }},
         {title:'首期总费用',dataIndex:'amount',width:'9%'},
         {title:"评审费",dataIndex:"orderPlande",width:"9%",renderer:function (value) {
 			 if(value){
