@@ -33,6 +33,9 @@ public class MapProperties {
         valveRejectMap = ImmutableMap.copyOf(JSONObject.parseObject(valveRejectSource,Map.class));
         userAuthMap = ImmutableMap.copyOf(JSONObject.parseObject(userAuthMapSource,Map.class));
         segmentMap = ImmutableMap.copyOf(JSON.parseObject(segmentMapSource,Map.class));
+        supplementMaterialMap = ImmutableMap.copyOf(JSON.parseObject(supplementMaterial,Map.class));
+        supplementMaterialTypeMap = ImmutableMap.copyOf(JSON.parseObject(supplementMaterialType,Map.class));
+        repayOrderStatusMap = ImmutableMap.copyOf(JSON.parseObject(repayOrderStatus,Map.class));
     }
 
     @Value("${backend.segmentMap}")
@@ -136,4 +139,49 @@ public class MapProperties {
         return null;
     }
 
+
+    @Value("${backend.supplementMaterial}")
+    private String supplementMaterial;
+
+    private static Map<String, String> supplementMaterialMap;
+
+    /***
+     * 获取补件资料名称
+     * @param key
+     * @return
+     */
+    public String getSupplyMarterialNm(String key) {
+        return getMapValue(supplementMaterialMap, key);
+    }
+
+
+    @Value("${backend.supplementMaterialType}")
+    private String supplementMaterialType;
+
+    private static Map<String, String> supplementMaterialTypeMap;
+
+    /***
+     * 获取补件资料名称
+     * @param key
+     * @return
+     */
+    public String getSupplyMarterialType(String key) {
+        return getMapValue(supplementMaterialTypeMap, key);
+    }
+
+
+
+    @Value("${backend.repayOrderStatus}")
+    private String repayOrderStatus;
+
+    private static Map<String, String> repayOrderStatusMap;
+
+    /***
+     * 获取补件资料名称
+     * @param key
+     * @return
+     */
+    public String getRepayOrderStatus(String key) {
+        return getMapValue(repayOrderStatusMap, key);
+    }
 }

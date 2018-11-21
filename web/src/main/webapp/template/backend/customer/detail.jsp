@@ -278,7 +278,6 @@
                     buttons: [],
                     bodyContent: large_image
                 });
-                dialog.show();
             });
         });
 
