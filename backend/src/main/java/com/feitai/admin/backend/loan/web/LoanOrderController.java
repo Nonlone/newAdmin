@@ -105,17 +105,12 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     @RequestMapping(value = "list")
     @ResponseBody
     public Map<String, Object> listPage(ServletRequest request) {
+
+
         Map<String, Object> map = listSup(request);
         return map;
     }
 
-
-    @RequestMapping(value = "listOut")
-    @ResponseBody
-    public Map<String, Object> listOut(ServletRequest request) {
-        Map<String, Object> map = listSup(request);
-        return map;
-    }
 
     /***
      * 取消放款

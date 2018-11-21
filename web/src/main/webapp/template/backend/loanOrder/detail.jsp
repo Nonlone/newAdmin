@@ -46,7 +46,7 @@
                     姓名：
                 </td>
                 <td width="100px" height="50px">
-                    ${idcard.name}
+                    ${idCard.name}
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     身份证号：

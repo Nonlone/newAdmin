@@ -12,4 +12,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class LoanOrderService extends ClassPrefixDynamicSupportService<LoanOrderMore> {
 
+
 }

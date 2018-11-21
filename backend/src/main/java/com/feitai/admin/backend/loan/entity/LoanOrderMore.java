@@ -35,6 +35,7 @@ public class LoanOrderMore extends com.feitai.jieya.server.dao.loan.model.LoanOr
 	@One(classOfMapper = UserMapper.class, sourceField = "userId")
 	private User user;
 
+	@Transient
 	private Byte cancelLoan;
 
 }

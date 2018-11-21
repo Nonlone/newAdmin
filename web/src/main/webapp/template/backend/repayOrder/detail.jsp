@@ -49,7 +49,7 @@
                     还款卡号：
                 </td>
                 <td width="100px" height="50px">
-                    ${phPayAccount}
+                    ${phPayCard}
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     提现金额：
