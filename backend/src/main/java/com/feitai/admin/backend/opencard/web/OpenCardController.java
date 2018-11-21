@@ -105,10 +105,19 @@ public class OpenCardController extends BaseListableController<CardMore> {
 
 
     @RequestMapping("/index")
-    public String index() {
-        return "/backend/opencard/index";
+    public ModelAndView index() {
+    	ModelAndView mav=new ModelAndView("/backend/opencard/index");
+    	List<ListItem> itemList = new ArrayList<>();
+    	for(CardStatus cs:CardStatus.values()){
+    	  String text=mapProperties.getCardStatus(cs);
+    	  if(!StringUtils.isEmpty(text)){
+    	   itemList.add(new ListItem(text, cs.getValue().toString()));
+    	  }
+    	}
+    	mav.addObject("itemList",JSONObject.toJSONString(itemList));
+        return mav;
     }
-
+  
 
     @RequiresPermissions("/backend/opencard:list")
     @RequestMapping(value = "list")
@@ -239,7 +248,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
 
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
-        sbSql.append(SelectMultiTable.builder(CardMore.class).buildCountSqlString());
+        sbSql.append(getSelectMultiTable().buildCountSqlString());
         sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
         return sbSql.toString();
     }
@@ -256,5 +265,5 @@ public class OpenCardController extends BaseListableController<CardMore> {
                 }).buildSqlString() + " where maintable.id = '" + id + "' ";
         return sql;
     }
-
+    
 }

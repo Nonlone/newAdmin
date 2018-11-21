@@ -27,7 +27,7 @@
             <div class="control-group span7">
                 <label class="control-label">注册手机号:</label>
                 <div class="controls">
-                    <input type="text" class="input-normal control-text" name="search_LIKE_userIn.phone">
+                    <input type="text" class="input-normal control-text" name="search_LIKE_user.phone">
                 </div>
             </div>
             <div class="control-group span7">
@@ -92,7 +92,8 @@
         <div id="grid"></div>
     </div>
 </div>
-
+<%-- <c:forEach var="item" items="${cardStatusList}">
+</c:forEach> --%>
 <script type="text/javascript">
 
     //清空按钮
@@ -109,16 +110,11 @@
 
     BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
 
-
-        var selectStatusStore = new Data.Store({
-            url: '/backend/opencard/getCardStatusList',
-            autoLoad: true
-        });
-
+         
         selectStatus = new Select.Select({
             render:'#statusSelect',
             valueField:'#search_EQ_status',
-            store:selectStatusStore
+            items:JSON.parse('${itemList}')
         });
         selectStatus.render();
 
@@ -153,7 +149,7 @@
         <framwork:crudPermission resource="/backend/opencard"/>
 
         var selectProductStore = new Data.Store({
-            url: '/admin/product/product/productNameList',
+            url: '/admin/backend/product/productNameList',
             autoLoad: true
         });
 
