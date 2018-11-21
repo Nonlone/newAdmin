@@ -108,6 +108,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
     public ModelAndView index() {
     	ModelAndView mav=new ModelAndView("/backend/opencard/index");
     	List<ListItem> itemList = new ArrayList<>();
+    	itemList.add(new ListItem("全部", ""));
     	for(CardStatus cs:CardStatus.values()){
     	  String text=mapProperties.getCardStatus(cs);
     	  if(!StringUtils.isEmpty(text)){

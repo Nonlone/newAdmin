@@ -46,7 +46,7 @@
             </div>
 
             <div class="control-group span7">
-                <label class="control-label">产品名称:</label>
+                <label class="control-label">产品:</label>
                 <div class="controls" id="selectProduct">
                     <input id="searchProduct" type="hidden" name="search_LIKE_product.name">
                 </div>
