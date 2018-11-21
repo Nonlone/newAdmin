@@ -39,7 +39,7 @@ public abstract class BaseListableController<T> extends BaseController {
             searchParamsList.addAll(extraSearchParamsList);
         }
         sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
-        sbSql.append(" GROUP BY " + SelectMultiTable.MAIN_ALAIS + ".id");
+        sbSql.append(" GROUP BY " + SelectMultiTable.MAIN_ALAIS + ".id ");
         return sbSql.toString();
     }
 

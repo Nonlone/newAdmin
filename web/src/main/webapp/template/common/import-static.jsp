@@ -6,7 +6,7 @@
 <link href="${ctx}/static/bui/css/${skin}/page-min.css" rel="stylesheet" type="text/css"/>
 <link href="${ctx}/static/iconfont/css/iconfont.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="${ctx}/static/common/js/jquery-1.8.1.min.js"></script>
-<script type="text/javascript" src="${ctx}/static/artTemplate/dist/template.js"></script>
+<script type="text/javascript" src="${ctx}/static/common/js/template.js"></script>
 <script type="text/javascript" src="${ctx}/static/bui/bui-min.js"></script>
 <script>
     var booleanEnumRender = {"true": "是", "false": "否"};
@@ -23,7 +23,6 @@
             dataType: "json",
             beforeSend:function(request,object){
                 var url = object.url;
-                console.log($ctx,url,url.startsWith("http"),url.startsWith($ctx));
                 if(!url.startsWith("http")&&!url.startsWith($ctx)){
                     object.url = $ctx + url;
                 }
@@ -47,6 +46,44 @@
                 dialog.show();
             });
         });
+
+        template.defaults.imports.log = console.log;
+
+        template.defaults.imports.getCtx = function(){
+            return $ctx;
+        };
+
+        template.defaults.imports.notEmpty = function(object){
+            return !jQuery.isEmptyObject(object);
+        };
+
+        template.defaults.imports.dateFormat = function (data) {
+            var pattern = /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
+            var formatedDate = data.replace(pattern, '$1-$2-$3 $4:$5:$6');
+            console.log(data,formatedDate);
+            return formatedDate;
+        }
+
+        /*
+
+       // template 注册渲染器
+       template.helper("getCtx", function () {
+           return $ctx;
+       });
+
+       //时间格式化
+       template.helper('dateFormat', function (data) {
+           var pattern = /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
+           var formatedDate = data.replace(pattern, '$1-$2-$3 $4:$5:$6');
+           return formatedDate;
+       });
+
+       template.helper("notEmpty",function(object){
+           console.log(object,!jQuery.isEmptyObject(object));
+          return !jQuery.isEmptyObject(object);
+       });
+       */
+
     })
 </script>
 <script type="text/javascript" >

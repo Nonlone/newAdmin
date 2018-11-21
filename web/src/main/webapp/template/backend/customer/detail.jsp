@@ -99,14 +99,10 @@
                 <table cellspacing="0" class="table table-bordered" style="margin-top: 15px;">
                     <tbody>
                     <tr>
-                        <td bgcolor="#F2F2F2" width="218px" height="30px"
-                            style="vertical-align: middle;text-align: center; ">活体对比公安4K
-                        </td>
-                        <td style="vertical-align: middle;text-align: center; ">${authVerify}</td>
-                        <td bgcolor="#F2F2F2" width="218px" height="30px"
-                            style="vertical-align: middle;text-align: center; ">活体对比身份证正面
-                        </td>
-                        <td style="vertical-align: middle;text-align: center; ">${livingVerify}</td>
+                        <td bgcolor="#F2F2F2" width="250px" height="30px" style="vertical-align: middle;text-align: center; ">活体对比公安4K</td>
+                        <td width="250px" style="vertical-align: middle;text-align: center; ">${authVerify}</td>
+                        <td bgcolor="#F2F2F2" width="218px" height="30px" style="vertical-align: middle;text-align: center; ">活体对比身份证正面</td>
+                        <td width="250px" style="vertical-align: middle;text-align: center; ">${livingVerify}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -162,41 +158,41 @@
             <table cellspacing="0" class="table table-bordered">
                 <tbody>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="200px">手机号</td>
-                    <td width="250px">${hyPhone}</td>
+                    <td bgcolor="#F2F2F2" width="150px">手机号</td>
+                    <td >${hyPhone}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="200px">居住类型</td>
-                    <td width="250px">${residentialType}</td>
+                    <td bgcolor="#F2F2F2" width="150px">居住类型</td>
+                    <td >${residentialType}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="200px">婚姻状况</td>
-                    <td width="250px">${maritalStatus}</td>
+                    <td bgcolor="#F2F2F2" width="150px">婚姻状况</td>
+                    <td>${maritalStatus}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="200px">生育状况</td>
-                    <td width="250px">${fertilityStatus}</td>
+                    <td bgcolor="#F2F2F2" width="150px">生育状况</td>
+                    <td >${fertilityStatus}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="200px">最高学历</td>
-                    <td width="250px">${educationLevel}</td>
+                    <td bgcolor="#F2F2F2" width="150px">最高学历</td>
+                    <td >${educationLevel}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="200px">学历</td>
-                    <td width="250px">${educationLevel}</td>
+                    <td bgcolor="#F2F2F2" width="150px">学历</td>
+                    <td >${educationLevel}</td>
                 </tr>
                 <tr>
                     <td bgcolor="#F2F2F2" width="200px">居住地</td>
-                    <td width="250px">${person.provinceName}&nbsp;${person.cityName}&nbsp;${person.districtName}&nbsp;${person.address}</td>
+                    <td >${person.provinceName}&nbsp;${person.cityName}&nbsp;${person.districtName}&nbsp;${person.address}</td>
                 </tr>
                 <c:if test="${ person.maritalStatus==2}">
                     <tr>
                         <td bgcolor="#F2F2F2" width="200px">配偶名字</td>
-                        <td width="250px">${person.spouseName}</td>
+                        <td >${person.spouseName}</td>
                     </tr>
                     <tr>
                         <td bgcolor="#F2F2F2" width="200px">配偶联系方式</td>
-                        <td width="250px">${person.spouseContact}</td>
+                        <td >${person.spouseContact}</td>
                     </tr>
                 </c:if>
                 </tbody>
@@ -209,48 +205,48 @@
             <table cellspacing="0" class="table table-bordered">
                 <tbody>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="200px">所属行业</td>
-                    <td width="200px">${belongIndustry}</td>
+                    <td bgcolor="#F2F2F2" width="150px">所属行业</td>
+                    <td >${belongIndustry}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="200px">工作类型</td>
-                    <td width="200px">${jobsType}</td>
+                    <td bgcolor="#F2F2F2" width="150px">工作类型</td>
+                    <td >${jobsType}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="200px">单位名称</td>
-                    <td width="200px">${work.companyName}</td>
+                    <td bgcolor="#F2F2F2" width="150px">单位名称</td>
+                    <td >${work.companyName}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="200px">单位地址</td>
-                    <td width="200px">${work.provinceName}&nbsp;${work.cityName}&nbsp;${districtName}&nbsp;${work.companyAddress}</td>
+                    <td bgcolor="#F2F2F2" width="150px">单位地址</td>
+                    <td >${work.provinceName}&nbsp;${work.cityName}&nbsp;${districtName}&nbsp;${work.companyAddress}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="200px">单位联系人手机</td>
-                    <td width="200px">${hyWorkContactPhone}</td>
+                    <td bgcolor="#F2F2F2" width="150px">单位联系人手机</td>
+                    <td >${hyWorkContactPhone}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="80px">单位联系人固话</td>
+                    <td bgcolor="#F2F2F2" width="150px">单位联系人固话</td>
                     <c:if test="${not empty work.contactTelephoneZoneCode}">
-                        <td width="200px">
+                        <td >
                             (${work.contactTelephoneZoneCode})&nbsp;${work.contactTelephone} <c:if
                                 test="${not empty work.contactTelephoneExtension}">&nbsp;-&nbsp;${work.contactTelephoneExtension}</c:if>
                         </td>
                     </c:if>
                     <c:if test="${empty work.contactTelephoneZoneCode}">
-                        <td width="200px">${work.contactTelephone}<c:if
+                        <td >${work.contactTelephone}<c:if
                                 test="${not empty work.contactTelephoneExtension}">&nbsp;-&nbsp;${work.contactTelephoneExtension}</c:if></td>
                     </c:if>
                 </tr>
                 <c:if test="${not empty work.organizationCode}">
                     <tr>
                         <td bgcolor="#F2F2F2" width="200px">公司企业机构代码</td>
-                        <td width="200px">${work.organizationCode}</td>
+                        <td >${work.organizationCode}</td>
                     </tr>
                 </c:if>
                 <c:if test="${not empty work.businessLicenseUrl}">
                     <tr>
                         <td bgcolor="#F2F2F2" width="200px">公司营业执照</td>
-                        <td width="200px">
+                        <td >
                             <img class="photo-businessLicenseUrl dialog" src="${work.businessLicenseUrl}" style="max-height: 200px;max-width: 200px;"/>
                         </td>
                     </tr>

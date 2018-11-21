@@ -161,8 +161,8 @@
         selectProduct.render();
 
         var columns = [
-            {title:'订单号',dataIndex:'id',width:'10%'},
-            {title:'客户ID',dataIndex:'userId',width:'130px'},
+            {title:'订单号',dataIndex:'id',width:'150px'},
+            {title:'客户ID',dataIndex:'userId',width:'150px'},
             {title:'客户姓名',dataIndex:'idCard',width:'80px',renderer: function (value) {
                     if(value){
                         return value.name;
@@ -223,7 +223,6 @@
             },
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
                 var title = obj.id+"—授信信息";
-                console.log(jQuery.isEmptyObject(obj.idCard),obj.idCard);
                 if(!jQuery.isEmptyObject(obj.idCard)){
                     title = obj.idCard.name + "—授信信息"
                 }

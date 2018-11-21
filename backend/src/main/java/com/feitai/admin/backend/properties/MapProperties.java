@@ -2,10 +2,7 @@ package com.feitai.admin.backend.properties;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.feitai.jieya.server.dao.base.constant.CardStatus;
-import com.feitai.jieya.server.dao.base.constant.PhotoType;
-import com.feitai.jieya.server.dao.base.constant.ProcessSegment;
-import com.feitai.jieya.server.dao.base.constant.UserAuthStatus;
+import com.feitai.jieya.server.dao.base.constant.*;
 import com.feitai.utils.StringUtils;
 import com.google.common.collect.ImmutableMap;
 import lombok.ToString;
@@ -110,6 +107,10 @@ public class MapProperties {
      */
     public String getAuthValue(String key) {
         return getMapValue(authValueMap, key);
+    }
+
+    public String getAuthValue(AuthCode authCode,AuthSource authSource) {
+        return getMapValue(authValueMap, authCode.getValue()+"-"+authSource.getValue());
     }
 
     /**

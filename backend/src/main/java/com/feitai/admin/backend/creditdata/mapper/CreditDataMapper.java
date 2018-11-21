@@ -1,6 +1,6 @@
 package com.feitai.admin.backend.creditdata.mapper;
 
-import com.feitai.admin.backend.creditdata.entity.CreditData;
+import com.feitai.admin.backend.creditdata.model.CreditData;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
