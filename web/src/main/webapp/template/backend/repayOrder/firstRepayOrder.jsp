@@ -38,6 +38,10 @@
 			<div class="span1 offset2">
 			  <button class="button button-danger" onclick="flushall();">清空</button>
 			</div>
+			
+			<div class="span1 offset2">
+			  <button type="button" class="button button-primary" onclick="downLoad();">导出</button>
+			</div>
 		</div>
 		<input type="hidden" name="search_EQ_repay_plan.term" value="1" />
 		</form>
@@ -71,7 +75,14 @@
            }
            return format;
        };
-
+       function downLoad(){
+    		 var downLoadUrl='${ctx}/backend/loan/repayOrder/downLoad';
+    		 var $form=$("#searchForm");
+    		 var oldAction=$form.attr("action");
+    		 $form.attr("action",downLoadUrl);
+    		 $form.submit();
+    		 $form.attr("action",oldAction);
+    	 }
     function openout(id) {
         window.open('${IP}'+'${ctx}/backend/loan/repayOrder/auth/'+id);
     }

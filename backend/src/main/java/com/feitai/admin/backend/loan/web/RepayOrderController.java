@@ -17,6 +17,7 @@ import com.feitai.admin.backend.loan.service.RepayOrderService;
 import com.feitai.admin.backend.loan.service.RepayPlanComponentService;
 import com.feitai.admin.backend.loan.service.RepayPlanService;
 import com.feitai.admin.backend.loan.vo.OrderPlande;
+import com.feitai.admin.backend.loan.vo.RepayData;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.product.service.ProductService;
@@ -44,7 +45,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -253,6 +260,57 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         return switchContent(repayOrderMorePage,resultList);
 
     }
+    
+    
+    public Map<String,Object> listSupportRec(ServletRequest request){
+        //根据request获取page
+        int pageNo = PageBulider.getPageNo(request);
+        int pageSize = PageBulider.getPageSize(request);
+        Page<RepayOrderMore> repayOrderMorePage = list(getCommonSqls(request,getSelectMultiTable().buildSqlString()), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        List<RepayOrderMore> content = repayOrderMorePage.getContent();
+        List<RepayData> resultList = new ArrayList<>();
+        RepayData repayData=null;
+        for (RepayOrderMore repayOrderMore :
+                content) {
+        	repayData=new RepayData(repayOrderMore);
+            Map<String, Object> productTermFeeFeatureMap = new HashMap<>();
+            Long productId = repayOrderMore.getLoanOrder().getProductId();
+            Integer loanTerm = repayOrderMore.getLoanOrder().getLoanTerm();
+            //productTermFeeFeature
+            List<ProductTermFeeFeature> search = new ArrayList<ProductTermFeeFeature>();
+            search = productTermFeeFeatureService.findByProductIdAndTerm(productId, loanTerm.shortValue());
+
+            if (search.size() > 0) {
+                ProductTermFeeFeature productTermFeeFeature = search.get(0);
+                try {
+                    productTermFeeFeatureMap = ObjectUtils.objectToMap(productTermFeeFeature);
+                } catch (Exception e) {
+                    log.error("",e);
+                }
+            }
+            repayData.setProductTermFeeFeature(productTermFeeFeatureMap);
+            //脱敏处理
+            String idCard=Desensitization.idCard(repayData.getIdCard().getIdCard());
+            repayData.getIdCard().setIdCard(idCard);            
+            repayData.setPayAccount(Desensitization.bankCardNo(repayData.getPayAccount()));
+
+            
+            List<RepayPlan> byLoanOrderId = repayPlanService.findByLoanOrderIdAndTerm(repayOrderMore.getLoanOrderId(),(short)1);
+            List<OrderPlande> orderPlandes = repayPlanComponentService.findOrderPlandesByRepayPlans(byLoanOrderId);
+            if(orderPlandes.size()>0){
+            	repayData.setOrderPlande(orderPlandes.get(0));
+            }
+            if(repayOrderMore.getLoanOrder()!=null && repayOrderMore.getLoanOrder().getPayFundId()!=null){
+              Fund fund=fundService.getFund(repayOrderMore.getLoanOrder().getPayFundId());
+              repayData.setFundName(Optional.ofNullable(fund).map(f ->f.getFundName()).orElse(""));
+            }
+            Product product=productService.findOne(productId);
+            repayData.setProductName(Optional.ofNullable(product).map(p ->p.getName()).orElse(""));
+            resultList.add(repayData);
+        }
+        return switchContent(repayOrderMorePage,resultList);
+
+    }
 
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
@@ -291,6 +349,73 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"id")
                 }).buildSqlString()+" where id = '" + id +"' Group by id";
         return sql;
+    }
+    @RequestMapping(value = "downLoadFirstRepayOrder")
+    public void downLoadFirstRepayOrder(ServletRequest request,HttpServletResponse response){
+    	try{
+    		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+    		List<String[]> dataList=getDataList(listSupport(request),(obj,rowList)->{
+    			rowList.add(obj.getString("userId"));
+        		rowList.add(obj.getJSONObject("idCard").getString("name"));
+        		rowList.add(obj.getJSONObject("user").get("phone").toString());
+        		rowList.add(obj.getJSONObject("loanOrder").get("loanAmount").toString());
+        		Date dueDate=obj.getJSONObject("repayPlan").getDate("dueDate");
+        		rowList.add(sdf.format(dueDate));  		
+        		rowList.add(obj.getDouble("amount").toString());
+        		rowList.add(obj.getJSONObject("orderPlande").get("approveFeeAmount").toString());
+        		rowList.add(obj.getJSONObject("orderPlande").get("guaranteeFeeAmount").toString());
+        		rowList.add(obj.getJSONObject("orderPlande").get("pincipalAmount").toString());
+        		rowList.add(obj.getString("fundName"));
+        		rowList.add(obj.getString("productName"));
+    		});
+    	  downLoad(response, dataList,"");
+    	}catch(Exception e){
+    		log.error("",e);
+    	}
+    }
+    @RequestMapping(value = "downLoadPastRepayOrder")
+    public void downLoadPastRepayOrder(ServletRequest request,HttpServletResponse response){
+    	try{
+    		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+    		List<String[]> dataList=getDataList(listSupport(request),(obj,rowList)->{
+    			rowList.add(obj.getString("userId"));
+        		rowList.add(obj.getJSONObject("idCard").getString("name"));
+        		rowList.add(obj.getJSONObject("user").get("phone").toString());
+        		rowList.add(obj.getJSONObject("loanOrder").get("loanAmount").toString());
+        		Date dueDate=obj.getJSONObject("repayPlan").getDate("dueDate");
+        		rowList.add(sdf.format(dueDate));  	
+        		rowList.add(obj.getJSONObject("repayPlan").get("overdueDays").toString());
+        		rowList.add(obj.getString("termPre"));
+        		rowList.add(obj.getString("fundName"));
+        		rowList.add(obj.getString("productName"));
+    		});
+    	  downLoad(response, dataList,"fristRepayOrder.cvs");
+    	}catch(Exception e){
+    		log.error("",e);
+    	}
+    }
+	private void downLoad(HttpServletResponse response, List<String[]> dataList,String fileName) throws IOException {
+		File file=repayOrderService.createFile(dataList, fileName);
+    	  response.setHeader("content-type", "application/octet-stream");
+		   response.setContentType("application/octet-stream");
+		   response.setHeader("Content-Disposition", "attachment;filename="+file.getName());	   
+		   Files.copy(file.toPath(), response.getOutputStream());
+		   Files.delete(file.toPath());
+	}
+    
+    private List<String[]> getDataList(Map<String,Object> map,DownLoadProcesser dlp){
+    	List<String[]> dataList=new ArrayList<>();
+    	List<JSONObject> repayDataList= (List<JSONObject>) map.get("content");
+    	List<String> rowList=null;
+    	for(JSONObject obj:repayDataList){
+    		rowList=new ArrayList<>();
+    		dlp.process(obj,rowList);
+    		dataList.add(rowList.toArray(new String[rowList.size()]));
+    	}
+    	return dataList;
+    }
+    private interface DownLoadProcesser{
+    	 void process(JSONObject obj,List<String> rowList);
     }
     
 }
