@@ -148,6 +148,8 @@
 
     BUI.use(['bui/ux/crudgrid','bui/common/search','bui/common/page','bui/overlay','bui/select','bui/data'],function (CrudGrid,Search,Grid,Overlay,Select,Data) {
 
+        var detailUrl = '${ctx}/backend/loanOrder/detail/';
+
         var selectFundStore = new Data.Store({
             url : '${ctx}/backend/fund/getFundList',
             autoLoad : true
@@ -172,11 +174,6 @@
             });
         selectStatus.render();
 
-        //定义页面权限
-        var add=false,update=false,list=false,del=false;
-        //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-        <framwork:crudPermission resource="/backend/loanOrder"/>
-
 
         var selectProductStore = new Data.Store({
             url : '${ctx}/backend/product/productNameList',
@@ -190,9 +187,15 @@
         });
         selectProduct.render();
 
-        var authUrl,authBtn=false;//授权按钮
-        authBtn = true;
-        authUrl = '${ctx}/backend/loanOrder/auth/';
+        //定义页面权限
+        var add=false,update=false,list=false,del=false;
+        //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
+        <framwork:crudPermission resource="/backend/loanOrder"/>
+
+
+
+
+
 
 
 
@@ -273,25 +276,20 @@
             showRemoveBtn : del,
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
 
-                var title = obj.id+"—提现信息";
-                if(!jQuery.isEmptyObject(obj.idCard)){
-                    title = obj.idCard.name + "—提现信息"
-                }
-                var detail =  CrudGrid.createLink({
-                    id : obj.id,
-                    title : title,
-                    text : '<li class="icon-user"></li>',
-                    href : $ctx+"/backend/loan/detail/" +obj.id
-                });
-
-
                 var editStr = '';
-                var id = String(obj.id);
-                var detail="";
-                if(authBtn){
-                    detail = '<span class="x-icon x-icon-info" title="'+'详细信息'+'"><i class="icon icon-list-alt icon-white"  onclick="openout(\''+id+'\');"></i></span>';
-
+                var title = obj.id+"—提现信息";
+                if(!jQuery.isEmptyObject(obj.idcard)){
+                    title = obj.idcard.name + "—提现信息"
                 }
+                var detail="";
+                var id = String(obj.id);
+                detail = CrudGrid.createLinkCustomSpan({
+					class:"page-action grid-command x-icon x-icon-info",
+                    id: 'auth' + id,
+                    title: title,
+                    text: '<i class="icon icon-white icon-list-alt"></i>',
+                    href: detailUrl + id
+                })
 
                 if(obj.status=="40"||obj.status=="20"){
                     if(obj.cancelLoan==null){
@@ -304,7 +302,7 @@
                 }else{
                     editStr = detail;
                 }
-                return editStr;
+                return "<div style='text-align:left'>&nbsp;&nbsp;"+editStr+"</div>";
             },
             storeCfg:{//定义store的排序，如果是复合主键一定要修改
                 sortInfo : {

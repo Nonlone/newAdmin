@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletRequest;
 import java.math.BigDecimal;
@@ -97,12 +98,13 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
     @RequiresUser
     @GetMapping(value = "/index")
-    public String index(Model model) {
+    public ModelAndView index() {
+        ModelAndView modelAndView = new ModelAndView("/backend/loanOrder/index");
         String rejectCash = appProperties.getRejectCash();
-        model.addAttribute("rejectCash", rejectCash);
+        modelAndView.addObject("rejectCash", rejectCash);
         Map<String, String> loanStatusMap = mapProperties.getLoanStatusMap();
-        model.addAttribute("loanStatusMap",JSON.toJSONString(loanStatusMap));
-        return "backend/loanOrder/index";
+        modelAndView.addObject("loanStatusMap",JSON.toJSONString(loanStatusMap));
+        return modelAndView;
     }
 
 
@@ -148,40 +150,46 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     /***
      * 获取详细页面
      * @param id
-     * @param model
      * @return
      */
     @RequiresUser
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
-    public String detail(@PathVariable("id") String id, Model model) {
+    public ModelAndView detail(@PathVariable("id") String id) {
+        ModelAndView modelAndView = new ModelAndView("/backend/loanOrder/detail");
         LoanOrderMore loanOrder = loanOrderService.findOneBySql(getOneSql(id));
         Long userId = loanOrder.getUserId();
         User userIn = userService.findOne(userId);
         IdCardData idcard = idcardService.findByUserId(userId);
         Product product = productService.findOne(loanOrder.getProductId());
 
+        //资金方
+        Fund fund = fundService.findOne(loanOrder.getPayFundId());
+        if(fund!=null){
+            modelAndView.addObject("fundName",fund.getFundName());
+        }
+
         //获取产品详细信息，需要产品id和期数
         List<ProductTermFeeFeature> byProductIdAndTerm = productTermFeeFeatureService.findByProductIdAndTerm(loanOrder.getProductId(), loanOrder.getLoanTerm().shortValue());
 
         //脱敏处理
         String hyPhone = Desensitization.phone(userIn.getPhone());
-        model.addAttribute("hyPhone", hyPhone);
+        modelAndView.addObject("hyPhone", hyPhone);
         String hyIdcard = Desensitization.idCard(idcard.getIdCard());
-        model.addAttribute("hyIdcard", hyIdcard);
+        modelAndView.addObject("hyIdcard", hyIdcard);
         if (loanOrder.getBankCardNo() != null) {
             String bankCardNo = Desensitization.bankCardNo(loanOrder.getBankCardNo());
-            model.addAttribute("bankCardNo", bankCardNo);
+            modelAndView.addObject("bankCardNo", bankCardNo);
         }
 
-        model.addAttribute("loanOrder",loanOrder);
-        model.addAttribute("user",userIn);
-        model.addAttribute("idCard",idcard);
-        model.addAttribute("product",product);
+        modelAndView.addObject("loanOrder",loanOrder);
+        modelAndView.addObject("user",userIn);
+        modelAndView.addObject("idCard",idcard);
+        modelAndView.addObject("product",product);
         if(byProductIdAndTerm.size()!=0){
-            model.addAttribute("productIdAndTerm",byProductIdAndTerm.get(0));
+            modelAndView.addObject("productIdAndTerm",byProductIdAndTerm.get(0));
         }
         int year = new Date().getYear() - idcard.getBirthday().getYear();
-        model.addAttribute("year",year);
+        modelAndView.addObject("year",year);
         Integer status = loanOrder.getStatus();
         String statu = mapProperties.getloanStatus(status.toString());
 
@@ -189,25 +197,31 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         Card card = cardService.findSingleById(loanOrder.getCardId());
         if(card!=null){
             BigDecimal creditSum = card.getCreditSum();
-            model.addAttribute("shouxin",creditSum);
+            modelAndView.addObject("shouxin",creditSum);
         }
-        model.addAttribute("status",statu);
+        modelAndView.addObject("status",statu);
         if(loanOrder.getBankCode()!=null){
             BankSupport bankSuppor = bankSupportService.findByBankCode(loanOrder.getBankCode());
-            model.addAttribute("bank", bankSuppor.getBankName());
+            modelAndView.addObject("bank", bankSuppor.getBankName());
         }
 
         List<RepayPlan> byLoanOrderId = repayPlanService.findByLoanOrderId(Long.parseLong(id));
         //还款计划
         List<OrderPlande> orderPlandes = repayPlanComponentService.findOrderPlandesByRepayPlans(byLoanOrderId);
-        model.addAttribute("repayPlan", orderPlandes);
+        if(orderPlandes.size()==0){
+            modelAndView.addObject("havePlan",false);
+        }else{
+            modelAndView.addObject("havePlan",true);
+        }
+        modelAndView.addObject("repayPlan", orderPlandes);
         if(loanOrder.getPayLoanTime()!=null){
-            model.addAttribute("payLoanTime",DateUtils.format(loanOrder.getPayLoanTime(),"yyyy-MM-dd HH:mm:ss"));
+            modelAndView.addObject("payLoanTime",DateUtils.format(loanOrder.getPayLoanTime(),"yyyy-MM-dd HH:mm:ss"));
         }
         if(loanOrder.getApplyTime()!=null){
-            model.addAttribute("applyTime",DateUtils.format(loanOrder.getApplyTime(),"yyyy-MM-dd HH:mm:ss"));
+            modelAndView.addObject("applyTime",DateUtils.format(loanOrder.getApplyTime(),"yyyy-MM-dd HH:mm:ss"));
         }
-        return "/backend/loanOrder/detail";
+
+        return modelAndView;
     }
 
     /**
