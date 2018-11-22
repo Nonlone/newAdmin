@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.jieya.server.dao.base.constant.*;
 import com.feitai.utils.StringUtils;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +36,7 @@ public class MapProperties {
         supplementMaterialMap = ImmutableMap.copyOf(JSON.parseObject(supplementMaterial,Map.class));
         supplementMaterialTypeMap = ImmutableMap.copyOf(JSON.parseObject(supplementMaterialType,Map.class));
         repayOrderStatusMap = ImmutableMap.copyOf(JSON.parseObject(repayOrderStatus,Map.class));
+        channelSortList=ImmutableList.copyOf(channelSort.split(","));
     }
 
     @Value("${backend.segmentMap}")
@@ -188,5 +192,17 @@ public class MapProperties {
      */
     public String getRepayOrderStatus(String key) {
         return getMapValue(repayOrderStatusMap, key);
+    }
+    
+    @Value("${backend.channelSort}")
+    private String channelSort;
+    private static List<String> channelSortList;
+    
+    /**
+     * 获取二级渠道 的渠道大类
+     * @return
+     */
+    public List<String> getChannelSortList(){
+    	return channelSortList;
     }
 }

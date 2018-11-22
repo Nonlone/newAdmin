@@ -7,16 +7,19 @@
 
 package com.feitai.admin.backend.config.web;
 
+import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.config.entity.ChannelCms;
 import com.feitai.admin.backend.config.entity.ChannelPrimary;
 import com.feitai.admin.backend.config.service.ChannelPrimaryService;
 import com.feitai.admin.backend.config.service.ChannelService;
+import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
 import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
+import com.feitai.jieya.server.dao.base.constant.CardStatus;
 import com.feitai.jieya.server.dao.channel.model.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
@@ -44,9 +48,20 @@ public class ChannelController extends BaseListableController<ChannelCms> {
 	@Autowired
 	private ChannelPrimaryService channelPrimaryService;
 	
+	@Autowired
+	private MapProperties mapProperties;
+	
 	@RequestMapping(value = "")
-	public String index() {
-		return "/backend/channel/index";
+	public ModelAndView index() {
+		ModelAndView mav=new ModelAndView("/backend/channel/index");
+    	List<ListItem> itemList = new ArrayList<>();
+    	itemList.add(new ListItem("全部", ""));
+    	List<String> channelSortList=mapProperties.getChannelSortList();
+    	channelSortList.forEach(channelSort->{
+    		 itemList.add(new ListItem(channelSort, channelSort));
+    	}); 
+    	mav.addObject("channelSortList",JSONObject.toJSONString(itemList));
+		return mav;
 	}
 
 	@RequestMapping(value = "/checkChannelName", method = RequestMethod.GET)
