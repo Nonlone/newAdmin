@@ -243,34 +243,6 @@
     }
 
 
-    /***
-     * 运营商入口
-     */
-    function operatorHtml() {
-        //容器id
-        var type = "#operator";
-        //json
-        var data = getData(type);
-        //模板url
-        var url = "";
-        produceHtml(url, data, type);
-    }
-
-
-    /***
-     * 贷后邦入口
-     */
-    function bondHtml() {
-        //容器id
-        var type = "#bond";
-        //模板url
-        var url = "${ctx}/static/artTemplate/template/templateTest.tpl";
-        //json
-        var data = getData(type);
-        produceHtml(url, data, type);
-    }
-
-
     /**
      * 获取模板渲染方法
      * */
@@ -297,6 +269,17 @@
                         && !jQuery.isEmptyObject(response.data)){
                         var html = template.render(resp,response.data.report);
                         $("#sauron_daihoubang").html("").html(html);
+                    }else{
+                        BUI.use('bui/overlay', function (Overlay) {
+                            new Overlay.Dialog({
+                                title: '提示窗口',
+                                width: 300,
+                                height: 150,
+                                mask: false,
+                                buttons: [],
+                                bodyContent: '<p>该用户的此类征信信息错误</p>'
+                            }).show();
+                        });
                     }
                 }
             });
@@ -318,6 +301,17 @@
                 $iframe.attr("frameborder","no");
                 $iframe.attr('src', url+response.data.reportMessage);
                 $("#operator_moxie").html("").html($iframe);
+            }else{
+                BUI.use('bui/overlay', function (Overlay) {
+                    new Overlay.Dialog({
+                        title: '提示窗口',
+                        width: 300,
+                        height: 150,
+                        mask: false,
+                        buttons: [],
+                        bodyContent: '<p>该用户的此类征信信息错误</p>'
+                    }).show();
+                });
             }
         });
     }
@@ -340,80 +334,21 @@
                         && !jQuery.isEmptyObject(response.data)){
                         var html = template.render(resp,response.data.report);
                         $("#pbccrc_suanhua").html("").html(html);
+                    }else{
+                        BUI.use('bui/overlay', function (Overlay) {
+                            new Overlay.Dialog({
+                                title: '提示窗口',
+                                width: 300,
+                                height: 150,
+                                mask: false,
+                                buttons: [],
+                                bodyContent: '<p>该用户的此类征信信息错误</p>'
+                            }).show();
+                        });
                     }
                 }
             });
         });
-    }
-
-
-    /***
-     * 通用获取数据的方法
-     */
-    function getData(type) {
-        var datajson = "";
-        var source = "";
-        if (type == "#bond") {
-            source = "bond";
-        } else if (type == "#operator") {
-            source = "operator";
-        } else if (type == "#credit") {
-            source = "credit";
-        }
-        $.ajax({
-            type: "post",
-            url: "${ctx}/backend/data/acquire/getData",
-            async: false,
-            data: {cardId: "${card.id}", type: source},
-            dataType: "json",
-            success: function (data) {
-                datajson = data;
-            }
-        });
-        return datajson;
-    }
-
-    /***
-     * 通用生产HTML方法
-     */
-    function produceHtml(url, jsonData, type) {
-        if (jsonData == "nulldata" || jsonData == "" || jsonData == null) {
-            BUI.use('bui/overlay', function (Overlay) {
-                var dialog = new Overlay.Dialog({
-                    title: '提示窗口',
-                    width: 500,
-                    height: 300,
-                    mask: false,
-                    buttons: [],
-                    bodyContent: '<p>没有该用户的此类征信信息</p>'
-                });
-                dialog.show();
-            });
-        } else {
-            if (type != "#operator") {
-                $.ajax({
-                    type: "GET",
-                    async: false,
-                    url: url,
-                    dataType: "html",
-                    success: function (data) {
-                        var render = template.compile(data);
-                        var html = render(jsonData);
-                        $(type).html("").html(html);
-                    }
-                });
-            } else {
-                //这里是默写获取pdf报告地址
-                var url = 'https://tenant.51datakey.com/carrier/report_data?data=';
-                var data = jsonData.message;
-                url += data;
-                $('#operatorIframe').attr('src', url);
-                $('#operatorIframe').attr('height', $(window).height() - 50);
-
-                // $('#operator').html('').html('<iframe src="'+url+'" width="100%" height="100%"></iframe>');
-
-            }
-        }
     }
 
 

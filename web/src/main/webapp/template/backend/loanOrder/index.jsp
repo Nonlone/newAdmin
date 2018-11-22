@@ -117,7 +117,7 @@
     }
 
     function openout(id) {
-        window.open('${IP}'+'${ctx}/backend/loan/loanOrder/auth/'+id);
+        window.open('${IP}'+'${ctx}/backend/loanOrder/auth/'+id);
     }
 
     function stop(id) {
@@ -161,7 +161,7 @@
         selectFundStatus.render();
 
         var selectStatusStore = new Data.Store({
-            url : '${ctx}/backend/loan/loanOrder/getLoanStatusList',
+            url : '${ctx}/backend/loanOrder/getLoanStatusList',
             autoLoad : true
         });
 
@@ -175,11 +175,11 @@
         //定义页面权限
         var add=false,update=false,list=false,del=false;
         //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-        <framwork:crudPermission resource="/backend/loan/loanOrder"/>
+        <framwork:crudPermission resource="/backend/loanOrder"/>
 
 
         var selectProductStore = new Data.Store({
-            url : '${ctx}/admin/product/product/productNameList',
+            url : '${ctx}/backend/product/productNameList',
             autoLoad : true
         });
 
@@ -192,7 +192,7 @@
 
         var authUrl,authBtn=false;//授权按钮
         authBtn = true;
-        authUrl = '${ctx}/backend/loan/loanOrder/auth/';
+        authUrl = '${ctx}/backend/loanOrder/auth/';
 
 
 
@@ -200,23 +200,22 @@
 
 
         var columns = [
-            {title:'订单编号',dataIndex:'id',width:'8%'},
-
-            {title:'客户姓名',dataIndex:'idcard',width:"5%",renderer: function (value) {
+            {title:'订单编号',dataIndex:'id',width:'150px'},
+            {title:'客户姓名',dataIndex:'idcard',width:"80px",renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '';
                     }
                 }},
-            {title:'身份证',dataIndex:'idcard',width:"9%",renderer: function (value) {
+            {title:'身份证',dataIndex:'idcard',width:"150px",renderer: function (value) {
                     if(value){
                         return value.idCard;
                     }else{
                         return '';
                     }
                 }},
-            {title:'客户ID',dataIndex:'user',renderer:function (value) {
+            {title:'客户ID',dataIndex:'user',width:"150px",renderer:function (value) {
                     if(value) {
                         return value.id;
                     }else{
@@ -238,35 +237,25 @@
                         return null;
                     }
                 }},
-            {title:'提现金额',dataIndex:'loanAmount',width:'5%'},
-            {title:'期限(月)',dataIndex:'loanTerm',width:'5%'},
-            {title:'资金方',dataIndex:'fundName',width:'5%',renderer: function (value) {
+            {title:'提现金额',dataIndex:'loanAmount',width:'100px'},
+            {title:'期限(月)',dataIndex:'loanTerm',width:'80px'},
+            {title:'资金方',dataIndex:'fundName',width:'100px',renderer: function (value) {
                     if(value){
                         return value;
                     }else{
                         return null;
                     }
                 }},
-            {title:'申请时间',dataIndex:'applyTime',width:'5%',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'放款时间',dataIndex:'payLoanTime',width:'5%',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'放款状态',dataIndex:'status',width:'5%',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
-
+            {title:'申请时间',dataIndex:'applyTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'放款时间',dataIndex:'payLoanTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'放款状态',dataIndex:'status',width:'100px',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
             {title:'产品名称',dataIndex:'product',width:'5%',renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '';
                     }
-                }},
-
-            {title:'是否新客户',dataIndex:'',width:'5%',renderer: function (value) {
-                    if(value){
-                        return "是";
-                    }else{
-                        return '是';
-                    }
                 }}
-
         ];
 
 
@@ -274,15 +263,28 @@
         var crudGrid = new CrudGrid({
             entityName : '借款订单表',
             pkColumn : 'id',//主键
-            storeUrl : '${ctx}/backend/loan/loanOrder/list',
-            addUrl : '${ctx}/backend/loan/loanOrder/add',
-            updateUrl : '${ctx}/backend/loan/loanOrder/update',
-            removeUrl : '${ctx}/backend/loan/loanOrder/del',
+            storeUrl : '${ctx}/backend/loanOrder/list',
+            addUrl : '${ctx}/backend/loanOrder/add',
+            updateUrl : '${ctx}/backend/loanOrder/update',
+            removeUrl : '${ctx}/backend/loanOrder/del',
             columns : columns,
             showAddBtn : add,
             showUpdateBtn : update,
             showRemoveBtn : del,
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
+
+                var title = obj.id+"—提现信息";
+                if(!jQuery.isEmptyObject(obj.idCard)){
+                    title = obj.idCard.name + "—提现信息"
+                }
+                var detail =  CrudGrid.createLink({
+                    id : obj.id,
+                    title : title,
+                    text : '<li class="icon-user"></li>',
+                    href : $ctx+"/backend/loan/detail/" +obj.id
+                });
+
+
                 var editStr = '';
                 var id = String(obj.id);
                 var detail="";
@@ -302,8 +304,6 @@
                 }else{
                     editStr = detail;
                 }
-
-
                 return editStr;
             },
             storeCfg:{//定义store的排序，如果是复合主键一定要修改

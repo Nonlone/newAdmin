@@ -24,7 +24,9 @@ import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
 import com.feitai.admin.backend.properties.AppProperties;
 import com.feitai.admin.backend.properties.MapProperties;
+import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
+import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.bank.model.BankSupport;
@@ -40,6 +42,7 @@ import com.feitai.utils.ObjectUtils;
 import com.feitai.utils.datetime.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,7 +54,7 @@ import java.util.*;
 
 
 @Controller
-@RequestMapping(value = "/backend/loan/loanOrder")
+@RequestMapping(value = "/backend/loanOrder")
 @Slf4j
 public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
@@ -92,21 +95,33 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private FundService fundService;
 
 
-    @RequestMapping(value = "")
+    @RequiresUser
+    @GetMapping(value = "/index")
     public String index(Model model) {
         String rejectCash = appProperties.getRejectCash();
         model.addAttribute("rejectCash", rejectCash);
-        model.addAttribute("isOut", false);
         return "backend/loanOrder/index";
     }
 
 
-    @RequiresPermissions("/backend/loan/loanOrder:list")
-    @RequestMapping(value = "list")
+    @RequestMapping(value = "getLoanStatusList")
+    @ResponseBody
+    @LogAnnotation(value = true, writeRespBody = false)
+    public Object getLoanStatusList(){
+        Map<String, String> loanStatusMap = mapProperties.getLoanStatusMap();
+        List<ListItem> list = new ArrayList<ListItem>();
+        list.add(new ListItem("全部"," "));
+        for(String key:loanStatusMap.keySet()){
+            list.add(new ListItem(loanStatusMap.get(key), key));
+        }
+        return list;
+    }
+
+
+    @RequiresPermissions("/backend/loanOrder:list")
+    @PostMapping("/list")
     @ResponseBody
     public Map<String, Object> listPage(ServletRequest request) {
-
-
         Map<String, Object> map = listSup(request);
         return map;
     }
@@ -117,10 +132,10 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
      * @param id
      * @return
      */
-    @RequestMapping(value = "stopLoan/{id}", method = RequestMethod.POST)
-    @RequiresPermissions("/backend/loan/loanOrder:auth")
+    @PostMapping("/rejectCash/{id}")
+    @RequiresPermissions("/backend/loanOrder:auth")
     @ResponseBody
-    public Object auth(@PathVariable("id") String id) {
+    public Object rejectCash(@PathVariable("id") String id) {
         //String url = "http://10.168.2.207:9090/cash/reject";
         //String json = "{\"serialNo\":\""+id+"\"}";
         //String result = HttpUtil.postByTypeIsJson(url, json);
@@ -134,8 +149,9 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
      * @param model
      * @return
      */
-    @RequestMapping(value = "auth/{id}", method = RequestMethod.GET)
-    public String auth(@PathVariable("id") String id, Model model) {
+    @RequiresUser
+    @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
+    public String detail(@PathVariable("id") String id, Model model) {
         LoanOrderMore loanOrder = loanOrderService.findOneBySql(getOneSql(id));
         Long userId = loanOrder.getUserId();
         User userIn = userService.findOne(userId);

@@ -55,6 +55,9 @@ import java.util.*;
 @Slf4j
 public class OpenCardController extends BaseListableController<CardMore> {
 
+    /**
+     * 展示征信项
+     */
     private Set<AuthCode> authListSet = new HashSet<AuthCode>(){{
         this.add(AuthCode.OPERATOR);
         this.add(AuthCode.PBCCRC);
