@@ -117,7 +117,7 @@
     }
 
     function openout(id) {
-        window.open('${IP}'+'${ctx}/backend/loan/loanOrder/auth/'+id);
+        window.open('${IP}'+'${ctx}/backend/loanOrder/auth/'+id);
     }
 
     function stop(id) {
@@ -161,7 +161,7 @@
         selectFundStatus.render();
 
         var selectStatusStore = new Data.Store({
-            url : '${ctx}/backend/loan/loanOrder/getLoanStatusList',
+            url : '${ctx}/backend/loanOrder/getLoanStatusList',
             autoLoad : true
         });
 
@@ -175,11 +175,11 @@
         //定义页面权限
         var add=false,update=false,list=false,del=false;
         //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-        <framwork:crudPermission resource="/backend/loan/loanOrder"/>
+        <framwork:crudPermission resource="/backend/loanOrder"/>
 
 
         var selectProductStore = new Data.Store({
-            url : '${ctx}/admin/product/product/productNameList',
+            url : '${ctx}/backend/product/productNameList',
             autoLoad : true
         });
 
@@ -192,7 +192,7 @@
 
         var authUrl,authBtn=false;//授权按钮
         authBtn = true;
-        authUrl = '${ctx}/backend/loan/loanOrder/auth/';
+        authUrl = '${ctx}/backend/loanOrder/auth/';
 
 
 
@@ -263,10 +263,10 @@
         var crudGrid = new CrudGrid({
             entityName : '借款订单表',
             pkColumn : 'id',//主键
-            storeUrl : '${ctx}/backend/loan/loanOrder/list',
-            addUrl : '${ctx}/backend/loan/loanOrder/add',
-            updateUrl : '${ctx}/backend/loan/loanOrder/update',
-            removeUrl : '${ctx}/backend/loan/loanOrder/del',
+            storeUrl : '${ctx}/backend/loanOrder/list',
+            addUrl : '${ctx}/backend/loanOrder/add',
+            updateUrl : '${ctx}/backend/loanOrder/update',
+            removeUrl : '${ctx}/backend/loanOrder/del',
             columns : columns,
             showAddBtn : add,
             showUpdateBtn : update,

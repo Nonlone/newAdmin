@@ -119,7 +119,11 @@ public class MapProperties {
     @Value("${backend.loanStatusMap}")
     private String loanStatusSource;
 
-    private static Map<String, String> loanStatusMap;
+    private Map<String, String> loanStatusMap;
+
+    public Map<String,String> getLoanStatusMap(){
+        return this.loanStatusMap;
+    }
 
 
     /***

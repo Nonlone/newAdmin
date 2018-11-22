@@ -24,7 +24,9 @@ import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
 import com.feitai.admin.backend.properties.AppProperties;
 import com.feitai.admin.backend.properties.MapProperties;
+import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
+import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.bank.model.BankSupport;
@@ -99,6 +101,20 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         String rejectCash = appProperties.getRejectCash();
         model.addAttribute("rejectCash", rejectCash);
         return "backend/loanOrder/index";
+    }
+
+
+    @RequestMapping(value = "getLoanStatusList")
+    @ResponseBody
+    @LogAnnotation(value = true, writeRespBody = false)
+    public Object getLoanStatusList(){
+        Map<String, String> loanStatusMap = mapProperties.getLoanStatusMap();
+        List<ListItem> list = new ArrayList<ListItem>();
+        list.add(new ListItem("全部"," "));
+        for(String key:loanStatusMap.keySet()){
+            list.add(new ListItem(loanStatusMap.get(key), key));
+        }
+        return list;
     }
 
 
