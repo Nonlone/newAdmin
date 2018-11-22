@@ -14,6 +14,8 @@ import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.jieya.server.dao.appconfig.model.AppConfig;
+import com.feitai.utils.CollectionUtils;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
-		Page<AppConfigType> listPage = listBySql(request,getSql());
+		Page<AppConfigType> listPage =listBySql(request,getSql(request));
 		return listPage;
 	}
 	
@@ -56,7 +58,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	@ResponseBody
 	@LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
 	public Object listAll(){
-		List<ListItem> list = this.appConfigTypeService.findAllItems(getSql());
+		List<ListItem> list = this.appConfigTypeService.findAllItems(getSql(null));
 		return list;
 	}
 	
@@ -127,12 +129,19 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 		return this.appConfigTypeService;
 	}
 
-	protected String getSql() {
-		String sql = SelectMultiTable.builder(AppConfigType.class)
+	protected String getSql(ServletRequest request) {
+		StringBuffer sql=new StringBuffer();
+		String joinSql = SelectMultiTable.builder(AppConfigType.class)
 				.leftJoin(AppConfig.class,"app_config",new OnCondition[]{
 						new OnCondition(SelectMultiTable.ConnectType.AND, "typeCode", Operator.EQ, "typeCode"),
-				}).buildSqlString()+" GROUP BY type_code";
-		return sql;
+				}).buildSqlString();
+		sql.append(joinSql);
+		if(request!=null){
+		List<SearchParams> searchParamsList = bulidSearchParamsList(request);		
+        sql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
+		}
+		sql.append(" GROUP BY type_code");
+		return sql.toString();
 	}
 
 	protected String getSingleSql(String typeCode){
