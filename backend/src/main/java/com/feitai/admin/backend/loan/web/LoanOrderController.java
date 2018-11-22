@@ -100,6 +100,8 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     public String index(Model model) {
         String rejectCash = appProperties.getRejectCash();
         model.addAttribute("rejectCash", rejectCash);
+        Map<String, String> loanStatusMap = mapProperties.getLoanStatusMap();
+        model.addAttribute("loanStatusMap",JSON.toJSONString(loanStatusMap));
         return "backend/loanOrder/index";
     }
 
