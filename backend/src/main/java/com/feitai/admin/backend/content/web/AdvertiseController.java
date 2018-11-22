@@ -8,6 +8,7 @@
 package com.feitai.admin.backend.content.web;
 
 import com.feitai.admin.backend.content.service.AdvertiseService;
+import com.feitai.admin.backend.content.vo.AdvertiseVo;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.jieya.server.dao.cms.model.Advertise;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
@@ -55,8 +58,9 @@ public class AdvertiseController extends BaseListableController<Advertise> {
     @RequiresPermissions("/backend/advertise:add")
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
-    public Object add(@Valid @ModelAttribute Advertise advertise) {
+    public Object add(@Valid @ModelAttribute AdvertiseVo advertise) {
         advertise.setId(SnowFlakeIdGenerator.getDefaultNextId());
+        advertise.setUpdateTime(new Date());
         this.advertiseService.save(advertise);
         return successResult;
     }
@@ -64,7 +68,8 @@ public class AdvertiseController extends BaseListableController<Advertise> {
     @RequiresPermissions("/backend/advertise:update")
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
-    public Object update(@Valid @ModelAttribute Advertise advertise) {
+    public Object update(@Valid @ModelAttribute AdvertiseVo advertise) {
+    	advertise.setUpdateTime(new Date());
         this.advertiseService.updateByPrimaryKey(advertise);
         return successResult;
     }
