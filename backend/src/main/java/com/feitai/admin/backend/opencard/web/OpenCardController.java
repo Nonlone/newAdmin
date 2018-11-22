@@ -10,15 +10,11 @@ package com.feitai.admin.backend.opencard.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.auth.service.AuthDataService;
-import com.feitai.admin.backend.auth.service.AuthdataLinkfaceLivenessIdnumberVerificationService;
-import com.feitai.admin.backend.auth.service.AuthdataLinkfaceLivenessSelfieVerificationService;
-import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.opencard.service.TongDunDataService;
 import com.feitai.admin.backend.properties.MapProperties;
-import com.feitai.admin.backend.customer.service.PhotoService;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
@@ -27,6 +23,7 @@ import com.feitai.jieya.server.dao.authdata.model.BaseAuthData;
 import com.feitai.jieya.server.dao.base.constant.AuthCode;
 import com.feitai.jieya.server.dao.base.constant.CardStatus;
 import com.feitai.jieya.server.dao.data.model.*;
+import com.feitai.jieya.server.dao.loan.model.RepayOrder;
 import com.feitai.jieya.server.dao.product.model.Product;
 import com.feitai.jieya.server.dao.user.model.User;
 import com.feitai.utils.CollectionUtils;
@@ -155,7 +152,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
                 model.addObject("rejectReason", mapProperties.getValveReject(card.getRejectReason()));
             }
             // 获取同盾数据
-            TongDunData tongDunData=tongDunDataService.findByUserIdAndCardId(card.getUserId(), card.getId());
+            TongDunData tongDunData=tongDunDataService.findByUserIdAndCardIdInOpenCard(card.getUserId(), card.getId());
             if(tongDunData!=null){
                 model.addObject("tongDunData",tongDunData);
             }
@@ -235,17 +232,23 @@ public class OpenCardController extends BaseListableController<CardMore> {
         return SelectMultiTable.builder(CardMore.class)
                 .leftJoin(User.class, "user", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class, "idCard", new OnCondition[]{
+                }).leftJoin(IdCardData.class, "idcard", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "userId")
                 }).leftJoin(Product.class, "product", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "productId", Operator.EQ, "id")
                 });
     }
 
+
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
-        sbSql.append(getSelectMultiTable().buildCountSqlString());
-        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
+        String searchSql = getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS);
+        if(searchSql.equals(getService().WHERE_COMMON)){
+            sbSql.append(SelectMultiTable.builder(CardMore.class).buildCountSqlString());
+        }else{
+            sbSql.append(getSelectMultiTable().buildCountSqlString());
+        }
+        sbSql.append(searchSql);
         return sbSql.toString();
     }
 
@@ -254,7 +257,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
         String sql = SelectMultiTable.builder(CardMore.class)
                 .leftJoin(User.class, "user", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class, "idCard", new OnCondition[]{
+                }).leftJoin(IdCardData.class, "idcard", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "userId")
                 }).leftJoin(Product.class, "product", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "productId", Operator.EQ, "id")

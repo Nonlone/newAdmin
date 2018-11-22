@@ -10,7 +10,7 @@ import tk.mybatis.mapper.util.Sqls;
 @Service
 public class TongDunDataService extends ClassPrefixDynamicSupportService<TongDunData>{
 
-	  public TongDunData findByUserIdAndCardId(Long userId, Long cardId){
+	  public TongDunData findByUserIdAndCardIdInOpenCard(Long userId, Long cardId){
 		  Example example=Example.builder(TongDunData.class).andWhere(Sqls.custom()
 				  .andEqualTo("userId", userId)
 				  .andEqualTo("cardId", cardId)
@@ -18,4 +18,13 @@ public class TongDunDataService extends ClassPrefixDynamicSupportService<TongDun
 				  .andEqualTo("segment", ProcessSegment.OPENCARD.getValue())).build();
 		  return getMapper().selectOneByExample(example);
 	  }
+
+	public TongDunData findByUserIdAndCardIdInLoan(Long userId, Long cardId){
+		Example example=Example.builder(TongDunData.class).andWhere(Sqls.custom()
+				.andEqualTo("userId", userId)
+				.andEqualTo("cardId", cardId)
+				.andEqualTo("enable", true)
+				.andEqualTo("segment", ProcessSegment.LOAN.getValue())).build();
+		return getMapper().selectOneByExample(example);
+	}
 }

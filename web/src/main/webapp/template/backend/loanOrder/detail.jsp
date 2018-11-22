@@ -37,10 +37,11 @@
     <!--提现详情页 ================================================== -->
     <div>
 
-        <h3 style="background-color:#ADADAD" ><span style="font-size:20">订单信息</span></h3>
+        <h3 style="background-color:#ADADAD"><span style="font-size:20px;padding: 5px;">订单信息</span></h3>
         <hr/>
         <table cellspacing="0" class="table table-bordered">
             <tbody>
+            <span style="font-size:13px;padding: 5px;">基本信息：</span>
             <tr>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     订单号：
@@ -48,6 +49,22 @@
                 <td width="100px" height="50px">
                     ${id}
                 </td>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    放款状态：
+                </td>
+                <td width="100px" height="50px">
+                    ${status}
+                </td>
+
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    借款用途：
+                </td>
+                <td width="100px" height="50px">
+                    ${loanPurpose}
+                </td>
+
+            </tr>
+            <tr>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     产品名称：
                 </td>
@@ -63,19 +80,64 @@
                     </c:if>
                     ${fundName}
                 </td>
-            </tr>
-            <tr>
+
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
-                    放款状态：
+                    申请渠道：
                 </td>
                 <td width="100px" height="50px">
-                    ${status}
+                    ${loanOrder.applyChannelId}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table cellspacing="0" class="table table-bordered">
+            <tbody>
+            <span style="font-size:13px;padding: 5px;">日期信息：</span>
+            <tr>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    订单创建日期：
+                </td>
+                <td width="100px" height="50px">
+                    ${createdTime}
+                </td>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    借款日期：
+                </td>
+                <td width="100px" height="50px">
+                    <c:if test="${empty loanTime}">
+                        未借款
+                    </c:if>
+                    ${loanTime}
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     申请日期：
                 </td>
                 <td width="100px" height="50px">
+                    <c:if test="${empty applyTime}">
+                        未申请
+                    </c:if>
                     ${applyTime}
+                </td>
+            </tr>
+            <tr>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    审批时间：
+                </td>
+                <td width="100px" height="50px">
+                    <c:if test="${empty approveTime}">
+                        未审批
+                    </c:if>
+                    ${approveTime}
+                </td>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    银行审批时间：
+                </td>
+                <td width="100px" height="50px">
+                    <c:if test="${empty bankApproveTime}">
+                        未审批
+                    </c:if>
+                    ${bankApproveTime}
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     放款日期：
@@ -87,27 +149,37 @@
                     ${payLoanTime}
                 </td>
             </tr>
-            <tr>
+            </tbody>
+        </table>
 
-                <td bgcolor="#F2F2F2" width="100px" height="50px">
-                    提现金额：
-                </td>
-                <td width="100px" height="50px">
-                    ${loanOrder.loanAmount}
-                </td>
-                <td bgcolor="#F2F2F2" width="100px" height="50px">
-                    授信金额：
-                </td>
-                <td width="100px" height="50px">
-                    ${shouxin}
-                </td>
+        <table cellspacing="0" class="table table-bordered">
+            <tbody>
+            <span style="font-size:13px;padding: 5px;">订单数据：</span>
+            <tr>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     期数(月)：
                 </td>
                 <td width="100px" height="50px">
                     ${loanOrder.loanTerm}
                 </td>
-
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    收款银行卡：
+                </td>
+                <td width="100px" height="50px">
+                    <c:if test="${empty payCard}">
+                        客户未填写
+                    </c:if>
+                    ${payCard}
+                </td>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    还款银行卡：
+                </td>
+                <td width="100px" height="50px">
+                    <c:if test="${empty repayCard}">
+                        客户未填写
+                    </c:if>
+                    ${repayCard}
+                </td>
             </tr>
             <tr>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
@@ -128,14 +200,107 @@
                 <td name="pres" width="100px" height="50px">
                     ${productIdAndTerm.guaranteeFeeRate*100}
                 </td>
-
+            </tr>
+            <tr>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    提现金额：
+                </td>
+                <td width="100px" height="50px">
+                    ${loanOrder.loanAmount}
+                </td>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    授信金额：
+                </td>
+                <td width="100px" height="50px">
+                    ${shouxin}
+                </td>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    净收金额(合同本金-首期各种费用)：
+                </td>
+                <td width="100px" height="50px">
+                    ${loanOrder.netReceiveAmount}
+                </td>
+            </tr>
+            <tr>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    待还余额：
+                </td>
+                <td width="100px" height="50px">
+                    ${loanOrder.balanceAmount}
+                </td>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    已还金额：
+                </td>
+                <td width="100px" height="50px">
+                    ${loanOrder.paidAmount}
+                </td>
+                <c:if test="${not empty tongDunData }">
+                    <td bgcolor="#F2F2F2" width="100px" height="50px">
+                        同盾设备指纹
+                    </td>
+                    <td width="100px" height="50px">
+                        <a id="btnShow" href="javascript:void(0);">显示</a>
+                    </td>
+                </c:if>
+                <c:if test="${empty tongDunData }">
+                    <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    </td>
+                    <td width="100px" height="50px">
+                    </td>
+                </c:if>
             </tr>
             </tbody>
         </table>
 
+        <div style="display: none" id="blackBox">
+            <div style="display:block;word-break: break-all;word-wrap: break-word;">${tongDunData.blackBox}</div>
+        </div>
+
+
+
+        <div>
+            <h3 style="background-color:#ADADAD"><span style="font-size:20px;padding: 5px;">地区信息</span></h3>
+            <div style="margin-top:10px;margin-bottom: 10px;">
+                <table cellspacing="0" class="table table-bordered">
+                    <thead>
+                    <th width="50px">步骤</th>
+                    <th width="80px">省份名</th>
+                    <th width="80px">城市名</th>
+                    <th width="80px">地区名</th>
+                    <th >地址</th>
+                    <th width="100px">ip</th>
+                    </thead>
+                    <tbody>
+                    <c:choose>
+                        <c:when test="${not empty areaList}">
+                            <c:forEach items="${areaList}" var="area">
+                                <tr>
+                                    <td >${area.segmentName}</td>
+                                    <td >${area.provinceName}</td>
+                                    <td >${area.cityName}</td>
+                                    <td >${area.districtName}</td>
+                                    <td >${area.location}</td>
+                                    <td >${area.ip}</td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr>
+                                <td style="text-align: center;" colspan="6" width="900px">无</td>
+                            </tr>
+                        </c:otherwise>
+                    </c:choose>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <ul id="tabHeader" class="nav-tabs">
             <li id="li_base" class="active"><a href="javascript:void(0)" onclick="load(this,'baseData')">基本资料</a></li>
             <li id="li_bond"><a href="javascript:void(0)" onclick="load(this,'repayPlan')">还款计划</a></li>
+            <c:forEach items="${faddDetails}" var="fadd">
+                <li id="li_credit"><a href="javascript:void(0)" onclick="load(this,'${fadd.id}')">${fadd.contractName}</a></li>
+            </c:forEach>
         </ul>
 
         <div id="tabContext" style="margin-bottom: 10px;">
@@ -193,11 +358,10 @@
                     </div>
                 </div>
             </div>
-
+            <c:forEach items="${faddDetails}" var="fadd">
+                <div id="${fadd.id}" style="display:none;"><iframe frameborder="no" border="0" src="${fadd.viewpdfUrl}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe></div>
+            </c:forEach>
         </div>
-
-
-
     </div>
 
     <!-- script end -->
@@ -208,19 +372,21 @@
 
 
     function load(ele, obj) {
-        var havePlan = ${havePlan};
-        if(!havePlan){
-            BUI.use('bui/overlay', function (Overlay) {
-                new Overlay.Dialog({
-                    title: '提示窗口',
-                    width: 300,
-                    height: 150,
-                    mask: false,
-                    buttons: [],
-                    bodyContent: '<p>该订单还没有对应的还款计划！</p>'
-                }).show();
-            });
-            return;
+        if(obj=='repayPlan'){
+            var havePlan = ${havePlan};
+            if(!havePlan){
+                BUI.use('bui/overlay', function (Overlay) {
+                    new Overlay.Dialog({
+                        title: '提示窗口',
+                        width: 300,
+                        height: 150,
+                        mask: false,
+                        buttons: [],
+                        bodyContent: '<p>该订单还没有对应的还款计划！</p>'
+                    }).show();
+                });
+                return;
+            }
         }
 
         // 样式控制
@@ -239,7 +405,21 @@
             // 标记渲染
             $ele.data("setted",jQuery.noop);
         }
-
     }
+
+    BUI.use('bui/overlay', function (Overlay) {
+
+        $('#btnShow').on('click', function () {
+            new Overlay.Dialog({
+                title: '同盾设备指纹',
+                width: 400,
+                height: 200,
+                mask: false,
+                buttons: [],
+                bodyContent: $("#blackBox").html()//'<div style="width:500px;word-wrap:break-word;">'+$("#btnShow").attr("blackBox")+'</div>'//'<p></p>'
+            }).show();
+        });
+
+    });
 </script>
 </html>

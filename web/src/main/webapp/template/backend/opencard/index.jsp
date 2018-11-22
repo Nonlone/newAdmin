@@ -25,6 +25,12 @@
                 </div>
             </div>
             <div class="control-group span7">
+                <label class="control-label">客户ID:</label>
+                <div class="controls">
+                    <input type="text" class="input-normal control-text" name="search_EQ_user.id">
+                </div>
+            </div>
+            <div class="control-group span7">
                 <label class="control-label">注册手机号:</label>
                 <div class="controls">
                     <input type="text" class="input-normal control-text" name="search_LIKE_user.phone">
