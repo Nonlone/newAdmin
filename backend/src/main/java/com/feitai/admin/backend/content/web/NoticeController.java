@@ -60,11 +60,7 @@ public class NoticeController extends BaseListableController<Notice> {
 	@RequiresPermissions("/backend/notice:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
-	public Object add(@Valid NoticeVo noticeVo){
-		Notice notice=new Notice();
-		notice.setExpiredTime(noticeVo.getExpiredTime());
-		notice.setPublishTime(noticeVo.getPublishTime());
-		notice.setNoticeText(noticeVo.getNoticeText());
+	public Object add(@Valid NoticeVo notice){
 		notice.setId(SnowFlakeIdGenerator.getDefaultNextId());
 		notice.setCreatedTime(new Date());
 		notice.setUpdateTime(new Date());
@@ -75,12 +71,7 @@ public class NoticeController extends BaseListableController<Notice> {
 	@RequiresPermissions("/backend/notice:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
-	public Object update(@Valid @ModelAttribute NoticeVo noticeVo, Model model){
-		Notice notice=new Notice();
-		notice.setExpiredTime(noticeVo.getExpiredTime());
-		notice.setPublishTime(noticeVo.getPublishTime());
-		notice.setNoticeText(noticeVo.getNoticeText());
-		notice.setId(noticeVo.getId());
+	public Object update(@Valid @ModelAttribute NoticeVo notice, Model model){
 		notice.setUpdateTime(new Date());
 		this.noticeService.updateByPrimaryKey(notice);
 		return successResult;
