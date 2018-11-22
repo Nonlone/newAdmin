@@ -76,7 +76,7 @@
            return format;
        };
        function downLoad(){
-    		 var downLoadUrl='${ctx}/backend/loan/repayOrder/downLoad';
+    		 var downLoadUrl='${ctx}/backend/loan/repayOrder/downLoadFirstRepayOrder';
     		 var $form=$("#searchForm");
     		 var oldAction=$form.attr("action");
     		 $form.attr("action",downLoadUrl);

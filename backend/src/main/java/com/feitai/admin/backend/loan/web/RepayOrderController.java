@@ -9,6 +9,7 @@ package com.feitai.admin.backend.loan.web;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.csvreader.CsvWriter;
 import com.feitai.admin.backend.customer.service.IdCardService;
 import com.feitai.admin.backend.customer.service.UserService;
 import com.feitai.admin.backend.fund.service.FundService;
@@ -17,7 +18,6 @@ import com.feitai.admin.backend.loan.service.RepayOrderService;
 import com.feitai.admin.backend.loan.service.RepayPlanComponentService;
 import com.feitai.admin.backend.loan.service.RepayPlanService;
 import com.feitai.admin.backend.loan.vo.OrderPlande;
-import com.feitai.admin.backend.loan.vo.RepayData;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.product.service.ProductService;
@@ -45,11 +45,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -260,57 +263,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         return switchContent(repayOrderMorePage,resultList);
 
     }
-    
-    
-    public Map<String,Object> listSupportRec(ServletRequest request){
-        //根据request获取page
-        int pageNo = PageBulider.getPageNo(request);
-        int pageSize = PageBulider.getPageSize(request);
-        Page<RepayOrderMore> repayOrderMorePage = list(getCommonSqls(request,getSelectMultiTable().buildSqlString()), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
-        List<RepayOrderMore> content = repayOrderMorePage.getContent();
-        List<RepayData> resultList = new ArrayList<>();
-        RepayData repayData=null;
-        for (RepayOrderMore repayOrderMore :
-                content) {
-        	repayData=new RepayData(repayOrderMore);
-            Map<String, Object> productTermFeeFeatureMap = new HashMap<>();
-            Long productId = repayOrderMore.getLoanOrder().getProductId();
-            Integer loanTerm = repayOrderMore.getLoanOrder().getLoanTerm();
-            //productTermFeeFeature
-            List<ProductTermFeeFeature> search = new ArrayList<ProductTermFeeFeature>();
-            search = productTermFeeFeatureService.findByProductIdAndTerm(productId, loanTerm.shortValue());
-
-            if (search.size() > 0) {
-                ProductTermFeeFeature productTermFeeFeature = search.get(0);
-                try {
-                    productTermFeeFeatureMap = ObjectUtils.objectToMap(productTermFeeFeature);
-                } catch (Exception e) {
-                    log.error("",e);
-                }
-            }
-            repayData.setProductTermFeeFeature(productTermFeeFeatureMap);
-            //脱敏处理
-            String idCard=Desensitization.idCard(repayData.getIdCard().getIdCard());
-            repayData.getIdCard().setIdCard(idCard);            
-            repayData.setPayAccount(Desensitization.bankCardNo(repayData.getPayAccount()));
-
-            
-            List<RepayPlan> byLoanOrderId = repayPlanService.findByLoanOrderIdAndTerm(repayOrderMore.getLoanOrderId(),(short)1);
-            List<OrderPlande> orderPlandes = repayPlanComponentService.findOrderPlandesByRepayPlans(byLoanOrderId);
-            if(orderPlandes.size()>0){
-            	repayData.setOrderPlande(orderPlandes.get(0));
-            }
-            if(repayOrderMore.getLoanOrder()!=null && repayOrderMore.getLoanOrder().getPayFundId()!=null){
-              Fund fund=fundService.getFund(repayOrderMore.getLoanOrder().getPayFundId());
-              repayData.setFundName(Optional.ofNullable(fund).map(f ->f.getFundName()).orElse(""));
-            }
-            Product product=productService.findOne(productId);
-            repayData.setProductName(Optional.ofNullable(product).map(p ->p.getName()).orElse(""));
-            resultList.add(repayData);
-        }
-        return switchContent(repayOrderMorePage,resultList);
-
-    }
+        
 
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
@@ -350,8 +303,13 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
                 }).buildSqlString()+" where id = '" + id +"' Group by id";
         return sql;
     }
+    /**
+     * 下载首期还款数据
+     * @param request
+     * @param response
+     */
     @RequestMapping(value = "downLoadFirstRepayOrder")
-    public void downLoadFirstRepayOrder(ServletRequest request,HttpServletResponse response){
+    public void downLoadFirstRepayOrder(HttpServletRequest request,HttpServletResponse response){
     	try{
     		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
     		List<String[]> dataList=getDataList(listSupport(request),(obj,rowList)->{
@@ -368,13 +326,19 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         		rowList.add(obj.getString("fundName"));
         		rowList.add(obj.getString("productName"));
     		});
-    	  downLoad(response, dataList,"");
+    	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","首个还款日","首期总费用","评审费","担保费","本息","资金方","产品名称"});
+    	  downLoad(request,response, dataList,"首期还款列表.cvs");
     	}catch(Exception e){
     		log.error("",e);
     	}
     }
+    /**
+     * 下载逾期还款数据
+     * @param request
+     * @param response
+     */
     @RequestMapping(value = "downLoadPastRepayOrder")
-    public void downLoadPastRepayOrder(ServletRequest request,HttpServletResponse response){
+    public void downLoadPastRepayOrder(HttpServletRequest request,HttpServletResponse response){
     	try{
     		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
     		List<String[]> dataList=getDataList(listSupport(request),(obj,rowList)->{
@@ -389,18 +353,34 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         		rowList.add(obj.getString("fundName"));
         		rowList.add(obj.getString("productName"));
     		});
-    	  downLoad(response, dataList,"fristRepayOrder.cvs");
+    	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","还款日","逾期天数","当期/总期","应还金额","资金方","产品名称"});
+    	  downLoad(request,response, dataList,"逾期还款列表.cvs");
     	}catch(Exception e){
     		log.error("",e);
     	}
     }
-	private void downLoad(HttpServletResponse response, List<String[]> dataList,String fileName) throws IOException {
-		File file=repayOrderService.createFile(dataList, fileName);
-    	  response.setHeader("content-type", "application/octet-stream");
-		   response.setContentType("application/octet-stream");
-		   response.setHeader("Content-Disposition", "attachment;filename="+file.getName());	   
-		   Files.copy(file.toPath(), response.getOutputStream());
-		   Files.delete(file.toPath());
+	private void downLoad(HttpServletRequest request,HttpServletResponse response, List<String[]> dataList,String fileName) throws IOException {
+		try{
+			String userAgent = request.getHeader("User-Agent");      
+		    // 针对IE或者以IE为内核的浏览器：  
+		    if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {  
+		    	fileName = java.net.URLEncoder.encode(fileName, "UTF-8");  
+		    } else {  
+		        // 非IE浏览器的处理：  
+		    	fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");  
+		    }
+           response.setCharacterEncoding("utf-8");
+		  response.setHeader("content-type", "application/octet-stream");
+		  response.setContentType("application/octet-stream");
+		 response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));  
+		 write(response.getOutputStream(),dataList, fileName);
+		}catch(Exception e){
+			log.error("",e);
+		}finally {
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		}
+		  
 	}
     
     private List<String[]> getDataList(Map<String,Object> map,DownLoadProcesser dlp){
@@ -417,5 +397,15 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     private interface DownLoadProcesser{
     	 void process(JSONObject obj,List<String> rowList);
     }
-    
+    private void write(OutputStream os,List<String[]> dataList,String fileName){
+    	CsvWriter writer=new CsvWriter(os, ',', Charset.forName("UTF-8"));
+    	dataList.forEach(data->{
+    		try {
+				writer.writeRecord(data);
+			} catch (Exception e) {
+				log.error("",e);
+			}
+    	});
+    	writer.close();
+    }
 }
