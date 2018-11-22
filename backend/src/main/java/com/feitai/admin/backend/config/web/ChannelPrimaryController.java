@@ -7,11 +7,14 @@
 
 package com.feitai.admin.backend.config.web;
 
+import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.config.entity.ChannelPrimary;
 import com.feitai.admin.backend.config.service.ChannelPrimaryService;
 import com.feitai.admin.backend.config.service.ChannelService;
+import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.vo.AjaxResult;
+import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.utils.SnowFlakeIdGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +25,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Controller
@@ -39,9 +46,20 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 	@Autowired
 	private ChannelService channelService;
 	
+	@Autowired
+	private MapProperties mapProperties;
+	
 	@RequestMapping(value = "")
-	public String index() {
-		return "/backend/channelPrimary/index";
+	public ModelAndView index() {
+		ModelAndView mav=new ModelAndView("/backend/channelPrimary/index");
+    	List<ListItem> itemList = new ArrayList<>();
+    	itemList.add(new ListItem("全部", ""));
+    	List<String> channelSortList=mapProperties.getChannelSortList();
+    	channelSortList.forEach(channelSort->{
+    		 itemList.add(new ListItem(channelSort, channelSort));
+    	}); 
+    	mav.addObject("channelSortList",JSONObject.toJSONString(itemList));
+		return mav;
 	}
 	
 	@RequiresPermissions("/backend/channelPrimary:list")
