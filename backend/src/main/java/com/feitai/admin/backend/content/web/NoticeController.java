@@ -9,6 +9,7 @@ package com.feitai.admin.backend.content.web;
 
 
 import com.feitai.admin.backend.content.service.NoticeService;
+import com.feitai.admin.backend.content.vo.NoticeVo;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
 import com.feitai.admin.core.web.BaseListableController;
@@ -59,7 +60,11 @@ public class NoticeController extends BaseListableController<Notice> {
 	@RequiresPermissions("/backend/notice:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
-	public Object add(@Valid Notice notice){
+	public Object add(@Valid NoticeVo noticeVo){
+		Notice notice=new Notice();
+		notice.setExpiredTime(noticeVo.getExpiredTime());
+		notice.setPublishTime(noticeVo.getPublishTime());
+		notice.setNoticeText(noticeVo.getNoticeText());
 		notice.setId(SnowFlakeIdGenerator.getDefaultNextId());
 		notice.setCreatedTime(new Date());
 		notice.setUpdateTime(new Date());
@@ -70,7 +75,13 @@ public class NoticeController extends BaseListableController<Notice> {
 	@RequiresPermissions("/backend/notice:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
-	public Object update(@Valid @ModelAttribute Notice notice, Model model){
+	public Object update(@Valid @ModelAttribute NoticeVo noticeVo, Model model){
+		Notice notice=new Notice();
+		notice.setExpiredTime(noticeVo.getExpiredTime());
+		notice.setPublishTime(noticeVo.getPublishTime());
+		notice.setNoticeText(noticeVo.getNoticeText());
+		notice.setId(noticeVo.getId());
+		notice.setUpdateTime(new Date());
 		this.noticeService.updateByPrimaryKey(notice);
 		return successResult;
 	}
