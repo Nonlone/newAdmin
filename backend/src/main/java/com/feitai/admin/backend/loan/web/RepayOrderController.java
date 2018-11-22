@@ -191,7 +191,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
                 try {
                     productTermFeeFeatureMap = ObjectUtils.objectToMap(productTermFeeFeature);
                 } catch (Exception e) {
-                    log.error("",e);
+                    log.error("productTermFeeFeatureMap can't objectToMap!",e);
                 }
             }
             json.put("productTermFeeFeature", productTermFeeFeatureMap);
@@ -216,8 +216,6 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
                 substring = stringBuffer.substring(0, stringBuffer.length() - 1);
             }
             json.put("payCard", substring);
-
-
             json.put("status",mapProperties.getRepayOrderStatus(json.getString("status")));
 
             resultList.add(json);
@@ -228,8 +226,13 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
 
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
-        sbSql.append(SelectMultiTable.builder(RepayOrderMore.class).buildCountSqlString());
-        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
+        String searchSql = getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS);
+        if(searchSql.equals(getService().WHERE_COMMON)){
+            sbSql.append(SelectMultiTable.builder(RepayOrder.class).buildCountSqlString());
+        }else{
+            sbSql.append(getSelectMultiTable().buildCountSqlString());
+        }
+        sbSql.append(searchSql);
         return sbSql.toString();
     }
 
@@ -240,26 +243,26 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
 
     private SelectMultiTable getSelectMultiTable() {
         return  SelectMultiTable.builder(RepayOrder.class)
-                .leftJoin(RepayPlan.class,"repay_plan",new OnCondition[]{
+                .leftJoin(RepayPlan.class,"repayPlan",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "repayPlanId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class,"idCard",new OnCondition[]{
+                }).leftJoin(IdCardData.class,"idcard",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"userId")
-                }).leftJoin(LoanOrder.class,"loan_order",new OnCondition[]{
+                }).leftJoin(LoanOrder.class,"loanOrder",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"loanOrderId",Operator.EQ,"id")
-                }).leftJoin(User.class,"user_in",new OnCondition[]{
+                }).leftJoin(User.class,"user",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"id")
                 });
     }
 
     protected String getOneSql(Object id){
         String sql = SelectMultiTable.builder(RepayOrder.class)
-                .leftJoin(RepayPlan.class,"repay_plan",new OnCondition[]{
+                .leftJoin(RepayPlan.class,"repayPlan",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "repayPlanId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class,"idCard",new OnCondition[]{
+                }).leftJoin(IdCardData.class,"idcard",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"userId")
-                }).leftJoin(LoanOrder.class,"loan_order",new OnCondition[]{
+                }).leftJoin(LoanOrder.class,"loanOrder",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"loanOrderId",Operator.EQ,"id")
-                }).leftJoin(User.class,"user_in",new OnCondition[]{
+                }).leftJoin(User.class,"user",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"id")
                 }).buildSqlString()+" where "+SelectMultiTable.MAIN_ALAIS+".id = '" + id +"' ";
         return sql;

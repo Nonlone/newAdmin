@@ -33,6 +33,7 @@ public class MapProperties {
         supplementMaterialMap = ImmutableMap.copyOf(JSON.parseObject(supplementMaterial,Map.class));
         supplementMaterialTypeMap = ImmutableMap.copyOf(JSON.parseObject(supplementMaterialType,Map.class));
         repayOrderStatusMap = ImmutableMap.copyOf(JSON.parseObject(repayOrderStatus,Map.class));
+        bankCardTypeMap = ImmutableMap.copyOf(JSON.parseObject(bankCardType,Map.class));
     }
 
     @Value("${backend.segmentMap}")
@@ -189,4 +190,19 @@ public class MapProperties {
     public String getRepayOrderStatus(String key) {
         return getMapValue(repayOrderStatusMap, key);
     }
+
+    @Value("${backend.bankCardType}")
+    private String bankCardType;
+
+    private static Map<String, String> bankCardTypeMap;
+
+    /***
+     * 获取银行卡类型名称
+     * @param key
+     * @return
+     */
+    public String getBankCardType(String key) {
+        return getMapValue(bankCardTypeMap, key);
+    }
+
 }

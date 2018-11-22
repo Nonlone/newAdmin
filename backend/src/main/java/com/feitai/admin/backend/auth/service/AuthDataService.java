@@ -44,6 +44,9 @@ public class AuthDataService {
                         .andEqualTo("status", AuthStatus.AUTHORIZED.getValue())).build());
         if (!CollectionUtils.isEmpty(authDataList)) {
             for (AuthData auth : authDataList) {
+                if(auth.getCode()==null||auth.getSource()==null){
+                    continue;
+                }
                 if (!checkSet.contains(auth.getCode().getValue() + "-" + auth.getSource().getValue())) {
                     checkSet.add(auth.getCode().getValue() + "-" + auth.getSource().getValue());
                     resultList.add(auth);

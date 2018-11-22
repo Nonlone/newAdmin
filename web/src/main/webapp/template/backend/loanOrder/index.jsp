@@ -25,6 +25,12 @@
 					<input type="text" class="input-normal control-text" name="search_LIKE_idcard.name">
 				</div>
 			</div>
+			<div class="control-group span7">
+				<label class="control-label">客户Id:</label>
+				<div class="controls">
+					<input type="text" class="input-normal control-text" name="search_LIKE_userId">
+				</div>
+			</div>
 
 			<div class="control-group span7">
 				<label class="control-label">身份证号:</label>
@@ -36,7 +42,7 @@
 			<div class="control-group span7">
 				<label class="control-label">注册手机号:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_userIn.phone">
+					<input type="text" class="input-normal control-text" name="search_LIKE_user.phone">
 				</div>
 			</div>
 
@@ -46,22 +52,14 @@
 					<input id="search_EQ_status" name="search_EQ_status" type="hidden" >
 				</div>
 			</div>
-			<div class="control-group span_width">
-				<label class="control-label">放款时间:</label>
-				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
-					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_payLoanTime_D" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_payLoanTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
-				</div>
-			</div>
 
-			<div class="control-group span7">
+			<div class="control-group span6">
 				<label class="control-label">产品名称:</label>
 				<div class="controls" id="selectProduct">
 					<input id="searchProduct" type="hidden" name="search_LIKE_product.name">
 				</div>
 			</div>
-			<div class="control-group span_width">
+			<div class="control-group span6">
 				<label class="control-label">资金方：</label>
 				<div id="selectPayFund" class="controls">
 					<input id="search_EQ_payFundId" name="search_EQ_payFundId" type="hidden" >
@@ -72,16 +70,16 @@
 				<label class="control-label">申请时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_applyTime_D" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_applyTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar" name="search_GTE_applyTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_applyTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 			<div class="control-group span_width">
 				<label class="control-label">放款时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_payLoanTime_D" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_payLoanTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar" name="search_GTE_payLoanTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_payLoanTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 

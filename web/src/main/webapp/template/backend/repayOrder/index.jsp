@@ -13,9 +13,21 @@
 		<form id="searchForm" class="form-horizontal search-form">
 		<div class="row">
 			<div class="control-group span7">
+				<label class="control-label">订单号:</label>
+				<div class="controls">
+					<input type="text" class="input-normal control-text" name="search_LIKE_id">
+				</div>
+			</div>
+			<div class="control-group span7">
 				<label class="control-label">客户姓名:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_idcard.name">
+					<input type="text" class="input-normal control-text" name="search_LIKE_userId">
+				</div>
+			</div>
+			<div class="control-group span7">
+				<label class="control-label">客户ID:</label>
+				<div class="controls">
+					<input type="text" class="input-normal control-text" name="search_LIKE_id">
 				</div>
 			</div>
 			<div class="control-group span7">
@@ -27,15 +39,10 @@
 			<div class="control-group span7">
 				<label class="control-label">手机号:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_userIn.phone">
+					<input type="text" class="input-normal control-text" name="search_LIKE_user.phone">
 				</div>
 			</div>
-			<div class="control-group span7">
-				<label class="control-label">订单号:</label>
-				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_id">
-				</div>
-			</div>
+
 			<div class="control-group span_width">
 				<label class="control-label">还款状态：</label>
 				<div class="controls bui-form-field-select height_auto"  data-items="{' ':'全部','10':'初始状态','90':'还款成功','100':'还款成功且结清','-10':'失败'}" class="control-text input-small">
