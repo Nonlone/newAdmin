@@ -739,7 +739,13 @@ define('bui/ux/crudgrid', ['bui/common', 'bui/grid', 'bui/form', 'bui/data', 'bu
         });
 
         CrudGrid.createLink = function (cfg) {
-            var temp = '<span class="page-action grid-command {style} "  data-id="{id}" data-href="{href}" title="{title}">{text}</span>';
+            var temp = '<span class="page-action grid-command {iconStyle} {backgroundStyle} "  data-id="{id}" data-href="{href}" title="{title}">{text}</span>';
+            return BUI.substitute(temp, cfg);
+        }
+
+
+        CrudGrid.createLinkCustomSpan = function(cfg){
+            var temp = '<span class="{class}"  data-id="{id}" data-href="{href}" title="{title}">{text}</span>';
             return BUI.substitute(temp, cfg);
         }
 

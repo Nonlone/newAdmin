@@ -198,13 +198,14 @@
         operationColumnRenderer : function(value, obj){//操作列最追加按钮
             var detail="";
             var id = obj.id;
-			detail = CrudGrid.createLink({
+			detail = CrudGrid.createLinkCustomSpan({
+                class:"page-action grid-command x-icon x-icon-info",
 				id: 'auth' + obj.id,
 				title: obj.idcard.name + '详细信息',
-				text: '<li class="icon-list-alt auth"></li>',
+				text: '<i class="icon icon-list-alt icon-white"></i>',
 				href: authUrl + obj.id
 			})
-			return detail;
+			return "<div style='text-align:left'>&nbsp;&nbsp;"+detail+"</div>";
         },
         storeCfg:{//定义store的排序，如果是复合主键一定要修改
             sortInfo : {
