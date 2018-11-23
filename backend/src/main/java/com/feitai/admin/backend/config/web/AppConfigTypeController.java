@@ -9,11 +9,16 @@ package com.feitai.admin.backend.config.web;
 
 import com.feitai.admin.backend.config.entity.AppConfigType;
 import com.feitai.admin.backend.config.service.AppConfigTypeService;
+import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
+import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.appconfig.model.AppConfig;
+import com.feitai.jieya.server.dao.data.model.IdCardData;
+import com.feitai.jieya.server.dao.product.model.Product;
+import com.feitai.jieya.server.dao.user.model.User;
 import com.feitai.utils.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +54,10 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
-		Page<AppConfigType> listPage =listBySql(request,getSql(request));
+		int pageNo = PageBulider.getPageNo(request);
+        int pageSize = PageBulider.getPageSize(request);
+        String sql = getSql(request, getSelectMultiTable());  
+		Page<AppConfigType> listPage =list(sql, pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);//listBySql(request,getSql(request));
 		return listPage;
 	}
 	
@@ -58,7 +66,8 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	@ResponseBody
 	@LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
 	public Object listAll(){
-		List<ListItem> list = this.appConfigTypeService.findAllItems(getSql(null));
+		String sql=getSelectMultiTable().buildSqlString()+" GROUP BY type_code";
+		List<ListItem> list = this.appConfigTypeService.findAllItems(sql);
 		return list;
 	}
 	
@@ -129,19 +138,14 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 		return this.appConfigTypeService;
 	}
 
-	protected String getSql(ServletRequest request) {
-		StringBuffer sql=new StringBuffer();
-		String joinSql = SelectMultiTable.builder(AppConfigType.class)
-				.leftJoin(AppConfig.class,"app_config",new OnCondition[]{
-						new OnCondition(SelectMultiTable.ConnectType.AND, "typeCode", Operator.EQ, "typeCode"),
-				}).buildSqlString();
-		sql.append(joinSql);
-		if(request!=null){
-		List<SearchParams> searchParamsList = bulidSearchParamsList(request);		
-        sql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
-		}
-		sql.append(" GROUP BY type_code");
-		return sql.toString();
+
+	protected String getSql(ServletRequest request, SelectMultiTable selectMultiTable) {
+	    	StringBuffer sbSql = new StringBuffer();
+	        sbSql.append(selectMultiTable.buildSqlString());
+	        List<SearchParams> searchParamsList = bulidSearchParamsList(request);
+	        sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
+	        sbSql.append(" GROUP BY type_code");
+	        return sbSql.toString();
 	}
 
 	protected String getSingleSql(String typeCode){
@@ -151,5 +155,24 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 				}).buildSqlString()+"where maintable.type_Code = '"+typeCode+"' GROUP BY type_code";
 		return sql;
 	}
+	  private SelectMultiTable getSelectMultiTable() {
+	        return SelectMultiTable.builder(AppConfigType.class)
+					.leftJoin(AppConfig.class,"app_config",new OnCondition[]{
+							new OnCondition(SelectMultiTable.ConnectType.AND, "typeCode", Operator.EQ, "typeCode"),
+					});
+	    }
+	  
+	   
 
+	    private String getCountSqls(ServletRequest request) {
+	        StringBuffer sbSql = new StringBuffer();
+	        String searchSql = getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS);
+	        if(searchSql.equals(getService().WHERE_COMMON)){
+	            sbSql.append(SelectMultiTable.builder(AppConfigType.class).buildCountSqlString());
+	        }else{
+	            sbSql.append(getSelectMultiTable().buildCountSqlString());
+	        }
+	        sbSql.append(searchSql);
+	        return sbSql.toString();
+	    }
 }
