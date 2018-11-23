@@ -178,6 +178,9 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
 			@Override
 			public Date convert(String source) {
+				if(com.feitai.utils.StringUtils.isEmpty(source)){
+					return null;
+				}
 				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				try {
 					return sdf.parse(source);
