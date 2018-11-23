@@ -13,8 +13,11 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -26,6 +29,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -166,6 +171,22 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         exceptionMappings.setProperty("java.lang.Throwable", "error/500");
         resolver.setExceptionMappings(exceptionMappings);
         return resolver;
+    }
+    @Override
+    protected void addFormatters(FormatterRegistry registry) {
+    	registry.addConverter(new Converter<String, Date>() {
+
+			@Override
+			public Date convert(String source) {
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				try {
+					return sdf.parse(source);
+				} catch (ParseException e) {
+					return new Date(Long.valueOf(source));
+				}
+			}
+		});
+    	
     }
 }
 
