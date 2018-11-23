@@ -122,12 +122,14 @@
             addOrUpdateFormId: 'addOrUpdateForm',
             dialogContentId: 'addOrUpdate',
             operationColumnRenderer: function (value, obj) {//操作列最追加按钮
-                return CrudGrid.createLink({
-                        id: obj.id,
-                        title: obj.name + '—客户信息',
-                        text: '<li class="icon icon-list-alt"></li>',
-                        href: $ctx+"/backend/customer/detail/" + obj.userId
-                    });
+                return CrudGrid.createLinkCustomSpan({
+                    class:"page-action grid-command x-icon x-icon-info",
+                    id: obj.id,
+                    title: obj.name + '—客户信息',
+                    text: '<i class="icon icon-white icon-list-alt"></i>',
+                    href: $ctx+"/backend/customer/detail/" + obj.userId
+                })
+
             },
             storeCfg: {//定义store的排序，如果是复合主键一定要修改
                 sortInfo: {

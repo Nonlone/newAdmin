@@ -54,11 +54,10 @@
 					<div class="controls">
 						<input id="channelCode"
 							   name="channelCode"
-							   readonly="true"
 							   type="text"
 							   data-rules="{required:true,}"
+							   data-remote="${ctx}/backend/channelPrimary/checkChannelCode"
 							   class="input-normal control-text"
-							   onclick="getNextCode();"
 							   >
 					</div>
 				</div>
@@ -98,20 +97,6 @@
 
 <script type="text/javascript">
 
-    function getNextCode(){
-        var nextCode;
-        $.ajax({
-            url: "${ctx}/backend/channelPrimary/getNextCode",
-            type:"GET",
-			async:false,
-            cache:false,
-            success:function (data) {
-                nextCode = data.msg;
-			}
-        });
-        var channelCode =  document.getElementById("channelCode");
-        channelCode.value = nextCode;
-    }
 
     function flushall(){
         var elementsByTagName = document.getElementsByTagName("input");

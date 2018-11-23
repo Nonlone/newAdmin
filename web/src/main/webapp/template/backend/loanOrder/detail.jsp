@@ -37,7 +37,7 @@
     <!--提现详情页 ================================================== -->
     <div>
 
-        <h3 style="background-color:#ADADAD"><span style="font-size:20px;padding: 5px;">订单信息</span></h3>
+        <h3 style="background-color:#ADADAD"><span style="font-size:20px;padding: 5px;">提现订单信息</span></h3>
         <hr/>
         <table cellspacing="0" class="table table-bordered">
             <tbody>
@@ -309,54 +309,7 @@
                 <iframe frameborder="no" border="0" src="${ctx}/backend/customer/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
             <div id = "repayPlan" style="display:none;">
-                <div class="row">
-                    <div>
-                        <table class="table">
-                            <thead>
-
-                            <tr>
-                                <th width="70px">期数</th>
-                                <th width="70px">还款日期</th>
-                                <th width="70px">实还日期</th>
-                                <th width="70px">当期期供</th>
-                                <th width="70px">应还本金</th>
-                                <th width="70px">应还利息</th>
-                                <th width="70px">应还评审费</th>
-                                <th width="70px">应还担保费</th>
-                                <th width="70px">应还违约金</th>
-                                <th width="70px">实还本金</th>
-                                <th width="70px">实还利息</th>
-                                <th width="70px">实还评审费</th>
-                                <th width="70px">实还担保费</th>
-                                <th width="70px">实还违约金</th>
-                                <th width="70px">还款状态</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <c:forEach items="${repayPlan}" var="plan" varStatus="">
-                                <tr>
-                                    <td>${plan.term}</td>
-                                    <td>${plan.dueDate}</td>
-                                    <td>${plan.realDate}</td>
-                                    <td>${plan.amount}</td>
-                                    <td>${plan.pincipalAmount}</td>
-                                    <td>${plan.interestAmount}</td>
-                                    <td>${plan.approveFeeAmount}</td>
-                                    <td>${plan.guaranteeFeeAmount}</td>
-                                    <td>${plan.overdueFineAmount}</td>
-                                    <td>${plan.pincipalBalance}</td>
-                                    <td>${plan.interestBalance}</td>
-                                    <td>${plan.approveFeeBalance}</td>
-                                    <td>${plan.guaranteeFeeBalance}</td>
-                                    <td>${plan.overdueFineBalance}</td>
-                                    <td></td>
-                                </tr>
-
-                            </c:forEach>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <iframe frameborder="no" border="0" src="${ctx}/backend/loan/repayOrder/repayPlan/${loanOrder.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
             <c:forEach items="${faddDetails}" var="fadd">
                 <div id="${fadd.id}" style="display:none;"><iframe frameborder="no" border="0" src="${fadd.viewpdfUrl}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe></div>

@@ -50,11 +50,17 @@
 				</div>
 			</div>
 			<div class="control-group span_width">
-				<label class="control-label">还款日期:</label>
+				<label class="control-label">还款到期日:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_dueDate_D" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_dueDate_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar" name="search_GTE_repayPlan.dueDate" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_repayPlan.dueDate" type="text" class="calendar" data-tip="{text : '结束日期'}">
+				</div>
+			</div>
+			<div class="control-group span7">
+				<label class="control-label">逾期天数:</label>
+				<div class="controls">
+					<input type="text" class="input-normal control-text" name="search_EQ_repayPlan.overdueDays">
 				</div>
 			</div>
 
@@ -127,12 +133,7 @@
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
 	<framwork:crudPermission resource="/backend/loan/repayOrder"/>
 
-    var authUrl = '${ctx}/backend/loan/repayOrder/auth/';
-
-    <shiro:hasPermission name='/admin/sys/role:auth'>
-    authBtn = true;
-    authUrl = '${ctx}/backend/loan/repayOrder/auth/';
-    </shiro:hasPermission>
+      var authUrl = '${ctx}/backend/loan/repayOrder/detail/';
 
     var columns = [
         {title:'订单号',dataIndex:'id',width:'8%'},
@@ -170,7 +171,6 @@
                     return '是';
                 }
             }},
-		 {title:'还款账号',dataIndex:'payCard',width:'8%'},
 		 {title:'借款金额',dataIndex:'loanOrder',width:'8%',renderer:function (value) {
 				 if(value){
 					return value.loanAmount;
@@ -185,7 +185,19 @@
 					 return '';
 				 }
              }},
-		{title:'还款到期日',dataIndex:'dueDate',width:'8%',renderer:BUI.Grid.Format.dateRenderer()},
+		{title:'存储信贷系统的出账编号',dataIndex:'repayPlan',width:'12%',renderer:function (value) {
+				if(value){
+				    return value.putoutno;
+				}
+				return '暂无';
+            }},
+		{title:'还款到期日',dataIndex:'dueDate',width:'8%'},
+		{title:'逾期天数',dataIndex:'repayPlan',width:'6%',renderer:function (value) {
+				if(value){
+				    return value.overdueDays;
+				}
+				return '';
+            }},
 		 {title:'当期实还',dataIndex:'amount',width:'8%'},
 		 {title:'当期/总期',dataIndex:'termPre',width:'8%'},
 		 {title:'还款状态',dataIndex:'status',width:'8%'}
@@ -207,8 +219,8 @@
             var id = obj.id;
 			detail = CrudGrid.createLinkCustomSpan({
                 class:"page-action grid-command x-icon x-icon-info",
-				id: 'auth' + obj.id,
-				title: obj.idcard.name + '详细信息',
+				id: 'detail' + obj.id,
+				title: obj.idcard.name + '还款信息',
 				text: '<i class="icon icon-list-alt icon-white"></i>',
 				href: authUrl + obj.id
 			})

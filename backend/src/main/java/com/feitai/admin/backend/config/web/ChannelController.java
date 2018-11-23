@@ -7,31 +7,22 @@
 
 package com.feitai.admin.backend.config.web;
 
-import com.alibaba.fastjson.JSONObject;
-import com.feitai.admin.backend.config.entity.ChannelCms;
 import com.feitai.admin.backend.config.entity.ChannelPrimary;
 import com.feitai.admin.backend.config.service.ChannelPrimaryService;
 import com.feitai.admin.backend.config.service.ChannelService;
-import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
-import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
-import com.feitai.jieya.server.dao.base.constant.CardStatus;
 import com.feitai.jieya.server.dao.channel.model.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 import java.util.*;
@@ -40,7 +31,7 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "/backend/channel")
 @Slf4j
-public class ChannelController extends BaseListableController<ChannelCms> {
+public class ChannelController extends BaseListableController<Channel> {
 
 	@Autowired
 	private ChannelService channelService;
@@ -48,20 +39,9 @@ public class ChannelController extends BaseListableController<ChannelCms> {
 	@Autowired
 	private ChannelPrimaryService channelPrimaryService;
 	
-	@Autowired
-	private MapProperties mapProperties;
-	
 	@RequestMapping(value = "")
-	public ModelAndView index() {
-		ModelAndView mav=new ModelAndView("/backend/channel/index");
-    	List<ListItem> itemList = new ArrayList<>();
-    	itemList.add(new ListItem("全部", ""));
-    	List<String> channelSortList=mapProperties.getChannelSortList();
-    	channelSortList.forEach(channelSort->{
-    		 itemList.add(new ListItem(channelSort, channelSort));
-    	}); 
-    	mav.addObject("channelSortList",JSONObject.toJSONString(itemList));
-		return mav;
+	public String index() {
+		return "/backend/channel/index";
 	}
 
 	@RequestMapping(value = "/checkChannelName", method = RequestMethod.GET)
@@ -118,7 +98,7 @@ public class ChannelController extends BaseListableController<ChannelCms> {
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
-		Page<ChannelCms> listPage = super.list(request);
+		Page<Channel> listPage = super.list(request);
 		return listPage;
 	}
 	
@@ -126,14 +106,14 @@ public class ChannelController extends BaseListableController<ChannelCms> {
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("id") Long id) {
-		ChannelCms channel = this.channelService.findOne(id);
+		Channel channel = this.channelService.findOne(id);
 		return channel;
 	}
 	
 	@RequiresPermissions("/backend/channel:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
-	public Object add(@Valid ChannelCms channel){
+	public Object add(@Valid Channel channel){
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
 		channel.setMainPackageCode(channelPrimary.getChannelCode().toString());
 		channel.setChannelId(channelPrimary.getChannelCode().toString()+"_"+channel.getChannelId());
@@ -146,7 +126,7 @@ public class ChannelController extends BaseListableController<ChannelCms> {
 	@RequiresPermissions("/backend/channel:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
-	public Object update(@Valid @ModelAttribute("channel") ChannelCms channel){
+	public Object update(@Valid @ModelAttribute("channel") Channel channel){
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
 		channel.setMainPackageCode(channelPrimary.getChannelCode().toString());
 		channel.setChannelId(channelPrimary.getChannelCode().toString()+"_"+channel.getChannelId());
@@ -176,7 +156,7 @@ public class ChannelController extends BaseListableController<ChannelCms> {
 	}
 
 	@Override
-	protected DynamitSupportService<ChannelCms> getService() {
+	protected DynamitSupportService<Channel> getService() {
 		return this.channelService;
 	}
 

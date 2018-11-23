@@ -18,5 +18,5 @@ public class ChannelPrimary extends BaseId {
 
     private String channelSort;
 
-    private Integer channelCode;
+    private String channelCode;
 }

@@ -65,19 +65,10 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 	@RequiresPermissions("/backend/channelPrimary:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
-	public Object listPage(ServletRequest request, Model model) {
-		Integer lastCode = channelPrimaryService.findLastCode();
-		model.addAttribute("nextCode",lastCode);
+	public Object listPage(ServletRequest request) {
 		return super.list(request);
 	}
 
-	@RequestMapping(value = "getNextCode")
-	@ResponseBody
-	public Object getNextCode() {
-		Integer lastCode = channelPrimaryService.findLastCode();
-		AjaxResult successResult = new AjaxResult(true, lastCode+"");
-		return successResult;
-	}
 
 	@RequiresPermissions("/backend/channelPrimary:update")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
@@ -96,6 +87,18 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 			return null;
 		} else {
 			return "该名称已经被使用";
+		}
+	}
+
+	@RequiresPermissions("/backend/channelPrimary:update")
+	@RequestMapping(value = "checkChannelCode")
+	@ResponseBody
+	public Object checkChannelCode(@RequestParam String channelCode) {
+		ChannelPrimary channelPrimary = this.channelPrimaryService.findByChannelCode(channelCode);
+		if (channelPrimary == null) {
+			return null;
+		} else {
+			return "该标识已经被使用";
 		}
 	}
 

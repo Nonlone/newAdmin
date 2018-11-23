@@ -22,6 +22,7 @@ import com.feitai.admin.backend.loan.service.RepayOrderService;
 import com.feitai.admin.backend.loan.service.RepayPlanComponentService;
 import com.feitai.admin.backend.loan.service.RepayPlanService;
 import com.feitai.admin.backend.loan.vo.OrderPlande;
+import com.feitai.admin.backend.loan.vo.RepayPlanVo;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.opencard.service.TongDunDataService;
 import com.feitai.admin.backend.product.service.ProductService;
@@ -114,6 +115,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
     @Autowired
     private AreaService areaService;
+
     private final static String LOAN_PURPOSE = "loanPurpose";
 
     private final static String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -193,10 +195,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         //借款用途
         modelAndView.addObject("loanPurpose",appConfigService.findByTypeCodeAndCode(LOAN_PURPOSE,loanOrder.getLoanPurposeCode()));
 
-
-        //获取产品详细信息，需要产品id和期数
-        List<ProductTermFeeFeature> byProductIdAndTerm = productTermFeeFeatureService.findByProductIdAndTerm(loanOrder.getProductId(), loanOrder.getLoanTerm().shortValue());
-
         //脱敏处理
         String hyPhone = Desensitization.phone(userIn.getPhone());
         modelAndView.addObject("hyPhone", hyPhone);
@@ -211,6 +209,9 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         modelAndView.addObject("user",userIn);
         modelAndView.addObject("idCard",idcard);
         modelAndView.addObject("product",product);
+
+        //获取产品详细信息，需要产品id和期数
+        List<ProductTermFeeFeature> byProductIdAndTerm = productTermFeeFeatureService.findByProductIdAndTerm(loanOrder.getProductId(), loanOrder.getLoanTerm().shortValue());
         if(byProductIdAndTerm.size()!=0){
             modelAndView.addObject("productIdAndTerm",byProductIdAndTerm.get(0));
         }
@@ -303,7 +304,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         if(tongDunData!=null){
             modelAndView.addObject("tongDunData",tongDunData);
         }
-
         return modelAndView;
     }
 

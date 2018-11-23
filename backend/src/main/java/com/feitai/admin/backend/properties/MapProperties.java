@@ -38,6 +38,8 @@ public class MapProperties {
         repayOrderStatusMap = ImmutableMap.copyOf(JSON.parseObject(repayOrderStatus,Map.class));
         channelSortList=ImmutableList.copyOf(channelSort.split(","));
         bankCardTypeMap = ImmutableMap.copyOf(JSON.parseObject(bankCardType,Map.class));
+        repayOrderPayTypeMap = ImmutableMap.copyOf(JSON.parseObject(repayOrderPayType,Map.class));
+
 
     }
 
@@ -195,11 +197,11 @@ public class MapProperties {
     public String getRepayOrderStatus(String key) {
         return getMapValue(repayOrderStatusMap, key);
     }
-    
+
     @Value("${backend.channelSort}")
     private String channelSort;
     private static List<String> channelSortList;
-    
+
     /**
      * 获取二级渠道 的渠道大类
      * @return
@@ -221,6 +223,22 @@ public class MapProperties {
      */
     public String getBankCardType(String key) {
         return getMapValue(bankCardTypeMap, key);
+    }
+
+
+
+    @Value("${backend.repayOrderPayType}")
+    private String repayOrderPayType;
+
+    private static Map<String, String> repayOrderPayTypeMap;
+
+    /***
+     * 获取还款方式名称
+     * @param key
+     * @return
+     */
+    public String getRepayOrderPayType(String key) {
+        return getMapValue(repayOrderPayTypeMap, key);
     }
 
 }
