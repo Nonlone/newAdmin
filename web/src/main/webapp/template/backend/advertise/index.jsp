@@ -233,7 +233,7 @@
         ];
 
         var crudGrid = new CrudGrid({
-            entityName: 'Advertise',
+            entityName: '广告',
             pkColumn: 'id',//主键
             storeUrl: '${ctx}/backend/advertise/list',
             addUrl: '${ctx}/backend/advertise/add',
