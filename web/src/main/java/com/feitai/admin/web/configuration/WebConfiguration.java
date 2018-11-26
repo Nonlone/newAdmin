@@ -7,8 +7,12 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.feitai.base.json.filter.KeyFilter;
 import com.feitai.base.json.serializer.DateSerializer;import com.feitai.utils.Desensitization;
 import com.google.code.kaptcha.servlet.KaptchaServlet;
+import org.apache.catalina.Context;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactory;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -95,6 +99,20 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         resolver.setSuffix(".jsp");
         resolver.setExposeContextBeansAsAttributes(true);
         return resolver;
+    }
+
+
+
+//    @Bean
+    public WebServerFactory webServerFactory() {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory("/app", 8080) {
+            @Override
+            protected void configureContext(Context context, ServletContextInitializer[] initializers) {
+                context.setDocBase("/path/to/your/docbase");
+                super.configureContext(context, initializers);
+            }
+        };
+        return factory;
     }
 
 
