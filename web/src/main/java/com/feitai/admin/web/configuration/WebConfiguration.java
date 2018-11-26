@@ -1,24 +1,20 @@
 package com.feitai.admin.web.configuration;
 
 import com.alibaba.druid.support.monitor.MonitorServlet;
-import com.alibaba.fastjson.serializer.*;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.feitai.base.json.filter.KeyFilter;
-import com.feitai.base.json.serializer.DateSerializer;import com.feitai.utils.Desensitization;
+import com.feitai.utils.Desensitization;
 import com.google.code.kaptcha.servlet.KaptchaServlet;
-import org.apache.catalina.Context;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.server.WebServerFactory;
-import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -31,8 +27,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,14 +38,6 @@ import java.util.*;
 @Configuration
 public class WebConfiguration extends WebMvcConfigurationSupport {
 
-    @Value("${server.docBase}")
-    private String docBase;
-
-    @Value("${server.port:8080}")
-    private int port;
-
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
 
     /**
      * 设置默认页
@@ -111,19 +97,6 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         return resolver;
     }
 
-
-
-    @Bean
-    public WebServerFactory webServerFactory() {
-        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory(contextPath, port) {
-            @Override
-            protected void configureContext(Context context, ServletContextInitializer[] initializers) {
-                context.setDocBase(docBase);
-                super.configureContext(context, initializers);
-            }
-        };
-        return factory;
-    }
 
 
     /***
