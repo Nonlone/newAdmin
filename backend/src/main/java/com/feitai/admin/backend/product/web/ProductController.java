@@ -89,6 +89,8 @@ public class ProductController extends BaseListableController<Product> {
 	@ResponseBody
 	public Object add(@Valid Product product){
 		//给初创product给与默认值
+		product.setUpdateTime(new Date());
+		product.setVersion(0);
 		this.productService.save(product);
 		return successResult;
 	}
