@@ -9,6 +9,7 @@ import com.feitai.base.json.serializer.DateSerializer;import com.feitai.utils.De
 import com.google.code.kaptcha.servlet.KaptchaServlet;
 import org.apache.catalina.Context;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactory;
@@ -42,6 +43,15 @@ import java.util.*;
  */
 @Configuration
 public class WebConfiguration extends WebMvcConfigurationSupport {
+
+    @Value("${server.docBase}")
+    private String docBase;
+
+    @Value("${server.port:8080}")
+    private int port;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     /**
      * 设置默认页
@@ -103,12 +113,12 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
 
 
-//    @Bean
+    @Bean
     public WebServerFactory webServerFactory() {
-        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory("/app", 8080) {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory(contextPath, port) {
             @Override
             protected void configureContext(Context context, ServletContextInitializer[] initializers) {
-                context.setDocBase("/path/to/your/docbase");
+                context.setDocBase(docBase);
                 super.configureContext(context, initializers);
             }
         };
