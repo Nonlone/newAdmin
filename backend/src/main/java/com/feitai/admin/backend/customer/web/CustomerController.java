@@ -9,8 +9,8 @@ package com.feitai.admin.backend.customer.web;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.feitai.admin.backend.auth.service.AuthdataLinkfaceLivenessIdnumberVerificationService;
-import com.feitai.admin.backend.auth.service.AuthdataLinkfaceLivenessSelfieVerificationService;
+import com.feitai.admin.backend.customer.service.AuthdataLinkfaceLivenessIdnumberVerificationService;
+import com.feitai.admin.backend.customer.service.AuthdataLinkfaceLivenessSelfieVerificationService;
 import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.customer.entity.IdCardDataExtend;
 import com.feitai.admin.backend.customer.service.*;

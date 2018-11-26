@@ -1,7 +1,5 @@
-package com.feitai.admin.backend.auth.service;
+package com.feitai.admin.backend.customer.service;
 
-import com.feitai.admin.backend.auth.entity.AuthDataTempAuth;
-import com.feitai.admin.backend.auth.mapper.AuthDataTempAuthMapper;
 import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.jieya.server.dao.authdata.mapper.AuthDataMapper;
 import com.feitai.jieya.server.dao.authdata.model.AuthData;
@@ -12,7 +10,6 @@ import com.feitai.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.util.Sqls;
 import tk.mybatis.mapper.weekend.WeekendSqls;
 
 import java.util.*;
@@ -22,9 +19,6 @@ public class AuthDataService {
 
     @Autowired
     private AuthDataMapper authDataMapper;
-
-    @Autowired
-    private AuthDataTempAuthMapper authdataTempAuthMapper;
 
     @Autowired
     private MapProperties mapProperties;
@@ -50,19 +44,6 @@ public class AuthDataService {
                 if (!checkSet.contains(auth.getCode().getValue() + "-" + auth.getSource().getValue())) {
                     checkSet.add(auth.getCode().getValue() + "-" + auth.getSource().getValue());
                     resultList.add(auth);
-                }
-            }
-        } else {
-            List<AuthDataTempAuth> authDataTempAuthList = authdataTempAuthMapper.selectByExample(Example.builder(AuthDataTempAuth.class)
-                    .andWhere(WeekendSqls.<AuthDataTempAuth>custom()
-            .andEqualTo("cardId", cardId)
-            .andEqualTo("status", AuthStatus.AUTHORIZED.getValue())).build());
-            if (!CollectionUtils.isEmpty(authDataList)) {
-                for (AuthDataTempAuth authdataTempAuth : authDataTempAuthList) {
-                    if (!checkSet.contains(authdataTempAuth.getCode().getValue() + "-" + authdataTempAuth.getSource().getValue())) {
-                        checkSet.add(authdataTempAuth.getCode().getValue() + "-" + authdataTempAuth.getSource().getValue());
-                        resultList.add(authdataTempAuth);
-                    }
                 }
             }
         }

@@ -9,7 +9,7 @@ package com.feitai.admin.backend.opencard.web;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.feitai.admin.backend.auth.service.AuthDataService;
+import com.feitai.admin.backend.customer.service.AuthDataService;
 import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
@@ -23,7 +23,6 @@ import com.feitai.jieya.server.dao.authdata.model.BaseAuthData;
 import com.feitai.jieya.server.dao.base.constant.AuthCode;
 import com.feitai.jieya.server.dao.base.constant.CardStatus;
 import com.feitai.jieya.server.dao.data.model.*;
-import com.feitai.jieya.server.dao.loan.model.RepayOrder;
 import com.feitai.jieya.server.dao.product.model.Product;
 import com.feitai.jieya.server.dao.user.model.User;
 import com.feitai.utils.CollectionUtils;
