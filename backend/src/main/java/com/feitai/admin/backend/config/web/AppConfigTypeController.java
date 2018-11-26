@@ -139,6 +139,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	}
 
 
+	@Override
 	protected String getSql(ServletRequest request, SelectMultiTable selectMultiTable) {
 	    	StringBuffer sbSql = new StringBuffer();
 	        sbSql.append(selectMultiTable.buildSqlString());

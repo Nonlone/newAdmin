@@ -20,15 +20,5 @@ import tk.mybatis.mapper.util.Sqls;
 @Service
 public class RatePlanService extends ClassPrefixDynamicSupportService<RatePlanMore> {
 
-    public RatePlanMore findById(Long id){
-        Example example = Example.builder(RatePlanMore.class).andWhere(Sqls.custom().andEqualTo("id",id)).build();
-        return getMapper().selectOneByExample(example);
-    }
-
-    public RatePlanMore findByIdAndCurrentVersion(Long id, Integer currentVersion){
-        Example example = Example.builder(RatePlanMore.class).andWhere(Sqls.custom().andEqualTo("id",id).andEqualTo("currentVersion",currentVersion)).build();
-        return getMapper().selectOneByExample(example);
-    }
-
 
 }
