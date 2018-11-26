@@ -126,9 +126,4 @@ public class ProductController extends BaseListableController<Product> {
 		return this.productService;
 	}
 
-	@InitBinder
-	public void initDate(WebDataBinder webDataBinder){
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-	}
 }
