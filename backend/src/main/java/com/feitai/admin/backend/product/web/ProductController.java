@@ -89,6 +89,8 @@ public class ProductController extends BaseListableController<Product> {
 	@ResponseBody
 	public Object add(@Valid Product product){
 		//给初创product给与默认值
+		product.setUpdateTime(new Date());
+		product.setVersion(0);
 		this.productService.save(product);
 		return successResult;
 	}
@@ -126,9 +128,4 @@ public class ProductController extends BaseListableController<Product> {
 		return this.productService;
 	}
 
-	@InitBinder
-	public void initDate(WebDataBinder webDataBinder){
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-	}
 }

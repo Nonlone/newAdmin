@@ -47,8 +47,20 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
     @Autowired
     private UserRoleMapper userRoleMapper;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+
+    class MenuComparator implements Comparator<Menu> {
+
+        @Override
+        public int compare(Menu o1, Menu o2) {
+            if (o1.getOrder() < o2.getOrder())
+                return -1;
+            if (o1.getOrder() > o2.getOrder())
+                return 1;
+            return 0;
+        }
+
+    }
+
 
     public void clearUserRole(Long userId) {
         Example example = Example.builder(UserRole.class).andWhere(Sqls.custom().andEqualTo("userId", userId)).build();
@@ -218,18 +230,5 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
             }
         }
         return permissionsStr;
-    }
-
-    class MenuComparator implements Comparator<Menu> {
-
-        @Override
-        public int compare(Menu o1, Menu o2) {
-            if (o1.getOrder() < o2.getOrder())
-                return -1;
-            if (o1.getOrder() > o2.getOrder())
-                return 1;
-            return 0;
-        }
-
     }
 }

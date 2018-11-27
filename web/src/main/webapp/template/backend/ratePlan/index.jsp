@@ -72,8 +72,7 @@
                     <label class="control-label"><s>*</s>方案名称:</label>
                     <div class="controls">
                         <input name="name" type="text"
-                               data-rules="{required:true,}"
-                               class="input-normal control-text">
+                               data-rules="{required:true,}" class="input-normal control-text">
                     </div>
                 </div>
             </div>
@@ -81,9 +80,7 @@
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>资金方id:</label>
                     <div class="controls">
-                        <input name="fundId" type="text"
-                               data-rules="{required:true,number:true}"
-                               class="input-normal control-text">
+                        <input name="fundId" type="text" data-rules="{required:true,number:true}" class="input-normal control-text">
                     </div>
                 </div>
                 <div class="control-group span8">
@@ -164,11 +161,23 @@
         var columns = [
             {title: '主键', dataIndex: 'id', width: '10%'},
             {title: '方案名称', dataIndex: 'name', width: '10%'},
-            {title: '资金方id', dataIndex: 'fundId', width: '10%'},
-            {title: '产品ID', dataIndex: 'productId', width: '10%'},
+            {title: '资金方名称', dataIndex: 'fund', width: '10%',renderer:function (value) {
+                if (!jQuery.isEmptyObject(value)) {
+                    return value.fundName;
+                }else {
+                    return '无';
+                }
+            }},
+            {title: '产品名称', dataIndex: 'product', width: '10%',renderer:function (value) {
+                if (!jQuery.isEmptyObject(value)) {
+                    return value.remark;
+                }else {
+                    return '无';
+                }
+            }},
             {title: '版本', dataIndex: 'currentVersion', width: '10%'},
-            {title: '是否生效', dataIndex: 'enable', width: '10%',renderer:function (value,obj,index) {
-                    if (obj.enable == true) {
+            {title: '是否生效', dataIndex: 'enable', width: '10%',renderer:function (value) {
+                    if (value) {
                         return '已启用';
                     }else {
                         return '已停用';

@@ -15,7 +15,15 @@ import org.springframework.stereotype.Component;
 @ToString
 public class AppProperties {
 
-    //取消放款
+    /**
+     * 资金方充值接口
+     */
+    @Value("${api.server.addCharge}")
+    private String fundCharge;
+
+    /**
+     * 取消放款接口（飞钛否决）
+     */
     @Value("${reject.cash.url}")
     private String rejectCash;
 

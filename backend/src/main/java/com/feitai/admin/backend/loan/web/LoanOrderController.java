@@ -149,9 +149,27 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     @RequiresPermissions("/backend/loanOrder:list")
     @PostMapping("/list")
     @ResponseBody
-    public Map<String, Object> listPage(ServletRequest request) {
-        Map<String, Object> map = listSup(request);
-        return map;
+    public Object listPage(ServletRequest request) {
+        //根据request获取page
+        int pageNo = PageBulider.getPageNo(request);
+        int pageSize = PageBulider.getPageSize(request);
+        Page<LoanOrderMore> loanOrderMorePage = list(getCommonSqls(request,getSelectMultiTable().buildSqlString()), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        List<LoanOrderMore> content = loanOrderMorePage.getContent();
+        List<JSONObject> resultList = new ArrayList<>();
+
+        //遍历page中内容，修改或添加非数据库的自定义字段
+        for (LoanOrderMore loanOrderMore :
+                content) {
+            JSONObject json = (JSONObject) JSON.toJSON(loanOrderMore);
+            try{
+                JSONObject jsonObject = handleSingleData(json);
+                resultList.add(jsonObject);
+            }catch (Exception e){
+                log.error("this json handle fail:[{}]! message:{}",json,e.getMessage());
+                continue;
+            }
+        }
+        return switchContent(loanOrderMorePage,resultList);
     }
 
 
@@ -329,29 +347,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         }
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public Map<String, Object> listSup(ServletRequest request) {
-        //根据request获取page
-        int pageNo = PageBulider.getPageNo(request);
-        int pageSize = PageBulider.getPageSize(request);
-        Page<LoanOrderMore> loanOrderMorePage = list(getCommonSqls(request,getSelectMultiTable().buildSqlString()), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
-        List<LoanOrderMore> content = loanOrderMorePage.getContent();
-        List<JSONObject> resultList = new ArrayList<>();
-
-        //遍历page中内容，修改或添加非数据库的自定义字段
-        for (LoanOrderMore loanOrderMore :
-                content) {
-            JSONObject json = (JSONObject) JSON.toJSON(loanOrderMore);
-            try{
-                JSONObject jsonObject = handleSingleData(json);
-                resultList.add(jsonObject);
-            }catch (Exception e){
-                log.error("this json handle fail:[{}]! message:{}",json,e.getMessage());
-                continue;
-            }
-        }
-        return switchContent(loanOrderMorePage,resultList);
-    }
 
     /***
      * 处理单条数据
@@ -400,7 +395,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
         String searchSql = getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS);
-        if(searchSql.equals(getService().WHERE_COMMON)){
+        if(searchSql.equals(DynamitSupportService.WHERE_COMMON)){
             sbSql.append(SelectMultiTable.builder(LoanOrderMore.class).buildCountSqlString());
         }else{
             sbSql.append(getSelectMultiTable().buildCountSqlString());

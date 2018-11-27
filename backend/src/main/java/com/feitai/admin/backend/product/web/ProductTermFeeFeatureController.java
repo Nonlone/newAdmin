@@ -94,10 +94,4 @@ public class ProductTermFeeFeatureController extends BaseListableController<Prod
 		return this.productTermFeeFeatureService;
 	}
 
-
-	@InitBinder
-	public void initDate(WebDataBinder webDataBinder){
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-	}
 }

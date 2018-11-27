@@ -34,14 +34,14 @@
     <div id="addOrUpdate" class="hide">
         <form id="addOrUpdateForm" class="form-inline">
             <div class="row">
-                <div class="control-group span8">
+ <!--                <div class="control-group span8">
                     <label class="control-label"><s>*</s>主键:</label>
                     <div class="controls">
                         <input name="id" type="text"
                                data-rules="{required:true,number:true}"
                                class="input-normal control-text">
                     </div>
-                </div>
+                </div>  -->
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>产品编号:</label>
                     <div class="controls">
@@ -50,9 +50,6 @@
                                class="input-normal control-text">
                     </div>
                 </div>
-
-            </div>
-            <div class="row">
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>产品名称:</label>
                     <div class="controls">
@@ -61,6 +58,9 @@
                                class="input-normal control-text">
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                
                 <div class="control-group span8">
                     <label class="control-label">产品类型</label>
                     <div class="controls ">
@@ -69,9 +69,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>部分还款:</label>
                     <div class="controls">
@@ -80,6 +77,10 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="row">
+                
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>是否启用:</label>
                     <div class="controls">
@@ -88,8 +89,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>期数:</label>
                     <div class="controls">
@@ -98,6 +97,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>最小借款金额:</label>
                     <div class="controls">
@@ -106,8 +108,6 @@
                                class="input-normal control-text">
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>最大借款金额:</label>
                     <div class="controls">
@@ -116,6 +116,9 @@
                                class="input-normal control-text">
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>借款步长:</label>
                     <div class="controls">
@@ -124,8 +127,6 @@
                                class="input-normal control-text">
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>循环借款上限:</label>
                     <div class="controls">
@@ -134,6 +135,9 @@
                                class="input-normal control-text">
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                
                 <div class="control-group span8">
                     <label class="control-label">备注:</label>
                     <div class="controls">

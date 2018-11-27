@@ -9,8 +9,8 @@ package com.feitai.admin.backend.customer.web;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.feitai.admin.backend.auth.service.AuthdataLinkfaceLivenessIdnumberVerificationService;
-import com.feitai.admin.backend.auth.service.AuthdataLinkfaceLivenessSelfieVerificationService;
+import com.feitai.admin.backend.customer.service.AuthdataLinkfaceLivenessIdnumberVerificationService;
+import com.feitai.admin.backend.customer.service.AuthdataLinkfaceLivenessSelfieVerificationService;
 import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.customer.entity.IdCardDataExtend;
 import com.feitai.admin.backend.customer.service.*;
@@ -98,7 +98,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
         List<SearchParams> extraSearchParamList = new ArrayList<SearchParams>() {{
-            this.add(new SearchParams(IdCardData::getCertified, Operator.EQ, Boolean.TRUE.toString()));
+            this.add(new SearchParams("certified", Operator.EQ, Boolean.TRUE.toString()));
         }};
         Page<IdCardDataExtend> idCardPage = list(getSql(request, getSelectMultiTable(), extraSearchParamList), pageNo, pageSize, getCountSql(request, getSelectMultiTable(), extraSearchParamList), SelectMultiTable.COUNT_ALIAS);
         List<IdCardDataExtend> idCardDataExtendList = idCardPage.getContent();

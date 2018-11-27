@@ -91,10 +91,4 @@ public class RatePlanTermController extends BaseListableController<RatePlanTermM
 		return this.ratePlanTermService;
 	}
 
-	@InitBinder
-	public void initDate(WebDataBinder webDataBinder){
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-		webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-	}
-
 }

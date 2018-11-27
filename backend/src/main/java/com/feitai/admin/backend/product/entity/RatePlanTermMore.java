@@ -17,7 +17,7 @@ import java.util.List;
 
 @Table(name = "t_rate_plan_term")
 @Data
-public class RatePlanTermMore extends com.feitai.jieya.server.dao.rateplan.model.RatePlanTerm implements Serializable {
+public class RatePlanTermMore extends com.feitai.jieya.server.dao.rateplan.model.RatePlanTerm  {
 
     private List<RatePlanDetail> ratePlanDetails;
 

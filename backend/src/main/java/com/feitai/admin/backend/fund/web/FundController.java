@@ -14,6 +14,7 @@ import com.feitai.admin.backend.fund.service.FundService;
 import com.feitai.admin.backend.fund.vo.FundChargeRequest;
 import com.feitai.admin.backend.fund.vo.FundDetailRequest;
 import com.feitai.admin.backend.fund.vo.FundRequest;
+import com.feitai.admin.backend.properties.AppProperties;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
@@ -24,15 +25,13 @@ import com.feitai.admin.system.model.User;
 import com.feitai.admin.system.service.UserService;
 import com.feitai.jieya.server.dao.fund.model.Fund;
 import com.feitai.jieya.server.dao.fund.model.FundAmountDetail;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Controller;
@@ -51,19 +50,20 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/backend/fund")
+@Slf4j
 public class FundController extends BaseListableController<Fund> {
 
     @Autowired
+    private AppProperties appProperties;
+
+    @Autowired
     private FundService fundService;
+
     @Autowired
     private UserService userService;
 
     @Autowired
     private FundAmountDetailService fundAmountDetailService;
-    @Value("${api.server.addCharge}")
-    private String url;
-
-    private Logger log = LoggerFactory.getLogger(FundController.class);
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -83,9 +83,7 @@ public class FundController extends BaseListableController<Fund> {
 
 
     @RequestMapping(value = "detail", method = RequestMethod.GET)
-    public ModelAndView detail(
-            @Valid FundDetailRequest fundDetailRequest
-    ) {
+    public ModelAndView detail(@Valid FundDetailRequest fundDetailRequest) {
         ModelAndView modelAndView = new ModelAndView("/backend/fund/detail");
         if (StringUtils.isNotBlank(fundDetailRequest.getType())) {
             Page<FundAmountDetail> fundAmountDetails = buildPage(fundAmountDetailService.queryFundChargeByFundId(fundDetailRequest.getPage(), fundDetailRequest.getSize(), fundDetailRequest.getFundId(), new Byte(fundDetailRequest.getType())), fundDetailRequest.getPage(), fundDetailRequest.getSize());
@@ -211,7 +209,7 @@ public class FundController extends BaseListableController<Fund> {
         log.info("[addCharge's FundChargeRequest]FundChargeRequest:{}", object.toJSONString());
         //RestTemplate中文乱码解决方案
         restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        ResponseEntity<String> jsonString = restTemplate.postForEntity(url, object.toJSONString(), String.class);
+        ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getFundCharge(), object.toJSONString(), String.class);
         if (StringUtils.isNotEmpty(jsonString.getBody())) {
             JSONObject result = JSONObject.parseObject(jsonString.getBody());
             if ("0".equals(result.getString("code"))) {
