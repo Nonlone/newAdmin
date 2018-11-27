@@ -7,8 +7,6 @@
 
 package com.feitai.admin.backend.config.service;
 
-import com.feitai.admin.backend.config.entity.ChannelCms;
-import com.feitai.admin.backend.config.mapper.ChannelCmsMapper;
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.channel.mapper.ChannelMapper;
@@ -23,24 +21,24 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class ChannelService extends ClassPrefixDynamicSupportService<ChannelCms> {
+public class ChannelService extends ClassPrefixDynamicSupportService<Channel> {
 
     @Autowired
-    private ChannelCmsMapper channelCmsMapper;
+    private ChannelMapper channelMapper;
 
-    public ChannelCms findBySubPackageAndMainPackage(String subPackage, String mainPackage) {
-        Example example = Example.builder(ChannelCms.class).andWhere(Sqls.custom().andEqualTo("subPackage",subPackage).andEqualTo("mainPackgage",mainPackage)).build();
-        return channelCmsMapper.selectOneByExample(example);
+    public Channel findBySubPackageAndMainPackage(String subPackage, String mainPackage) {
+        Example example = Example.builder(Channel.class).andWhere(Sqls.custom().andEqualTo("subPackage",subPackage).andEqualTo("mainPackgage",mainPackage)).build();
+        return channelMapper.selectOneByExample(example);
     }
 
-    public List<ChannelCms> findByPrimaryId(Long id) {
-        Example example = Example.builder(ChannelCms.class).andWhere(Sqls.custom().andEqualTo("primaryId",id)).build();
-        return channelCmsMapper.selectByExample(example);
+    public List<Channel> findByPrimaryId(Long id) {
+        Example example = Example.builder(Channel.class).andWhere(Sqls.custom().andEqualTo("primaryId",id)).build();
+        return channelMapper.selectByExample(example);
     }
 
     public boolean checkChannel(String channelId) {
-        Example example = Example.builder(ChannelCms.class).andWhere(Sqls.custom().andEqualTo("channelId",channelId)).build();
-        List<ChannelCms> channelCms = getMapper().selectByExample(example);
+        Example example = Example.builder(Channel.class).andWhere(Sqls.custom().andEqualTo("channelId",channelId)).build();
+        List<Channel> channelCms = getMapper().selectByExample(example);
         if(channelCms.size()>0){
             return false;
         }

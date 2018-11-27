@@ -23,18 +23,14 @@ public class ChannelPrimaryService extends ClassPrefixDynamicSupportService<Chan
     @Autowired
     private ChannelPrimaryMapper channelPrimaryMapper;
 
-    public Integer findLastCode() {
-        Example example = Example.builder(ChannelPrimary.class).orderByDesc("channelCode").build();
-        List<ChannelPrimary> channelPrimaries = getMapper().selectByExample(example);
-        if (channelPrimaries.size() == 0) {
-            return startCode;
-        } else {
-            return (channelPrimaries.get(0).getChannelCode() + 1);
-        }
-    }
 
     public ChannelPrimary findByChannelName(String primaryChannelName) {
         Example example = Example.builder(ChannelPrimary.class).andWhere(Sqls.custom().andEqualTo("primaryChannelName", primaryChannelName)).build();
+        return channelPrimaryMapper.selectOneByExample(example);
+    }
+
+    public ChannelPrimary findByChannelCode(String channelCode) {
+        Example example = Example.builder(ChannelPrimary.class).andWhere(Sqls.custom().andEqualTo("channelCode", channelCode)).build();
         return channelPrimaryMapper.selectOneByExample(example);
     }
 }

@@ -48,6 +48,8 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
 
     protected SqlMapper sqlMapper;
 
+    public final static String WHERE_COMMON = " where 1=1 ";
+
     @PostConstruct
     public void init() {
         this.sqlMapper = doGetSqlMapper();
@@ -240,7 +242,7 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
             if (!ArrayUtils.isEmpty(searchParams.getValues())) {
                 long code = System.currentTimeMillis();
                 //sql.append(" where "+code+"="+code+" ");
-                sql.append(" where 1=1 ");
+                sql.append(WHERE_COMMON);
                 break;
             }
         }

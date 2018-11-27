@@ -71,6 +71,7 @@ public class NoticeController extends BaseListableController<Notice> {
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute Notice notice, Model model){
+		notice.setUpdateTime(new Date());
 		this.noticeService.updateByPrimaryKey(notice);
 		return successResult;
 	}

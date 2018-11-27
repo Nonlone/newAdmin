@@ -1,14 +1,15 @@
 package com.feitai.admin.backend.loan.service;
 
+import com.alibaba.fastjson.JSON;
+import com.feitai.admin.backend.loan.mapper.RepayPlanVoMapper;
 import com.feitai.admin.backend.loan.vo.OrderPlande;
+import com.feitai.admin.backend.loan.vo.RepayPlanVo;
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
-import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.loan.model.RepayPlan;
 import com.feitai.jieya.server.dao.loan.model.RepayPlanComponent;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
@@ -16,15 +17,19 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class RepayPlanComponentService extends ClassPrefixDynamicSupportService<RepayPlanComponent> {
 
-    public List<RepayPlanComponent> findByRepayPlanId(Long reLong) {
-        Example example = Example.builder(RepayPlanComponent.class).andWhere(Sqls.custom().andEqualTo("repayPlanId", reLong)).build();
-        return getMapper().selectByExample(example);
+    @Autowired
+    private RepayPlanVoMapper repayPlanMapper;
+
+    public List<RepayPlanVo> findRepayPlanVoByLoanOrder(Long loanOrderId){
+        return repayPlanMapper.findRepayPlanDetailByLoanOrderVo(loanOrderId);
     }
+
 
     public List<OrderPlande> findOrderPlandesByRepayPlans(List<RepayPlan> byLoanOrderId) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

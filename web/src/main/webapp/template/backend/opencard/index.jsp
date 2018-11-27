@@ -25,9 +25,15 @@
                 </div>
             </div>
             <div class="control-group span7">
+                <label class="control-label">客户ID:</label>
+                <div class="controls">
+                    <input type="text" class="input-normal control-text" name="search_EQ_user.id">
+                </div>
+            </div>
+            <div class="control-group span7">
                 <label class="control-label">注册手机号:</label>
                 <div class="controls">
-                    <input type="text" class="input-normal control-text" name="search_LIKE_userIn.phone">
+                    <input type="text" class="input-normal control-text" name="search_LIKE_user.phone">
                 </div>
             </div>
             <div class="control-group span7">
@@ -46,7 +52,7 @@
             </div>
 
             <div class="control-group span7">
-                <label class="control-label">产品名称:</label>
+                <label class="control-label">产品:</label>
                 <div class="controls" id="selectProduct">
                     <input id="searchProduct" type="hidden" name="search_LIKE_product.name">
                 </div>
@@ -92,7 +98,8 @@
         <div id="grid"></div>
     </div>
 </div>
-
+<%-- <c:forEach var="item" items="${cardStatusList}">
+</c:forEach> --%>
 <script type="text/javascript">
 
     //清空按钮
@@ -109,16 +116,11 @@
 
     BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
 
-
-        var selectStatusStore = new Data.Store({
-            url: '/backend/opencard/getCardStatusList',
-            autoLoad: true
-        });
-
+         
         selectStatus = new Select.Select({
             render:'#statusSelect',
             valueField:'#search_EQ_status',
-            store:selectStatusStore
+            items:JSON.parse('${itemList}')
         });
         selectStatus.render();
 
@@ -153,7 +155,7 @@
         <framwork:crudPermission resource="/backend/opencard"/>
 
         var selectProductStore = new Data.Store({
-            url: '/admin/product/product/productNameList',
+            url: '/admin/backend/product/productNameList',
             autoLoad: true
         });
 
@@ -165,8 +167,8 @@
         selectProduct.render();
 
         var columns = [
-            {title:'订单号',dataIndex:'id',width:'10%'},
-            {title:'客户ID',dataIndex:'userId',width:'130px'},
+            {title:'订单号',dataIndex:'id',width:'150px'},
+            {title:'客户ID',dataIndex:'userId',width:'150px'},
             {title:'客户姓名',dataIndex:'idCard',width:'80px',renderer: function (value) {
                     if(value){
                         return value.name;
@@ -227,7 +229,6 @@
             },
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
                 var title = obj.id+"—授信信息";
-                console.log(jQuery.isEmptyObject(obj.idCard),obj.idCard);
                 if(!jQuery.isEmptyObject(obj.idCard)){
                     title = obj.idCard.name + "—授信信息"
                 }

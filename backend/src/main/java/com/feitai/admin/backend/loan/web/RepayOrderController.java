@@ -10,23 +10,32 @@ package com.feitai.admin.backend.loan.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.csvreader.CsvWriter;
+import com.feitai.admin.backend.config.service.AppConfigService;
+import com.feitai.admin.backend.customer.service.AreaService;
 import com.feitai.admin.backend.customer.service.IdCardService;
 import com.feitai.admin.backend.customer.service.UserService;
 import com.feitai.admin.backend.fund.service.FundService;
+import com.feitai.admin.backend.loan.entity.LoanOrderMore;
 import com.feitai.admin.backend.loan.entity.RepayOrderMore;
+import com.feitai.admin.backend.loan.service.LoanOrderService;
 import com.feitai.admin.backend.loan.service.RepayOrderService;
 import com.feitai.admin.backend.loan.service.RepayPlanComponentService;
 import com.feitai.admin.backend.loan.service.RepayPlanService;
 import com.feitai.admin.backend.loan.vo.OrderPlande;
+import com.feitai.admin.backend.loan.vo.RepayPlanVo;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
+import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
+import com.feitai.jieya.server.dao.bank.model.UserBankCard;
+import com.feitai.jieya.server.dao.contract.model.ContractFaddDetail;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
+import com.feitai.jieya.server.dao.data.model.LocationData;
 import com.feitai.jieya.server.dao.fund.model.Fund;
 import com.feitai.jieya.server.dao.loan.model.LoanOrder;
 import com.feitai.jieya.server.dao.loan.model.RepayOrder;
@@ -37,7 +46,9 @@ import com.feitai.jieya.server.dao.user.model.User;
 import com.feitai.jieya.server.utils.IdCardUtils;
 import com.feitai.utils.Desensitization;
 import com.feitai.utils.ObjectUtils;
+import com.feitai.utils.datetime.DateUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -67,13 +78,13 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     private RepayOrderService repayOrderService;
 
     @Autowired
+    private LoanOrderService loanOrderService;
+
+    @Autowired
     private IdCardService idcardService;
 
     @Autowired
     private CardService cardService;
-
-    @Autowired
-    private ProductService productService;
 
     @Autowired
     private UserService userService;
@@ -90,10 +101,27 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     @Autowired
     private FundService fundService;
 
+    @Autowired
+    private AreaService areaService;
+
+    @Autowired
+    private ProductService productService;
+
+
+    @Autowired
+    private MapProperties mapProperties;
+
+    private final static String DATE_FORMAT = "yyyy-MM-dd";
+
+    private final static String LOAN_PURPOSE = "loanPurpose";
+
+    private final static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     @RequestMapping(value = "")
-    public String index(Model model) {
-        model.addAttribute("isOut",false);
-        return "/backend/repayOrder/index";
+    public ModelAndView index() {
+        ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/index");
+        modelAndView.addObject("isOut",false);
+        return modelAndView;
     }
     
     /**
@@ -140,50 +168,118 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         return listSupport(request);
     }
 
-    @RequestMapping(value = "auth/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
     //@RequiresPermissions("/admin/loan/loanOrder:auth")
-    public String auth(@PathVariable("id") String id, Model model) {
+    public ModelAndView auth(@PathVariable("id") String id) {
+        ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/detail");
         RepayOrderMore repayOrder = repayOrderService.findOneBySql(getOneSql(id));
         Long userId = repayOrder.getUserId();
-        User userIn = userService.findOne(userId);
+        User user = userService.findOne(userId);
         IdCardData idcard = idcardService.findByUserId(userId);
-        if(repayOrder.getLoanOrder()!=null){
-            if(repayOrder.getLoanOrder().getProductId()!=null){
-                Product product = productService.findOne(repayOrder.getLoanOrder().getProductId());
-                model.addAttribute("prodcutName", product.getName());
-            }
-            List<ProductTermFeeFeature> byProductIdAndTerm = productTermFeeFeatureService.findByProductIdAndTerm(repayOrder.getLoanOrder().getProductId(), repayOrder.getLoanOrder().getLoanTerm().shortValue());
-            model.addAttribute("productIdAndTerm", byProductIdAndTerm.get(0));
+        LoanOrderMore loanOrder = repayOrder.getLoanOrder();
+
+
+        modelAndView.addObject("loanOrder",loanOrder);
+        modelAndView.addObject("repayOrder", repayOrder);
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("idcard", idcard);
+
+        //基本信息
+        String statu = mapProperties.getRepayOrderStatus(repayOrder.getStatus().toString());
+        modelAndView.addObject("status", statu);
+        String repayOrderPayType = mapProperties.getRepayOrderPayType(repayOrder.getPayType().toString());
+        modelAndView.addObject("payType",repayOrderPayType);
+
+        //资金方
+        Fund fund = fundService.findOne(loanOrder.getPayFundId());
+        if(fund!=null){
+            modelAndView.addObject("fundName",fund.getFundName());
         }
 
-        //脱敏处理
-        String payAccount = repayOrder.getPayAccount();
-        if(payAccount!=null){
-            String phPayAccount = Desensitization.bankCardNo(payAccount);
-            model.addAttribute("phPayAccount",phPayAccount);
-        }
-        model.addAttribute("repayOrder", repayOrder);
-        model.addAttribute("userIn", userIn);
-        model.addAttribute("idCard", idcard);
+        RepayPlan repayPlan = repayPlanService.findOne(repayOrder.getRepayPlanId());
 
-        int ageByIdCard = IdCardUtils.getAgeByIdCard(idcard.getIdCard());
-        model.addAttribute("year", ageByIdCard);
-        Byte status = repayOrder.getStatus();
-        String statu = "暂无";
+        //当期/总期termPre
+        modelAndView.addObject("termPre", repayPlan.getTerm().toString() + "/" + loanOrder.getLoanTerm());
 
-        //授信
+        //存储信贷系统的出账编号
+        modelAndView.addObject("putOutNo", repayPlan.getPutoutno());
+
+        //卡
         CardMore card = cardService.findByUserId(userId);
-        BigDecimal creditSum = card.getCreditSum();
-        model.addAttribute("shouxin", creditSum);
-        model.addAttribute("status", statu);
 
-
-        //成分详情
+        //还款计划详情
         List<RepayPlan> byLoanOrderId = repayPlanService.findByLoanOrderId(repayOrder.getLoanOrderId());
         List<OrderPlande> orderPlandes = repayPlanComponentService.findOrderPlandesByRepayPlans(byLoanOrderId);
-        model.addAttribute("repayPlan",orderPlandes);
-        return "/backend/repayOrder/detail";
+        modelAndView.addObject("repayPlan",orderPlandes);
+
+        //还款银行卡
+        List<UserBankCard> byUserIdAndRepay = repayOrderService.findByUserIdAndRepay(userId);
+        StringBuffer bankCardDetail = getBankCardDetail(byUserIdAndRepay);
+        String repayCardString = "";
+        if(bankCardDetail.length()>0){
+            repayCardString = bankCardDetail.substring(0, bankCardDetail.length() - 1);
+        }
+        modelAndView.addObject("payCard", repayCardString);
+
+        //收款银行卡
+        List<UserBankCard> byUserIdAndPay = repayOrderService.findByUserIdAndPay(userId);
+        StringBuffer payCardBuffer = getBankCardDetail(byUserIdAndPay);
+        String payCardString = "";
+        if(payCardBuffer.length()>0){
+            payCardString = payCardBuffer.substring(0, payCardBuffer.length() - 1);
+        }
+        modelAndView.addObject("payCard", payCardString);
+
+        //地区信息
+        //获取对应地址
+        List<JSONObject> areaList = new ArrayList<>();
+        LocationData authArea = areaService.findByCardIdInAuth(card.getId());
+        if (authArea != null) {
+            JSONObject jsonObject = (JSONObject) JSON.toJSON(authArea);
+            jsonObject.put("segmentName", mapProperties.getSegment(authArea.getSegment()));
+            areaList.add(jsonObject);
+        }
+        LocationData openCardArea = areaService.findByCardIdInOpenCard(card.getId());
+        if (openCardArea != null) {
+            JSONObject jsonObject = (JSONObject) JSON.toJSON(openCardArea);
+            jsonObject.put("segmentName", mapProperties.getSegment(openCardArea.getSegment()));
+            areaList.add(jsonObject);
+        }
+        modelAndView.addObject("areaList",areaList);
+
+        //发大大合同
+        List<ContractFaddDetail> faddDetails = loanOrderService.getFaddByLoanOrder(loanOrder.getId());
+        modelAndView.addObject("faddDetails",faddDetails);
+
+        //日期类
+        if(loanOrder.getPayLoanTime()!=null){
+            modelAndView.addObject("payLoanTime",DateUtils.format(loanOrder.getPayLoanTime(), TIME_FORMAT));
+        }
+        if(repayPlan.getDueDate()!=null){
+            modelAndView.addObject("dueDate",DateUtils.format(repayPlan.getDueDate(),DATE_FORMAT));
+        }
+        modelAndView.addObject("overdueDays",repayPlan.getOverdueDays());
+
+        //利率
+        List<ProductTermFeeFeature> byProductIdAndTerm = productTermFeeFeatureService.findByProductIdAndTerm(loanOrder.getProductId(), loanOrder.getLoanTerm().shortValue());
+        if(byProductIdAndTerm.size()!=0){
+            modelAndView.addObject("productIdAndTerm",byProductIdAndTerm.get(0));
+        }
+
+        return modelAndView;
     }
+
+    private StringBuffer getBankCardDetail(List<UserBankCard> byUserIdAndPay) {
+        StringBuffer cardBuffer = new StringBuffer();
+        for (UserBankCard userBankCard:byUserIdAndPay){
+            String hyCard = Desensitization.bankCardNo(userBankCard.getBankCardNo());
+            String bankNameByCode = repayOrderService.findBankNameByCode(userBankCard.getBankCode());
+            String bankCardType = mapProperties.getBankCardType(userBankCard.getBankCardType());
+            cardBuffer.append(hyCard+"（"+bankNameByCode+bankCardType+"）</br>");
+        }
+        return cardBuffer;
+    }
+
 
     /**
      * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2 Preparable二次部分绑定的效果,先根据form的id从数据库查出User对象,再把Form提交的内容绑定到该对象上。
@@ -205,49 +301,55 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         List<JSONObject> resultList = new ArrayList<>();
         for (RepayOrderMore repayOrderMore :
                 content) {
-            Map<String, Object> productTermFeeFeatureMap = new HashMap<>();
-            JSONObject json = (JSONObject) JSON.toJSON(repayOrderMore);
-            //IdCardDataExtend
-            Long userId = (Long) json.get("userId");
-
-            //product
-            JSONObject loanOrder =  json.getJSONObject("loanOrder");
-            Integer productId = loanOrder.getInteger("productId");
-            Integer loanTerm = loanOrder.getInteger("loanTerm");
-
-
-            //productTermFeeFeature
-            List<ProductTermFeeFeature> search = new ArrayList<ProductTermFeeFeature>();
-            search = productTermFeeFeatureService.findByProductIdAndTerm(productId.longValue(), loanTerm.shortValue());
-
-            if (search.size() > 0) {
-                ProductTermFeeFeature productTermFeeFeature = search.get(0);
-                try {
-                    productTermFeeFeatureMap = ObjectUtils.objectToMap(productTermFeeFeature);
-                } catch (Exception e) {
-                    log.error("",e);
-                }
+            try{
+                JSONObject jsonObject = handleRepayOrder(repayOrderMore);
+                resultList.add(jsonObject);
+            }catch (Exception e){
+                log.error(String.format("This repayOrder can't be find repayOrderId is [{%s}]",repayOrderMore.getId()),e);
+                continue;
             }
-            json.put("productTermFeeFeature", productTermFeeFeatureMap);
+        }
+        return switchContent(repayOrderMorePage,resultList);
 
-            //repayPlan
-            JSONObject repayPlan = (JSONObject)json.get("repayPlan");
+    }
 
-            //实还款日repayDate
-            json.put("repayDate", "未");
-            //当期/总期termPre
-            json.put("termPre", repayPlan.get("term").toString() + "/" + loanTerm);
-            //脱敏处理
-            //TODO-日后处理idcard/payAccount的脱敏处理
-            JSONObject idcard = (JSONObject)json.get("idCard");
-            String hyIdcard = Desensitization.idCard((String)idcard.get("idCard"));
-            idcard.put("idCard",hyIdcard);
-            json.remove("idCard");
-            json.put("idCard", idcard);
+    private JSONObject handleRepayOrder(RepayOrderMore repayOrderMore){
+        Map<String, Object> productTermFeeFeatureMap = new HashMap<>();
+        JSONObject json = (JSONObject) JSON.toJSON(repayOrderMore);
 
-            String hyCard = Desensitization.bankCardNo((String)json.get("payAccount"));
-            json.put("payAccount", hyCard);
-            resultList.add(json);
+        //product
+        Map loanOrder = (Map) json.get("loanOrder");
+        Long productId = (Long) loanOrder.get("productId");
+        Integer loanTerm = (Integer) loanOrder.get("loanTerm");
+
+        //productTermFeeFeature
+        List<ProductTermFeeFeature> search = new ArrayList<ProductTermFeeFeature>();
+        search = productTermFeeFeatureService.findByProductIdAndTerm(productId, loanTerm.shortValue());
+
+        if (search.size() > 0) {
+            ProductTermFeeFeature productTermFeeFeature = search.get(0);
+            try {
+                productTermFeeFeatureMap = ObjectUtils.objectToMap(productTermFeeFeature);
+            } catch (Exception e) {
+                log.error("productTermFeeFeatureMap can't objectToMap!",e);
+            }
+        }
+        json.put("productTermFeeFeature", productTermFeeFeatureMap);
+
+        //repayPlan
+        JSONObject repayPlan = (JSONObject)json.get("repayPlan");
+
+        //实还款日repayDate
+        json.put("dueDate",DateUtils.format(repayPlan.getDate("dueDate"),DATE_FORMAT));
+        //当期/总期termPre
+        json.put("termPre", repayPlan.get("term").toString() + "/" + loanTerm);
+        //还款银行卡
+        Long userId = json.getLong("userId");
+        List<UserBankCard> byUserIdAndRepay = repayOrderService.findByUserIdAndRepay(userId);
+        StringBuffer stringBuffer = new StringBuffer();
+        for (UserBankCard userBankCard:byUserIdAndRepay){
+            String hyCard = Desensitization.bankCardNo(userBankCard.getBankCardNo());
+            stringBuffer.append(hyCard+",");
             List<RepayPlan> byLoanOrderId = repayPlanService.findByLoanOrderIdAndTerm(repayOrderMore.getLoanOrderId(),(short)1);
             List<OrderPlande> orderPlandes = repayPlanComponentService.findOrderPlandesByRepayPlans(byLoanOrderId);
             if(orderPlandes.size()>0){
@@ -260,15 +362,26 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
             Product product=productService.findOne(productId);
             json.put("product", product);
         }
-        return switchContent(repayOrderMorePage,resultList);
+        String substring = "";
+        if(stringBuffer.length()>0){
+            substring = stringBuffer.substring(0, stringBuffer.length() - 1);
+        }
+        json.put("payCard", substring);
 
+        json.put("status",mapProperties.getRepayOrderStatus(json.getString("status")));
+        return json;
     }
         
 
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
-        sbSql.append(getSelectMultiTable().buildCountSqlString());
-        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
+        String searchSql = getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS);
+        if(searchSql.equals(getService().WHERE_COMMON)){
+            sbSql.append(SelectMultiTable.builder(RepayOrder.class).buildCountSqlString());
+        }else{
+            sbSql.append(getSelectMultiTable().buildCountSqlString());
+        }
+        sbSql.append(searchSql);
         return sbSql.toString();
     }
 
@@ -281,26 +394,26 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         return  SelectMultiTable.builder(RepayOrder.class)
                 .leftJoin(RepayPlan.class,"repay_plan",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "repayPlanId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class,"idCard",new OnCondition[]{
+                }).leftJoin(IdCardData.class,"idcard",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"userId")
                 }).leftJoin(LoanOrder.class,"loan_order",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"loanOrderId",Operator.EQ,"id")
-                }).leftJoin(User.class,"user_in",new OnCondition[]{
+                }).leftJoin(User.class,"user",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"id")
                 });
     }
 
     protected String getOneSql(Object id){
         String sql = SelectMultiTable.builder(RepayOrder.class)
-                .leftJoin(RepayPlan.class,"repay_plan",new OnCondition[]{
+                .leftJoin(RepayPlan.class,"repayPlan",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "repayPlanId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class,"idCard",new OnCondition[]{
+                }).leftJoin(IdCardData.class,"idcard",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"userId")
-                }).leftJoin(LoanOrder.class,"loan_order",new OnCondition[]{
+                }).leftJoin(LoanOrder.class,"loanOrder",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"loanOrderId",Operator.EQ,"id")
-                }).leftJoin(User.class,"user_in",new OnCondition[]{
+                }).leftJoin(User.class,"user",new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND,"userId",Operator.EQ,"id")
-                }).buildSqlString()+" where id = '" + id +"' Group by id";
+                }).buildSqlString()+" where "+SelectMultiTable.MAIN_ALAIS+".id = '" + id +"' ";
         return sql;
     }
     /**

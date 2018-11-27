@@ -23,8 +23,10 @@
 				</div>
 			</div>
 			<label class="control-label">渠道大类:</label>
-			<div class="controls bui-form-field-select height_auto"  data-items="{' ':'全部','A-线上场景':'A-线上场景','A-应用商店':'A-应用商店','A-微信推广':'A-微信推广','A-品牌推广':'A-品牌推广','A-贷款超市':'A-贷款超市','A-数据营销':'A-数据营销','B-线下渠道':'B-线下渠道','B-O2O':'B-O2O','C-其他':'C-其他'}" class="control-text input-small">
-				<input name="search_EQ_channelSort" type="hidden" >
+			<div class="controls  height_auto"   class="control-text input-small">
+				<div id="channelSortSelect" class="controls">
+				<input id="channelSortSearch"  name="search_EQ_channelSort" type="hidden" >
+				</div>
 			</div>
 			<div class="control-group span7">
 				<label class="control-label">一级渠道名称:</label>
@@ -202,7 +204,15 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
         store:selectStore
     });
     select.render();
-
+    
+    
+    var channelSortSelect = new Select.Select({
+        render:'#channelSortSelect',
+        valueField:'#channelSortSearch',
+        items:JSON.parse('${channelSortList}')
+    });
+    channelSortSelect.render();
+  
     var columns = [
 		 {title:'应用名称',dataIndex:'appName',width:'10%'},
 		 {title:'渠道标识',dataIndex:'channelId',width:'15%'},

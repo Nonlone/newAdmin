@@ -10,6 +10,7 @@ package com.feitai.admin.backend.config.entity;
 import com.feitai.jieya.server.dao.base.model.BaseModel;
 import lombok.Data;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
@@ -32,6 +33,7 @@ public class AppConfigType extends BaseModel implements Serializable {
 
 	//可以直接使用: @Length(max=50,message="用户名长度不能大于50")显示错误消息
 	//columns START
+	@Id
 	private String typeCode;
 
 	private String name;

@@ -16,18 +16,18 @@
                 <label class="control-label">发布时间：</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_maintable.publishTime_D" data-tip="{text : '开始日期'}">
+                    <input type="text" class="calendar" name="search_GTE_maintable.publishTime" data-tip="{text : '开始日期'}">
                     <span>
-             - </span><input name="search_LTE_maintable.publishTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+             - </span><input name="search_LTE_maintable.publishTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
                 </div>
             </div>
             <div class="control-group span_width">
                 <label class="control-label">过期时间：</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_maintable.expiredTime_D" data-tip="{text : '开始日期'}">
+                    <input type="text" class="calendar" name="search_GTE_maintable.expiredTime" data-tip="{text : '开始日期'}">
                     <span>
-             - </span><input name="search_LTE_maintable.expiredTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+             - </span><input name="search_LTE_maintable.expiredTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
                 </div>
             </div>
             <div class="control-group span7">
@@ -233,7 +233,7 @@
         ];
 
         var crudGrid = new CrudGrid({
-            entityName: 'Advertise',
+            entityName: '广告',
             pkColumn: 'id',//主键
             storeUrl: '${ctx}/backend/advertise/list',
             addUrl: '${ctx}/backend/advertise/add',

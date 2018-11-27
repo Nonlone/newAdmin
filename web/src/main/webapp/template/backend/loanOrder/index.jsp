@@ -25,6 +25,12 @@
 					<input type="text" class="input-normal control-text" name="search_LIKE_idcard.name">
 				</div>
 			</div>
+			<div class="control-group span7">
+				<label class="control-label">客户Id:</label>
+				<div class="controls">
+					<input type="text" class="input-normal control-text" name="search_LIKE_userId">
+				</div>
+			</div>
 
 			<div class="control-group span7">
 				<label class="control-label">身份证号:</label>
@@ -36,7 +42,7 @@
 			<div class="control-group span7">
 				<label class="control-label">注册手机号:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_userIn.phone">
+					<input type="text" class="input-normal control-text" name="search_LIKE_user.phone">
 				</div>
 			</div>
 
@@ -46,22 +52,14 @@
 					<input id="search_EQ_status" name="search_EQ_status" type="hidden" >
 				</div>
 			</div>
-			<div class="control-group span_width">
-				<label class="control-label">放款时间:</label>
-				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
-					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_payLoanTime_D" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_payLoanTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
-				</div>
-			</div>
 
-			<div class="control-group span7">
+			<div class="control-group span6">
 				<label class="control-label">产品名称:</label>
 				<div class="controls" id="selectProduct">
 					<input id="searchProduct" type="hidden" name="search_LIKE_product.name">
 				</div>
 			</div>
-			<div class="control-group span_width">
+			<div class="control-group span6">
 				<label class="control-label">资金方：</label>
 				<div id="selectPayFund" class="controls">
 					<input id="search_EQ_payFundId" name="search_EQ_payFundId" type="hidden" >
@@ -72,16 +70,16 @@
 				<label class="control-label">申请时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_applyTime_D" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_applyTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar" name="search_GTE_applyTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_applyTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 			<div class="control-group span_width">
 				<label class="control-label">放款时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_payLoanTime_D" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_payLoanTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar" name="search_GTE_payLoanTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_payLoanTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 
@@ -117,7 +115,7 @@
     }
 
     function openout(id) {
-        window.open('${IP}'+'${ctx}/backend/loan/loanOrder/auth/'+id);
+        window.open('${IP}'+'${ctx}/backend/loanOrder/auth/'+id);
     }
 
     function stop(id) {
@@ -148,6 +146,8 @@
 
     BUI.use(['bui/ux/crudgrid','bui/common/search','bui/common/page','bui/overlay','bui/select','bui/data'],function (CrudGrid,Search,Grid,Overlay,Select,Data) {
 
+        var detailUrl = '${ctx}/backend/loanOrder/detail/';
+
         var selectFundStore = new Data.Store({
             url : '${ctx}/backend/fund/getFundList',
             autoLoad : true
@@ -161,7 +161,7 @@
         selectFundStatus.render();
 
         var selectStatusStore = new Data.Store({
-            url : '${ctx}/backend/loan/loanOrder/getLoanStatusList',
+            url : '${ctx}/backend/loanOrder/getLoanStatusList',
             autoLoad : true
         });
 
@@ -172,14 +172,9 @@
             });
         selectStatus.render();
 
-        //定义页面权限
-        var add=false,update=false,list=false,del=false;
-        //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-        <framwork:crudPermission resource="/backend/loan/loanOrder"/>
-
 
         var selectProductStore = new Data.Store({
-            url : '${ctx}/admin/product/product/productNameList',
+            url : '${ctx}/backend/product/productNameList',
             autoLoad : true
         });
 
@@ -190,33 +185,38 @@
         });
         selectProduct.render();
 
-        var authUrl,authBtn=false;//授权按钮
-        authBtn = true;
-        authUrl = '${ctx}/backend/loan/loanOrder/auth/';
+        //定义页面权限
+        var add=false,update=false,list=false,del=false;
+        //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
+        <framwork:crudPermission resource="/backend/loanOrder"/>
 
 
 
-        var enumObj = {"10":"提现审批处理中","11":"提现被拒","20":"待确认提现","30":"待放款","40":"放款处理中","50":"已放款/待还款","99":"已取消","100":"已结清","21":"取消提现"};
+
+
+
+
+
+        var enumObj = ${loanStatusMap};
 
 
         var columns = [
-            {title:'订单编号',dataIndex:'id',width:'8%'},
-
-            {title:'客户姓名',dataIndex:'idCard',width:"5%",renderer: function (value) {
+            {title:'订单编号',dataIndex:'id',width:'150px'},
+            {title:'客户姓名',dataIndex:'idcard',width:"80px",renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '';
                     }
                 }},
-            {title:'身份证',dataIndex:'idCard',width:"9%",renderer: function (value) {
+            {title:'身份证',dataIndex:'idcard',width:"150px",renderer: function (value) {
                     if(value){
                         return value.idCard;
                     }else{
                         return '';
                     }
                 }},
-            {title:'客户ID',dataIndex:'user',renderer:function (value) {
+            {title:'客户ID',dataIndex:'user',width:"150px",renderer:function (value) {
                     if(value) {
                         return value.id;
                     }else{
@@ -238,35 +238,25 @@
                         return null;
                     }
                 }},
-            {title:'提现金额',dataIndex:'loanAmount',width:'5%'},
-            {title:'期限(月)',dataIndex:'loanTerm',width:'5%'},
-            {title:'资金方',dataIndex:'fundName',width:'5%',renderer: function (value) {
+            {title:'提现金额',dataIndex:'loanAmount',width:'100px'},
+            {title:'期限(月)',dataIndex:'loanTerm',width:'80px'},
+            {title:'资金方',dataIndex:'fundName',width:'100px',renderer: function (value) {
                     if(value){
                         return value;
                     }else{
                         return null;
                     }
                 }},
-            {title:'申请时间',dataIndex:'applyTime',width:'5%',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'放款时间',dataIndex:'payLoanTime',width:'5%',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'放款状态',dataIndex:'status',width:'5%',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
-
+            {title:'申请时间',dataIndex:'applyTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'放款时间',dataIndex:'payLoanTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'放款状态',dataIndex:'status',width:'100px',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
             {title:'产品名称',dataIndex:'product',width:'5%',renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '';
                     }
-                }},
-
-            {title:'是否新客户',dataIndex:'',width:'5%',renderer: function (value) {
-                    if(value){
-                        return "是";
-                    }else{
-                        return '是';
-                    }
                 }}
-
         ];
 
 
@@ -274,22 +264,30 @@
         var crudGrid = new CrudGrid({
             entityName : '借款订单表',
             pkColumn : 'id',//主键
-            storeUrl : '${ctx}/backend/loan/loanOrder/list',
-            addUrl : '${ctx}/backend/loan/loanOrder/add',
-            updateUrl : '${ctx}/backend/loan/loanOrder/update',
-            removeUrl : '${ctx}/backend/loan/loanOrder/del',
+            storeUrl : '${ctx}/backend/loanOrder/list',
+            addUrl : '${ctx}/backend/loanOrder/add',
+            updateUrl : '${ctx}/backend/loanOrder/update',
+            removeUrl : '${ctx}/backend/loanOrder/del',
             columns : columns,
             showAddBtn : add,
             showUpdateBtn : update,
             showRemoveBtn : del,
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
-                var editStr = '';
-                var id = String(obj.id);
-                var detail="";
-                if(authBtn){
-                    detail = '<span class="x-icon x-icon-info" title="'+'详细信息'+'"><i class="icon icon-list-alt icon-white"  onclick="openout(\''+id+'\');"></i></span>';
 
+                var editStr = '';
+                var title = obj.id+"—提现信息";
+                if(!jQuery.isEmptyObject(obj.idcard)){
+                    title = obj.idcard.name + "—提现信息"
                 }
+                var detail="";
+                var id = String(obj.id);
+                detail = CrudGrid.createLinkCustomSpan({
+					class:"page-action grid-command x-icon x-icon-info",
+                    id: 'auth' + id,
+                    title: title,
+                    text: '<i class="icon icon-white icon-list-alt"></i>',
+                    href: detailUrl + id
+                })
 
                 if(obj.status=="40"||obj.status=="20"){
                     if(obj.cancelLoan==null){
@@ -302,9 +300,7 @@
                 }else{
                     editStr = detail;
                 }
-
-
-                return editStr;
+                return "<div style='text-align:left'>&nbsp;&nbsp;"+editStr+"</div>";
             },
             storeCfg:{//定义store的排序，如果是复合主键一定要修改
                 sortInfo : {

@@ -21,6 +21,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
@@ -57,6 +59,7 @@ public class AdvertiseController extends BaseListableController<Advertise> {
     @ResponseBody
     public Object add(@Valid @ModelAttribute Advertise advertise) {
         advertise.setId(SnowFlakeIdGenerator.getDefaultNextId());
+        advertise.setUpdateTime(new Date());
         this.advertiseService.save(advertise);
         return successResult;
     }
@@ -65,6 +68,7 @@ public class AdvertiseController extends BaseListableController<Advertise> {
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
     public Object update(@Valid @ModelAttribute Advertise advertise) {
+    	advertise.setUpdateTime(new Date());
         this.advertiseService.updateByPrimaryKey(advertise);
         return successResult;
     }

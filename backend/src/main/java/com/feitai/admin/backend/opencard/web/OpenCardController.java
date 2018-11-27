@@ -10,26 +10,20 @@ package com.feitai.admin.backend.opencard.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.auth.service.AuthDataService;
-import com.feitai.admin.backend.auth.service.AuthdataLinkfaceLivenessIdnumberVerificationService;
-import com.feitai.admin.backend.auth.service.AuthdataLinkfaceLivenessSelfieVerificationService;
-import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.opencard.service.TongDunDataService;
 import com.feitai.admin.backend.properties.MapProperties;
-import com.feitai.admin.backend.customer.service.PhotoService;
-import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
-import com.feitai.jieya.server.dao.attach.model.PhotoAttach;
 import com.feitai.jieya.server.dao.authdata.model.BaseAuthData;
+import com.feitai.jieya.server.dao.base.constant.AuthCode;
 import com.feitai.jieya.server.dao.base.constant.CardStatus;
-import com.feitai.jieya.server.dao.callback.model.linkface.LinkfaceLivenessIdNumberVerifcation;
-import com.feitai.jieya.server.dao.callback.model.linkface.LinkfaceLivenessSelfieVerification;
 import com.feitai.jieya.server.dao.data.model.*;
+import com.feitai.jieya.server.dao.loan.model.RepayOrder;
 import com.feitai.jieya.server.dao.product.model.Product;
 import com.feitai.jieya.server.dao.user.model.User;
 import com.feitai.utils.CollectionUtils;
@@ -43,7 +37,6 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,8 +44,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletRequest;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -61,54 +52,54 @@ import java.util.*;
 @Slf4j
 public class OpenCardController extends BaseListableController<CardMore> {
 
+    /**
+     * 展示征信项
+     */
+    private Set<AuthCode> authListSet = new HashSet<AuthCode>(){{
+        this.add(AuthCode.OPERATOR);
+        this.add(AuthCode.PBCCRC);
+        this.add(AuthCode.TOBACCO);
+        this.add(AuthCode.XYL_TOBACCO);
+    }};
+
     @Autowired
     private CardService cardService;
 
     @Autowired
-    private AppConfigService appConfigService;
-
-    @Autowired
     private AuthDataService authDataService;
 
-    @Autowired
-    private IdCardService idcardService;
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PersonService personService;
-
-    @Autowired
-    private WorkService workService;
-
-    @Autowired
-    private ContactService contactService;
 
     @Autowired
     private AreaService areaService;
 
-    @Autowired
-    private AuthdataLinkfaceLivenessIdnumberVerificationService authdataLinkfaceLivenessIdnumberVerificationService;
-
-    @Autowired
-    private AuthdataLinkfaceLivenessSelfieVerificationService authdataLinkfaceLivenessSelfieVerificationService;
 
     @Autowired
     private MapProperties mapProperties;
 
-    @Autowired
-    private PhotoService photoService;
-    
+
     @Autowired
     private TongDunDataService tongDunDataService;
 
 
     @RequestMapping("/index")
-    public String index() {
-        return "/backend/opencard/index";
+    public ModelAndView index() {
+    	ModelAndView mav=new ModelAndView("/backend/opencard/index");
+    	List<ListItem> itemList = new ArrayList<>();
+    	 itemList.add(new ListItem("全部", ""));
+    	for(CardStatus cs:CardStatus.values()){
+    	  String text=mapProperties.getCardStatus(cs);
+    	  if(!StringUtils.isEmpty(text)){
+    	   itemList.add(new ListItem(text, cs.getValue().toString()));
+    	  }
+    	}
+    	mav.addObject("itemList",JSONObject.toJSONString(itemList));
+        return mav;
     }
-
+  
 
     @RequiresPermissions("/backend/opencard:list")
     @RequestMapping(value = "list")
@@ -117,7 +108,8 @@ public class OpenCardController extends BaseListableController<CardMore> {
         //根据request获取page
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
-        Page<CardMore> cardMorePage = list(getSql(request, getSelectMultiTable()), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        String sql = getSql(request, getSelectMultiTable())+" ORDER BY "+SelectMultiTable.MAIN_ALAIS+".created_time DESC";
+        Page<CardMore> cardMorePage = list(sql, pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
         List<CardMore> cardMoreList = cardMorePage.getContent();
         List<JSONObject> resultList = new ArrayList();
         //遍历page中内容，修改或添加非数据库的自定义字段
@@ -159,6 +151,11 @@ public class OpenCardController extends BaseListableController<CardMore> {
             if (StringUtils.isNotBlank(card.getRejectReason())) {
                 model.addObject("rejectReason", mapProperties.getValveReject(card.getRejectReason()));
             }
+            // 获取同盾数据
+            TongDunData tongDunData=tongDunDataService.findByUserIdAndCardIdInOpenCard(card.getUserId(), card.getId());
+            if(tongDunData!=null){
+                model.addObject("tongDunData",tongDunData);
+            }
         }
         // 用户信息
         User user = userService.findOne(card.getUserId());
@@ -171,8 +168,20 @@ public class OpenCardController extends BaseListableController<CardMore> {
         // 征信项
         List<BaseAuthData> baseAuthDataList = authDataService.getAuthValueString(card.getId());
         if (!CollectionUtils.isEmpty(baseAuthDataList)) {
+            List<JSONObject> authsList = new ArrayList<JSONObject>(){{
+                for(BaseAuthData baseAuthData:baseAuthDataList){
+                    if(authListSet.contains(baseAuthData.getCode())) {
+                        JSONObject json = (JSONObject) JSON.toJSON(baseAuthData);
+                        json.put("function",baseAuthData.getCode().getValue()+"_"+ baseAuthData.getSource().getValue());
+                        json.put("name", mapProperties.getAuthValue(baseAuthData.getCode(), baseAuthData.getSource()));
+                        this.add(json);
+                    }
+                }
+            }};
+            if(!CollectionUtils.isEmpty(authsList)) {
+                model.addObject("authsList", authsList);
+            }
             List<String> authList = authDataService.convertBaseAuthDataListToString(baseAuthDataList);
-            model.addObject("authsList", baseAuthDataList);
             model.addObject("auths", Joiner.on("<br/>").join(authList));
         } else {
             model.addObject("auths", '无');
@@ -207,15 +216,8 @@ public class OpenCardController extends BaseListableController<CardMore> {
 
         model.addObject("card", card);
         model.addObject("createdTime", DateUtils.format(card.getCreatedTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD_HH_MM_SS));
-
         model.addObject("areaList", areaList);
-        //
-        if(card!=null){
-        TongDunData tongDunData=tongDunDataService.getTonDunData(card.getUserId(), card.getId());
-        if(tongDunData!=null){
-        	model.addObject("tongDunData",tongDunData);
-        }
-        }
+
         return model;
     }
 
@@ -230,17 +232,23 @@ public class OpenCardController extends BaseListableController<CardMore> {
         return SelectMultiTable.builder(CardMore.class)
                 .leftJoin(User.class, "user", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class, "idCard", new OnCondition[]{
+                }).leftJoin(IdCardData.class, "idcard", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "userId")
                 }).leftJoin(Product.class, "product", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "productId", Operator.EQ, "id")
                 });
     }
 
+
     private String getCountSqls(ServletRequest request) {
         StringBuffer sbSql = new StringBuffer();
-        sbSql.append(SelectMultiTable.builder(CardMore.class).buildCountSqlString());
-        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
+        String searchSql = getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS);
+        if(searchSql.equals(getService().WHERE_COMMON)){
+            sbSql.append(SelectMultiTable.builder(CardMore.class).buildCountSqlString());
+        }else{
+            sbSql.append(getSelectMultiTable().buildCountSqlString());
+        }
+        sbSql.append(searchSql);
         return sbSql.toString();
     }
 
@@ -249,12 +257,12 @@ public class OpenCardController extends BaseListableController<CardMore> {
         String sql = SelectMultiTable.builder(CardMore.class)
                 .leftJoin(User.class, "user", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "id"),
-                }).leftJoin(IdCardData.class, "idCard", new OnCondition[]{
+                }).leftJoin(IdCardData.class, "idcard", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "userId", Operator.EQ, "userId")
                 }).leftJoin(Product.class, "product", new OnCondition[]{
                         new OnCondition(SelectMultiTable.ConnectType.AND, "productId", Operator.EQ, "id")
                 }).buildSqlString() + " where maintable.id = '" + id + "' ";
         return sql;
     }
-
+    
 }

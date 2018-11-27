@@ -97,7 +97,7 @@
                     <div class="control-group span15">
                         <label class="control-label">备注:</label>
                         <div class="controls control-row4">
-                            <textarea name="memo" class="input-large"></textarea>
+                            <textarea name="remark" class="input-large"></textarea>
                         </div>
                     </div>
 

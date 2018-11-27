@@ -2,11 +2,9 @@ package com.feitai.admin.backend.properties;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.feitai.jieya.server.dao.base.constant.CardStatus;
-import com.feitai.jieya.server.dao.base.constant.PhotoType;
-import com.feitai.jieya.server.dao.base.constant.ProcessSegment;
-import com.feitai.jieya.server.dao.base.constant.UserAuthStatus;
+import com.feitai.jieya.server.dao.base.constant.*;
 import com.feitai.utils.StringUtils;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,8 +33,14 @@ public class MapProperties {
         valveRejectMap = ImmutableMap.copyOf(JSONObject.parseObject(valveRejectSource,Map.class));
         userAuthMap = ImmutableMap.copyOf(JSONObject.parseObject(userAuthMapSource,Map.class));
         segmentMap = ImmutableMap.copyOf(JSON.parseObject(segmentMapSource,Map.class));
-        supplementMaterialNmMap = ImmutableMap.copyOf(JSON.parseObject(supplementMaterialNm,Map.class));
+        supplementMaterialMap = ImmutableMap.copyOf(JSON.parseObject(supplementMaterial,Map.class));
         supplementMaterialTypeMap = ImmutableMap.copyOf(JSON.parseObject(supplementMaterialType,Map.class));
+        repayOrderStatusMap = ImmutableMap.copyOf(JSON.parseObject(repayOrderStatus,Map.class));
+        channelSortList=ImmutableList.copyOf(channelSort.split(","));
+        bankCardTypeMap = ImmutableMap.copyOf(JSON.parseObject(bankCardType,Map.class));
+        repayOrderPayTypeMap = ImmutableMap.copyOf(JSON.parseObject(repayOrderPayType,Map.class));
+
+
     }
 
     @Value("${backend.segmentMap}")
@@ -111,13 +117,21 @@ public class MapProperties {
         return getMapValue(authValueMap, key);
     }
 
+    public String getAuthValue(AuthCode authCode,AuthSource authSource) {
+        return getMapValue(authValueMap, authCode.getValue()+"-"+authSource.getValue());
+    }
+
     /**
      * 放款状态
      */
     @Value("${backend.loanStatusMap}")
     private String loanStatusSource;
 
-    private static Map<String, String> loanStatusMap;
+    private Map<String, String> loanStatusMap;
+
+    public Map<String,String> getLoanStatusMap(){
+        return this.loanStatusMap;
+    }
 
 
     /***
@@ -159,6 +173,95 @@ public class MapProperties {
             return map.get(key);
         }
         return null;
+    }
+
+
+    @Value("${backend.supplementMaterial}")
+    private String supplementMaterial;
+
+    private static Map<String, String> supplementMaterialMap;
+
+    /***
+     * 获取补件资料名称
+     * @param key
+     * @return
+     */
+    public String getSupplyMarterialNm(String key) {
+        return getMapValue(supplementMaterialMap, key);
+    }
+
+
+    @Value("${backend.supplementMaterialType}")
+    private String supplementMaterialType;
+
+    private static Map<String, String> supplementMaterialTypeMap;
+
+    /***
+     * 获取补件资料名称
+     * @param key
+     * @return
+     */
+    public String getSupplyMarterialType(String key) {
+        return getMapValue(supplementMaterialTypeMap, key);
+    }
+
+
+
+    @Value("${backend.repayOrderStatus}")
+    private String repayOrderStatus;
+
+    private static Map<String, String> repayOrderStatusMap;
+
+    /***
+     * 获取补件资料名称
+     * @param key
+     * @return
+     */
+    public String getRepayOrderStatus(String key) {
+        return getMapValue(repayOrderStatusMap, key);
+    }
+
+    @Value("${backend.channelSort}")
+    private String channelSort;
+    private static List<String> channelSortList;
+
+    /**
+     * 获取二级渠道 的渠道大类
+     * @return
+     */
+    public List<String> getChannelSortList(){
+    	return channelSortList;
+    }
+
+
+    @Value("${backend.bankCardType}")
+    private String bankCardType;
+
+    private static Map<String, String> bankCardTypeMap;
+
+    /***
+     * 获取银行卡类型名称
+     * @param key
+     * @return
+     */
+    public String getBankCardType(String key) {
+        return getMapValue(bankCardTypeMap, key);
+    }
+
+
+
+    @Value("${backend.repayOrderPayType}")
+    private String repayOrderPayType;
+
+    private static Map<String, String> repayOrderPayTypeMap;
+
+    /***
+     * 获取还款方式名称
+     * @param key
+     * @return
+     */
+    public String getRepayOrderPayType(String key) {
+        return getMapValue(repayOrderPayTypeMap, key);
     }
 
 }

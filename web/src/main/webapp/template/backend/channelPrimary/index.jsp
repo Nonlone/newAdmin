@@ -25,12 +25,18 @@
 					<input type="text" class="input-normal control-text" name="search_LIKE_primaryChannelName">
 				</div>
 			</div>
-			<div class="control-group span_width">
+		<!-- 	<div class="control-group span_width">
 				<label class="control-label">渠道大类:</label>
 				<div class="controls bui-form-field-select height_auto"  data-items="{' ':'全部','A-线上场景':'A-线上场景','A-应用商店':'A-应用商店','A-微信推广':'A-微信推广','A-品牌推广':'A-品牌推广','A-贷款超市':'A-贷款超市','A-数据营销':'A-数据营销','B-线下渠道':'B-线下渠道','B-O2O':'B-O2O','C-其他':'C-其他'}" class="control-text input-small">
 					<input name="search_EQ_channelSort" type="hidden" >
 				</div>
-			</div>
+			</div> -->
+			<div class="control-group span_width">
+				<label class="control-label">渠道大类:</label>
+				<div id="channelSortSearchSelect" class="controls height_auto"   class="control-text input-small">
+					<input id="channelSortSearch" name="search_EQ_channelSort" type="hidden" >
+				</div>
+			</div> 
 			<div class="span3 offset1">
 			  <button  type="button" id="btnSearch" class="button button-primary">搜索</button>
 			</div>
@@ -48,11 +54,10 @@
 					<div class="controls">
 						<input id="channelCode"
 							   name="channelCode"
-							   readonly="true"
 							   type="text"
 							   data-rules="{required:true,}"
+							   data-remote="${ctx}/backend/channelPrimary/checkChannelCode"
 							   class="input-normal control-text"
-							   onclick="getNextCode();"
 							   >
 					</div>
 				</div>
@@ -71,9 +76,13 @@
 			<div class="row">
 				<div class="control-group span8">
 					<label class="control-label"><s>*</s>渠道大类:</label>
-					<div class="controls bui-form-field-select" data-items="{'A-线上场景':'A-线上场景','A-应用商店':'A-应用商店','A-微信推广':'A-微信推广','A-品牌推广':'A-品牌推广','A-贷款超市':'A-贷款超市','A-数据营销':'A-数据营销','B-线下渠道':'B-线下渠道','B-O2O':'B-O2O','C-其他':'C-其他'}"
+					<!-- <div class="controls bui-form-field-select" data-items="{'A-线上场景':'A-线上场景','A-应用商店':'A-应用商店','A-微信推广':'A-微信推广','A-品牌推广':'A-品牌推广','A-贷款超市':'A-贷款超市','A-数据营销':'A-数据营销','B-线下渠道':'B-线下渠道','B-O2O':'B-O2O','C-其他':'C-其他'}"
 						 class="control-text input-small">
 						<input name="channelSort" type="hidden" value="">
+					</div> -->
+					 <div id="channelSortUpdateSelect" class="controls"
+						 class="control-text input-small">
+						<input id="channelSortUpdate" name="channelSort" type="hidden" value="">
 					</div>
 				</div>
 			</div>
@@ -88,20 +97,6 @@
 
 <script type="text/javascript">
 
-    function getNextCode(){
-        var nextCode;
-        $.ajax({
-            url: "${ctx}/backend/channelPrimary/getNextCode",
-            type:"GET",
-			async:false,
-            cache:false,
-            success:function (data) {
-                nextCode = data.msg;
-			}
-        });
-        var channelCode =  document.getElementById("channelCode");
-        channelCode.value = nextCode;
-    }
 
     function flushall(){
         var elementsByTagName = document.getElementsByTagName("input");
@@ -110,7 +105,21 @@
         }
     }
 
-BUI.use(['bui/ux/crudgrid'],function (CrudGrid) {
+BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
+
+	  var channelSortSearchSelect = new Select.Select({
+	        render:'#channelSortSearchSelect',
+	        valueField:'#channelSortSearch',
+	        items:JSON.parse('${channelSortList}')
+	    });
+	  channelSortSearchSelect.render();
+	    
+	    var channelSortUpdateSelect = new Select.Select({
+	        render:'#channelSortUpdateSelect',
+	        valueField:'#channelSortUpdate',
+	        items:JSON.parse('${channelSortList}')
+	    });
+	    channelSortUpdateSelect.render();
 	
 	//定义页面权限
 	var add=false,update=false,del=false,list=false;

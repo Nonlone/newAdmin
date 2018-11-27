@@ -120,14 +120,14 @@ public class UserController extends BaseListableController<User> {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(@Valid User user, @RequestParam(value = "roleIds") List<Long> roleIds) {
-        for (Long roleId : roleIds) {
-            userService.saveUserRole(user.getId(), roleId);
-        }
         user.setCreateTime(new Date());
         User creater = new User();
         creater.setId(this.getCurrentUserId());
         user.setCreater(creater);
-        this.userService.save(user);
+        User save = this.userService.save(user);
+        for (Long roleId : roleIds) {
+            userService.saveUserRole(save.getId(), roleId);
+        }
         return successResult;
     }
 

@@ -7,6 +7,8 @@
 
 package com.feitai.admin.backend.loan.entity;
 
+import com.feitai.admin.backend.loan.mapper.LoanOrderMoreMapper;
+import com.feitai.base.mybatis.Many;
 import com.feitai.base.mybatis.One;
 import com.feitai.jieya.server.dao.data.mapper.IdCardDataMapper;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
@@ -31,8 +33,8 @@ public class RepayOrderMore extends com.feitai.jieya.server.dao.loan.model.Repay
 	private IdCardData idCard;
 
 	@Transient
-	@One(classOfMapper = LoanOrderMapper.class, sourceField = "loanOrderId")
-	private LoanOrder loanOrder;
+	@One(classOfMapper = LoanOrderMoreMapper.class, sourceField = "loanOrderId")
+	private LoanOrderMore loanOrder;
 
 	@Transient
 	@One(classOfMapper = UserMapper.class, sourceField = "userId")

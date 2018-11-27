@@ -209,5 +209,11 @@ define('common/search',['bui/common','bui/grid','bui/form','bui/data','bui/overl
     var temp = '<span class="page-action grid-command" data-id="{id}" data-href="{href}" title="{title}">{text}</span>';
     return BUI.substitute(temp,cfg);
   }
+
+    Search.createLinkCustomSpan = function(cfg){
+        var temp = '<span class={class}  data-id="{id}" data-href="{href}" title="{title}">{text}</span>';
+        return BUI.substitute(temp, cfg);
+    }
+
   return Search;
 });

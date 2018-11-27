@@ -7,14 +7,22 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.feitai.base.json.filter.KeyFilter;
 import com.feitai.base.json.serializer.DateSerializer;import com.feitai.utils.Desensitization;
 import com.google.code.kaptcha.servlet.KaptchaServlet;
+import org.apache.catalina.Context;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactory;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -26,6 +34,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -33,6 +43,15 @@ import java.util.*;
  */
 @Configuration
 public class WebConfiguration extends WebMvcConfigurationSupport {
+
+    @Value("${server.docBase}")
+    private String docBase;
+
+    @Value("${server.port:8080}")
+    private int port;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     /**
      * 设置默认页
@@ -90,6 +109,20 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         resolver.setSuffix(".jsp");
         resolver.setExposeContextBeansAsAttributes(true);
         return resolver;
+    }
+
+
+
+    @Bean
+    public WebServerFactory webServerFactory() {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory(contextPath, port) {
+            @Override
+            protected void configureContext(Context context, ServletContextInitializer[] initializers) {
+                context.setDocBase(docBase);
+                super.configureContext(context, initializers);
+            }
+        };
+        return factory;
     }
 
 
@@ -166,6 +199,25 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         exceptionMappings.setProperty("java.lang.Throwable", "error/500");
         resolver.setExceptionMappings(exceptionMappings);
         return resolver;
+    }
+    @Override
+    protected void addFormatters(FormatterRegistry registry) {
+    	registry.addConverter(new Converter<String, Date>() {
+
+			@Override
+			public Date convert(String source) {
+				if(com.feitai.utils.StringUtils.isEmpty(source)){
+					return null;
+				}
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				try {
+					return sdf.parse(source);
+				} catch (ParseException e) {
+					return new Date(Long.valueOf(source));
+				}
+			}
+		});
+    	
     }
 }
 
