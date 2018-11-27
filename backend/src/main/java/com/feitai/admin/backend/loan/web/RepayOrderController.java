@@ -123,7 +123,17 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         modelAndView.addObject("isOut",false);
         return modelAndView;
     }
-    
+
+    @RequestMapping(value = "repayPlan/{id}")
+    @RequiresPermissions("/backend/loan/repayOrder:list")
+    @ResponseBody
+    public ModelAndView repayPlan(@PathVariable("id") Long id) {
+        List<RepayPlanVo> repayPlanVoByLoanOrder = repayPlanComponentService.findRepayPlanVoByLoanOrder(id);
+        ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/repayPlan");
+        modelAndView.addObject("repayPlan",JSON.toJSONString(repayPlanVoByLoanOrder));
+        return modelAndView;
+    }
+
     /**
      * 首期还款列表页面
      * @return
@@ -165,7 +175,8 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     @RequestMapping(value = "list")
     @ResponseBody
     public Map<String,Object> listPage(ServletRequest request) {
-        return listSupport(request);
+        Map<String, Object> map = listSupport(request);
+        return map;
     }
 
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)

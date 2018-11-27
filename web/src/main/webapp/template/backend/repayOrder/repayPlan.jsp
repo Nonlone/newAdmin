@@ -174,7 +174,7 @@
                 scrollStart:8,//scroll start fields
                 scrollBarHeight:18,//滚动条高
                 staWidth:200,//static table width
-                dynWidth:1317,//dynamic table width
+                dynWidth:1300,//dynamic table width
                 dynCellWidth:90//extend cell width in dynamic part
             };
             $("#dynTable").jexTable(dynOption);
