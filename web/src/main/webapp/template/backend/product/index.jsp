@@ -145,6 +145,7 @@
                     </div>
                 </div>
             </div>
+            <input type="hidden" name="id" value="">
         </form>
     </div>
     <div class="search-grid-container">
@@ -225,7 +226,7 @@
         var beforeUpdateShow = function(dialog,form,record){
             debugger;
             update = true;
-            form.getField('id').disable();
+            //form.getField('id').disable();
             form.getField('code').disable();
         };
 
