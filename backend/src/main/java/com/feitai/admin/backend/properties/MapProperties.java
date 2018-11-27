@@ -33,6 +33,8 @@ public class MapProperties {
         valveRejectMap = ImmutableMap.copyOf(JSONObject.parseObject(valveRejectSource,Map.class));
         userAuthMap = ImmutableMap.copyOf(JSONObject.parseObject(userAuthMapSource,Map.class));
         segmentMap = ImmutableMap.copyOf(JSON.parseObject(segmentMapSource,Map.class));
+        supplementMaterialNmMap = ImmutableMap.copyOf(JSON.parseObject(supplementMaterialNm,Map.class));
+        supplementMaterialTypeMap = ImmutableMap.copyOf(JSON.parseObject(supplementMaterialType,Map.class));
     }
 
     @Value("${backend.segmentMap}")
@@ -127,6 +129,29 @@ public class MapProperties {
         return getMapValue(loanStatusMap, key);
     }
 
+
+
+    /**
+     * 补件内容
+     */
+    @Value("${backend.supplementMaterial}")
+    private String supplementMaterialNm;
+
+    private static Map<String, String> supplementMaterialNmMap;
+
+    public String getSupplyMarterialNm(String key) { return getMapValue(supplementMaterialNmMap, key); }
+
+
+
+    /**
+     * 补件类型
+     */
+    @Value("${backend.supplementMaterialType}")
+    private String supplementMaterialType;
+
+    private static Map<String, String> supplementMaterialTypeMap;
+
+    public String getSupplyMarterialType(String key) { return getMapValue(supplementMaterialTypeMap, key); }
 
     private String getMapValue(Map<String, String> map, String key) {
         if (!CollectionUtils.isEmpty(map)
