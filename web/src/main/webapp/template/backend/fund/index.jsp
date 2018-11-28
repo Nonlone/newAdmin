@@ -44,9 +44,9 @@
                 <label class="control-label">创建时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createdTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_createdTime_D" data-tip="{text : '开始日期'}">
+                    <input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
                     <span>- </span>
-                    <input name="search_LTE_createdTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+                    <input name="search_LTE_createdTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
                 </div>
             </div>
             <div class="span3 offset1">
@@ -318,7 +318,7 @@
                     id: obj.id,
                     title: obj.fundName + '—充值记录',
                     text: '<li class="icon-search js-fundDetailRecord"></li>',
-                    href: '${ctx}/backend/fund/detail?id=' + obj.id
+                    href: '${ctx}/backend/fund/detail?fundId=' + obj.id
                 });
                 </shiro:hasPermission>
 

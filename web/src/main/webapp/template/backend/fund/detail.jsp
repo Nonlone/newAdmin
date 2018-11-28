@@ -51,7 +51,8 @@
                 </thead>
                 <tbody>
                 <c:choose>
-                    <c:when test="${fundAmountDetails.numberOfElements > 0}">
+                    <%-- <c:when test="${fundAmountDetails.numberOfElements > 0}"> --%>
+                    <c:when test="${fundAmountDetails.size > 0}">
                         <c:forEach var="fundAmountDetail" items="${fundAmountDetails.content}">
                             <tr>
                                 <td>${fundAmountDetail.id}</td>
@@ -108,7 +109,7 @@
                 <%--是否为首页：${fundCharges.first} <br>--%>
                 <%--是否为尾页：${fundCharges.last} <br>--%>
                 <%--每页显示的数量：${fundCharges.numberOfElements} <br>--%>
-                <c:if test="${fundAmountDetails.numberOfElements > 0}">
+                <c:if test="${fundAmountDetails.size > 0}">
                     <ul>
                         <li>
                             <a href="${ctx}/backend/fund/detail?fundId=${fundId}&page=0&type=${type}">首页 </a>
