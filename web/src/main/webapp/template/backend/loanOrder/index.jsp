@@ -56,7 +56,7 @@
 			<div class="control-group span6">
 				<label class="control-label">产品名称:</label>
 				<div class="controls" id="selectProduct">
-					<input id="searchProduct" type="hidden" name="search_LIKE_product.name">
+					<input id="searchProduct" type="hidden" name="search_EQ_product.id">
 				</div>
 			</div>
 			<div class="control-group span6">
