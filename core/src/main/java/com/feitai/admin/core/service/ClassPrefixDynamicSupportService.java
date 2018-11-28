@@ -89,7 +89,7 @@ public abstract class ClassPrefixDynamicSupportService<T> extends DynamitSupport
             }
         }
 
-        factory.setConfiguration(configuration);
+        //factory.setConfiguration(configuration);
         if (properties.getConfigurationProperties() != null) {
             factory.setConfigurationProperties(properties.getConfigurationProperties());
         }
