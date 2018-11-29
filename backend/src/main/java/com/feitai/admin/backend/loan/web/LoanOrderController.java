@@ -10,10 +10,7 @@ package com.feitai.admin.backend.loan.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.config.service.AppConfigService;
-import com.feitai.admin.backend.customer.service.AreaService;
-import com.feitai.admin.backend.customer.service.BankSupportService;
-import com.feitai.admin.backend.customer.service.IdCardService;
-import com.feitai.admin.backend.customer.service.UserService;
+import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.fund.service.FundService;
 import com.feitai.admin.backend.loan.entity.LoanOrderMore;
 import com.feitai.admin.backend.loan.entity.RepayOrderMore;
@@ -35,6 +32,8 @@ import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
+import com.feitai.jieya.server.dao.authdata.model.AuthData;
+import com.feitai.jieya.server.dao.authdata.model.BaseAuthData;
 import com.feitai.jieya.server.dao.bank.model.BankSupport;
 import com.feitai.jieya.server.dao.bank.model.UserBankCard;
 import com.feitai.jieya.server.dao.card.model.Card;
@@ -120,6 +119,9 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private TongDunDataService tongDunDataService;
 
     @Autowired
+    private AuthDataService authDataService;
+
+    @Autowired
     private AreaService areaService;
 
     private RestTemplate restTemplate = new RestTemplate();
@@ -127,6 +129,8 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private final static String LOAN_PURPOSE = "loanPurpose";
 
     private final static String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    private final static String AUTH_TOBACCO_CODE = "tobacco";
 
     /***
      * 内审通过
@@ -361,6 +365,14 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
             modelAndView.addObject("dataApprovePass",true);
         }else{
             modelAndView.addObject("dataApprovePass",false);
+        }
+
+        //是否有烟草补充资料
+        List<AuthData> tobaccoAuthDataList = authDataService.findByCardIdAndCode(card.getId(),AUTH_TOBACCO_CODE);
+        if(tobaccoAuthDataList.size()>0){
+            modelAndView.addObject("tobaccoAuth",true);
+        }else{
+            modelAndView.addObject("tobaccoAuth",false);
         }
         return modelAndView;
     }
