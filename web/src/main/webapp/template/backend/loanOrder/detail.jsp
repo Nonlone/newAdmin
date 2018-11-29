@@ -301,6 +301,10 @@
             <c:forEach items="${faddDetails}" var="fadd">
                 <li id="li_credit"><a href="javascript:void(0)" onclick="load(this,'${fadd.id}')">${fadd.contractName}</a></li>
             </c:forEach>
+            <li id="li_xinwangAuth"><a href="javascript:void(0)" onclick="load(this,'xinwangAuth')">新网授信数据</a></li>
+            <c:if test="${tobaccoAuth}">
+                <li id="li_tobacco"><a href="javascript:void(0)" onclick="load(this,'tobaccoData')">烟草贷补充资料</a></li>
+            </c:if>
         </ul>
 
         <div id="tabContext" style="margin-bottom: 10px;">
@@ -314,6 +318,12 @@
             <c:forEach items="${faddDetails}" var="fadd">
                 <div id="${fadd.id}" style="display:none;"><iframe frameborder="no" border="0" src="${fadd.viewpdfUrl}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe></div>
             </c:forEach>
+            <div id = "xinwangAuth" style="display:none;">
+                <iframe frameborder="no" border="0" src="${ctx}/backend/loan/repayOrder/repayPlan/${loanOrder.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
+            </div>
+            <div id = "tobaccoData">
+                <iframe frameborder="no" border="0" src="${ctx}/backend/tobacco/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
+            </div>
         </div>
     </div>
 
@@ -340,6 +350,21 @@
                 });
                 return;
             }
+        }else if(obj=='xinwangAuth'){
+        	var hasAuthdata=${hasAuthdata};
+        	if(!hasAuthdata){
+        		BUI.use('bui/overlay', function (Overlay) {
+                    new Overlay.Dialog({
+                        title: '提示窗口',
+                        width: 300,
+                        height: 150,
+                        mask: false,
+                        buttons: [],
+                        bodyContent: '<p>该订单没有对应的新网的授信数据！</p>'
+                    }).show();
+                });
+                return;
+        	}
         }
 
         // 样式控制
