@@ -125,26 +125,7 @@ public class DataSourceConfiguration implements EnvironmentAware {
         }
         return null;
     }
-    @Bean
-     public AutoBeanIntecepter autoBeanIntecepter(){
-    	return new AutoBeanIntecepter(new AutoBeanHandler<BaseModel>() {
-    		@Override
-			public Class<BaseModel> getAutoBeanConstraintClass() {
-				return BaseModel.class;
-			}
-
-			@Override
-			public void handleBoundSqlAndParameterObject(BoundSql boundSql, BaseModel baseModel) {
-				if(boundSql.getSql().toLowerCase().startsWith("insert")){
-					baseModel.setCreatedTime(new Date());
-					baseModel.setUpdateTime(new Date());					
-				}else if(boundSql.getSql().toLowerCase().startsWith("update")){
-					baseModel.setUpdateTime(new Date());
-				}
-				
-			}
-		});
-    }
+   
 
     /**
      * 类前缀数据源修改拦截器
@@ -175,7 +156,26 @@ public class DataSourceConfiguration implements EnvironmentAware {
     public ClassPrefixMultiDataSourceSelector classPrefixMultiDataSourceSelector(@Autowired ClassPrefixMultiDataSourceInterceptor classPrefixMultiDataSourceInterceptor, @Autowired MultipleDataSource multipleDataSource) {
         return new ClassPrefixMultiDataSourceSelector(classPrefixMultiDataSourceInterceptor, multipleDataSource);
     }
+    @Bean
+    public AutoBeanIntecepter autoBeanIntecepter(){
+   	return new AutoBeanIntecepter(new AutoBeanHandler<BaseModel>() {
+   		@Override
+			public Class<BaseModel> getAutoBeanConstraintClass() {
+				return BaseModel.class;
+			}
 
+			@Override
+			public void handleBoundSqlAndParameterObject(BoundSql boundSql, BaseModel baseModel) {
+				if(boundSql.getSql().toLowerCase().startsWith("insert")){
+					baseModel.setCreatedTime(new Date());
+					baseModel.setUpdateTime(new Date());					
+				}else if(boundSql.getSql().toLowerCase().startsWith("update")){
+					baseModel.setUpdateTime(new Date());
+				}
+				
+			}
+		});
+   }
     /**
      * MyBatis 拦截器
      *
@@ -183,9 +183,10 @@ public class DataSourceConfiguration implements EnvironmentAware {
      * @return
      */
     @Bean
-    public Interceptor[] mybatisInterceptors(@Autowired ClassPrefixMultiDataSourceInterceptor classPrefixMultiDataSourceInterceptor) {
+    public Interceptor[] mybatisInterceptors(@Autowired ClassPrefixMultiDataSourceInterceptor classPrefixMultiDataSourceInterceptor,@Autowired AutoBeanIntecepter autoBeanIntecepter) {
         return new Interceptor[]{
-                classPrefixMultiDataSourceInterceptor
+                classPrefixMultiDataSourceInterceptor,
+                autoBeanIntecepter
         };
     }
 
