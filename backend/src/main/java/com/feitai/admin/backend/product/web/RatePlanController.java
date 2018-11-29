@@ -21,6 +21,7 @@ import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.jieya.server.dao.base.constant.CalculationMode;
 import com.feitai.jieya.server.dao.base.constant.FeeBaseType;
+import com.feitai.jieya.server.dao.base.constant.PaymentTimeType;
 import com.feitai.jieya.server.dao.base.constant.PaymentType;
 import com.feitai.jieya.server.dao.rateplan.model.RatePlanDetail;
 import com.feitai.jieya.server.dao.rateplan.model.RatePlanDetailSnapshot;
@@ -125,10 +126,12 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
     @ResponseBody
     public Object add(@Valid @RequestBody RatePlanRequest ratePlanRequest) {
         Date date = new Date();
+        ratePlanRequest.setId(null);
         RatePlanMore ratePlan = new RatePlanMore();
-        BeanUtils.copyProperties(ratePlanRequest, ratePlan);
+        BeanUtils.copyProperties(ratePlanRequest, ratePlan);        
         ratePlan.setCreatedTime(date);
         ratePlan.setUpdateTime(date);
+        ratePlan.setCurrentVersion(0);
         ratePlan = ratePlanService.save(ratePlan);
         //复制到快照表
         SnapshotRatePlan snapshotRatePlan = new SnapshotRatePlan();
@@ -147,6 +150,7 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
             SnapshotRatePlanTerm snapshotRatePlanTerm = new SnapshotRatePlanTerm();
             BeanUtils.copyProperties(ratePlanTerm, snapshotRatePlanTerm);
             snapshotRatePlanTerm.setRatePlanId(snapshotRatePlan.getId());
+            snapshotRatePlanTerm.setVersion(0);
             snapshotRatePlanTerm = snapshotRatePlanTermService.save(snapshotRatePlanTerm);
             for (FeePlan feePlan : ratePlanRequest.getFeePlan()) {
                 if (feePlan.getTerm().shortValue() == weight.getTerm()) {
@@ -159,7 +163,7 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
                         ratePlanDetail.setVersion(0);
                         // 利率除以100
                         if (ratePlanDetail.getCalculationMode() != CalculationMode.FIXED_AMOUNT) {
-                            ratePlanDetail.setFee(ratePlanDetail.getFee().multiply(new BigDecimal("100")));
+                            ratePlanDetail.setFee(new BigDecimal(feePlanDetail.getFee()).multiply(new BigDecimal("100")));
                         }
                         // 默认回写
                         if (ratePlanDetail.getFeeBaseType() == null) {
@@ -168,12 +172,25 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
                         if (ratePlanDetail.getPaymentType() == null) {
                             ratePlanDetail.setPaymentType(PaymentType.DEFAULT);
                         }
+                        for(CalculationMode calculationMode:CalculationMode.values()){
+                        	if(calculationMode.getValue()==(int)feePlanDetail.getCalculationMode()){
+                        		ratePlanDetail.setCalculationMode(calculationMode);
+                        		break;
+                        	}
+                        }
+                        for(PaymentTimeType paymentTimeType:PaymentTimeType.values()){
+                        	if(paymentTimeType.getValue()==(int)feePlanDetail.getPaymentTimeType()){
+                        		ratePlanDetail.setPaymentTimeType(paymentTimeType);
+                        		break;
+                        	}
+                        }
                         ratePlanDetail.setUpdateTime(date);
                         ratePlanDetail.setCreatedTime(date);
                         ratePlanDetailService.save(ratePlanDetail);
                         // 复制到快照表
                         RatePlanDetailSnapshot snapshotRatePlanDetail = new RatePlanDetailSnapshot();
                         BeanUtils.copyProperties(ratePlanDetail, snapshotRatePlanDetail);
+                       // snapshotRatePlanDetail.setPaymentTimeType(ratePlanDetail.getPaymentTimeType());
                         snapshotRatePlanDetail.setRatePlanTermId(snapshotRatePlanTerm.getRatePlanId());
                         snapshotRatePlanDetailService.save(snapshotRatePlanDetail);
                     }
