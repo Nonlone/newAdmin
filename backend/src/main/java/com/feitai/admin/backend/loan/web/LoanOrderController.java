@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.creditdata.service.AuthdataAuthService;
+import com.feitai.admin.backend.creditdata.vo.PhotoAttachViewVo;
 import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.fund.service.FundService;
 import com.feitai.admin.backend.loan.entity.LoanOrderMore;
@@ -34,6 +35,7 @@ import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
+import com.feitai.jieya.server.dao.attach.model.PhotoAttach;
 import com.feitai.jieya.server.dao.authdata.model.AuthData;
 import com.feitai.jieya.server.dao.bank.model.BankSupport;
 import com.feitai.jieya.server.dao.bank.model.UserBankCard;
@@ -53,6 +55,7 @@ import com.feitai.utils.datetime.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -128,13 +131,16 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     @Autowired
     private AuthdataAuthService authdataAuthService;
 
+    @Autowired
+    private PhotoService photoService;
+
     private RestTemplate restTemplate = new RestTemplate();
 
     private final static String LOAN_PURPOSE = "loanPurpose";
 
     private final static String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
     
-    private final static String XINWANG_CODE="xinwang_supplement_infor";
+    private final static String AUTN_XINWANG_CODE="xinwang_supplement_infor";
 
     private final static String AUTH_TOBACCO_CODE = "tobacco";
 
@@ -368,7 +374,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
             modelAndView.addObject("tongDunData",tongDunData);
         }
         //是否有新网征信数据
-        boolean hasAuthdata=authdataAuthService.hasUserAuthData(userId, XINWANG_CODE);
+        boolean hasAuthdata=authdataAuthService.hasUserAuthData(userId, AUTN_XINWANG_CODE);
         modelAndView.addObject("hasAuthdata", hasAuthdata);
         if(loanOrder.getStatus()==3){
             modelAndView.addObject("dataApprovePass",true);
@@ -383,6 +389,19 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         }else{
             modelAndView.addObject("tobaccoAuth",false);
         }
+
+        //图片
+        List<PhotoAttach> commonPhotoList = photoService.findCommonPhotoByUserId(userId);
+        List<PhotoAttachViewVo> commonPhoto = new ArrayList<>();
+        for (PhotoAttach photoAttach:commonPhotoList){
+            PhotoAttachViewVo photoAttachViewVo = new PhotoAttachViewVo();
+            BeanUtils.copyProperties(photoAttach,photoAttachViewVo);
+            photoAttachViewVo.setName(mapProperties.getPhotoType(photoAttach.getType()));
+            photoAttachViewVo.setTypeName(photoAttach.getType().toString().toUpperCase());
+            commonPhoto.add(photoAttachViewVo);
+        }
+        modelAndView.addObject("commonPhoto",commonPhoto);
+
         return modelAndView;
     }
 
