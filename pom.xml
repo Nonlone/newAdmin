@@ -17,20 +17,30 @@
         <!-- lookup parent from repository -->
     </parent>
 
-
     <repositories>
         <repository>
             <id>feitai-maven</id>
             <name>feitai-maven</name>
-            <url>http://maven.feitai.info/nexus/content/groups/public/</url>
+            <url>http://nexus.feitai.info/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>feitai-release</id>
+            <url>http://nexus.feitai.info/repository/feitai-release/</url>
+        </repository>
+        <snapshotRepository>
+            <id>feitai-snapshot</id>
+            <url>http://nexus.feitai.info/repository/feitai-snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

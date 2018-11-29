@@ -32,7 +32,6 @@ public class ResourceController extends BaseListableController<Resource> {
     @Autowired
     private ResourceService resourceService;
 
-    @RequiresUser
     @RequestMapping(value = "")
     public String index() {
         return "/system/resource/index";

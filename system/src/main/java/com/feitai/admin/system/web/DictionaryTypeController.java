@@ -30,7 +30,6 @@ public class DictionaryTypeController extends BaseListableController<DictionaryT
     @Autowired
     private DictionaryTypeService dictionaryTypeService;
 
-    @RequiresUser
     @RequestMapping(value = "")
     public String index() {
         return "/system/dictionaryType/index";
