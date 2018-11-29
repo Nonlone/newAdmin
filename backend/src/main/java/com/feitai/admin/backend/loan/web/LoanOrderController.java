@@ -11,10 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.creditdata.service.AuthdataAuthService;
-import com.feitai.admin.backend.customer.service.AreaService;
-import com.feitai.admin.backend.customer.service.BankSupportService;
-import com.feitai.admin.backend.customer.service.IdCardService;
-import com.feitai.admin.backend.customer.service.UserService;
+import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.fund.service.FundService;
 import com.feitai.admin.backend.loan.entity.LoanOrderMore;
 import com.feitai.admin.backend.loan.entity.RepayOrderMore;
@@ -22,6 +19,7 @@ import com.feitai.admin.backend.loan.service.LoanOrderService;
 import com.feitai.admin.backend.loan.service.RepayOrderService;
 import com.feitai.admin.backend.loan.service.RepayPlanComponentService;
 import com.feitai.admin.backend.loan.service.RepayPlanService;
+import com.feitai.admin.backend.loan.vo.BackendLoanRequest;
 import com.feitai.admin.backend.loan.vo.OrderPlande;
 import com.feitai.admin.backend.loan.vo.RepayPlanVo;
 import com.feitai.admin.backend.opencard.service.CardService;
@@ -30,11 +28,13 @@ import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
 import com.feitai.admin.backend.properties.AppProperties;
 import com.feitai.admin.backend.properties.MapProperties;
+import com.feitai.admin.backend.vo.BackendResponse;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
+import com.feitai.jieya.server.dao.authdata.model.AuthData;
 import com.feitai.jieya.server.dao.bank.model.BankSupport;
 import com.feitai.jieya.server.dao.bank.model.UserBankCard;
 import com.feitai.jieya.server.dao.card.model.Card;
@@ -54,13 +54,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletRequest;
+import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
@@ -115,10 +120,15 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private TongDunDataService tongDunDataService;
 
     @Autowired
+    private AuthDataService authDataService;
+
+    @Autowired
     private AreaService areaService;
     
     @Autowired
     private AuthdataAuthService authdataAuthService;
+
+    private RestTemplate restTemplate = new RestTemplate();
 
     private final static String LOAN_PURPOSE = "loanPurpose";
 
@@ -126,7 +136,51 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     
     private final static String XINWANG_CODE="xinwang_supplement_infor";
 
-    @RequiresUser
+    private final static String AUTH_TOBACCO_CODE = "tobacco";
+
+    /***
+     * 内审通过
+     * @param loanId
+     * @return
+     */
+    @PostMapping(value = "/dataApprovePass/{loanId}")
+    @RequiresPermissions("/backend/loanOrder:auth")
+    @ResponseBody
+    public Object dataApprovePass(@PathVariable("loanId") String loanId) {
+        LoanOrderMore loanOrderMore = loanOrderService.findOne(loanId);
+        if(loanOrderMore.getStatus()!=3){
+            return new BackendResponse(-1,"订单状态已更新，不能进行内审！");
+        }
+        BackendLoanRequest backendLoanRequest = new BackendLoanRequest();
+        backendLoanRequest.setLoanOrderId(Long.parseLong(loanId));
+        String requestJsonString = JSON.toJSONString(backendLoanRequest);
+        try {
+            restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+            ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getDataApprovePassUrl(), requestJsonString, String.class);
+            JSONObject jsonObject = JSON.parseObject(jsonString.getBody());
+            return new BackendResponse((int)jsonObject.get("code"),(String)jsonObject.get("message"));
+        }catch (Exception e){
+            return new BackendResponse(-1,"连接服务器失败！");
+        }
+
+    }
+
+    /***
+     * 取消放款
+     * @param dataApprovePassRequest
+     * @return
+     */
+    @PostMapping("/rejectCash")
+    @RequiresPermissions("/backend/loanOrder:auth")
+    @ResponseBody
+    public Object rejectCash(@Valid BackendLoanRequest dataApprovePassRequest) {
+        String requestJsonString = JSON.toJSONString(dataApprovePassRequest);
+        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getRejectCash(), requestJsonString, String.class);
+        return jsonString.getBody();
+    }
+
+
     @GetMapping(value = "/index")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("/backend/loanOrder/index");
@@ -179,28 +233,12 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     }
 
 
-    /***
-     * 取消放款
-     * @param id
-     * @return
-     */
-    @PostMapping("/rejectCash/{id}")
-    @RequiresPermissions("/backend/loanOrder:auth")
-    @ResponseBody
-    public Object rejectCash(@PathVariable("id") String id) {
-        //String url = "http://10.168.2.207:9090/cash/reject";
-        //String json = "{\"serialNo\":\""+id+"\"}";
-        //String result = HttpUtil.postByTypeIsJson(url, json);
-
-        return BaseListableController.successResult;
-    }
 
     /***
      * 获取详细页面
      * @param id
      * @return
      */
-    @RequiresUser
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
     public ModelAndView detail(@PathVariable("id") String id) {
         ModelAndView modelAndView = new ModelAndView("/backend/loanOrder/detail");
@@ -210,6 +248,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         IdCardData idcard = idcardService.findByUserId(userId);
         Product product = productService.findOne(loanOrder.getProductId());
 
+        modelAndView.addObject("loanId",id);
         //资金方
         Fund fund = fundService.findOne(loanOrder.getPayFundId());
         if(fund!=null){

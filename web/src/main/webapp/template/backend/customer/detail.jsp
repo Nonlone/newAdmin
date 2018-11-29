@@ -262,7 +262,7 @@
     $(function () {
         //放大图片
         $('img.dialog').on('click', function () {
-            var large_image = '<img class=\'closeImg\' src= ' + $(this).attr("src") + '></img>';
+            var large_image = '<img style=\'max-height: 800px;max-width: 800px\' class=\'closeImg\' src= ' + $(this).attr("src") + '></img>';
             BUI.use('bui/overlay', function (Overlay) {
                 var width = this.width;
                 var height = this.height;

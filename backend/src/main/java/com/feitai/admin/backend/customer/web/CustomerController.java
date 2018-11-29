@@ -89,7 +89,6 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
     }
 
 
-    @RequiresUser
     @RequiresPermissions("/backend/customer:list")
     @RequestMapping(value = "list")
     @ResponseBody
@@ -121,7 +120,6 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
     }
 
 
-    @RequiresUser
     @RequestMapping(value = "detail/{userId}", method = RequestMethod.GET)
     public ModelAndView detail(@PathVariable("userId") Long userId) {
         ModelAndView model = new ModelAndView("backend/customer/detail");

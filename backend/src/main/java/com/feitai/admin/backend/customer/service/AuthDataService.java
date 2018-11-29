@@ -10,6 +10,7 @@ import com.feitai.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.util.Sqls;
 import tk.mybatis.mapper.weekend.WeekendSqls;
 
 import java.util.*;
@@ -81,4 +82,9 @@ public class AuthDataService {
         return sbValue.toString();
     }
 
+    public List<AuthData> findByCardIdAndCode(Long cardId, String authTobaccoCode) {
+        Example example = Example.builder(AuthData.class).andWhere(Sqls.custom().andEqualTo("code",authTobaccoCode).andEqualTo("cardId",cardId)).build();
+        List<AuthData> authData = authDataMapper.selectByExample(example);
+        return authData;
+    }
 }

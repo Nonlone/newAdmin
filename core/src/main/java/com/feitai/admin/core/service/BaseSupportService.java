@@ -73,7 +73,7 @@ public abstract class BaseSupportService<T> {
         try{
             if (mapper.insert(entity) > 0) {
                 return entity;
-            }
+            }        	
         }catch (Exception e){
             log.warn(String.format("save fail,try to update because:{%s}",e.getMessage()),e);
             mapper.updateByPrimaryKey(entity);
