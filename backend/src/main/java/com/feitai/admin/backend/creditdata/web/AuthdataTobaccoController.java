@@ -11,7 +11,6 @@ import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.jieya.server.dao.attach.model.PhotoAttach;
 import com.feitai.jieya.server.dao.authdata.model.AuthdataTobacco;
 import com.feitai.utils.ObjectUtils;
-import com.sun.xml.internal.bind.v2.TODO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
