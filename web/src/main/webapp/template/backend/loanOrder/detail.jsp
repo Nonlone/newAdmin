@@ -364,6 +364,7 @@
 </body>
 <script type="text/javascript">
 
+
     function dataApprovePass() {
         BUI.use('bui/overlay',function (Overlay){
             BUI.Message.Confirm('确认要内审通过吗？',function(){
