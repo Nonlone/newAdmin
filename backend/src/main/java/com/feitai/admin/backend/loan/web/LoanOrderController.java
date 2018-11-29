@@ -10,6 +10,7 @@ package com.feitai.admin.backend.loan.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.config.service.AppConfigService;
+import com.feitai.admin.backend.creditdata.service.AuthdataAuthService;
 import com.feitai.admin.backend.customer.service.AreaService;
 import com.feitai.admin.backend.customer.service.BankSupportService;
 import com.feitai.admin.backend.customer.service.IdCardService;
@@ -115,10 +116,15 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
     @Autowired
     private AreaService areaService;
+    
+    @Autowired
+    private AuthdataAuthService authdataAuthService;
 
     private final static String LOAN_PURPOSE = "loanPurpose";
 
     private final static String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    
+    private final static String XINWANG_CODE="xinwang_supplement_infor";
 
     @RequiresUser
     @GetMapping(value = "/index")
@@ -321,6 +327,22 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         TongDunData tongDunData=tongDunDataService.findByUserIdAndCardIdInLoan(userId, card.getId());
         if(tongDunData!=null){
             modelAndView.addObject("tongDunData",tongDunData);
+        }
+        //是否有新网征信数据
+        boolean hasAuthdata=authdataAuthService.hasUserAuthData(userId, XINWANG_CODE);
+        modelAndView.addObject("hasAuthdata", hasAuthdata);
+        if(loanOrder.getStatus()==3){
+            modelAndView.addObject("dataApprovePass",true);
+        }else{
+            modelAndView.addObject("dataApprovePass",false);
+        }
+
+        //是否有烟草补充资料
+        List<AuthData> tobaccoAuthDataList = authDataService.findByCardIdAndCode(card.getId(),AUTH_TOBACCO_CODE);
+        if(tobaccoAuthDataList.size()>0){
+            modelAndView.addObject("tobaccoAuth",true);
+        }else{
+            modelAndView.addObject("tobaccoAuth",false);
         }
         return modelAndView;
     }
