@@ -314,8 +314,17 @@
             <c:forEach items="${faddDetails}" var="fadd">
                 <div id="${fadd.id}" style="display:none;"><iframe frameborder="no" border="0" src="${fadd.viewpdfUrl}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe></div>
             </c:forEach>
+
         </div>
+
     </div>
+    <c:if test="${dataApprovePass}">
+        <div id="dataApprovePass" style="background-color: white;">
+            <button style="width: 90px;height: 50px;float: right" onclick="dataApprovePass();"><span style="color: #ac2925;size: 30px">内审通过</span></button>
+        </div>
+        <br/><br/><br/><br/><br/>
+
+    </c:if>
 
     <!-- script end -->
 </div>
@@ -323,6 +332,30 @@
 </body>
 <script type="text/javascript">
 
+    function dataApprovePass() {
+        BUI.use('bui/overlay',function (Overlay){
+            BUI.Message.Confirm('确认要内审通过吗？',function(){
+                $.ajax({
+                    url:'/backend/loanOrder/dataApprovePass/${loanId}',
+                    dataType:'JSON',
+                    headers: {'Content-type':'application/json'},
+                    type:'POST',
+                    async:true,
+                    //contentType: 'application/json;charset=utf-8',
+                    success:function(result){
+                        if(result.code==0){
+                            BUI.Message.Alert('内审成功！',function(){
+                            },'success');
+                        }else{
+                            BUI.Message.Alert(result.message,function(){
+                            },'error');
+                        }
+                    }});
+
+            },'question');
+        });
+
+    }
 
     function load(ele, obj) {
         if(obj=='repayPlan'){
