@@ -256,7 +256,28 @@
             <div style="display:block;word-break: break-all;word-wrap: break-word;">${tongDunData.blackBox}</div>
         </div>
 
-
+        <c:if test="${not empty commonPhoto}">
+            <div style="margin-top: 20px;">
+                <h3 style="background-color:#ADADAD">
+                    <span style="font-size:20px;padding: 5px;">提现影像信息</span>
+                </h3>
+                <br/>
+                <div>
+                    <c:forEach items="${commonPhoto}" var="common">
+                        <div style="float: left;margin: auto 20px;">
+                            <div>
+                                <img style="max-height: 200px;max-width: 200px;"
+                                     class="photo-${common.typeName} dialog" src="${common.path}">
+                            </div>
+                            <div style="text-align: center;margin-top: 5px;margin-bottom: 5px;">
+                                <span>${common.name}</span>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+                <div style="clear: both"></div>
+            </div>
+        </c:if>
 
         <div>
             <h3 style="background-color:#ADADAD"><span style="font-size:20px;padding: 5px;">地区信息</span></h3>
@@ -336,6 +357,7 @@
 </div>
 </body>
 <script type="text/javascript">
+
 
     function dataApprovePass() {
         BUI.use('bui/overlay',function (Overlay){
