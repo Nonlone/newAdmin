@@ -2,10 +2,16 @@ package com.feitai.admin.web.configuration;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.feitai.base.mybatis.MultipleDataSource;
+import com.feitai.base.mybatis.annotation.AutoBeanHandler;
+import com.feitai.base.mybatis.interceptor.AutoBeanIntecepter;
 import com.feitai.base.mybatis.interceptor.ClassPrefixMultiDataSourceInterceptor;
 import com.feitai.base.mybatis.interceptor.ClassPrefixMultiDataSourceSelector;
 import com.feitai.base.mybatis.interceptor.ConnectionSignature;
+import com.feitai.jieya.server.dao.base.model.BaseModel;
+
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -119,6 +125,26 @@ public class DataSourceConfiguration implements EnvironmentAware {
         }
         return null;
     }
+    @Bean
+     public AutoBeanIntecepter autoBeanIntecepter(){
+    	return new AutoBeanIntecepter(new AutoBeanHandler<BaseModel>() {
+    		@Override
+			public Class<BaseModel> getAutoBeanConstraintClass() {
+				return BaseModel.class;
+			}
+
+			@Override
+			public void handleBoundSqlAndParameterObject(BoundSql boundSql, BaseModel baseModel) {
+				if(boundSql.getSql().toLowerCase().startsWith("insert")){
+					baseModel.setCreatedTime(new Date());
+					baseModel.setUpdateTime(new Date());					
+				}else if(boundSql.getSql().toLowerCase().startsWith("update")){
+					baseModel.setUpdateTime(new Date());
+				}
+				
+			}
+		});
+    }
 
     /**
      * 类前缀数据源修改拦截器
@@ -136,7 +162,8 @@ public class DataSourceConfiguration implements EnvironmentAware {
         }
         return new ClassPrefixMultiDataSourceInterceptor(multipleDataSource, connectionSignatureMap, classPrefixMap);
     }
-
+    
+ 
     /**
      * 类前缀数据源修改拦截器
      *
