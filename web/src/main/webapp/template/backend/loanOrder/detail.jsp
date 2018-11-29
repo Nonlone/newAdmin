@@ -256,7 +256,28 @@
             <div style="display:block;word-break: break-all;word-wrap: break-word;">${tongDunData.blackBox}</div>
         </div>
 
-
+        <c:if test="${not empty commonPhoto}">
+            <div style="margin-top: 20px;">
+                <h3 style="background-color:#ADADAD">
+                    <span style="font-size:20px;padding: 5px;">提现影像信息</span>
+                </h3>
+                <br/>
+                <div>
+                    <c:forEach items="${commonPhoto}" var="common">
+                        <div style="float: left;margin: auto 20px;">
+                            <div>
+                                <img style="max-height: 200px;max-width: 200px;"
+                                     class="photo-${common.typeName} dialog" src="${common.path}">
+                            </div>
+                            <div style="text-align: center;margin-top: 5px;margin-bottom: 5px;">
+                                <span>${common.name}</span>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+                <div style="clear: both"></div>
+            </div>
+        </c:if>
 
         <div>
             <h3 style="background-color:#ADADAD"><span style="font-size:20px;padding: 5px;">地区信息</span></h3>
@@ -301,7 +322,9 @@
             <c:forEach items="${faddDetails}" var="fadd">
                 <li id="li_credit"><a href="javascript:void(0)" onclick="load(this,'${fadd.id}')">${fadd.contractName}</a></li>
             </c:forEach>
-            <li id="li_xinwangAuth"><a href="javascript:void(0)" onclick="load(this,'xinwangAuth')">新网授信数据</a></li>
+            <c:if test="${hasAuthdata}">
+              <li id="li_xinwangAuth"><a href="javascript:void(0)" onclick="load(this,'xinwangAuth')">新网授信数据</a></li>
+            </c:if>
             <c:if test="${tobaccoAuth}">
                 <li id="li_tobacco"><a href="javascript:void(0)" onclick="load(this,'tobaccoData')">烟草贷补充资料</a></li>
             </c:if>
@@ -319,7 +342,7 @@
                 <div id="${fadd.id}" style="display:none;"><iframe frameborder="no" border="0" src="${fadd.viewpdfUrl}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe></div>
             </c:forEach>
             <div id = "xinwangAuth" style="display:none;">
-                <iframe frameborder="no" border="0" src="${ctx}/backend/loan/repayOrder/repayPlan/${loanOrder.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
+                <iframe frameborder="no" border="0" src="${ctx}/backend/xinwang/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
             <div id = "tobaccoData">
                 <iframe frameborder="no" border="0" src="${ctx}/backend/tobacco/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
@@ -382,23 +405,7 @@
                 });
                 return;
             }
-        }else if(obj=='xinwangAuth'){
-        	var hasAuthdata=${hasAuthdata};
-        	if(!hasAuthdata){
-        		BUI.use('bui/overlay', function (Overlay) {
-                    new Overlay.Dialog({
-                        title: '提示窗口',
-                        width: 300,
-                        height: 150,
-                        mask: false,
-                        buttons: [],
-                        bodyContent: '<p>该订单没有对应的新网的授信数据！</p>'
-                    }).show();
-                });
-                return;
-        	}
         }
-
         // 样式控制
         var $ele = $(ele);
         $ele.parent().addClass("active").siblings().removeClass("active");
