@@ -98,8 +98,8 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
                     <!--git 账号密码-->
-                    <username>linguocheng</username>
-                    <password>Feitai1234</password>
+                    <username>maven-releases</username>
+                    <password>maven-releases</password>
                     <!--禁用超级pom中的profile文件-->
                     <useReleaseProfile>true</useReleaseProfile>
                 </configuration>
