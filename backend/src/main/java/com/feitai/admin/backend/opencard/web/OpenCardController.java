@@ -139,7 +139,6 @@ public class OpenCardController extends BaseListableController<CardMore> {
      * @param id
      * @return
      */
-    @RequiresUser
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
     public ModelAndView detail(@PathVariable("id") Long id) {
         ModelAndView model = new ModelAndView("/backend/opencard/detail");

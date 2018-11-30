@@ -43,7 +43,7 @@ public class ProductController extends BaseListableController<Product> {
 		List<ListItem> list = new ArrayList<ListItem>();
 		list.add(new ListItem("全部"," "));
 		for(Product product:products){
-			list.add(new ListItem(product.getName(), product.getName()));
+			list.add(new ListItem(product.getRemark(), product.getId().toString()));
 		}
 		return list;
 	}

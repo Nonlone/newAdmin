@@ -55,7 +55,7 @@
                     </div>
                     <div class="control-group span10">
                         <label class="control-label">是否有效</label>
-                        <div class="controls bui-form-field-select" data-items="{'true':'启用','false':'停用'}"
+                        <div class="controls bui-form-field-select" data-items="{'1':'启用','0':'停用'}"
                              class="control-text input-small">
                             <input name="enable" type="hidden" value="">
                         </div>
@@ -69,7 +69,7 @@
                     <label class="control-label">支持期数</label>
                     <div class="controls" id="list"></div>
                 </div>-->
-                <input type="hidden" name="id" value="${id}">
+                 <input type="hidden" name="id" value="${id}">
             </form>
         </div>
     </div>

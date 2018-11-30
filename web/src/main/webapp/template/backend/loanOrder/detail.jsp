@@ -256,7 +256,28 @@
             <div style="display:block;word-break: break-all;word-wrap: break-word;">${tongDunData.blackBox}</div>
         </div>
 
-
+        <c:if test="${not empty commonPhoto}">
+            <div style="margin-top: 20px;">
+                <h3 style="background-color:#ADADAD">
+                    <span style="font-size:20px;padding: 5px;">提现影像信息</span>
+                </h3>
+                <br/>
+                <div>
+                    <c:forEach items="${commonPhoto}" var="common">
+                        <div style="float: left;margin: auto 20px;">
+                            <div>
+                                <img style="max-height: 200px;max-width: 200px;"
+                                     class="photo-${common.typeName} dialog" src="${common.path}">
+                            </div>
+                            <div style="text-align: center;margin-top: 5px;margin-bottom: 5px;">
+                                <span>${common.name}</span>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+                <div style="clear: both"></div>
+            </div>
+        </c:if>
 
         <div>
             <h3 style="background-color:#ADADAD"><span style="font-size:20px;padding: 5px;">地区信息</span></h3>
@@ -301,6 +322,12 @@
             <c:forEach items="${faddDetails}" var="fadd">
                 <li id="li_credit"><a href="javascript:void(0)" onclick="load(this,'${fadd.id}')">${fadd.contractName}</a></li>
             </c:forEach>
+            <c:if test="${hasAuthdata}">
+              <li id="li_xinwangAuth"><a href="javascript:void(0)" onclick="load(this,'xinwangAuth')">新网授信数据</a></li>
+            </c:if>
+            <c:if test="${tobaccoAuth}">
+                <li id="li_tobacco"><a href="javascript:void(0)" onclick="load(this,'tobaccoData')">烟草贷补充资料</a></li>
+            </c:if>
         </ul>
 
         <div id="tabContext" style="margin-bottom: 10px;">
@@ -314,8 +341,22 @@
             <c:forEach items="${faddDetails}" var="fadd">
                 <div id="${fadd.id}" style="display:none;"><iframe frameborder="no" border="0" src="${fadd.viewpdfUrl}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe></div>
             </c:forEach>
+            <div id = "xinwangAuth" style="display:none;">
+                <iframe frameborder="no" border="0" src="${ctx}/backend/xinwang/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
+            </div>
+            <div id = "tobaccoData" style="display:none;">
+                <iframe frameborder="no" border="0" src="${ctx}/backend/tobacco/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
+            </div>
         </div>
+
     </div>
+    <c:if test="${dataApprovePass}">
+        <div id="dataApprovePass" style="background-color: white;">
+            <button style="width: 90px;height: 50px;float: right" onclick="dataApprovePass();"><span style="color: #ac2925;size: 30px">内审通过</span></button>
+        </div>
+        <br/><br/><br/><br/><br/>
+
+    </c:if>
 
     <!-- script end -->
 </div>
@@ -323,6 +364,31 @@
 </body>
 <script type="text/javascript">
 
+
+    function dataApprovePass() {
+        BUI.use('bui/overlay',function (Overlay){
+            BUI.Message.Confirm('确认要内审通过吗？',function(){
+                $.ajax({
+                    url:'/backend/loanOrder/dataApprovePass/${loanId}',
+                    dataType:'JSON',
+                    headers: {'Content-type':'application/json'},
+                    type:'POST',
+                    async:true,
+                    //contentType: 'application/json;charset=utf-8',
+                    success:function(result){
+                        if(result.code==0){
+                            BUI.Message.Alert('内审成功！',function(){
+                            },'success');
+                        }else{
+                            BUI.Message.Alert(result.message,function(){
+                            },'error');
+                        }
+                    }});
+
+            },'question');
+        });
+
+    }
 
     function load(ele, obj) {
         if(obj=='repayPlan'){
@@ -341,7 +407,6 @@
                 return;
             }
         }
-
         // 样式控制
         var $ele = $(ele);
         $ele.parent().addClass("active").siblings().removeClass("active");

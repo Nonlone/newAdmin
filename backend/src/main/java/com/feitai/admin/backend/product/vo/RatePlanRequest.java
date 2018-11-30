@@ -18,14 +18,17 @@ public class RatePlanRequest  {
     @Length(max = 20)
     private String name;
 
+    //@NotNull
+   // private Long fundId;
+    
     @NotNull
-    private Long fundId;
+     private String fundId;
 
     @NotNull
     private Long productId;
 
     @NotNull
-    private Boolean enable;
+    private String enable;
 
     /**
      * 权重结构
@@ -75,12 +78,20 @@ public class RatePlanRequest  {
         this.name = name;
     }
 
-    @NotNull
+  /*  @NotNull
     public Long getFundId() {
         return fundId;
     }
 
     public void setFundId(@NotNull Long fundId) {
+        this.fundId = fundId;
+    }*/
+    @NotNull
+    public String getFundId() {
+        return fundId;
+    }
+
+    public void setFundId(@NotNull String fundId) {
         this.fundId = fundId;
     }
 
@@ -93,12 +104,20 @@ public class RatePlanRequest  {
         this.productId = productId;
     }
 
-    @NotNull
+  /*  @NotNull
     public Boolean getEnable() {
         return enable;
     }
 
     public void setEnable(@NotNull Boolean enable) {
+        this.enable = enable;
+    }*/
+    @NotNull
+    public String getEnable() {
+        return enable;
+    }
+
+    public void setEnable(@NotNull String enable) {
         this.enable = enable;
     }
 }

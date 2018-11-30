@@ -56,7 +56,7 @@
 			<div class="control-group span6">
 				<label class="control-label">产品名称:</label>
 				<div class="controls" id="selectProduct">
-					<input id="searchProduct" type="hidden" name="search_LIKE_product.name">
+					<input id="searchProduct" type="hidden" name="search_EQ_product.id">
 				</div>
 			</div>
 			<div class="control-group span6">
@@ -122,7 +122,7 @@
         BUI.use('bui/overlay',function (Overlay){
             BUI.Message.Confirm('确认要终止放款么？',function(){
                 $.ajax({
-                    url:'${rejectCash}',
+                    url:'${ctx}/backend/loanOrder/rejectCash',
                     dataType:'JSON',
                     headers: {'Content-type':'application/json'},
                     type:'POST',
@@ -231,6 +231,7 @@
                         return "";
                     }
                 }},
+            {title:'订单状态',dataIndex:'status',width:'100px',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
             {title:'授信金额',dataIndex:'card.creditSum',width:'5%',renderer: function (value) {
                     if(value){
                         return value;
@@ -249,7 +250,6 @@
                 }},
             {title:'申请时间',dataIndex:'applyTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
             {title:'放款时间',dataIndex:'payLoanTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'放款状态',dataIndex:'status',width:'100px',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
             {title:'产品名称',dataIndex:'product',width:'5%',renderer: function (value) {
                     if(value){
                         return value.name;

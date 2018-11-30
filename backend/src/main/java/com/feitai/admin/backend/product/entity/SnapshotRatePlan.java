@@ -41,7 +41,7 @@ public class SnapshotRatePlan implements Serializable {
     private Long fundId;
     private Long productId;
 
-    private Boolean enable;
+    private String enable;
 
     private Integer currentVersion;
     private Date createdTime;

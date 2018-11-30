@@ -43,7 +43,6 @@ public class UserController extends BaseListableController<User> {
     @Autowired
     private UserService userService;
 
-    @RequiresUser
     @RequestMapping(value = "")
     public String index() {
         return "/system/user/index";
