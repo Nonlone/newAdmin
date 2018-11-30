@@ -344,7 +344,7 @@
             <div id = "xinwangAuth" style="display:none;">
                 <iframe frameborder="no" border="0" src="${ctx}/backend/xinwang/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
-            <div id = "tobaccoData">
+            <div id = "tobaccoData" style="display:none;">
                 <iframe frameborder="no" border="0" src="${ctx}/backend/tobacco/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
         </div>

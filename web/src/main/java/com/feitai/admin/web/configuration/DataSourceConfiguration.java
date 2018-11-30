@@ -204,6 +204,9 @@ public class DataSourceConfiguration implements EnvironmentAware {
         props.put(DruidDataSourceFactory.PROP_TESTONRETURN, environment.getProperty(defaultPropertiesPrefix + ".testOnReturn"));
         props.put(DruidDataSourceFactory.PROP_POOLPREPAREDSTATEMENTS, environment.getProperty(defaultPropertiesPrefix + ".poolPreparedStatements"));
         props.put(DruidDataSourceFactory.PROP_MAXOPENPREPAREDSTATEMENTS, environment.getProperty(defaultPropertiesPrefix + ".maxPoolPreparedStatementPerConnectionSize"));
+        props.put(DruidDataSourceFactory.PROP_MAXWAIT,environment.getProperty(defaultPropertiesPrefix+".maxWait"));
+        props.put(DruidDataSourceFactory.PROP_REMOVEABANDONEDTIMEOUT,environment.getProperty(defaultPropertiesPrefix+".removeAbandonedTimeout"));
+
         props.put(DruidDataSourceFactory.PROP_CONNECTIONPROPERTIES, connectionProperties);
         return DruidDataSourceFactory.createDataSource(props);
     }
