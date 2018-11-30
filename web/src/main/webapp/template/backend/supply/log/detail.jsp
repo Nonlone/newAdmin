@@ -26,6 +26,7 @@
                     <th width="80px">资金方</th>
                     <th width="150px">产品名称</th>
                     <th width="150px">用户ID</th>
+                    <th width="60px">发送总部次数</th>
                 </tr>
                 </thead>
                 <tr>
@@ -36,6 +37,7 @@
                     <td><c:if test="${not empty fundName}">${fundName}</c:if></td>
                     <td><c:if test="${not empty supplyLog.loanOrder}"><c:if test="${not empty supplyLog.loanOrder.product}">${supplyLog.loanOrder.product.name}</c:if></c:if></td>
                     <td><c:if test="${not empty supplyLog.user}">${supplyLog.user.id}</c:if></td>
+                    <td>${supply2dashu}</td>
                 </tr>
             </table>
         <hr/>
@@ -43,7 +45,8 @@
         <hr/>
         <c:forEach items="${history}" var="his" varStatus="">
 
-            <div style="font-size: 15px">提交补件时间：${his.createdTime}</div>
+            <div style="font-size: 15px">提交补件时间：${his.createdTime}<button style="width: 60px;height: 30px;float: right" onclick="supply2dashu('${his.id}');"><span style="color: #ac2925;size: 30px">发送总部</span></button></div>
+            <br/>
             <table cellspacing="0" class="table table-bordered">
                 <thead>
                     <tr style="background-color: #F2F2F2">
@@ -103,6 +106,35 @@
 </div>
 </body>
 <script type="text/javascript">
+
+    function supply2dashu(id) {
+        BUI.use('bui/overlay',function (Overlay){
+            BUI.Message.Confirm('确认发送补件影像信息到总部吗？',function(){
+                $.ajax({
+                    url:'/backend/supply/log/supplyLog2Dashu/'+id,
+                    dataType:'JSON',
+                    headers: {'Content-type':'application/json'},
+                    type:'POST',
+                    async:true,
+                    //contentType: 'application/json;charset=utf-8',
+                    success:function(result){
+                        if(result.code==0){
+                            BUI.Message.Alert(result.message,function(){
+                            },'success');
+                        }else if(result.code==3){
+                            BUI.Message.Alert(result.message,function(){
+                            },'error');
+                        }else {
+                            BUI.Message.Alert(result.message,function(){
+                            },'error');
+                        }
+                    }});
+
+            },'question');
+        });
+
+    }
+
     $(function () {
         BUI.use('bui/overlay', function (Overlay) {
         //放大图片
