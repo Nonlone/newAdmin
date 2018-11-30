@@ -92,6 +92,28 @@
                 </tbody>
             </table>
         </div>
+         <c:if test="${not empty tobaccoPhoto}">
+            <div style="margin-top: 20px;">
+                <h3 style="background-color:#ADADAD">
+                    <span style="font-size:20px;padding: 5px;">影像信息</span>
+                </h3>
+                <br/>
+                    <div>
+                        <c:forEach items="${tobaccoPhoto}" var="tobacco">
+                            <div style="float: left;margin: auto 20px;">
+                                <div>
+                                    <img style="max-height: 200px;max-width: 200px;"
+                                         class="photo-${tobacco.typeName} dialog" src="${tobacco.path}">
+                                </div>
+                                <div style="text-align: center;margin-top: 5px;margin-bottom: 5px;">
+                                    <span>${tobacco.name}</span>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                    <div style="clear: both"></div>
+            </div>
+        </c:if>
     </div>
 </div>
 </body>

@@ -256,21 +256,21 @@
             <div style="display:block;word-break: break-all;word-wrap: break-word;">${tongDunData.blackBox}</div>
         </div>
 
-        <c:if test="${not empty commonPhoto}">
+        <c:if test="${not empty loanVoucherPhoto}">
             <div style="margin-top: 20px;">
                 <h3 style="background-color:#ADADAD">
-                    <span style="font-size:20px;padding: 5px;">提现影像信息</span>
+                    <span style="font-size:20px;padding: 5px;">借款凭证影像</span>
                 </h3>
                 <br/>
                 <div>
-                    <c:forEach items="${commonPhoto}" var="common">
+                    <c:forEach items="${loanVoucherPhoto}" var="loanVoucher">
                         <div style="float: left;margin: auto 20px;">
                             <div>
                                 <img style="max-height: 200px;max-width: 200px;"
-                                     class="photo-${common.typeName} dialog" src="${common.path}">
+                                     class="photo-${loanVoucher.typeName} dialog" src="${loanVoucher.path}">
                             </div>
                             <div style="text-align: center;margin-top: 5px;margin-bottom: 5px;">
-                                <span>${common.name}</span>
+                                <span>${loanVoucher.name}</span>
                             </div>
                         </div>
                     </c:forEach>
@@ -322,7 +322,7 @@
             <c:forEach items="${faddDetails}" var="fadd">
                 <li id="li_credit"><a href="javascript:void(0)" onclick="load(this,'${fadd.id}')">${fadd.contractName}</a></li>
             </c:forEach>
-            <c:if test="${hasAuthdata}">
+            <c:if test="${xinwangAuth}">
               <li id="li_xinwangAuth"><a href="javascript:void(0)" onclick="load(this,'xinwangAuth')">新网授信数据</a></li>
             </c:if>
             <c:if test="${tobaccoAuth}">

@@ -219,6 +219,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
             model.addObject("belongIndustry", appConfigService.findByTypeCodeAndCode("belongIndustry", work.getBelongIndustry()));
             model.addObject("jobsType", appConfigService.findByTypeCodeAndCode("jobsType", work.getJobsType()));
         } else {
+            model.addObject("registerTime","无");
             model.addObject("belongIndustry", "无");
             model.addObject("jobsType", "无");
         }
