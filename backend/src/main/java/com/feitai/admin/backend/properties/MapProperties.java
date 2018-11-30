@@ -139,8 +139,8 @@ public class MapProperties {
      * @param key
      * @return
      */
-    public String getloanStatus(String key) {
-        return getMapValue(loanStatusMap, key);
+    public String getloanStatus(Integer key) {
+        return getMapValue(loanStatusMap, key.toString());
     }
 
 

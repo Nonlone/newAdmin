@@ -23,4 +23,9 @@ public class AreaService extends ClassPrefixDynamicSupportService<LocationData> 
         return getMapper().selectOneByExample(example);
     }
 
+    public LocationData findByCardIdInLoan(Long id) {
+        Example example = Example.builder(LocationData.class).andWhere(Sqls.custom().andEqualTo("cardId",id).andEqualTo("segment",ProcessSegment.LOAN.getValue())).build();
+        return getMapper().selectOneByExample(example);
+    }
+
 }

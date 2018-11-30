@@ -62,7 +62,7 @@ public class AuthdataTobaccoController extends BaseListableController<AuthdataTo
         String spouseIdTypeName = appConfigService.findByTypeCodeAndCode(CERTIFI_TYPE, authdataTobaccoByUserId.getSpouseIdType());
         authdataTobacooViewVo.setSpouseIdTypeName(spouseIdTypeName);
 
-        String socialTypeName = appConfigService.findByTypeCodeAndCode(SOCIAL_TYPE, authdataTobaccoByUserId.getSocialType());
+        String socialTypeName = appConfigService.findByTypeCodeAndValue(SOCIAL_TYPE, authdataTobaccoByUserId.getSocialType());
         authdataTobacooViewVo.setSocialTypeName(socialTypeName);
 
         modelAndView.addObject("authdataTobacoo",authdataTobacooViewVo);

@@ -33,7 +33,7 @@ public class PhotoService extends ClassPrefixDynamicSupportService<PhotoAttach> 
         return mapper.selectByExample(example);
     }
 
-    public List<PhotoAttach> findCommonPhotoByUserId(long userId) {
+    public List<PhotoAttach> findLoanVoucherPhotoByUserId(long userId) {
         Example example = Example.builder(PhotoAttach.class).andWhere(
                 Sqls.custom().andEqualTo("userId", userId)
                         .andIn("type", Arrays.asList(new Integer[]{

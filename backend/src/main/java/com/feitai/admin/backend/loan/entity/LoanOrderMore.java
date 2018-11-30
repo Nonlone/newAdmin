@@ -10,6 +10,8 @@ package com.feitai.admin.backend.loan.entity;
 import com.feitai.base.mybatis.One;
 import com.feitai.jieya.server.dao.data.mapper.IdCardDataMapper;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
+import com.feitai.jieya.server.dao.fund.mapper.FundMapper;
+import com.feitai.jieya.server.dao.fund.model.Fund;
 import com.feitai.jieya.server.dao.product.mapper.ProductMapper;
 import com.feitai.jieya.server.dao.product.model.Product;
 import com.feitai.jieya.server.dao.user.mapper.UserMapper;
@@ -36,7 +38,8 @@ public class LoanOrderMore extends com.feitai.jieya.server.dao.loan.model.LoanOr
 	private User user;
 
 	@Transient
-	private Byte cancelLoan;
+	@One(classOfMapper = FundMapper.class,sourceField = "payFundId")
+	private Fund fund;
 
 }
 
