@@ -29,7 +29,7 @@
                        </c:choose>                       
                     </td>
                     <td bgcolor="#F2F2F2" width="50px" height="30px" style="vertical-align: middle; ">
-                        年度毛利润：
+                        年度毛利润(万元)：
                     </td>
                     <td width="100px" height="30px" style="vertical-align: middle;">
                          <c:choose>
@@ -42,7 +42,7 @@
                 </tr>
                 <tr>
                     <td bgcolor="#F2F2F2" width="50px" height="30px" style="vertical-align: middle;">
-                        经营主体年收入：
+                        经营主体年收入(万元)：
                     </td>
                     <td width="100px" height="30px" style="vertical-align: middle; ">
                         <c:choose>
@@ -53,7 +53,7 @@
                        </c:choose>  
                     </td>
                     <td bgcolor="#F2F2F2" width="50px" height="30px" style="vertical-align: middle; ">
-                       近六个月营业额：
+                       近六个月营业额(万元)：
                     </td>
                     <td width="100px" height="30px" style="vertical-align: middle;">
                         <c:choose>
@@ -84,7 +84,7 @@
                           <c:when test="${empty attachUserBusiInfor.createdTime}">
                           未填写
                           </c:when>
-                          <c:otherwise>${attachUserBusiInfor.createdTime}</c:otherwise>
+                          <c:otherwise><fmt:formatDate value="${attachUserBusiInfor.createdTime}" pattern="yyyy-MM-dd"/></c:otherwise>
                        </c:choose>  
                     </td>  
                 </tr>
