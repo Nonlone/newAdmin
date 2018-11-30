@@ -206,7 +206,7 @@
                 <tbody>
                 <tr>
                     <td bgcolor="#F2F2F2" width="150px">所属行业</td>
-                    <td >${belongIndustry}</td>
+                    <td >${tradeType}</td>
                 </tr>
                 <tr>
                     <td bgcolor="#F2F2F2" width="150px">工作类型</td>
