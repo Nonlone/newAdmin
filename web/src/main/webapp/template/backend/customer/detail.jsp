@@ -260,11 +260,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td bgcolor="#F2F2F2" width="200px">注册资本</td>
+                        <td bgcolor="#F2F2F2" width="200px">注册资本(万元)</td>
                         <td >${work.registerCapital}</td>
                     </tr>
                     <tr>
-                        <td bgcolor="#F2F2F2" width="200px">实收资本</td>
+                        <td bgcolor="#F2F2F2" width="200px">实收资本(万元)</td>
                         <td >${work.receiptCapital}</td>
                     </tr>
                     <tr>
