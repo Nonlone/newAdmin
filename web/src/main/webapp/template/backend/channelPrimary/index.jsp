@@ -50,7 +50,7 @@
 		<form id="addOrUpdateForm" class="form-inline">
 			<div class="row">
 				<div class="control-group span8">
-					<label class="control-label"><s>*</s>渠道标识:</label>
+					<label class="control-label"><s>*</s>一级渠道标识:</label>
 					<div class="controls">
 						<input id="channelCode"
 							   name="channelCode"
@@ -76,11 +76,11 @@
 			<div class="row">
 				<div class="control-group span8">
 					<label class="control-label"><s>*</s>渠道大类:</label>
-					<!-- <div class="controls bui-form-field-select" data-items="{'A-线上场景':'A-线上场景','A-应用商店':'A-应用商店','A-微信推广':'A-微信推广','A-品牌推广':'A-品牌推广','A-贷款超市':'A-贷款超市','A-数据营销':'A-数据营销','B-线下渠道':'B-线下渠道','B-O2O':'B-O2O','C-其他':'C-其他'}"
+			<!-- 		 <div class="controls bui-form-field-select" data-items="{'A-线上场景':'A-线上场景','A-应用商店':'A-应用商店','A-微信推广':'A-微信推广','A-品牌推广':'A-品牌推广','A-贷款超市':'A-贷款超市','A-数据营销':'A-数据营销','B-线下渠道':'B-线下渠道','B-O2O':'B-O2O','C-其他':'C-其他'}"
 						 class="control-text input-small">
 						<input name="channelSort" type="hidden" value="">
 					</div> -->
-					 <div id="channelSortUpdateSelect" class="controls"
+ 					 <div id="channelSortUpdateSelect" class="controls"
 						 class="control-text input-small">
 						<input id="channelSortUpdate" name="channelSort" type="hidden" value="">
 					</div>
@@ -114,12 +114,13 @@ BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
 	    });
 	  channelSortSearchSelect.render();
 	    
-	    var channelSortUpdateSelect = new Select.Select({
+ 	    var channelSortUpdateSelect = new Select.Select({
 	        render:'#channelSortUpdateSelect',
 	        valueField:'#channelSortUpdate',
+	        autoSetValue:true,
 	        items:JSON.parse('${channelSortList}')
 	    });
-	    channelSortUpdateSelect.render();
+	    channelSortUpdateSelect.render(); 
 	
 	//定义页面权限
 	var add=false,update=false,del=false,list=false;
@@ -128,7 +129,7 @@ BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
 
     var columns = [
 		 {title:'id',dataIndex:'id',width:'10%'},
-		 {title:'渠道标识',dataIndex:'channelCode',width:'20%'},
+		 {title:'一级渠道标识',dataIndex:'channelCode',width:'20%'},
 		 {title:'一级渠道名称',dataIndex:'primaryChannelName',width:'20%'},
 		 {title:'渠道大类',dataIndex:'channelSort',width:'20%'},
 		 {title:'创建时间',dataIndex:'createdTime',width:'10%',renderer:BUI.Grid.Format.datetimeRenderer},
@@ -164,7 +165,7 @@ BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
 
     var update = true;
 
-    addOrUpdateForm.getField('primaryChannelName').on('remotecomplete',function(){
+     addOrUpdateForm.getField('primaryChannelName').on('remotecomplete',function(){
         if(update){
             addOrUpdateForm.getField('primaryChannelName').clearErrors();
         }
@@ -185,7 +186,6 @@ BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
 
     var beforeUpdateShow = function(dialog,form,record){
         update = true;
-        form.getField('primaryChannelName').disable();
         form.getField('channelCode').disable();
     };
 

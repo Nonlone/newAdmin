@@ -100,7 +100,7 @@
 					</div>
 				</div>
 				<div class="control-group span8">
-					<label class="control-label"><s>*</s>渠道标识:</label>
+					<label class="control-label"><s>*</s>二级渠道标识:</label>
 					<div class="controls">
 						<input id="primaryCode" name="primaryCode" class="input-minimum" readonly="true" data-rules="{required:false,}" type="text">
 						<input id="channelId" name="channelId" type="text"
@@ -215,7 +215,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
   
     var columns = [
 		 {title:'应用名称',dataIndex:'appName',width:'10%'},
-		 {title:'渠道标识',dataIndex:'channelId',width:'15%'},
+		 {title:'二级渠道标识',dataIndex:'channelId',width:'15%'},
 		 {title:'渠道大类',dataIndex:'channelSort',width:'10%'},
 		 {title:'一级渠道名称',dataIndex:'mainPackgage',width:'15%'},
 		 {title:'二级渠道名称',dataIndex:'subPackage',width:'15%'},
@@ -308,6 +308,8 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
         update = true;
         select.setSelectedValue('');
         select.setSelectedValue(record.mainPackgage);
+        form.getField("primaryCode").disable();
+        form.getField("channelId").disable();
     };
 
     crudGrid.on('beforeUpdateShow', beforeUpdateShow);
