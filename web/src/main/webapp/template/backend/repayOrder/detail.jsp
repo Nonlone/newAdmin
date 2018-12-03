@@ -96,7 +96,7 @@
                 </td>
                 <td width="100px" height="50px">
                     <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
-                    ${repayOrder.amount}
+                    ${amount}
                     </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
@@ -264,17 +264,12 @@
             </div>
         </div>
 
-        <ul id="tabHeader" class="nav-tabs">
-            <li id="li_bond" class="active"><a href="javascript:void(0)" onclick="load(this,'repayPlan')">还款计划</a></li>
-        </ul>
-
-        <div id="tabContext" style="margin-bottom: 10px;">
-            <div id = "repayPlan" style="display:none;">
+        <h3 style="background-color:#ADADAD"><span style="font-size:20px;padding: 5px;">还款信息</span></h3>
+            <div id = "repayPlan">
                 <iframe frameborder="no" border="0" src="${ctx}/backend/loan/repayOrder/repayPlan/${loanOrder.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
-        </div>
 
-        </div>
+
 
 </div>
 </div>

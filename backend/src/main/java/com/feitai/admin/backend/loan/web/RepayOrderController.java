@@ -65,6 +65,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -184,6 +185,13 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     public ModelAndView auth(@PathVariable("id") String id) {
         ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/detail");
         RepayOrderMore repayOrder = repayOrderService.findOneBySql(getOneSql(id));
+        List<RepayOrderMore> repayOrderMores = repayOrderService.findByRepayPlanId(repayOrder.getRepayPlanId());
+        double amount = new Double(0);
+        for(RepayOrderMore repayOrderMore:repayOrderMores){
+            amount +=  repayOrderMore.getAmount().doubleValue();;
+        }
+        modelAndView.addObject("amount",amount);
+
         Long userId = repayOrder.getUserId();
         User user = userService.findOne(userId);
         IdCardData idcard = idcardService.findByUserId(userId);
@@ -306,7 +314,11 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         //根据request获取page
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
-        Page<RepayOrderMore> repayOrderMorePage = list(getCommonSqls(request,getSelectMultiTable().buildSqlString())+ " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC", pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        StringBuffer sbSql = new StringBuffer();
+        sbSql.append(getSelectMultiTable().buildSqlString());
+        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
+        sbSql.append(" GROUP BY " + SelectMultiTable.MAIN_ALAIS + ".repay_plan_id");
+        Page<RepayOrderMore> repayOrderMorePage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC", pageNo, pageSize, getCountSqls(request), "RCOUNT");
         List<RepayOrderMore> content = repayOrderMorePage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
         for (RepayOrderMore repayOrderMore :
@@ -377,7 +389,13 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
             substring = stringBuffer.substring(0, stringBuffer.length() - 1);
         }
         json.put("payCard", substring);
-
+        List<RepayOrderMore> repayOrderMores = repayOrderService.findByRepayPlanId((Long)json.get("repayPlanId"));
+        double amount = new Double(0);
+        for(RepayOrderMore repayOrder:repayOrderMores){
+            amount +=  repayOrder.getAmount().doubleValue();;
+        }
+        DecimalFormat df = new DecimalFormat("0.00");
+        json.put("amount",df.format(amount));
         json.put("status",mapProperties.getRepayOrderStatus(json.getString("status")));
         return json;
     }
@@ -392,6 +410,8 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
             sbSql.append(getSelectMultiTable().buildCountSqlString());
         }
         sbSql.append(searchSql);
+        sbSql.append(" Group by " + SelectMultiTable.MAIN_ALAIS + ".repay_plan_id )tcount");
+        sbSql.insert(0,"select count(tcount." + SelectMultiTable.COUNT_ALIAS + ") AS RCOUNT from (" );
         return sbSql.toString();
     }
 
