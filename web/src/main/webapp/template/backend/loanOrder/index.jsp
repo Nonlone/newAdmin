@@ -252,7 +252,7 @@
             {title:'放款时间',dataIndex:'payLoanTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
             {title:'产品名称',dataIndex:'product',width:'5%',renderer: function (value) {
                     if(value){
-                        return value.name;
+                        return value.remark;
                     }else{
                         return '';
                     }

@@ -43,6 +43,7 @@ public class MapProperties {
 
     }
 
+
     @Value("${backend.segmentMap}")
     private String segmentMapSource;
 
@@ -62,7 +63,7 @@ public class MapProperties {
     }
 
 
-    @Value("${backend.valveRejectMap}")
+    @Value("${backend.openCardRejectReason}")
     private String valveRejectSource;
 
     private Map<String,String> valveRejectMap;

@@ -56,7 +56,7 @@
                         产品名称
                     </td>
                     <td width="70px" height="30px">
-                        ${card.product.name}
+                        ${card.product.remark}
                     </td>
                     <td bgcolor="#F2F2F2" width="30px" height="30px">
                         产品状态
@@ -129,6 +129,29 @@
                     </td>
                     <td width="70px" height="30px">
                         ${creditTime}
+                    </td>
+                </tr>
+                <tr>
+                    <td bgcolor="#F2F2F2" width="30px" height="30px">
+                        是否授信拒绝
+                    </td>
+                    <td width="70px" height="30px">
+                        <c:if test="${empty rejectReason}">
+                            没拒绝
+                        </c:if>
+                        <c:if test="${not empty rejectReason}">
+                            拒绝
+                        </c:if>
+                    </td>
+                    <td bgcolor="#F2F2F2" width="30px" height="30px">
+                        拒绝原因
+                    </td>
+                    <td width="70px" height="30px">
+                        ${rejectReason}
+                    </td>
+                    <td bgcolor="#F2F2F2" width="30px" height="30px">
+                    </td>
+                    <td width="70px" height="30px">
                     </td>
                 </tr>
                 <c:if test="${not empty tongDunData }">

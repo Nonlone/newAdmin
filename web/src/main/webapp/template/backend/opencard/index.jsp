@@ -127,27 +127,7 @@
         var ViewBtn = true;
         var spantrue = "<span style='color:#32CD32'>";
         var spanfalse = "<span style='color:#FF4500'>";
-        var statusEmun = {
-            "VALVE_REJECT": spanfalse + "阀门拒绝</span>",
-            "AUTHORIZED_REJECT": spanfalse + "授信拒绝</span>",
-            "CUSTOMER_REJECT": spanfalse + "主体拒绝</span>",
-            "WITHDRAW_REJECT": spantrue + "提现拒绝</span>",
-            "QUOTACHANGE_REJECT": spantrue + "提额拒绝</span>",
-            "RENEWAL_REJECT": spanfalse + "续卡拒绝</span>",
-            "RENEWAL_APPROVING": spanfalse + "续卡审核中"
-            ,
-            "QUOTACHAGNE_APPROVING": spantrue + "提额审核中</span>",
-            "WITHDRAW_APPROVING": spantrue + "提现审核中</span>",
-            "OPENCARD_APPROVING": "授信审核中",
-            "FILLING": "资料填写中",
-            "LOANING": spantrue + "放款中</span>",
-            "UNACTIVE": "未激活",
-            "NORMAL": spantrue + "授信（未提现）</span>",
-            "DEBT": spantrue + "授信（已提现）"
-            ,
-            "OVERDUE": spantrue + "逾期</span>",
-            "ABANDONED": spanfalse + "卡废弃</span>"
-        };
+
 
         //定义页面权限
         var add = false, update = false, del = false, list = false;
@@ -192,7 +172,7 @@
                 }},
             {title:'产品名称',dataIndex:'product',width:'10%',renderer:function(value){
                     if(value){
-                        return value.name;
+                        return value.remark;
                     }
                     return "";
                 }},

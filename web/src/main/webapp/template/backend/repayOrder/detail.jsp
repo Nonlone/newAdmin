@@ -44,7 +44,7 @@
                     产品名称：
                 </td>
                 <td width="100px" height="50px">
-                    ${loanOrder.product.name}
+                    ${loanOrder.product.remark}
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     资金方：
@@ -75,7 +75,9 @@
                     支付金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${repayOrder.amount}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     存储信贷系统的出账编号:
@@ -154,19 +156,25 @@
                     利率(%年）：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.interestRate*100}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     评审费率(%)：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.approveFeeRate*100}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     担保费率（%）：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.guaranteeFeeRate*100}
+                    </fmt:formatNumber>
                 </td>
             </tr>
             <tr>
@@ -174,19 +182,25 @@
                     提现金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.loanAmount}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     待还余额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.balanceAmount}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     已还金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.paidAmount}
+                    </fmt:formatNumber>
                 </td>
             </tr>
 
