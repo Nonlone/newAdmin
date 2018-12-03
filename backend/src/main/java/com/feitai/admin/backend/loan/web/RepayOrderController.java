@@ -240,7 +240,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         if(bankCardDetail.length()>0){
             repayCardString = bankCardDetail.substring(0, bankCardDetail.length() - 1);
         }
-        modelAndView.addObject("payCard", repayCardString);
+        modelAndView.addObject("repayCard", repayCardString);
 
         //收款银行卡
         List<UserBankCard> byUserIdAndPay = repayOrderService.findByUserIdAndPay(userId);
@@ -318,7 +318,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         sbSql.append(getSelectMultiTable().buildSqlString());
         sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
         sbSql.append(" GROUP BY " + SelectMultiTable.MAIN_ALAIS + ".repay_plan_id");
-        Page<RepayOrderMore> repayOrderMorePage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC", pageNo, pageSize, getCountSqls(request), "RCOUNT");
+        Page<RepayOrderMore> repayOrderMorePage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC", pageNo, pageSize, getCountSqls(request), SelectMultiTable.RCOUNT_ALIAS);
         List<RepayOrderMore> content = repayOrderMorePage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
         for (RepayOrderMore repayOrderMore :
@@ -411,7 +411,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         }
         sbSql.append(searchSql);
         sbSql.append(" Group by " + SelectMultiTable.MAIN_ALAIS + ".repay_plan_id )tcount");
-        sbSql.insert(0,"select count(tcount." + SelectMultiTable.COUNT_ALIAS + ") AS RCOUNT from (" );
+        sbSql.insert(0,"select count(tcount." + SelectMultiTable.COUNT_ALIAS + ") AS " + SelectMultiTable.RCOUNT_ALIAS + " from (" );
         return sbSql.toString();
     }
 

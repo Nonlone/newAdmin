@@ -144,6 +144,13 @@
                         return '';
                     }
                 }},
+            {title:'客户ID',dataIndex:'user',width:"170px",renderer: function (value) {
+                    if(value){
+                        return value.id;
+                    }else{
+                        return '';
+                    }
+                }},
             {title:'注册手机号',dataIndex:'user',width:"120px",renderer:function (value) {
                     if(value){
                         return value.phone;
@@ -164,13 +171,6 @@
                         return '';
                     }
                 }},
-            {title:'是否新客户',dataIndex:'',width:'100px',renderer: function (value) {
-                    if(value){
-                        return "是";
-                    }else{
-                        return '是';
-                    }
-                }},
             {title:'借款金额',dataIndex:'loanOrder',width:'100px',renderer:function (value) {
                     if(value){
                         return value.loanAmount;
@@ -185,12 +185,8 @@
                         return '';
                     }
                 }},
-            {title:'存储信贷系统的出账编号',dataIndex:'repayPlan',width:'150px',renderer:function (value) {
-                    if(value){
-                        return value.putoutno;
-                    }
-                    return '暂无';
-                }},
+            {title:'当期实还',dataIndex:'amount',width:'100px'},
+
             {title:'还款到期日',dataIndex:'dueDate',width:'100px'},
             {title:'逾期天数',dataIndex:'repayPlan',width:'80px',renderer:function (value) {
                     if(value){
@@ -198,7 +194,12 @@
                     }
                     return '';
                 }},
-            {title:'当期实还',dataIndex:'amount',width:'100px'},
+            {title:'存储信贷系统的出账编号',dataIndex:'repayPlan',width:'120px',renderer:function (value) {
+                    if(value){
+                        return value.putoutno;
+                    }
+                    return '暂无';
+                }},
             {title:'当期/总期',dataIndex:'termPre',width:'100px'},
             {title:'还款状态',dataIndex:'status',width:'100px'}
         ];
