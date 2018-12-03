@@ -149,11 +149,11 @@
 			var columns = [ {
 				title : '用户ID',
 				dataIndex : 'userId',
-				width : '10%'
+				width : '166px'
 			}, {
 				title : '客户姓名',
 				dataIndex : 'idCard',
-				width : "10%",
+				width : "166px",
 				renderer : function(value) {
 					if (value) {
 						return value.name;
@@ -164,7 +164,7 @@
 			}, {
 				title : '注册手机号',
 				dataIndex : 'user',
-				width : "10%",
+				width : "166px",
 				renderer : function(value) {
 					if (value) {
 						return value.phone;
@@ -175,7 +175,7 @@
 			}, {
 				title : '贷款金额',
 				dataIndex : 'loanOrder',
-				width : '10%',
+				width : '166px',
 				renderer : function(value) {
 					if (value) {
 						return value.loanAmount;
@@ -186,7 +186,7 @@
 			}, {
 				title : '还款日',
 				dataIndex : 'repayPlan',
-				width : '10%',
+				width : '166px',
 				renderer : function(value) {
 					if (value) {
 						return BUI.Grid.Format.dateRenderer(value.dueDate);
@@ -197,7 +197,7 @@
 			}, {
 				title : '逾期天数',
 				dataIndex : 'repayPlan',
-				width : '10%',
+				width : '166px',
 				renderer : function(value) {
 					if (value) {
 						return value.overdueDays;
@@ -208,7 +208,7 @@
 			}, {
 				title : '当期/总期',
 				dataIndex : 'termPre',
-				width : '10%'
+				width : '166px'
 			}, {
 				title : '应还金额',
 				dataIndex : 'repayPlan',
@@ -223,11 +223,11 @@
 			}, {
 				title : "资金方",
 				dataIndex : "fundName",
-				width : "10%"
+				width : "166px"
 			}, {
 				title : '产品名称',
 				dataIndex : 'product',
-				width : '10%',
+				width : '166px',
 				renderer : function(value) {
 					if (value) {
 						return value.name;

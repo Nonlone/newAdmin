@@ -232,7 +232,7 @@
                     }
                 }},
             {title:'订单状态',dataIndex:'status',width:'100px',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
-            {title:'授信金额',dataIndex:'card.creditSum',width:'5%',renderer: function (value) {
+            {title:'授信金额',dataIndex:'card.creditSum',width:'100px',renderer: function (value) {
                     if(value){
                         return value;
                     }else{
@@ -250,7 +250,7 @@
                 }},
             {title:'申请时间',dataIndex:'applyTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
             {title:'放款时间',dataIndex:'payLoanTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'产品名称',dataIndex:'product',width:'5%',renderer: function (value) {
+            {title:'产品名称',dataIndex:'product',width:'100px',renderer: function (value) {
                     if(value){
                         return value.remark;
                     }else{
