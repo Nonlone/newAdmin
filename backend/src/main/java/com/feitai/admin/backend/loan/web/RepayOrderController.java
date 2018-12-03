@@ -194,6 +194,8 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         modelAndView.addObject("repayOrder", repayOrder);
         modelAndView.addObject("user", user);
         modelAndView.addObject("idcard", idcard);
+        String hyIdcard = Desensitization.idCard(idcard.getIdCard());
+        modelAndView.addObject("hyIdcard", hyIdcard);
 
         //基本信息
         String statu = mapProperties.getRepayOrderStatus(repayOrder.getStatus().toString());
@@ -258,9 +260,6 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         }
         modelAndView.addObject("areaList",areaList);
 
-        //发大大合同
-        List<ContractFaddDetail> faddDetails = loanOrderService.getFaddByLoanOrder(loanOrder.getId());
-        modelAndView.addObject("faddDetails",faddDetails);
 
         //日期类
         if(loanOrder.getPayLoanTime()!=null){
@@ -307,7 +306,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         //根据request获取page
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
-        Page<RepayOrderMore> repayOrderMorePage = list(getCommonSqls(request,getSelectMultiTable().buildSqlString()), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        Page<RepayOrderMore> repayOrderMorePage = list(getCommonSqls(request,getSelectMultiTable().buildSqlString())+ " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC", pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
         List<RepayOrderMore> content = repayOrderMorePage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
         for (RepayOrderMore repayOrderMore :

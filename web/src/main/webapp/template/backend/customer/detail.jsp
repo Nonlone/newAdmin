@@ -280,6 +280,7 @@
 </div>
 </body>
 <script type="text/javascript">
+
     $(function () {
         //放大图片
         $('img.dialog').on('click', function () {
