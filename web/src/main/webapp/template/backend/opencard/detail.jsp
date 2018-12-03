@@ -244,7 +244,6 @@
 </body>
 <script type="text/javascript">
 
-
     function load(ele, obj) {
         // 样式控制
         var $ele = $(ele);
