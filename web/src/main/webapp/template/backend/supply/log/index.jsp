@@ -82,20 +82,20 @@
 	<framwork:crudPermission resource="/backend/supply/log"/>
 
     var columns = [
-		{title:'提现订单编号',dataIndex:'loanOrder',width:"10%",renderer:function (value) {
+		{title:'提现订单编号',dataIndex:'loanOrder',width:"170px",renderer:function (value) {
 				if(value){
 				    return value.id;
 				}
 				return '';
             }},
-        {title:'客户姓名',dataIndex:'idCardData',width:"8%",renderer: function (value) {
+        {title:'客户姓名',dataIndex:'idCardData',width:"135px",renderer: function (value) {
                 if(value){
                     return value.name;
                 }else{
                     return '';
                 }
             }},
-        {title:'注册手机号',dataIndex:'user',width:"9%",renderer:function (value) {
+        {title:'注册手机号',dataIndex:'user',width:"150px",renderer:function (value) {
 				if(value){
 				    return value.phone;
 				}else{
@@ -103,17 +103,17 @@
 				}
             }},
 
-        {title:'申请提现金额',dataIndex:'loanOrder',width:'8%',renderer: function (value) {
+        {title:'申请提现金额',dataIndex:'loanOrder',width:'135px',renderer: function (value) {
                 if(value){
                     return value.applyAmount;
                 }else{
                     return '';
                 }
             }},
-        {title:'提交补件时间',dataIndex:'createdTime',width:'8%',renderer:BUI.Grid.Format.dateRenderer},
-		{title:'补件次数',dataIndex:'supplyCount',width:'8%'},
-		 {title:'资金方',dataIndex:'fundName',width:'8%'},
-		 {title:'产品名称',dataIndex:'loanOrder',width:'8%',renderer:function (value) {
+        {title:'提交补件时间',dataIndex:'createdTime',width:'135px',renderer:BUI.Grid.Format.dateRenderer},
+		{title:'补件次数',dataIndex:'supplyCount',width:'135px'},
+		 {title:'资金方',dataIndex:'fundName',width:'135px'},
+		 {title:'产品名称',dataIndex:'loanOrder',width:'135px',renderer:function (value) {
                  if(value){
                      if(value.product){
                          return value.product.name;
@@ -121,7 +121,7 @@
                  }
                  return '';
              }},
-		 {title:'用户ID',dataIndex:'user',width:'8%',renderer:function (value) {
+		 {title:'用户ID',dataIndex:'user',width:'135px',renderer:function (value) {
 				 if(value){
 				     return value.id;
 				 }else{

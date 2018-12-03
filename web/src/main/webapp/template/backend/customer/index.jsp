@@ -94,16 +94,16 @@
         <framwork:crudPermission resource="/backend/customer"/>
 
         var columns = [
-            {title: '客户Id', dataIndex: 'userId', width: '13%'},
-            {title: '姓名', dataIndex: 'name', width: '10%'},
-            {title: '身份证号', dataIndex: 'idCard', width: '15%'},
-            {title: '性别', dataIndex: 'sex', width: '10%'},
-            {title: '生日', dataIndex: 'birthday', width: '10%'},
-            {title: '年龄', dataIndex: 'age', width: '10%'},
-            {title: '民族', dataIndex: 'nation', width: '10%'},
-            {title: '注册时间', dataIndex: 'createdTime', width: '15%', renderer: BUI.Grid.Format.datetimeRenderer},
-            {title: '签发机关', dataIndex: 'orgination', width: '15%'},
-            {title:'是否实名',dataIndex:'certified',width:'10%',renderer:BUI.Grid.Format.enumRenderer(booleanEnumRender)}
+            {title: '客户Id', dataIndex: 'userId', width: '170px'},
+            {title: '姓名', dataIndex: 'name', width: '130px'},
+            {title: '身份证号', dataIndex: 'idCard', width: '200px'},
+            {title: '性别', dataIndex: 'sex', width: '130px'},
+            {title: '生日', dataIndex: 'birthday', width: '130px'},
+            {title: '年龄', dataIndex: 'age', width: '130px'},
+            {title: '民族', dataIndex: 'nation', width: '130px'},
+            {title: '注册时间', dataIndex: 'createdTime', width: '200px', renderer: BUI.Grid.Format.datetimeRenderer},
+            {title: '签发机关', dataIndex: 'orgination', width: '200px'},
+            {title:'是否实名',dataIndex:'certified',width:'130px',renderer:BUI.Grid.Format.enumRenderer(booleanEnumRender)}
         ];
 
         var detailUrl =  "/backend/customer/detail/";

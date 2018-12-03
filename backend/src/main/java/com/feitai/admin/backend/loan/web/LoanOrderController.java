@@ -344,7 +344,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         if (bankCardDetail.length() > 0) {
             repayCardString = bankCardDetail.substring(0, bankCardDetail.length() - 1);
         }
-        modelAndView.addObject("payCard", repayCardString);
+        modelAndView.addObject("repayCard", repayCardString);
 
         //收款银行卡
         List<UserBankCard> byUserIdAndPay = repayOrderService.findByUserIdAndPay(userId);
@@ -353,7 +353,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         if (payCardBuffer.length() > 0) {
             payCardString = payCardBuffer.substring(0, payCardBuffer.length() - 1);
         }
-        modelAndView.addObject("repayCard", payCardString);
+        modelAndView.addObject("payCard", payCardString);
 
         //地区信息
         LocationData authArea = areaService.findByCardIdInLoan(card.getId());

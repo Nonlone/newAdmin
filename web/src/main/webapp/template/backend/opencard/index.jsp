@@ -163,27 +163,27 @@
                         return '<span style="color:#ff9955">未填写</span>';
                     }
                 }},
-            {title:'注册手机号',dataIndex:'user',width:'10%',renderer:function (value) {
+            {title:'注册手机号',dataIndex:'user',width:'100px',renderer:function (value) {
                     if(value){
                         return value.phone;
                     }else{
                         return "";
                     }
                 }},
-            {title:'产品名称',dataIndex:'product',width:'10%',renderer:function(value){
+            {title:'产品名称',dataIndex:'product',width:'100px',renderer:function(value){
                     if(value){
                         return value.remark;
                     }
                     return "";
                 }},
-            {title:'授信状态',dataIndex:'cardStatusName',width:'10%'},
+            {title:'授信状态',dataIndex:'cardStatusName',width:'100px'},
             {title:"授权项",dataIndex:'auths',width:'150px'},
-            {title:'授信额度',dataIndex:'creditSum',width:'10%'},
-            {title:'注册渠道',dataIndex:'registChannelId',width:'10%'},
+            {title:'授信额度',dataIndex:'creditSum',width:'80px'},
+            {title:'注册渠道',dataIndex:'registChannelId',width:'100px'},
             {title:'创建时间',dataIndex:'createdTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'进件渠道',dataIndex:'applyChannelId',width:'10%'},
+            {title:'进件渠道',dataIndex:'applyChannelId',width:'80px'},
             {title:'提交审批时间',dataIndex:'submitTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'注册客户端',dataIndex:'user',width:'10%',renderer:function(value) {
+            {title:'注册客户端',dataIndex:'user',width:'80px',renderer:function(value) {
                     if (value) {
                         return value.osType;
                     }
