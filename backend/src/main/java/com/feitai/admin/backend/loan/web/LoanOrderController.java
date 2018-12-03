@@ -280,10 +280,9 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         modelAndView.addObject("loanPurpose", appConfigService.findByTypeCodeAndCode(LOAN_PURPOSE, loanOrder.getLoanPurposeCode()));
 
         //脱敏处理
-        String hyPhone = Desensitization.phone(user.getPhone());
-        modelAndView.addObject("hyPhone", hyPhone);
-        String hyIdcard = Desensitization.idCard(idcard.getIdCard());
-        modelAndView.addObject("hyIdcard", hyIdcard);
+        modelAndView.addObject("hyPhone", Desensitization.phone(user.getPhone()));
+        modelAndView.addObject("hyPhone", user.getPhone());
+        modelAndView.addObject("hyIdcard", Desensitization.idCard(idcard.getIdCard()));
 
 
 
