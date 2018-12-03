@@ -217,8 +217,12 @@
                     <td >${work.companyName}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="150px">单位地址</td>
+                    <td bgcolor="#F2F2F2" width="150px">单位地址(注册地址)</td>
                     <td >${work.provinceName}&nbsp;${work.cityName}&nbsp;${districtName}&nbsp;${work.companyAddress}</td>
+                </tr>
+                <tr>
+                    <td bgcolor="#F2F2F2" width="150px">单位联系人名称</td>
+                    <td >${work.contactName}</td>
                 </tr>
                 <tr>
                     <td bgcolor="#F2F2F2" width="150px">单位联系人手机</td>
@@ -264,10 +268,6 @@
                         <td >${work.registerCapital}</td>
                     </tr>
                     <tr>
-                        <td bgcolor="#F2F2F2" width="200px">实收资本(万元)</td>
-                        <td >${work.receiptCapital}</td>
-                    </tr>
-                    <tr>
                         <td bgcolor="#F2F2F2" width="200px">经营范围</td>
                         <td >${work.businessScope}</td>
                     </tr>
@@ -280,6 +280,7 @@
 </div>
 </body>
 <script type="text/javascript">
+
     $(function () {
         //放大图片
         $('img.dialog').on('click', function () {

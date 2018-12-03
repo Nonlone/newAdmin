@@ -144,6 +144,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
         ModelAndView model = new ModelAndView("/backend/opencard/detail");
         //授信信息
         CardMore card = cardService.findOne(id);
+
         if (card != null) {
             model.addObject("cardStatus", mapProperties.getCardStatus(card.getStatus()));
             if (StringUtils.isNotBlank(card.getRejectReason())) {

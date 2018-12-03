@@ -21,6 +21,26 @@
             <span style="font-size:13px;padding: 5px;">基本信息：</span>
             <tr>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    客户姓名：
+                </td>
+                <td width="100px" height="50px">
+                    ${idcard.name}
+                </td>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    身份证号：
+                </td>
+                <td width="100px" height="50px">
+                    ${hyIdcard}
+                </td>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
+                    客户Id：
+                </td>
+                <td width="100px" height="50px">
+                    ${user.id}
+                </td>
+            </tr>
+            <tr>
+                <td bgcolor="#F2F2F2" width="100px" height="50px">
                     订单号：
                 </td>
                 <td width="100px" height="50px">
@@ -44,7 +64,7 @@
                     产品名称：
                 </td>
                 <td width="100px" height="50px">
-                    ${loanOrder.product.name}
+                    ${loanOrder.product.remark}
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     资金方：
@@ -75,7 +95,9 @@
                     支付金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${repayOrder.amount}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     存储信贷系统的出账编号:
@@ -154,19 +176,25 @@
                     利率(%年）：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.interestRate*100}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     评审费率(%)：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.approveFeeRate*100}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     担保费率（%）：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.guaranteeFeeRate*100}
+                    </fmt:formatNumber>
                 </td>
             </tr>
             <tr>
@@ -174,19 +202,25 @@
                     提现金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.loanAmount}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     待还余额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.balanceAmount}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     已还金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.paidAmount}
+                    </fmt:formatNumber>
                 </td>
             </tr>
 
@@ -231,24 +265,13 @@
         </div>
 
         <ul id="tabHeader" class="nav-tabs">
-            <li id="li_base" class="active"><a href="javascript:void(0)" onclick="load(this,'baseData')">基本资料</a></li>
             <li id="li_bond"><a href="javascript:void(0)" onclick="load(this,'repayPlan')">还款计划</a></li>
-            <c:forEach items="${faddDetails}" var="fadd">
-                <li id="li_credit"><a href="javascript:void(0)" onclick="load(this,'${fadd.id}')">${fadd.contractName}</a></li>
-            </c:forEach>
         </ul>
 
         <div id="tabContext" style="margin-bottom: 10px;">
-            <!-- 基本资料 -->
-            <div id = "baseData">
-                <iframe frameborder="no" border="0" src="${ctx}/backend/customer/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
-            </div>
             <div id = "repayPlan" style="display:none;">
                 <iframe frameborder="no" border="0" src="${ctx}/backend/loan/repayOrder/repayPlan/${loanOrder.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
-            <c:forEach items="${faddDetails}" var="fadd">
-                <div id="${fadd.id}" style="display:none;"><iframe frameborder="no" border="0" src="${fadd.viewpdfUrl}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe></div>
-            </c:forEach>
         </div>
 
         </div>

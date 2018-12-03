@@ -69,7 +69,7 @@
                     产品名称：
                 </td>
                 <td width="100px" height="50px">
-                    ${product.name}
+                    ${product.remark}
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     资金方：
@@ -186,19 +186,25 @@
                     利率(%年）：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.interestRate*100}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     评审费率(%)：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.approveFeeRate*100}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     担保费率（%）：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.guaranteeFeeRate*100}
+                    </fmt:formatNumber>
                 </td>
             </tr>
             <tr>
@@ -206,19 +212,25 @@
                     提现金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.loanAmount}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     授信金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${shouxin}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     净收金额(合同本金-首期各种费用)：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.netReceiveAmount}
+                    </fmt:formatNumber>
                 </td>
             </tr>
             <tr>
@@ -226,13 +238,17 @@
                     待还余额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.balanceAmount}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     已还金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.paidAmount}
+                    </fmt:formatNumber>
                 </td>
                 <c:if test="${not empty tongDunData }">
                     <td bgcolor="#F2F2F2" width="100px" height="50px">

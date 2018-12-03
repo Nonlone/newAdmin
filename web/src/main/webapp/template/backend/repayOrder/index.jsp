@@ -21,7 +21,7 @@
 			<div class="control-group span7">
 				<label class="control-label">客户姓名:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_userId">
+					<input type="text" class="input-normal control-text" name="search_LIKE_idcard.name">
 				</div>
 			</div>
 			<div class="control-group span7">
@@ -159,7 +159,7 @@
                 }},
             {title:'产品名称',dataIndex:'loanOrder',width:'8%',renderer: function (value) {
                     if(value){
-                        return value.product.name;
+                        return value.product.remark;
                     }else{
                         return '';
                     }
