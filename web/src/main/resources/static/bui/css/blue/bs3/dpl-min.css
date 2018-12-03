@@ -3433,6 +3433,10 @@ input.input-normal,select.input-normal,textarea.input-normal,select.input-normal
 	width: 140px
 }
 
+input.input-minimum,select.input-minimum,textarea.input-minimum,select.input-minimum {
+	width: 60px
+}
+
 input.input-small,select.input-small,textarea.input-small,select.input-small {
 	width: 80px
 }

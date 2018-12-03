@@ -1,17 +1,81 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<base href="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/">
 <link href="${ctx}/static/bui/css/${skin}/bs3/dpl-min.css" rel="stylesheet" type="text/css"/>
 <link href="${ctx}/static/bui/css/${skin}/bs3/bui-min.css" rel="stylesheet" type="text/css"/>
 <link href="${ctx}/static/bui/css/${skin}/page-min.css" rel="stylesheet" type="text/css"/>
 <link href="${ctx}/static/iconfont/css/iconfont.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="${ctx}/static/common/js/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" src="${ctx}/static/common/js/template.js"></script>
 <script type="text/javascript" src="${ctx}/static/bui/bui-min.js"></script>
-
 <script>
-    var ctx = '${pageContext.request.contextPath}';
+    var booleanEnumRender = {"true": "是", "false": "否"};
+    var $ctx = '${pageContext.request.contextPath}';
+
     BUI.actions = {};
     BUI.setDebug(<spring:eval expression="@webConf['bui.debug']" />);
-    //BUI.setDebug(true);
+
+    //ajax
+    // 设置 application/json
+    // 设置添加contextPath前缀
+    $(function () {
+        $.ajaxSetup({
+            dataType: "json",
+            beforeSend:function(request,object){
+                var url = object.url;
+                if(!url.startsWith("http")&&!url.startsWith($ctx)){
+                    object.url = $ctx + url;
+                }
+            }
+        });
+
+        //放大图片
+        $('img.dialog').on('click', function () {
+            var large_image = '<img class=\'closeImg\' style=\'max-height: 800px;max-width: 800px\' src= ' + $(this).attr("src") +'></img>';
+            BUI.use('bui/overlay', function (Overlay) {
+                var width = this.width;
+                var height = this.height;
+                var dialog = new Overlay.Dialog({
+                    title: '图片放大',
+                    width: width,
+                    height: height,
+                    mask: false,
+                    buttons: [],
+                    bodyContent: large_image
+                });
+                dialog.show();
+            });
+        });
+
+        template.defaults.imports.log = console.log;
+
+        template.defaults.imports.getCtx = function(){
+            return $ctx;
+        };
+
+        template.defaults.imports.notEmpty = function(object){
+            return !jQuery.isEmptyObject(object);
+        };
+
+        template.defaults.imports.dateFormat = function (data) {
+            var pattern = /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
+            var formatedDate = data.replace(pattern, '$1-$2-$3 $4:$5:$6');
+            console.log(data,formatedDate);
+            return formatedDate;
+        }
+
+    })
+</script>
+<script type="text/javascript" >
+
+    function autoSetIframeHeight(id) {
+        var ifm= document.getElementById(id);
+        var subWeb = document.frames ? document.frames[id].document :ifm.contentDocument;
+        if(ifm != null && subWeb != null) {
+            ifm.height = subWeb.body.scrollHeight;
+        }
+    }
+
 </script>
 <script type="text/javascript" src="${ctx}/static/bui/ux/crudgrid.js"></script>
 <script type="text/javascript" src="${ctx}/static/bui/ux/savedialog.js"></script>
@@ -75,11 +139,11 @@
 
 <script type="text/javascript">
 
-    document.onkeydown = function(e){
-        if(!e){
+    document.onkeydown = function (e) {
+        if (!e) {
             e = window.event;
         }
-        if((e.keyCode || e.which) == 13){
+        if ((e.keyCode || e.which) == 13) {
 
             $("#btnSearch").click();
         }
@@ -95,7 +159,7 @@
         }
     });
 
-    function searchBtn(){
+    function searchBtn() {
         document.getElementById("btnSearch").click();
     }
 

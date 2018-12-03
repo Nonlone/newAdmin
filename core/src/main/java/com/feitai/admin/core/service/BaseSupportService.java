@@ -2,6 +2,7 @@ package com.feitai.admin.core.service;
 
 import com.feitai.utils.ObjectUtils;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.binding.MapperProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.common.Mapper;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
+@Slf4j
 public abstract class BaseSupportService<T> {
 
     @Autowired
@@ -68,7 +70,13 @@ public abstract class BaseSupportService<T> {
      * @return 返回保存的实体
      */
     public T save(T entity) {
-        if (mapper.insert(entity) > 0) {
+        try{
+            if (mapper.insert(entity) > 0) {
+                return entity;
+            }        	
+        }catch (Exception e){
+            log.warn(String.format("save fail,try to update because:{%s}",e.getMessage()),e);
+            mapper.updateByPrimaryKey(entity);
             return entity;
         }
         return null;
@@ -189,6 +197,11 @@ public abstract class BaseSupportService<T> {
     }
 
 
+    /**
+     * 获取MapperClass类
+     * @param mapper
+     * @return
+     */
     protected Class<?> getMapperClass(Mapper<?> mapper) {
         MapperProxy mapperProxy = (MapperProxy) ObjectUtils.getFieldValue(mapper, "h");
         if(!Objects.isNull(mapperProxy)){

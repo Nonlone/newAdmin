@@ -16,7 +16,9 @@ public class Dictionary {
 	
 	@Id
 	protected Long id;
-	
+
+	private Long dictionaryTypeId;
+
 	private String name;
 	
 	private String code;
@@ -25,11 +27,11 @@ public class Dictionary {
 	
 	private Integer orderId;
 
-	private String extend1;
+	private String extend_1;
 
-	private String extend2;
+	private String extend_2;
 
-	private String extend3;
+	private String extend_3;
 
 	private String memo;
 

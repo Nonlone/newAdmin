@@ -7,6 +7,7 @@ import com.feitai.admin.system.mapper.ResourceMapper;
 import com.feitai.base.mybatis.Many;
 import com.feitai.base.mybatis.One;
 import lombok.Data;
+import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.Id;
 import javax.persistence.OrderBy;
@@ -22,7 +23,12 @@ import java.util.List;
 public class Resource{
 
 	@Id
+	@KeySql(useGeneratedKeys = true)
 	protected Long id;
+
+	@Transient
+	@One(classOfMapper = ResourceMapper.class, sourceField = "parentId")
+	private Resource parent;
 
 	private String parentId;
 
@@ -47,10 +53,6 @@ public class Resource{
 	private String permissionIds;
 
 	private String memo;
-
-	@Transient
-	@One(classOfMapper = ResourceMapper.class, sourceField = "parentId")
-	private Resource parent;
 
 	@Transient
 	@Many(classOfMapper = ResourceMapper.class, classOfEntity = Resource.class, targetField = "parentId")

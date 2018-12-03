@@ -36,7 +36,6 @@ public class DictionaryController extends BaseListableController<Dictionary> {
     @Autowired
     private DictionaryService dictionaryService;
 
-    @RequiresUser
     @RequestMapping(value = "")
     public String index() {
         return "/system/dictionary/index";
@@ -46,7 +45,6 @@ public class DictionaryController extends BaseListableController<Dictionary> {
     @RequestMapping(value = "list")
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)
-    // 写日志但是不打印请求的params,但不打印ResponseBody的内容
     public Object listPage(ServletRequest request) {
         Page<Dictionary> listPage = super.list(request);
         return listPage;
@@ -66,7 +64,6 @@ public class DictionaryController extends BaseListableController<Dictionary> {
      * @return [{"text":"广州","value":"020"},{"text":"深圳","value":"0754"}
      * @throws UnsupportedEncodingException
      */
-    @RequiresUser
     @RequestMapping(value = "search")
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)
@@ -75,15 +72,15 @@ public class DictionaryController extends BaseListableController<Dictionary> {
             @RequestParam(value = "headText", defaultValue = "") String headText,
             @RequestParam(value = "headValue", defaultValue = "") String headValue,
             @RequestParam(value = "headCharsetName", defaultValue = "iso8859-1") String headCharsetName) throws UnsupportedEncodingException {
-        Sort sort = new Sort("orderId", Sort.Direction.ASC);
+        Sort sort = new Sort( "orderId",Sort.Direction.ASC);
         Map<String, Object> searchParams = WebUtils.getParametersStartingWith(request, "search_");
         //当使用GET操作时需要传编码进行转码
-        if (request.getMethod() == "GET") {
+        if(request.getMethod()=="GET"){
             headText = new String(headText.getBytes(headCharsetName));
         }
-        List<Dictionary> list = dictionaryService.searchListItem(buildSearchParams(searchParams), sort);
-        // 转换为ItemList
-        List<ListItem> items = new ArrayList<ListItem>(list.size() + 1);
+        List<Dictionary> list = this.dictionaryService.searchListItem(
+                buildSearchParams(searchParams), sort, headText, headValue);
+        List<ListItem> items = new ArrayList<>(list.size() + 1);
         if (StringUtils.isNotBlank(headText)) {
             ListItem item = new ListItem(headText, headValue);
             items.add(item);
@@ -111,11 +108,10 @@ public class DictionaryController extends BaseListableController<Dictionary> {
      * @return [{"text":"广州","value":"020"},{"text":"深圳","value":"0754"}
      * @throws UnsupportedEncodingException
      */
-    @RequiresUser
     @RequestMapping(value = "searchEnum")
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)
-    public Object searchEnumByDictionaryTypeId(HttpServletRequest request)  {
+    public Object searchEnumByDictionaryTypeId(HttpServletRequest request) {
         Map<String, Object> searchParams = WebUtils.getParametersStartingWith(request, "search_");
         Map<String, String> map = this.dictionaryService.searchEnum(buildSearchParams(searchParams));
         return map;
@@ -171,11 +167,6 @@ public class DictionaryController extends BaseListableController<Dictionary> {
     @Override
     protected DynamitSupportService<Dictionary> getService() {
         return this.dictionaryService;
-    }
-
-    @Override
-    protected String getSql() {
-        return null;
     }
 
 

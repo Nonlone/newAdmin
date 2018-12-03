@@ -35,7 +35,6 @@ public class RoleController extends BaseListableController<Role> {
     @Autowired
     private RoleAuthService roleAuthService;
 
-    @RequiresUser
     @RequestMapping(value = "")
     public String index() {
         return "/system/role/index";
@@ -130,7 +129,6 @@ public class RoleController extends BaseListableController<Role> {
         return this.roleService;
     }
 
-    @Override
     protected String getSql() {
         String sql = SelectMultiTable.builder(Role.class)
                 .leftJoin(RoleAuth.class, "roleAuth", new OnCondition[]{

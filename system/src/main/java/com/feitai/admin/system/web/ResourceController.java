@@ -7,6 +7,7 @@ import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.system.model.Resource;
 import com.feitai.admin.system.service.ResourceService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
@@ -31,7 +32,6 @@ public class ResourceController extends BaseListableController<Resource> {
     @Autowired
     private ResourceService resourceService;
 
-    @RequiresUser
     @RequestMapping(value = "")
     public String index() {
         return "/system/resource/index";
@@ -42,12 +42,8 @@ public class ResourceController extends BaseListableController<Resource> {
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
     public Object resourceTree() {
-        List<Resource> resources = this.resourceService.getRsourceList();
-        List<TreeItem> trees = new ArrayList<TreeItem>(resources.size());
-        for (Resource resource : resources) {
-            trees.add(this.resourceToTree(resource));
-        }
-        return trees;
+        List<TreeItem> rsourceList = this.resourceService.getRsourceList();
+        return rsourceList;
     }
 
     @RequiresPermissions("/system/resource:list")
@@ -74,8 +70,8 @@ public class ResourceController extends BaseListableController<Resource> {
     @ResponseBody
     public Object add(@Valid Resource resource) {
         //如果Parent的ID为空，则需要把Parent设置为空，否则会报错
-        if (resource.getParent() != null && (resource.getParent().getId() == null || resource.getParent().getId() == 0)) {
-            resource.setParent(null);
+        if (StringUtils.isBlank(resource.getParentId())) {
+            resource.setParentId(null);
         }
         this.resourceService.save(resource);
         return successResult;
@@ -118,7 +114,6 @@ public class ResourceController extends BaseListableController<Resource> {
         return this.resourceService;
     }
 
-    @Override
     protected String getSql() {
         String sql = SelectMultiTable.builder(Resource.class)
                 .leftJoin(Resource.class, "resource", new OnCondition[]{
@@ -132,28 +127,6 @@ public class ResourceController extends BaseListableController<Resource> {
     public void initDate(WebDataBinder webDataBinder) {
         webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
         webDataBinder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-    }
-
-
-    private TreeItem resourceToTree(Resource resource) {
-        TreeItem tree = new TreeItem();
-        tree.setId(resource.getId());
-        if (resource.getParent() != null) {
-            tree.setParentId(resource.getParent().getId());
-        }
-        tree.setText(resource.getName());
-        tree.setLevel(resource.getLevel());
-        tree.setValue(resource.getPermissionIds());
-        List<Resource> list = resource.getResources();
-        if (list != null && list.size() > 0) {
-            Iterator<Resource> it = resource.getResources().iterator();
-            List<TreeItem> children = new ArrayList<TreeItem>(list.size());
-            while (it.hasNext()) {
-                children.add(this.resourceToTree(it.next()));
-            }
-            tree.setChildren(children);
-        }
-        return tree;
     }
 
 }

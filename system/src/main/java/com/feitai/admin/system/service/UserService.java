@@ -1,17 +1,26 @@
 package com.feitai.admin.system.service;
 
+import com.feitai.admin.core.security.Digests;
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.system.mapper.PermissionMapper;
 import com.feitai.admin.system.mapper.RoleMapper;
 import com.feitai.admin.system.mapper.UserRoleMapper;
 import com.feitai.admin.system.model.*;
 import com.feitai.admin.system.vo.Menu;
+import com.feitai.base.mybatis.ManyAnnotationFieldWalkProcessor;
+import com.feitai.base.mybatis.OneAnnotationFieldWalkProcessor;
+import com.feitai.utils.ObjectUtils;
 import com.feitai.utils.digest.SHAUtils;
 import com.feitai.utils.encode.HexUtils;
+import com.feitai.utils.identity.Encodes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
@@ -28,6 +37,7 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
 
     private static final int SALT_SIZE = 8;
 
+
     @Autowired
     private RoleMapper roleMapper;
 
@@ -37,7 +47,8 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
     @Autowired
     private UserRoleMapper userRoleMapper;
 
-    private class MenuComparator implements Comparator<Menu> {
+
+    class MenuComparator implements Comparator<Menu> {
 
         @Override
         public int compare(Menu o1, Menu o2) {
@@ -47,31 +58,50 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
                 return 1;
             return 0;
         }
+
     }
 
+
+    public void clearUserRole(Long userId) {
+        Example example = Example.builder(UserRole.class).andWhere(Sqls.custom().andEqualTo("userId", userId)).build();
+        userRoleMapper.deleteByExample(example);
+    }
+
+    public Integer saveUserRole(Long userId, Long roleId) {
+        UserRole userRole = new UserRole();
+        userRole.setUserId(userId);
+        userRole.setRoleId(roleId);
+        return userRoleMapper.insert(userRole);
+    }
 
     public User findByLoginName(String loginName) {
         Example example = Example.builder(User.class).andWhere(Sqls.custom().andEqualTo("loginName", loginName)).build();
-        User user = this.mapper.selectOneByExample(example);
-        user.setRoles(getRoles(user.getId()));
-        walkProcess(user);
+        User user = getMapper().selectOneByExample(example);
+        if (user != null) {
+            OneAnnotationFieldWalkProcessor oneAnnotationFieldWalkProcessor = new OneAnnotationFieldWalkProcessor(applicationContext);
+            ObjectUtils.fieldWalkProcess(user, oneAnnotationFieldWalkProcessor);
+            user.setRoles(getRoles(user.getId().toString()));
+        }
         return user;
     }
 
-    public List<Role> getRoles(Long userId) {
+    public List<Role> getRoles(String userId) {
         List<Role> list = new ArrayList<>();
-        List<UserRole> userRoles = userRoleMapper.selectByExample(Example.builder(UserRole.class).andWhere(Sqls.custom().andEqualTo("userId", userId)).build());
-        for (UserRole userRole : userRoles) {
+        Example example = Example.builder(UserRole.class).andWhere(Sqls.custom().andEqualTo("userId", userId)).build();
+        List<UserRole> userRoles = userRoleMapper.selectByExample(example);
+        for (UserRole userRole :
+                userRoles) {
             Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
-            walkProcess(role);
-            list.add(role);
+            list.add(walkProcess(role));
         }
         return list;
     }
 
 
     public List<Role> findRolesByUserId(Long userId) {
-        return getRoles(userId);
+        List<Role> roles = getRoles(userId.toString());
+        roles.size();//在shiro如果权限检查不是页面出发的就会导致无法异步加载所以这里用size强制加载。
+        return roles;
     }
 
     /**
@@ -83,12 +113,6 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
      */
     @Override
     public User save(User user) {
-
-        // if (isSupervisor(user)) {
-        // logger.warn("操作员{}尝试修改超级管理员用户", getCurrentUserName());
-        // throw new ServiceException("不能修改超级管理员用户");
-        // }
-
         // 设定安全的密码，生成随机的salt并经过1024次 sha-1 hash
         if (StringUtils.isNotBlank(user.getPlainPassword())) {
             entryptPassword(user);
@@ -96,39 +120,33 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
         if (user.getCreateTime() == null) {
             user.setCreateTime(new Date());
         }
-        return this.save(user);
+        return super.save(user);
     }
 
     public boolean checkPassword(Long id, String password) {
-        User user = findOne(id);
-        byte[] salt = HexUtils.decode(user.getSalt());
-        try {
-            byte[] hashPassword = SHAUtils.sha1(password.getBytes(), salt, HASH_INTERATIONS);
-            if (user.getPassword().equals(HexUtils.encode(hashPassword))) {
-                return true;
-            }
-        } catch (GeneralSecurityException e) {
-            log.error(String.format("checkPassword error %s password<%s>", e.getMessage(), password), e);
+        User user = this.findOne(id);
+        byte[] salt = Encodes.decodeHex(user.getSalt());
+        byte[] hashPassword = Digests.sha1(password.getBytes(), salt, HASH_INTERATIONS);
+        if (user.getPassword().equals(Encodes.encodeHex(hashPassword))) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     /**
      * 设定安全的密码，生成随机的salt并经过1024次 sha-1 hash
      */
     private void entryptPassword(User user) {
-        byte[] salt = SHAUtils.generateSalt(SALT_SIZE);
-        user.setSalt(HexUtils.encode(salt));
-        try {
-            byte[] hashPassword = SHAUtils.sha1(user.getPlainPassword().getBytes(), salt, HASH_INTERATIONS);
-            user.setPassword(HexUtils.encode(hashPassword));
-        } catch (GeneralSecurityException e) {
-            log.error(String.format("entryptPassword error %s salt<%s>", salt), e);
-        }
+        byte[] salt = Digests.generateSalt(SALT_SIZE);
+        user.setSalt(Encodes.encodeHex(salt));
+
+        byte[] hashPassword = Digests.sha1(user.getPlainPassword().getBytes(), salt, HASH_INTERATIONS);
+        user.setPassword(Encodes.encodeHex(hashPassword));
     }
 
     public Collection<Menu> loadMenu(Long userId, String ctx) {
-        Iterator<Role> roles = getRoles(userId).iterator();
+        Iterator<Role> roles = getRoles(userId.toString()).iterator();
         Map<Long, Menu> levelOne = new HashMap<Long, Menu>();
         Map<Long, Menu> levelTwo = new HashMap<Long, Menu>();
         Set<Menu> levelThree = new HashSet<Menu>();
@@ -137,7 +155,11 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
             Iterator<RoleAuth> auths = role.getRoleAuths().iterator();
             while (auths.hasNext()) {
                 RoleAuth ra = auths.next();
-                walkProcess(ra);
+                try {
+                    OneAnnotationFieldWalkProcessor oneAnnotationFieldWalkProcessor = new OneAnnotationFieldWalkProcessor(applicationContext);
+                    ObjectUtils.fieldWalkProcess(ra, oneAnnotationFieldWalkProcessor);
+                } catch (Exception e) {
+                }
                 Resource resource = ra.getResource();
                 if (resource.getLevel() == 1) {
                     levelOne.put(resource.getId(), Menu.build(resource.getLevel(), resource, ctx));
@@ -179,13 +201,17 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
         return menuOne;
     }
 
-    public List<String> findUserPermissions(Long userId) {
-        List<Role> roles = getRoles(userId);
+    public List<String> findUserPermissions(Long id) {
+        List<Role> roles = getRoles(id.toString());
         List<String> permissionsStr = new ArrayList<String>();
         for (Role role : roles) {
             List<RoleAuth> ras = role.getRoleAuths();
             for (RoleAuth ra : ras) {
-                walkProcess(ra);
+                try {
+                    OneAnnotationFieldWalkProcessor oneAnnotationFieldWalkProcessor = new OneAnnotationFieldWalkProcessor(applicationContext);
+                    ObjectUtils.fieldWalkProcess(ra, oneAnnotationFieldWalkProcessor);
+                } catch (Exception e) {
+                }
                 Resource resource = ra.getResource();
                 String permissionsIds = ra.getPermissionIds();
                 if (permissionsIds != null && !"".equals(permissionsIds)) {
@@ -205,5 +231,4 @@ public class UserService extends ClassPrefixDynamicSupportService<User> {
         }
         return permissionsStr;
     }
-
 }

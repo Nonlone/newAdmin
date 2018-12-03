@@ -42,13 +42,11 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
-    @RequiresUser
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index() {
         return "/home";
     }
 
-    @RequiresUser
     @RequestMapping(value = "loadMenu", method = RequestMethod.GET)
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)
@@ -56,12 +54,10 @@ public class HomeController {
     public Collection<Menu> loadMenu(ServletRequest request) {
         HttpServletRequest r = (HttpServletRequest) request;
         String ctx = r.getContextPath();
-        Collection<Menu> menu = this.userService.loadMenu(
-                this.getCurrentUserId(), ctx);
+        Collection<Menu> menu = userService.loadMenu(getCurrentUserId(), ctx);
         return menu;
     }
 
-    @RequiresUser
     @RequestMapping(value = "changePasswd", method = RequestMethod.POST)
     @ResponseBody
     @LogAnnotation(value = true, writeParams = false)// 写日志但是不打印请求的params,但不打印Params的内容

@@ -3,6 +3,7 @@ package com.feitai.admin.core.web;
 import com.feitai.admin.core.service.Sort;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletRequest;
 import java.util.ArrayList;
@@ -12,6 +13,9 @@ import java.util.List;
 @Slf4j
 public class PageBulider {
 
+    public static final int DEFAULT_PAGE_SIZE = 10;
+
+    public static final int DEFAULT_PAGE_NO = 0;
 
     /**
      * 页面索引，一般从0开始
@@ -52,23 +56,27 @@ public class PageBulider {
 
     public static int getPageNo(ServletRequest request) {
         String value = getParamEndWith(request, pageIndex);
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException nfe) {
-            log.error(String.format("getPage error value<%s>", value));
+        if (StringUtils.isNotBlank(value)) {
+            try {
+                return Integer.parseInt(value);
+            } catch (NumberFormatException nfe) {
+                log.error(String.format("getPage error value<%s>", value), nfe);
+            }
         }
-        return 0;
+        return DEFAULT_PAGE_NO;
     }
 
 
     public static int getPageSize(ServletRequest request) {
         String value = getParamEndWith(request, pageSize);
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException nfe) {
-            log.error(String.format("getPageSize error value<%s>", value));
+        if (StringUtils.isNotBlank(value)) {
+            try {
+                return Integer.parseInt(value);
+            } catch (NumberFormatException nfe) {
+                log.error(String.format("getPageSize error value<%s>", value), nfe);
+            }
         }
-        return 0;
+        return DEFAULT_PAGE_SIZE;
     }
 
     public static List<Sort> getSort(ServletRequest request) {

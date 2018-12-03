@@ -1,12 +1,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@include file="./common/import-tags.jsp" %>
-<%@include file="./common/import-static.jsp" %>
 <!DOCTYPE HTML>
 <html>
 <head>
     <title><spring:eval expression="@webConf['admin.title']"/></title>
+    <%@include file="./common/import-static.jsp" %>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-
 
     <link href="${ctx}/static/bui/css/${skin}/main-min.css" rel="stylesheet" type="text/css"/>
     <link href="${ctx}/static/bui/css/${skin}/page-min.css" rel="stylesheet" type="text/css"/>
@@ -89,7 +88,7 @@
         });
 
         $.ajax({
-            url: ctx + '/home/loadMenu',
+            url: '/home/loadMenu',
             cache: false,
             success: function (data) {
                 var navs = data;

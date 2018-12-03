@@ -31,7 +31,6 @@ public class PermissionController  extends BaseListableController<Permission> {
 	@Autowired
 	private PermissionService permissionService;
 
-	@RequiresUser
 	@RequestMapping(value = "")
 	public String index() {
 		return "/system/permission/index";
@@ -107,11 +106,6 @@ public class PermissionController  extends BaseListableController<Permission> {
 	@Override
 	protected DynamitSupportService<Permission> getService() {
 		return this.permissionService;
-	}
-
-	@Override
-	protected String getSql() {
-		return null;
 	}
 
 

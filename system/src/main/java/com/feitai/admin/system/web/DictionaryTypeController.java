@@ -30,7 +30,6 @@ public class DictionaryTypeController extends BaseListableController<DictionaryT
     @Autowired
     private DictionaryTypeService dictionaryTypeService;
 
-    @RequiresUser
     @RequestMapping(value = "")
     public String index() {
         return "/system/dictionaryType/index";
@@ -112,10 +111,6 @@ public class DictionaryTypeController extends BaseListableController<DictionaryT
         return this.dictionaryTypeService;
     }
 
-    @Override
-    protected String getSql() {
-        return null;
-    }
 
 
     @InitBinder
