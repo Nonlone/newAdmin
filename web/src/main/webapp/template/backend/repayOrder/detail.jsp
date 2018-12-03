@@ -265,7 +265,7 @@
         </div>
 
         <ul id="tabHeader" class="nav-tabs">
-            <li id="li_bond"><a href="javascript:void(0)" onclick="load(this,'repayPlan')">还款计划</a></li>
+            <li id="li_bond" class="active"><a href="javascript:void(0)" onclick="load(this,'repayPlan')">还款计划</a></li>
         </ul>
 
         <div id="tabContext" style="margin-bottom: 10px;">
