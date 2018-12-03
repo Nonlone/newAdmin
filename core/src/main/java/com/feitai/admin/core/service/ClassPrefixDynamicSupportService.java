@@ -8,6 +8,7 @@ import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
@@ -55,7 +56,7 @@ public abstract class ClassPrefixDynamicSupportService<T> extends DynamitSupport
                 List<ConfigurationCustomizer> configurationCustomizers = (List) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "configurationCustomizers");
                 Interceptor[] interceptors = (Interceptor[]) com.feitai.utils.ObjectUtils.getFieldValue(mybatisAutoConfiguration, "interceptors");
                 SqlSessionFactory sqlSessionFactory = buildSqlSessionFactory(dataSource, properties, resourceLoader, configurationCustomizers, interceptors);
-                return new SqlMapper(sqlSessionFactory.openSession());
+                return new SqlMapper(new SqlSessionTemplate(sqlSessionFactory));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
