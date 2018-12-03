@@ -14,7 +14,7 @@
 
     BUI.actions = {};
     BUI.setDebug(<spring:eval expression="@webConf['bui.debug']" />);
-app
+    
     //ajax
     // 设置 application/json
     // 设置添加contextPath前缀
