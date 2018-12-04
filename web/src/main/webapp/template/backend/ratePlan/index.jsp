@@ -191,8 +191,8 @@
             entityName: '产品费率方案表',
             pkColumn: 'id',//主键
             storeUrl: '${ctx}/backend/ratePlan/list',
-            addUrl: '${ctx}/backend/ratePlan/add',
-            updateUrl: '${ctx}/backend/ratePlan/update',
+            addUrl: '${ctx}/backend/ratePlan/addModel',
+            updateUrl: '${ctx}/backend/ratePlan/updateModel',
             removeUrl: '${ctx}/backend/ratePlan/del',
             columns: columns,
             showAddBtn: add,

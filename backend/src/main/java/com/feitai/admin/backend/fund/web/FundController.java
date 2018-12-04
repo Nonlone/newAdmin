@@ -139,9 +139,9 @@ public class FundController extends BaseCrudController<Fund> {
     }*/
 
     @RequiresPermissions("/backend/fund:add")
-    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @RequestMapping(value = "addModel", method = RequestMethod.POST)
     @ResponseBody
-    public Object add(@Valid FundRequest fundRequest) {
+    public Object addModel(@Valid FundRequest fundRequest) {
         Fund fund = new Fund();
         BeanUtils.copyProperties(fundRequest, fund);
         fund.setBalance(BigDecimal.ZERO);
@@ -155,9 +155,9 @@ public class FundController extends BaseCrudController<Fund> {
     }
 
     @RequiresPermissions("/backend/fund:update")
-    @RequestMapping(value = "update", method = RequestMethod.POST)
+    @RequestMapping(value = "updateModel", method = RequestMethod.POST)
     @ResponseBody
-    public Object update(@Valid FundRequest fundRequest) {
+    public Object updateModel(@Valid FundRequest fundRequest) {
         if (fundRequest.getId() != null) {
             Fund fund = fundService.findOne(fundRequest.getId());
             if (fund != null) {

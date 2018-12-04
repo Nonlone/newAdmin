@@ -123,9 +123,9 @@ public class RatePlanController extends BaseCrudController<RatePlanMore>{
 
 
     @RequiresPermissions("/backend/ratePlan:add")
-    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @RequestMapping(value = "addModel", method = RequestMethod.POST)
     @ResponseBody
-    public Object add(@Valid @RequestBody RatePlanRequest ratePlanRequest) {
+    public Object addModel(@Valid @RequestBody RatePlanRequest ratePlanRequest) {
         Date date = new Date();
         ratePlanRequest.setId(null);
         RatePlanMore ratePlan = new RatePlanMore();
@@ -202,9 +202,9 @@ public class RatePlanController extends BaseCrudController<RatePlanMore>{
     }
 
     @RequiresPermissions("/backend/ratePlan:update")
-    @RequestMapping(value = "update", method = RequestMethod.POST)
+    @RequestMapping(value = "updateModel", method = RequestMethod.POST)
     @ResponseBody
-    public Object update(@RequestBody RatePlanRequest ratePlanRequest) {
+    public Object updateModel(@RequestBody RatePlanRequest ratePlanRequest) {
         RatePlanMore ratePlan = ratePlanService.findOne(ratePlanRequest.getId());
         if (ratePlan != null) {
             //保留code和版本信息，删除原来记录

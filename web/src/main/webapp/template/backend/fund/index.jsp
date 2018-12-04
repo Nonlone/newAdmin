@@ -297,8 +297,8 @@
             entityName: '资金方信息',
             pkColumn: 'id',//主键
             storeUrl: '${ctx}/backend/fund/list',
-            addUrl: '${ctx}/backend/fund/add',
-            updateUrl: '${ctx}/backend/fund/update',
+            addUrl: '${ctx}/backend/fund/addModel',
+            updateUrl: '${ctx}/backend/fund/updateModel',
             removeUrl: '${ctx}/backend/fund/disable',
             columns: columns,
             showAddBtn: true,
