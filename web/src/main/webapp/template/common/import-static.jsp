@@ -1,6 +1,6 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<base href="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/">
+<base href="${pageContext.request.contextPath}/">
 <link href="${ctx}/static/bui/css/${skin}/bs3/dpl-min.css" rel="stylesheet" type="text/css"/>
 <link href="${ctx}/static/bui/css/${skin}/bs3/bui-min.css" rel="stylesheet" type="text/css"/>
 <link href="${ctx}/static/bui/css/${skin}/page-min.css" rel="stylesheet" type="text/css"/>
@@ -14,7 +14,7 @@
 
     BUI.actions = {};
     BUI.setDebug(<spring:eval expression="@webConf['bui.debug']" />);
-
+    
     //ajax
     // 设置 application/json
     // 设置添加contextPath前缀

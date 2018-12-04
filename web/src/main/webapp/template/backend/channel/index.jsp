@@ -17,7 +17,13 @@
 				<input name="search_EQ_appName" type="hidden" >
 			</div>
 			<div class="control-group span7">
-				<label class="control-label">渠道标识:</label>
+				<label class="control-label">一级渠道标识:</label>
+				<div class="controls">
+					<input type="text" class="input-normal control-text" name="search_LIKE_mainPackageCode">
+				</div>
+			</div>
+			<div class="control-group span7">
+				<label class="control-label">二级渠道标识:</label>
 				<div class="controls">
 					<input type="text" class="input-normal control-text" name="search_LIKE_channelId">
 				</div>
@@ -214,13 +220,14 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     channelSortSelect.render();
   
     var columns = [
-		 {title:'应用名称',dataIndex:'appName',width:'10%'},
-		 {title:'二级渠道标识',dataIndex:'channelId',width:'15%'},
-		 {title:'渠道大类',dataIndex:'channelSort',width:'10%'},
+		 {title:'应用名称',dataIndex:'appName',width:'8%'},
 		 {title:'一级渠道名称',dataIndex:'mainPackgage',width:'15%'},
 		 {title:'二级渠道名称',dataIndex:'subPackage',width:'15%'},
-		 {title:'开发主体',dataIndex:'devBody',width:'10%'},
+		 {title:'一级渠道标识',dataIndex:'mainPackageCode',width:'8%'},
+		 {title:'二级渠道标识',dataIndex:'channelId',width:'8%'},
+		 {title:'渠道大类',dataIndex:'channelSort',width:'10%'},
 		 {title:'渠道终端',dataIndex:'channelTerminal',width:'10%'},
+		 {title:'开发主体',dataIndex:'devBody',width:'10%'},		 
         ];
     
 	var crudGrid = new CrudGrid({
@@ -308,8 +315,8 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
         update = true;
         select.setSelectedValue('');
         select.setSelectedValue(record.mainPackgage);
-        form.getField("primaryCode").disable();
-        form.getField("channelId").disable();
+        select.disable();
+        form.getField("primaryCode").disable();   
     };
 
     crudGrid.on('beforeUpdateShow', beforeUpdateShow);
