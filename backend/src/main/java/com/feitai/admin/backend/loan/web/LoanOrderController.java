@@ -246,6 +246,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
      * @return
      */
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
+    @RequiresPermissions("/backend/loanOrder:list")
     public ModelAndView detail(@PathVariable("id") String id) {
         ModelAndView modelAndView = new ModelAndView("/backend/loanOrder/detail");
         LoanOrderMore loanOrder = loanOrderService.findOneBySql(getOneSql(id));
