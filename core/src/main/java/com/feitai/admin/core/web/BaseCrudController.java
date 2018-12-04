@@ -59,7 +59,7 @@ public abstract class BaseCrudController<T> extends BaseListableController<T> {
 
 	@RequestMapping(value = UPDATE, method = RequestMethod.POST)
 	@ResponseBody
-	public Object update(@Valid @ModelAttribute T t, Model model) {
+	public Object update(@Valid @ModelAttribute T t) {
 		checkPermission(UPDATE);
 		getService().updateByPrimaryKey(t);
 		return successResult;
