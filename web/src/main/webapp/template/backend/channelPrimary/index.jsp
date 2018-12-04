@@ -34,7 +34,7 @@
 			<div class="control-group span_width">
 				<label class="control-label">渠道大类:</label>
 				<div id="channelSortSearchSelect" class="controls height_auto"   class="control-text input-small">
-					<input id="channelSortSearch" name="search_EQ_channelSort" type="hidden" >
+					<input id="channelSortSearch" name="search_EQ_channelSort" value=' ' type="hidden" >
 				</div>
 			</div> 
 			<div class="span3 offset1">
@@ -76,10 +76,6 @@
 			<div class="row">
 				<div class="control-group span8">
 					<label class="control-label"><s>*</s>渠道大类:</label>
-			<!-- 		 <div class="controls bui-form-field-select" data-items="{'A-线上场景':'A-线上场景','A-应用商店':'A-应用商店','A-微信推广':'A-微信推广','A-品牌推广':'A-品牌推广','A-贷款超市':'A-贷款超市','A-数据营销':'A-数据营销','B-线下渠道':'B-线下渠道','B-O2O':'B-O2O','C-其他':'C-其他'}"
-						 class="control-text input-small">
-						<input name="channelSort" type="hidden" value="">
-					</div> -->
  					 <div id="channelSortUpdateSelect" class="controls"
 						 class="control-text input-small">
 						<input id="channelSortUpdate" name="channelSort" type="hidden" value="">
@@ -113,6 +109,7 @@ BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
 	        items:JSON.parse('${channelSortList}')
 	    });
 	  channelSortSearchSelect.render();
+	  channelSortSearchSelect.setSelectedValue(' ');
 	    
  	    var channelSortUpdateSelect = new Select.Select({
 	        render:'#channelSortUpdateSelect',
@@ -186,7 +183,10 @@ BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
 
     var beforeUpdateShow = function(dialog,form,record){
         update = true;
-        form.getField('channelCode').disable();
+        form.getField('channelCode').disable();    
+        channelSortUpdateSelect.setSelectedValue('');
+        channelSortUpdateSelect.setSelectedValue(record.channelSort);
+        
     };
 
     crudGrid.on('beforeUpdateShow', beforeUpdateShow);
