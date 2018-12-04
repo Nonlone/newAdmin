@@ -26,7 +26,6 @@ import com.feitai.admin.system.model.User;
 import com.feitai.admin.system.service.UserService;
 import com.feitai.jieya.server.dao.fund.model.Fund;
 import com.feitai.jieya.server.dao.fund.model.FundAmountDetail;
-import com.feitai.utils.SnowFlakeIdGenerator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,8 +40,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -123,20 +120,6 @@ public class FundController extends BaseCrudController<Fund> {
         return "/backend/fund/index";
     }
 
-  /*  @RequiresPermissions("/backend/fund:list")
-    @RequestMapping(value = "list")
-    @ResponseBody
-    public Object listPage(ServletRequest request) {
-        return super.list(request);
-    }
-
-    @RequiresPermissions("/backend/fund:update")
-    @RequestMapping(value = "update/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public Object editFrom(@PathVariable("id") Long id) {
-        Fund fund = fundService.findOne(id);
-        return fund;
-    }*/
 
     @RequiresPermissions("/backend/fund:add")
     @RequestMapping(value = "addModel", method = RequestMethod.POST)

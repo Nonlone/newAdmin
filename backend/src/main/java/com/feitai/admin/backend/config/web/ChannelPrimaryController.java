@@ -63,21 +63,6 @@ public class ChannelPrimaryController extends BaseCrudController<ChannelPrimary>
 		return mav;
 	}
 	
-	/*@RequiresPermissions("/backend/channelPrimary:list")
-	@RequestMapping(value = "list")
-	@ResponseBody
-	public Object listPage(ServletRequest request) {
-		return super.list(request);
-	}
-
-
-	@RequiresPermissions("/backend/channelPrimary:update")
-	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
-	@ResponseBody
-	public Object editFrom(@PathVariable("id") Long id) {
-		ChannelPrimary channelPrimary = this.channelPrimaryService.findOne(id);
-		return channelPrimary;
-	}*/
 
 	@RequiresPermissions("/backend/channelPrimary:update")
 	@RequestMapping(value = "checkChannelName")
@@ -103,25 +88,6 @@ public class ChannelPrimaryController extends BaseCrudController<ChannelPrimary>
 		}
 	}
 
-/*	@RequiresPermissions("/backend/channelPrimary:add")
-	@RequestMapping(value = "add", method = RequestMethod.POST)
-	@ResponseBody
-	public Object add(@Valid ChannelPrimary channelPrimary){
-		channelPrimary.setId(SnowFlakeIdGenerator.getDefaultNextId());
-		this.channelPrimaryService.save(channelPrimary);
-		return this.successResult;
-
-
-	}
-
-	@RequiresPermissions("/backend/channelPrimary:update")
-	@RequestMapping(value = "update", method = RequestMethod.POST)
-	@ResponseBody
-	public Object update(@Valid @ModelAttribute("channelPrimary") ChannelPrimary channelPrimary){
-		channelPrimary.setUpdateTime(new Date());
-		this.channelPrimaryService.save(channelPrimary);
-		return this.successResult;
-	}*/
 	
 	@RequiresPermissions("/backend/channelPrimary:del")
 	@RequestMapping(value = "del")

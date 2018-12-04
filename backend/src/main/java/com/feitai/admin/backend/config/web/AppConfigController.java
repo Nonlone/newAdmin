@@ -63,60 +63,6 @@ public class AppConfigController extends BaseCrudController<AppConfig> {
         return "/backend/appConfig/index";
     }
 
- /*   @Override
-    @RequiresPermissions("/backend/appConfig:list")
-    @RequestMapping(value = "list")
-    @ResponseBody
-    public Page<AppConfig> list(ServletRequest request) {
-        return super.list(request);
-    }
-
-    @RequiresPermissions("/backend/appConfig:update")
-    @RequestMapping(value = "update/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public Object editFrom(@PathVariable("id") Long id) {
-        AppConfig appConfig = this.appConfigService.findOne(id);
-        return appConfig;
-    }
-
-    @RequiresPermissions("/backend/appConfig:add")
-    @RequestMapping(value = "add", method = RequestMethod.POST)
-    @ResponseBody
-    public Object add(@Valid AppConfig appConfig) {
-        appConfig.setId(SnowFlakeIdGenerator.getDefaultNextId());
-        appConfig.setUpdateTime(new Date());
-        this.appConfigService.save(appConfig);
-        return BaseListableController.successResult;
-    }
-
-    @RequiresPermissions("/backend/appConfig:update")
-    @RequestMapping(value = "update", method = RequestMethod.POST)
-    @ResponseBody
-    public Object update(@Valid @ModelAttribute AppConfig appConfig) {
-        this.appConfigService.save(appConfig);
-        return BaseListableController.successResult;
-    }
-
-    @RequiresPermissions("/backend/appConfig:del")
-    @RequestMapping(value = "del")
-    @ResponseBody
-    public Object del(@RequestParam(value = "ids[]") Long[] ids) {
-        this.appConfigService.delete(ids);
-        return BaseListableController.successResult;
-    }
-
-
-    *//**
-     * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2 Preparable二次部分绑定的效果,先根据form的id从数据库查出User对象,再把Form提交的内容绑定到该对象上。
-     * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.
-     *//*
-    @ModelAttribute
-    public void getappConfig(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
-        if (id != -1) {
-            model.addAttribute("appConfig", this.appConfigService.findOne(id));
-        }
-    }*/
-
     @Override
     protected DynamitSupportService<AppConfig> getService() {
         return this.appConfigService;

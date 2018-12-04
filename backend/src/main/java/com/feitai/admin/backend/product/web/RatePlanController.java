@@ -82,12 +82,6 @@ public class RatePlanController extends BaseCrudController<RatePlanMore>{
         return "/backend/ratePlan/index";
     }
 
-/*    @RequiresPermissions("/backend/ratePlan:list")
-    @RequestMapping(value = "list")
-    @ResponseBody
-    public Object listPage(ServletRequest request) {
-        return super.list(request);
-    }*/
 
     @RequestMapping(value = "getRatePlan", method = RequestMethod.POST)
     @ResponseBody

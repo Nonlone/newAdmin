@@ -14,27 +14,14 @@ import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseCrudController;
-import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.appconfig.model.AppConfig;
-import com.feitai.jieya.server.dao.data.model.IdCardData;
-import com.feitai.jieya.server.dao.product.model.Product;
-import com.feitai.jieya.server.dao.user.model.User;
-import com.feitai.utils.CollectionUtils;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
 
 
@@ -81,58 +68,6 @@ public class AppConfigTypeController extends BaseCrudController<AppConfigType> {
 		return appConfigType;
 	}
 
-/*	@RequiresPermissions("/backend/appConfigType:add")
-	@RequestMapping(value = "add", method = RequestMethod.POST)
-	@ResponseBody
-	public Object add(HttpServletRequest request,HttpServletResponse response){
-		String typeCode = (String) request.getParameter("typeCode");
-		String name = (String) request.getParameter("name");
-		String remark = (String) request.getParameter("remark");
-		AppConfigType appConfigType = new AppConfigType();
-		appConfigType.setTypeCode(typeCode);
-		appConfigType.setName(name);
-		appConfigType.setRemark(remark);
-		appConfigType.setCreatedTime(new Date());
-		appConfigType.setUpdateTime(new Date());
-		this.appConfigTypeService.save(appConfigType);
-		return BaseListableController.successResult;
-	}
-
-	@RequiresPermissions("/backend/appConfigType:update")
-	@RequestMapping(value = "update", method = RequestMethod.POST)
-	@ResponseBody
-	public Object update(HttpServletRequest request,HttpServletResponse response){
-		String typeCode = (String) request.getParameter("typeCode");
-		String name = (String) request.getParameter("name");
-		String remark = (String) request.getParameter("remark");
-		AppConfigType appConfigType = appConfigTypeService.findOne(typeCode);
-		appConfigType.setTypeCode(typeCode);
-		appConfigType.setName(name);
-		appConfigType.setRemark(remark);
-		appConfigType.setUpdateTime(new Date());
-		this.appConfigTypeService.save(appConfigType);
-		return BaseListableController.successResult;
-	}
-
-	@RequiresPermissions("/backend/appConfigType:del")
-	@RequestMapping(value = "del")
-	@ResponseBody
-	public Object del(@RequestParam(value = "typeCodes[]") String[] ids){
-		this.appConfigTypeService.delete(ids);
-		return BaseListableController.successResult;
-	}
-
-
-	*//**
-	 * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2 Preparable二次部分绑定的效果,先根据form的id从数据库查出User对象,再把Form提交的内容绑定到该对象上。
-	 * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.
-	 *//*
-	@ModelAttribute
-	public void getappConfigType(@RequestParam(value = "id", defaultValue = "-1") String id, Model model) {
-		if (!id.equals("-1")) {
-			model.addAttribute("appConfigType", this.appConfigTypeService.findOneBySql(getSingleSql(id)));
-		}
-	}*/
 
 	@Override
 	protected DynamitSupportService<AppConfigType> getService() {
