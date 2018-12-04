@@ -146,7 +146,7 @@
 
     BUI.use(['bui/ux/crudgrid','bui/common/search','bui/common/page','bui/overlay','bui/select','bui/data'],function (CrudGrid,Search,Grid,Overlay,Select,Data) {
 
-        var detailUrl = '${ctx}/backend/loanOrder/detail/';
+        var  detailUrl = '${ctx}/backend/loanOrder/detail/';
 
         var selectFundStore = new Data.Store({
             url : '${ctx}/backend/fund/getFundList',

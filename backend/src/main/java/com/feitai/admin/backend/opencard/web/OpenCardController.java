@@ -163,6 +163,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
             model.addObject("user", user);
             model.addObject("userAuth", mapProperties.getUserAuth(user.getAuthStatus()));
             model.addObject("hyPhone", Desensitization.phone(user.getPhone()));
+            model.addObject("hyPhone", user.getPhone());
         }
 
         // 征信项

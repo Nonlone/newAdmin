@@ -334,7 +334,11 @@
 
         <ul id="tabHeader" class="nav-tabs">
             <li id="li_base" class="active"><a href="javascript:void(0)" onclick="load(this,'baseData')">基本资料</a></li>
+
+            <shiro:hasPermission name='/backend/loan/repayOrder:list'>
             <li id="li_bond"><a href="javascript:void(0)" onclick="load(this,'repayPlan')">还款计划</a></li>
+            </shiro:hasPermission>
+
             <c:forEach items="${faddDetails}" var="fadd">
                 <li id="li_credit"><a href="javascript:void(0)" onclick="load(this,'${fadd.id}')">${fadd.contractName}</a></li>
             </c:forEach>
@@ -351,9 +355,14 @@
             <div id = "baseData">
                 <iframe frameborder="no" border="0" src="${ctx}/backend/customer/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
+
+            <!-- 还款计划 -->
+            <shiro:hasPermission name='/backend/loan/repayOrder:list'>
             <div id = "repayPlan" style="display:none;">
                 <iframe frameborder="no" border="0" src="${ctx}/backend/loan/repayOrder/repayPlan/${loanOrder.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
+            </shiro:hasPermission>
+
             <c:forEach items="${faddDetails}" var="fadd">
                 <div id="${fadd.id}" style="display:none;"><iframe frameborder="no" border="0" src="${fadd.viewpdfUrl}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe></div>
             </c:forEach>
