@@ -170,7 +170,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     }
 
 
-
     /***
      * 取消放款
      * @param dataApprovePassRequest
@@ -185,6 +184,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getRejectCash(), requestJsonString, String.class);
         return jsonString.getBody();
     }
+
 
 
     @GetMapping(value = "/index")
@@ -245,6 +245,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
      * @param id
      * @return
      */
+    @RequiresPermissions("/backend/loanOrder:list")
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
     public ModelAndView detail(@PathVariable("id") String id) {
         ModelAndView modelAndView = new ModelAndView("/backend/loanOrder/detail");
@@ -255,7 +256,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         User user = loanOrder.getUser();
         IdCardData idcard = loanOrder.getIdcard();
         Product product = loanOrder.getProduct();
-
 
 
         //资金方
@@ -435,7 +435,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
      */
     private JSONObject handleSingleData(JSONObject json) {
         List<ProductTermFeeFeature> search = new ArrayList<ProductTermFeeFeature>();
-        //productTermFeeFeature
         Long productId = (Long) json.get("productId");
         Integer loanTerm = (Integer) json.get("loanTerm");
         Long cardId = (Long) json.get("cardId");

@@ -32,7 +32,6 @@ import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.bank.model.UserBankCard;
-import com.feitai.jieya.server.dao.contract.model.ContractFaddDetail;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
 import com.feitai.jieya.server.dao.data.model.LocationData;
 import com.feitai.jieya.server.dao.fund.model.Fund;
@@ -42,12 +41,10 @@ import com.feitai.jieya.server.dao.loan.model.RepayPlan;
 import com.feitai.jieya.server.dao.product.model.Product;
 import com.feitai.jieya.server.dao.product.model.ProductTermFeeFeature;
 import com.feitai.jieya.server.dao.user.model.User;
-import com.feitai.jieya.server.utils.IdCardUtils;
 import com.feitai.utils.Desensitization;
 import com.feitai.utils.ObjectUtils;
 import com.feitai.utils.datetime.DateUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,13 +55,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -166,12 +159,6 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         return modelAndView;
     }
 
-    @RequestMapping(value = "listOut")
-    @ResponseBody
-    public Map<String, Object> listOut(ServletRequest request){
-        return listSupport(request);
-    }
-
 	@RequiresPermissions("/backend/loan/repayOrder:list")
     @RequestMapping(value = "list")
     @ResponseBody
@@ -181,7 +168,6 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     }
 
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
-    //@RequiresPermissions("/admin/loan/loanOrder:auth")
     public ModelAndView auth(@PathVariable("id") String id) {
         ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/detail");
         RepayOrderMore repayOrder = repayOrderService.findOneBySql(getOneSql(id));
