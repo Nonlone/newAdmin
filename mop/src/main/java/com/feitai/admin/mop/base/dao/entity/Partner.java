@@ -5,12 +5,12 @@ import com.feitai.admin.mop.base.dao.mapper.SettleInfoMapper;
 import com.feitai.admin.mop.base.enums.PartnerStatus;
 import com.feitai.admin.mop.base.enums.PartnerType;
 import com.feitai.base.mybatis.One;
-import com.feitai.jieya.server.utils.SnowFlakeIdGenerator;
+import com.feitai.base.mybatis.genid.SnowFlakeGenId;
 import lombok.Data;
 import lombok.ToString;
+import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Date;
@@ -22,14 +22,11 @@ import java.util.Date;
 @ToString(callSuper = true)
 @Table(name = "t_partner")
 public class Partner {
-    /**
-	 *
-	 */
-	protected static final long serialVersionUID = 1L;
 
     /**
      * 主键
      */
+    @KeySql(genId = SnowFlakeGenId.class)
     @Id
     private Long id;
     /**
@@ -75,9 +72,11 @@ public class Partner {
     public Partner(Long userId){
     	this.userId=userId;
     }
+
     public Partner(Long userId,Long phone,String inviteCode){
     	this(userId,phone,inviteCode, PartnerType.PERSONAL.getType(), PartnerStatus.ACTIVE.getStatus(),new Date());
     }
+
     public Partner(Long userId,Long phone,String inviteCode,Integer type,Integer status,Date createTime){
     	this.userId=userId;
     	this.phone=phone;
@@ -85,7 +84,6 @@ public class Partner {
     	this.type=type;
     	this.status=status;
     	this.createdTime=createTime;
-    	this.id= SnowFlakeIdGenerator.getDefaultNextId();
     }
 
     

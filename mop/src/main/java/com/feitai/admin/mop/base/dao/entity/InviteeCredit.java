@@ -1,9 +1,11 @@
 package com.feitai.admin.mop.base.dao.entity;
 
-import com.feitai.jieya.server.utils.SnowFlakeIdGenerator;
+import com.feitai.base.mybatis.genid.SnowFlakeGenId;
 import lombok.Data;
 import lombok.ToString;
+import tk.mybatis.mapper.annotation.KeySql;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,12 +17,12 @@ import java.util.Date;
 @ToString(callSuper = true)
 @Table(name = "t_invitee_credit")
 public class InviteeCredit {
-    public InviteeCredit() {
-        this.id = SnowFlakeIdGenerator.getDefaultNextId();
-    }
+
     /**
      * 主键
      */
+    @KeySql(genId = SnowFlakeGenId.class)
+    @Id
     private Long id;
     /**
      * 被邀请用户ID

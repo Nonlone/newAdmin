@@ -84,15 +84,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private ProductTermFeeFeatureService productTermFeeFeatureService;
 
     @Autowired
-    private IdCardService idcardService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ProductService productService;
-
-    @Autowired
     private CardService cardService;
 
     @Autowired
@@ -127,9 +118,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
     @Autowired
     private AreaService areaService;
-
-    @Autowired
-    private AuthdataAuthService authdataAuthService;
 
     @Autowired
     private PhotoService photoService;
@@ -247,7 +235,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
      */
     @RequiresPermissions("/backend/loanOrder:list")
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
-    @RequiresPermissions("/backend/loanOrder:list")
     public ModelAndView detail(@PathVariable("id") String id) {
         ModelAndView modelAndView = new ModelAndView("/backend/loanOrder/detail");
         LoanOrderMore loanOrder = loanOrderService.findOneBySql(getOneSql(id));
