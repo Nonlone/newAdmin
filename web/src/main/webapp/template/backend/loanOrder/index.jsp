@@ -122,7 +122,7 @@
         BUI.use('bui/overlay',function (Overlay){
             BUI.Message.Confirm('确认要终止放款么？',function(){
                 $.ajax({
-                    url:'${rejectCash}',
+                    url:'${ctx}/backend/loanOrder/rejectCash',
                     dataType:'JSON',
                     headers: {'Content-type':'application/json'},
                     type:'POST',
@@ -146,7 +146,7 @@
 
     BUI.use(['bui/ux/crudgrid','bui/common/search','bui/common/page','bui/overlay','bui/select','bui/data'],function (CrudGrid,Search,Grid,Overlay,Select,Data) {
 
-        var detailUrl = '${ctx}/backend/loanOrder/detail/';
+        var  detailUrl = '${ctx}/backend/loanOrder/detail/';
 
         var selectFundStore = new Data.Store({
             url : '${ctx}/backend/fund/getFundList',
@@ -231,7 +231,8 @@
                         return "";
                     }
                 }},
-            {title:'授信金额',dataIndex:'card.creditSum',width:'5%',renderer: function (value) {
+            {title:'订单状态',dataIndex:'status',width:'100px',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
+            {title:'授信金额',dataIndex:'card.creditSum',width:'100px',renderer: function (value) {
                     if(value){
                         return value;
                     }else{
@@ -249,10 +250,9 @@
                 }},
             {title:'申请时间',dataIndex:'applyTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
             {title:'放款时间',dataIndex:'payLoanTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'放款状态',dataIndex:'status',width:'100px',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
-            {title:'产品名称',dataIndex:'product',width:'5%',renderer: function (value) {
+            {title:'产品名称',dataIndex:'product',width:'100px',renderer: function (value) {
                     if(value){
-                        return value.name;
+                        return value.remark;
                     }else{
                         return '';
                     }

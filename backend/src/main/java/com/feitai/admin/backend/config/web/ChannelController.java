@@ -43,7 +43,7 @@ public class ChannelController extends BaseCrudController<Channel> {
 	@Autowired
 	private MapProperties mapProperties;
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
 	public ModelAndView index() {
 		ModelAndView mav=new ModelAndView("/backend/channel/index");
     	List<ListItem> itemList = new ArrayList<>();

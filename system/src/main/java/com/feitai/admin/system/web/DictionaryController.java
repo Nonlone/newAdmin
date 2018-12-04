@@ -36,7 +36,6 @@ public class DictionaryController extends BaseListableController<Dictionary> {
     @Autowired
     private DictionaryService dictionaryService;
 
-    @RequiresUser
     @RequestMapping(value = "")
     public String index() {
         return "/system/dictionary/index";
@@ -65,7 +64,6 @@ public class DictionaryController extends BaseListableController<Dictionary> {
      * @return [{"text":"广州","value":"020"},{"text":"深圳","value":"0754"}
      * @throws UnsupportedEncodingException
      */
-    @RequiresUser
     @RequestMapping(value = "search")
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)
@@ -110,7 +108,6 @@ public class DictionaryController extends BaseListableController<Dictionary> {
      * @return [{"text":"广州","value":"020"},{"text":"深圳","value":"0754"}
      * @throws UnsupportedEncodingException
      */
-    @RequiresUser
     @RequestMapping(value = "searchEnum")
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)

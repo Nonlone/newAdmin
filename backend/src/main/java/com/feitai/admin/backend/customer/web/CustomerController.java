@@ -89,7 +89,6 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
     }
 
 
-    @RequiresUser
     @RequiresPermissions("/backend/customer:list")
     @RequestMapping(value = "list")
     @ResponseBody
@@ -121,8 +120,8 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
     }
 
 
-    @RequiresUser
     @RequestMapping(value = "detail/{userId}", method = RequestMethod.GET)
+    @RequiresPermissions("/backend/customer:list")
     public ModelAndView detail(@PathVariable("userId") Long userId) {
         ModelAndView model = new ModelAndView("backend/customer/detail");
         //用户基本信息
@@ -218,9 +217,10 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         model.addObject("work", work);
         if (work != null) {
             model.addObject("hyWorkContactPhone", Desensitization.phone(work.getContactPhone()));
-            model.addObject("belongIndustry", appConfigService.findByTypeCodeAndCode("belongIndustry", work.getBelongIndustry()));
+            model.addObject("tradeType", appConfigService.findByTypeCodeAndValue("tradeType", work.getBelongIndustry()));
             model.addObject("jobsType", appConfigService.findByTypeCodeAndCode("jobsType", work.getJobsType()));
         } else {
+            model.addObject("registerTime","无");
             model.addObject("belongIndustry", "无");
             model.addObject("jobsType", "无");
         }

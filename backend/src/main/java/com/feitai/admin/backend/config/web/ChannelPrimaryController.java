@@ -50,7 +50,7 @@ public class ChannelPrimaryController extends BaseCrudController<ChannelPrimary>
 	@Autowired
 	private MapProperties mapProperties;
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
 	public ModelAndView index() {
 		ModelAndView mav=new ModelAndView("/backend/channelPrimary/index");
     	List<ListItem> itemList = new ArrayList<>();

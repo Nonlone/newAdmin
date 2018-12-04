@@ -4,7 +4,7 @@
 
     <groupId>com.feitai</groupId>
     <artifactId>admin</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>2.0.0</version>
     <packaging>pom</packaging>
     <name>Admin</name>
     <description>Feitai Admin</description>
@@ -17,20 +17,30 @@
         <!-- lookup parent from repository -->
     </parent>
 
-
     <repositories>
         <repository>
             <id>feitai-maven</id>
             <name>feitai-maven</name>
-            <url>http://maven.feitai.info/nexus/content/groups/public/</url>
+            <url>http://nexus.feitai.info/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>feitai-release</id>
+            <url>http://nexus.feitai.info/repository/feitai-release/</url>
+        </repository>
+        <snapshotRepository>
+            <id>feitai-snapshot</id>
+            <url>http://nexus.feitai.info/repository/feitai-snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -88,8 +98,8 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
                     <!--git 账号密码-->
-                    <username>linguocheng</username>
-                    <password>Feitai1234</password>
+                    <username>maven-releases</username>
+                    <password>maven-releases</password>
                     <!--禁用超级pom中的profile文件-->
                     <useReleaseProfile>true</useReleaseProfile>
                 </configuration>

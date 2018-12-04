@@ -25,7 +25,8 @@ public class PersonService extends ClassPrefixDynamicSupportService<PersonData> 
 
 
 	public PersonData findByUserId(Long id) {
-		Example example = Example.builder(IdCardData.class).andWhere(Sqls.custom().andEqualTo("userId",id)).build();
+		Example example = Example.builder(IdCardData.class).andWhere(Sqls.custom()
+				.andEqualTo("userId",id)).build();
 		return mapper.selectOneByExample(example);
 	}
 

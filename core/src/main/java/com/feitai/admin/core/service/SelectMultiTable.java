@@ -22,6 +22,11 @@ public class SelectMultiTable {
      */
     public static final String MAIN_ALAIS = "maintable";
 
+    /***
+     * 还款列表计数别名
+     */
+    public static final String RCOUNT_ALIAS = "RCOUNT";
+
     /**
      * 计数别名
      */

@@ -73,10 +73,17 @@ public class DataSourceConfiguration implements EnvironmentAware {
                 //  服务端数据源
                 BACKEND_DATASOURCE
         ));
+        // 服务端持久层
         classPrefixMap.put("com.feitai.jieya.server.dao", BACKEND_DATASOURCE);
+        // 管理后台管理服务端持久层
+        classPrefixMap.put("com.feitai.admin.backend", BACKEND_DATASOURCE);
+        // 管理后台管理征信数据
         classPrefixMap.put("com.feitai.admin.backend.creditdata", ORDER_CENTER_DATASOURCE);
+        // 管理后台智齿输出
         classPrefixMap.put("com.feitai.admin.wisdomTooth",ADMIN_DATASOURCE);
+        // 管理后台超级合伙人
         classPrefixMap.put("com.feitai.admin.mop",MOP_DATASOURCE);
+
         return classPrefixMap;
     }
 
@@ -232,6 +239,9 @@ public class DataSourceConfiguration implements EnvironmentAware {
         props.put(DruidDataSourceFactory.PROP_TESTONRETURN, environment.getProperty(defaultPropertiesPrefix + ".testOnReturn"));
         props.put(DruidDataSourceFactory.PROP_POOLPREPAREDSTATEMENTS, environment.getProperty(defaultPropertiesPrefix + ".poolPreparedStatements"));
         props.put(DruidDataSourceFactory.PROP_MAXOPENPREPAREDSTATEMENTS, environment.getProperty(defaultPropertiesPrefix + ".maxPoolPreparedStatementPerConnectionSize"));
+        props.put(DruidDataSourceFactory.PROP_MAXWAIT,environment.getProperty(defaultPropertiesPrefix+".maxWait"));
+        props.put(DruidDataSourceFactory.PROP_REMOVEABANDONEDTIMEOUT,environment.getProperty(defaultPropertiesPrefix+".removeAbandonedTimeout"));
+
         props.put(DruidDataSourceFactory.PROP_CONNECTIONPROPERTIES, connectionProperties);
         return DruidDataSourceFactory.createDataSource(props);
     }

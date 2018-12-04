@@ -41,6 +41,20 @@ public class AppConfigService extends ClassPrefixDynamicSupportService<AppConfig
         }else{
             return "";
         }
-
     }
+
+
+    public String findByTypeCodeAndValue(String typeCode, String value) {
+        if(StringUtils.isNotBlank(typeCode)&&StringUtils.isNotBlank(value)){
+            Example example = Example.builder(AppConfig.class).andWhere(Sqls.custom().andEqualTo("value",value).andEqualTo("typeCode",typeCode)).build();
+            AppConfig appConfig = appConfigMapper.selectOneByExample(example);
+            if (appConfig != null) {
+                return appConfig.getName();
+            }
+            return String.format("typeCode[ %s], value[ %s ] 不存在", typeCode, value);
+        }else{
+            return "";
+        }
+    }
+
 }

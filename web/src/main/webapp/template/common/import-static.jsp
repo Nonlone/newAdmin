@@ -1,6 +1,6 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<base href="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/">
+<base href="${pageContext.request.contextPath}/">
 <link href="${ctx}/static/bui/css/${skin}/bs3/dpl-min.css" rel="stylesheet" type="text/css"/>
 <link href="${ctx}/static/bui/css/${skin}/bs3/bui-min.css" rel="stylesheet" type="text/css"/>
 <link href="${ctx}/static/bui/css/${skin}/page-min.css" rel="stylesheet" type="text/css"/>
@@ -14,7 +14,7 @@
 
     BUI.actions = {};
     BUI.setDebug(<spring:eval expression="@webConf['bui.debug']" />);
-
+    
     //ajax
     // 设置 application/json
     // 设置添加contextPath前缀
@@ -31,7 +31,7 @@
 
         //放大图片
         $('img.dialog').on('click', function () {
-            var large_image = '<img class=\'closeImg\' src= ' + $(this).attr("src") + '></img>';
+            var large_image = '<img class=\'closeImg\' style=\'max-height: 800px;max-width: 800px\' src= ' + $(this).attr("src") +'></img>';
             BUI.use('bui/overlay', function (Overlay) {
                 var width = this.width;
                 var height = this.height;

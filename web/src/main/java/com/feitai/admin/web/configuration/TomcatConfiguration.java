@@ -16,12 +16,6 @@ public class TomcatConfiguration {
     @Value("${server.docBase:''}")
     private String docBase;
 
-    @Value("${server.port:8080}")
-    private int port;
-
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
-
     @Bean
     @ConditionalOnProperty("server.docBase")
     public ServletWebServerFactory webServerFactory() {

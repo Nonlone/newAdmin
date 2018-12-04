@@ -48,64 +48,64 @@
             format : "<th id='@field' style='text-align:center;'>"
         }, {
             field : "pincipalAmount",
-            name : "本金"
+            name : "应还本金"
         }, {
             field : "pincipalBalanceAmount",
-            name : "本金"
+            name : "剩余应还本金"
         }, {
             field : "interestAmount",
-            name : "利息"
+            name : "应还利息"
         }, {
             field : "interestBalanceAmount",
-            name : "利息"
-        }, {
-            field : "overdueFineAmount",
-            name : "罚息"
-        }, {
-            field : "overdueFineBalanceAmount",
-            name : "罚息"
-        }, {
-            field : "overdueFineCompoundAmount",
-            name : "罚息复利"
-        }, {
-            field : "overdueFineCompoundBalanceAmount",
-            name : "罚息复利"
-        }, {
-            field : "innerInteAmount",
-            name : "复利"
-        }, {
-            field : "innerInteAalanceAmount",
-            name : "复利"
-        }, {
-            field : "occupyFeeAmount",
-            name : "资金占用费"
-        }, {
-            field : "occupyFeeBalanceAmount",
-            name : "资金占用费"
-        }, {
-            field : "poundageAmtAmount",
-            name : "违约金"
-        }, {
-            field : "poundageAmtBalanceAmount",
-            name : "违约金"
-        } , {
+            name : "剩余应还利息"
+        },{
             field : "approveFeeAmount",
-            name : "审批费"
+            name : "应还审批费"
         }, {
             field : "approveFeeBalanceAmount",
-            name : "审批费"
+            name : "剩余应还审批费"
         }, {
             field : "guaranteeFeeAmount",
-            name : "担保费"
+            name : "应还担保费"
         }, {
             field : "guaranteeFeeBalanceAmount",
-            name : "担保费"
+            name : "剩余应还担保费"
+        },  {
+            field : "overdueFineAmount",
+            name : "应还罚息"
         }, {
+            field : "overdueFineBalanceAmount",
+            name : "剩余应还罚息"
+        }, {
+            field : "overdueFineCompoundAmount",
+            name : "应还罚息复利"
+        }, {
+            field : "overdueFineCompoundBalanceAmount",
+            name : "剩余应还罚息复利"
+        }, {
+            field : "innerInteAmount",
+            name : "应还复利"
+        }, {
+            field : "innerInteAalanceAmount",
+            name : "剩余应还复利"
+        }, {
+            field : "occupyFeeAmount",
+            name : "应还资金占用费"
+        }, {
+            field : "occupyFeeBalanceAmount",
+            name : "剩余应还资金占用费"
+        }, {
+            field : "poundageAmtAmount",
+            name : "应还违约金"
+        }, {
+            field : "poundageAmtBalanceAmount",
+            name : "剩余应还违约金"
+        } , {
             field : "brokerCommissionAmount",
-            name : "中间人服务费"
+            name : "应还中间人服务费"
         }, {
             field : "brokerCommissionBalanceAmount",
-            name : "中间人服务费"
+            name : "剩余应还中间人服务费"
         } ];
 
         function generateData() {

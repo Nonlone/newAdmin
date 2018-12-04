@@ -27,5 +27,11 @@ public class AppProperties {
     @Value("${reject.cash.url}")
     private String rejectCash;
 
+    /***
+     * 内审通过
+     */
+    @Value("${api.server.dataApprovePass}")
+    private String dataApprovePassUrl;
+
 
 }

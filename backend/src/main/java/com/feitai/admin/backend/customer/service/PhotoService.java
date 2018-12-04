@@ -32,4 +32,26 @@ public class PhotoService extends ClassPrefixDynamicSupportService<PhotoAttach> 
         ).orderByAsc("type").build();
         return mapper.selectByExample(example);
     }
+
+    public List<PhotoAttach> findLoanVoucherPhotoByUserId(long userId) {
+        Example example = Example.builder(PhotoAttach.class).andWhere(
+                Sqls.custom().andEqualTo("userId", userId)
+                        .andIn("type", Arrays.asList(new Integer[]{
+                                PhotoType.LOAN_VOUCHER.getValue()
+                        }))
+        ).orderByAsc("type").build();
+        return mapper.selectByExample(example);
+    }
+
+
+    public List<PhotoAttach> findTobaccoPhotoByUserId(long userId) {
+        Example example = Example.builder(PhotoAttach.class).andWhere(
+                Sqls.custom().andEqualTo("userId", userId)
+                        .andIn("type", Arrays.asList(new Integer[]{
+                                PhotoType.MARRIAGE_CERTIFICATE.getValue(),
+                                PhotoType.FRANCHISE_PERMIT.getValue()
+                        }))
+        ).orderByAsc("type").build();
+        return mapper.selectByExample(example);
+    }
 }

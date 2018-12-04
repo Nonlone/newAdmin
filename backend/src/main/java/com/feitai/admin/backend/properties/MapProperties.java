@@ -43,6 +43,7 @@ public class MapProperties {
 
     }
 
+
     @Value("${backend.segmentMap}")
     private String segmentMapSource;
 
@@ -62,7 +63,7 @@ public class MapProperties {
     }
 
 
-    @Value("${backend.valveRejectMap}")
+    @Value("${backend.openCardRejectReason}")
     private String valveRejectSource;
 
     private Map<String,String> valveRejectMap;
@@ -139,8 +140,8 @@ public class MapProperties {
      * @param key
      * @return
      */
-    public String getloanStatus(String key) {
-        return getMapValue(loanStatusMap, key);
+    public String getloanStatus(Integer key) {
+        return getMapValue(loanStatusMap, key.toString());
     }
 
 
