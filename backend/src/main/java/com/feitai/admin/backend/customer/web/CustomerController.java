@@ -121,6 +121,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
 
 
     @RequestMapping(value = "detail/{userId}", method = RequestMethod.GET)
+    @RequiresPermissions("/backend/customer:list")
     public ModelAndView detail(@PathVariable("userId") Long userId) {
         ModelAndView model = new ModelAndView("backend/customer/detail");
         //用户基本信息

@@ -168,6 +168,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     }
 
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
+    @RequiresPermissions("/backend/loan/repayOrder:list")
     public ModelAndView auth(@PathVariable("id") String id) {
         ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/detail");
         RepayOrderMore repayOrder = repayOrderService.findOneBySql(getOneSql(id));
