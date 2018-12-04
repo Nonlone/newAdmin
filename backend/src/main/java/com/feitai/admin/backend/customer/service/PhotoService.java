@@ -27,7 +27,8 @@ public class PhotoService extends ClassPrefixDynamicSupportService<PhotoAttach> 
                                 PhotoType.NOD.getValue(),
                                 PhotoType.BLINK.getValue(),
                                 PhotoType.SHAKE.getValue(),
-                                PhotoType.MOUTH.getValue()
+                                PhotoType.MOUTH.getValue(),
+                                PhotoType.QC_LIVING_IMG.getValue(),
                         }))
         ).orderByAsc("type").build();
         return mapper.selectByExample(example);

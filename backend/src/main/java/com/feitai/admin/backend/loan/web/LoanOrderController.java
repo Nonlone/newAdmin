@@ -84,15 +84,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private ProductTermFeeFeatureService productTermFeeFeatureService;
 
     @Autowired
-    private IdCardService idcardService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ProductService productService;
-
-    @Autowired
     private CardService cardService;
 
     @Autowired
@@ -127,9 +118,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
     @Autowired
     private AreaService areaService;
-
-    @Autowired
-    private AuthdataAuthService authdataAuthService;
 
     @Autowired
     private PhotoService photoService;
