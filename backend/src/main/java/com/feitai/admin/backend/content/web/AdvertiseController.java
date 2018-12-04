@@ -9,6 +9,7 @@ package com.feitai.admin.backend.content.web;
 
 import com.feitai.admin.backend.content.service.AdvertiseService;
 import com.feitai.admin.core.service.DynamitSupportService;
+import com.feitai.admin.core.web.BaseCrudController;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.jieya.server.dao.cms.model.Advertise;
 import com.feitai.utils.SnowFlakeIdGenerator;
@@ -30,7 +31,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping(value = "/backend/advertise")
 @Slf4j
-public class AdvertiseController extends BaseListableController<Advertise> {
+public class AdvertiseController extends BaseCrudController<Advertise> {
     @Autowired
     private AdvertiseService advertiseService;
 
@@ -39,7 +40,7 @@ public class AdvertiseController extends BaseListableController<Advertise> {
         return "/backend/advertise/index";
     }
 
-    @RequiresPermissions("/backend/advertise:list")
+ /*   @RequiresPermissions("/backend/advertise:list")
     @RequestMapping(value = "list")
     @ResponseBody
     public Object listPage(ServletRequest request) {
@@ -82,16 +83,16 @@ public class AdvertiseController extends BaseListableController<Advertise> {
     }
 
 
-    /**
+    *//**
      * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2 Preparable二次部分绑定的效果,先根据form的id从数据库查出User对象,再把Form提交的内容绑定到该对象上。
      * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.
-     */
+     *//*
     @ModelAttribute
     public void getadvertise(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
         if (id != -1) {
             model.addAttribute("advertise", this.advertiseService.findOne(id));
         }
-    }
+    }*/
 
 
     @Override

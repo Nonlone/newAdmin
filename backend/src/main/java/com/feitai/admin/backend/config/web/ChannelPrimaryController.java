@@ -15,6 +15,7 @@ import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.vo.ListItem;
+import com.feitai.admin.core.web.BaseCrudController;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.utils.SnowFlakeIdGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/backend/channelPrimary")
 @Slf4j
-public class ChannelPrimaryController extends BaseListableController<ChannelPrimary> {
+public class ChannelPrimaryController extends BaseCrudController<ChannelPrimary>{
 
 	@Autowired
 	private ChannelPrimaryService channelPrimaryService;
@@ -62,7 +63,7 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 		return mav;
 	}
 	
-	@RequiresPermissions("/backend/channelPrimary:list")
+	/*@RequiresPermissions("/backend/channelPrimary:list")
 	@RequestMapping(value = "list")
 	@ResponseBody
 	public Object listPage(ServletRequest request) {
@@ -76,7 +77,7 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 	public Object editFrom(@PathVariable("id") Long id) {
 		ChannelPrimary channelPrimary = this.channelPrimaryService.findOne(id);
 		return channelPrimary;
-	}
+	}*/
 
 	@RequiresPermissions("/backend/channelPrimary:update")
 	@RequestMapping(value = "checkChannelName")
@@ -102,7 +103,7 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 		}
 	}
 
-	@RequiresPermissions("/backend/channelPrimary:add")
+/*	@RequiresPermissions("/backend/channelPrimary:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid ChannelPrimary channelPrimary){
@@ -120,7 +121,7 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 		channelPrimary.setUpdateTime(new Date());
 		this.channelPrimaryService.save(channelPrimary);
 		return this.successResult;
-	}
+	}*/
 	
 	@RequiresPermissions("/backend/channelPrimary:del")
 	@RequestMapping(value = "del")

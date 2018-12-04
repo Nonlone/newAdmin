@@ -20,6 +20,7 @@ import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.vo.ShiroUser;
+import com.feitai.admin.core.web.BaseCrudController;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.system.model.User;
 import com.feitai.admin.system.service.UserService;
@@ -53,7 +54,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/backend/fund")
 @Slf4j
-public class FundController extends BaseListableController<Fund> {
+public class FundController extends BaseCrudController<Fund> {
 
     @Autowired
     private AppProperties appProperties;
@@ -122,7 +123,7 @@ public class FundController extends BaseListableController<Fund> {
         return "/backend/fund/index";
     }
 
-    @RequiresPermissions("/backend/fund:list")
+  /*  @RequiresPermissions("/backend/fund:list")
     @RequestMapping(value = "list")
     @ResponseBody
     public Object listPage(ServletRequest request) {
@@ -135,7 +136,7 @@ public class FundController extends BaseListableController<Fund> {
     public Object editFrom(@PathVariable("id") Long id) {
         Fund fund = fundService.findOne(id);
         return fund;
-    }
+    }*/
 
     @RequiresPermissions("/backend/fund:add")
     @RequestMapping(value = "add", method = RequestMethod.POST)

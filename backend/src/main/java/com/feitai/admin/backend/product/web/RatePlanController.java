@@ -18,6 +18,7 @@ import com.feitai.admin.backend.product.vo.FeePlanDetail;
 import com.feitai.admin.backend.product.vo.RatePlanRequest;
 import com.feitai.admin.backend.product.vo.Weight;
 import com.feitai.admin.core.service.DynamitSupportService;
+import com.feitai.admin.core.web.BaseCrudController;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.jieya.server.dao.base.constant.CalculationMode;
 import com.feitai.jieya.server.dao.base.constant.FeeBaseType;
@@ -45,7 +46,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/backend/ratePlan")
-public class RatePlanController extends BaseListableController<RatePlanMore> {
+public class RatePlanController extends BaseCrudController<RatePlanMore>{
 
 
     /**
@@ -81,12 +82,12 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
         return "/backend/ratePlan/index";
     }
 
-    @RequiresPermissions("/backend/ratePlan:list")
+/*    @RequiresPermissions("/backend/ratePlan:list")
     @RequestMapping(value = "list")
     @ResponseBody
     public Object listPage(ServletRequest request) {
         return super.list(request);
-    }
+    }*/
 
     @RequestMapping(value = "getRatePlan", method = RequestMethod.POST)
     @ResponseBody

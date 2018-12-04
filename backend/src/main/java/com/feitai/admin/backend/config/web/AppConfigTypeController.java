@@ -13,6 +13,7 @@ import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
+import com.feitai.admin.core.web.BaseCrudController;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.appconfig.model.AppConfig;
@@ -40,7 +41,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/backend/appConfigType")
 @Slf4j
-public class AppConfigTypeController extends BaseListableController<AppConfigType> {
+public class AppConfigTypeController extends BaseCrudController<AppConfigType> {
 
 	@Autowired
 	private AppConfigTypeService appConfigTypeService;
@@ -72,7 +73,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	}
 	
 	@RequiresPermissions("/backend/appConfigType:update")
-	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "update/{typeCode}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object editFrom(@PathVariable("typeCode") String typeCode) {
 		String singleSql = getSingleSql(typeCode);
@@ -80,7 +81,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 		return appConfigType;
 	}
 
-	@RequiresPermissions("/backend/appConfigType:add")
+/*	@RequiresPermissions("/backend/appConfigType:add")
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(HttpServletRequest request,HttpServletResponse response){
@@ -122,16 +123,16 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	}
 
 
-	/**
+	*//**
 	 * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2 Preparable二次部分绑定的效果,先根据form的id从数据库查出User对象,再把Form提交的内容绑定到该对象上。
 	 * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.
-	 */
+	 *//*
 	@ModelAttribute
 	public void getappConfigType(@RequestParam(value = "id", defaultValue = "-1") String id, Model model) {
 		if (!id.equals("-1")) {
 			model.addAttribute("appConfigType", this.appConfigTypeService.findOneBySql(getSingleSql(id)));
 		}
-	}
+	}*/
 
 	@Override
 	protected DynamitSupportService<AppConfigType> getService() {
