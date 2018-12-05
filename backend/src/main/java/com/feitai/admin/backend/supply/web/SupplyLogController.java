@@ -23,6 +23,7 @@ import com.feitai.jieya.server.dao.data.model.IdCardData;
 import com.feitai.jieya.server.dao.fund.model.Fund;
 import com.feitai.jieya.server.dao.loan.model.LoanSupplyLog;
 import com.feitai.jieya.server.dao.user.model.User;
+import com.feitai.utils.StringUtils;
 import com.feitai.utils.datetime.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -107,15 +108,21 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
                         PicturesInfo picturesInfo = new PicturesInfo();
                         picturesInfo.setContent(url);
                         picturesInfo.setEndFlag(PHOTE_TYPE);
-                        picturesInfo.setType(loanSupplyInfo.getSupplyCode());
-                        picturesInfos.add(picturesInfo);
+                        String supplyTodashu = mapProperties.getSupplyTodashu(loanSupplyInfo.getSupplyCode());
+                        if(StringUtils.isNotBlank(supplyTodashu)){
+                            picturesInfo.setType(supplyTodashu);
+                            picturesInfos.add(picturesInfo);
+                        }
                     }
                 }else{
                     PicturesInfo picturesInfo = new PicturesInfo();
                     picturesInfo.setContent(loanSupplyInfo.getSupplyInfo());
                     picturesInfo.setEndFlag(PHOTE_TYPE);
-                    picturesInfo.setType(loanSupplyInfo.getSupplyCode());
-                    picturesInfos.add(picturesInfo);
+                    String supplyTodashu = mapProperties.getSupplyTodashu(loanSupplyInfo.getSupplyCode());
+                    if(StringUtils.isNotBlank(supplyTodashu)){
+                        picturesInfo.setType(supplyTodashu);
+                        picturesInfos.add(picturesInfo);
+                    }
                 }
             }
         }
