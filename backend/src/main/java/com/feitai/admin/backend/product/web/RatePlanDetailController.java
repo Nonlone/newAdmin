@@ -31,7 +31,7 @@ public class RatePlanDetailController extends BaseListableController<RatePlanDet
 	@Autowired
 	private RatePlanDetailService ratePlanDetailService;
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/ratePlanDetail/index";
 	}

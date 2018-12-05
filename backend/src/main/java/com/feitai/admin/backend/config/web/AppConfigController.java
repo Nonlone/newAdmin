@@ -44,7 +44,7 @@ public class AppConfigController extends BaseListableController<AppConfig> {
     private AppConfigTypeService appConfigTypeService;
 
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "index")
     public String index(Model model) {
         Map<String, String> configTypeMap = new HashMap<String, String>();
         List<AppConfigType> allAppConfigType = appConfigTypeService.findAll();//所以的app配置类型

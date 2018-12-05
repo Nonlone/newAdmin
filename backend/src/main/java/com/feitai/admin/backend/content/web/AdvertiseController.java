@@ -34,7 +34,7 @@ public class AdvertiseController extends BaseListableController<Advertise> {
     @Autowired
     private AdvertiseService advertiseService;
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "index")
     public String index() {
         return "/backend/advertise/index";
     }

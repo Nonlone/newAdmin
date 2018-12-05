@@ -64,7 +64,7 @@ public class ProductController extends BaseListableController<Product> {
 		return list;
 	}
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/product/index";
 	}

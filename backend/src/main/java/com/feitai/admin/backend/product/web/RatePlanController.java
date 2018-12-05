@@ -76,7 +76,7 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
     @Autowired
     private SnapshotRatePlanDetailService snapshotRatePlanDetailService;
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "index")
     public String index() {
         return "/backend/ratePlan/index";
     }

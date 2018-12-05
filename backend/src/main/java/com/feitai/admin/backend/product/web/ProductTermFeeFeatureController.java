@@ -30,7 +30,7 @@ public class ProductTermFeeFeatureController extends BaseListableController<Prod
 	@Autowired
 	private ProductTermFeeFeatureService productTermFeeFeatureService;
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/productTermFeeFeature/index";
 	}

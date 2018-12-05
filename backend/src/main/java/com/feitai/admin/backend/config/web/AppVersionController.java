@@ -38,7 +38,7 @@ public class AppVersionController extends BaseListableController<AppVersion> {
 	@Autowired
 	private AppVersionService appVersionService;
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
 	public String index(Model model) {
 		List<AppVersion> appVersions = appVersionService.findAll();
 		Map<String,String> osTypeMap = new HashMap<>();

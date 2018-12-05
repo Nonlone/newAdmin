@@ -45,7 +45,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	@Autowired
 	private AppConfigTypeService appConfigTypeService;
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/appConfigType/index";
 	}

@@ -111,7 +111,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
 
     private final static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "index")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/index");
         modelAndView.addObject("isOut",false);

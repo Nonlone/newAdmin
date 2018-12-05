@@ -117,7 +117,7 @@ public class FundController extends BaseListableController<Fund> {
     }
 
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "index")
     public String index() {
         return "/backend/fund/index";
     }

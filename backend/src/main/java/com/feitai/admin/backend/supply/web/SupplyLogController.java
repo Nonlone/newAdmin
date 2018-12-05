@@ -74,7 +74,7 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "index")
     public String index(Model model) {
         return "backend/supply/log/index";
     }

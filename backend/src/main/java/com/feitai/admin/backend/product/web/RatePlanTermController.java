@@ -30,7 +30,7 @@ public class RatePlanTermController extends BaseListableController<RatePlanTermM
 	@Autowired
 	private RatePlanTermService ratePlanTermService;
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/ratePlanTerm/index";
 	}
