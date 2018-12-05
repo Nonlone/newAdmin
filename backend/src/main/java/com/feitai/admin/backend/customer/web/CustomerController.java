@@ -109,7 +109,6 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
                     json.put("birthday",IdCardUtils.getBirthByIdCard(idCardDataExtend.getIdCard()));
                     json.put("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
                 }
-
                 resultList.add(json);
             } catch (Exception e) {
                 log.error(String.format("this json handle fail:[{}]! message:{}", json, e.getMessage()), e);
@@ -121,7 +120,6 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
 
 
     @RequestMapping(value = "detail/{userId}", method = RequestMethod.GET)
-    @RequiresPermissions("/backend/customer:list")
     public ModelAndView detail(@PathVariable("userId") Long userId) {
         ModelAndView model = new ModelAndView("backend/customer/detail");
         //用户基本信息
