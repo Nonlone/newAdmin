@@ -136,7 +136,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
      * @return
      */
     @PostMapping(value = "/dataApprovePass/{loanId}")
-    @RequiresPermissions("/backend/loanOrder:auth")
+    @RequiresPermissions("/backend/loanOrder:approve")
     @ResponseBody
     public Object dataApprovePass(@PathVariable("loanId") String loanId) {
         LoanOrderMore loanOrderMore = loanOrderService.findOne(loanId);
@@ -164,7 +164,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
      * @return
      */
     @PostMapping("/rejectCash")
-    @RequiresPermissions("/backend/loanOrder:auth")
+    @RequiresPermissions("/backend/loanOrder:stop")
     @ResponseBody
     public Object rejectCash(@Valid BackendLoanRequest dataApprovePassRequest) {
         String requestJsonString = JSON.toJSONString(dataApprovePassRequest);

@@ -141,10 +141,11 @@
             showRemoveBtn : del,
             columns : columns,
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
-                return CrudGrid.createLink({
+                return CrudGrid.createLinkCustomSpan({
+                    class:"page-action grid-command x-icon x-icon-info",
                     id: obj.id,
-                    title:  '补件详细记录',
-                    text: '<li class="icon icon-list-alt"></li>',
+                    title: obj.idCardData.name+"补件需求",
+                    text: '<i class="icon icon-white icon-list-alt"></i>',
                     href: $ctx+"/backend/supply/requirement/detail/"+obj.id
                 });
 
