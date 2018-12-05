@@ -46,7 +46,7 @@ public class ChannelController extends BaseListableController<Channel> {
 	@Autowired
 	private MapProperties mapProperties;
 	
-	@RequestMapping(value = "index")
+	@RequestMapping(value = "")
 	public ModelAndView index() {
 		ModelAndView mav=new ModelAndView("/backend/channel/index");
     	List<ListItem> itemList = new ArrayList<>();
