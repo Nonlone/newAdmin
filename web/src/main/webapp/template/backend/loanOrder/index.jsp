@@ -275,6 +275,10 @@
             showAddBtn : add,
             showUpdateBtn : update,
             showRemoveBtn : del,
+            gridCfg:{
+                innerBorder:true,
+
+            },
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
 
                 var editStr = '';

@@ -39,8 +39,21 @@ public class MapProperties {
         channelSortList=ImmutableList.copyOf(channelSort.split(","));
         bankCardTypeMap = ImmutableMap.copyOf(JSON.parseObject(bankCardType,Map.class));
         repayOrderPayTypeMap = ImmutableMap.copyOf(JSON.parseObject(repayOrderPayType,Map.class));
+        supplyTodashuMap = ImmutableMap.copyOf(JSON.parseObject(supplyTodashu,Map.class));
 
+    }
 
+    @Value("${orderCenter.supplyTodashu}")
+    private String supplyTodashu;
+
+    private Map<String,String> supplyTodashuMap;
+
+    public String getSupplyTodashu(String key){
+        String value =  getMapValue(supplyTodashuMap,key);
+        if(StringUtils.isBlank(value)){
+            return key;
+        }
+        return value;
     }
 
 

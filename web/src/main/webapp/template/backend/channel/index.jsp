@@ -228,7 +228,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
         ];
     
 	var crudGrid = new CrudGrid({
-		entityName : 'Channel',
+		entityName : '二级渠道',
     	pkColumn : 'id',//主键
       	storeUrl : '${ctx}/backend/channel/list',
         addUrl : '${ctx}/backend/channel/add',
