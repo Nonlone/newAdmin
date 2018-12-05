@@ -376,10 +376,10 @@
 
     </div>
     <c:if test="${dataApprovePass}">
-        <div id="dataApprovePass" style="background-color: white;">
+        <div id="dataApprovePass" style="background-color: white;" hidden="hidden">
             <button style="width: 90px;height: 50px;float: right" onclick="dataApprovePass();"><span style="color: #ac2925;size: 30px">内审通过</span></button>
+            <br/><br/><br/><br/><br/>
         </div>
-        <br/><br/><br/><br/><br/>
 
     </c:if>
 
@@ -389,6 +389,10 @@
 </body>
 <script type="text/javascript">
 
+    <shiro:hasPermission name="/backend/loanOrder:approve">
+    document.getElementById("dataApprovePass").removeAttribute("hidden");
+
+    </shiro:hasPermission>
 
     function dataApprovePass() {
         BUI.use('bui/overlay',function (Overlay){
