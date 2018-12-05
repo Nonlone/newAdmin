@@ -264,10 +264,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td bgcolor="#F2F2F2" width="200px">注册资本(万元)</td>
-                        <td >${work.registerCapital}</td>
-                    </tr>
-                    <tr>
                         <td bgcolor="#F2F2F2" width="200px">经营范围</td>
                         <td >${work.businessScope}</td>
                     </tr>
