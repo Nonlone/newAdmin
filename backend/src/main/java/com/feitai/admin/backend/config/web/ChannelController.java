@@ -145,10 +145,6 @@ public class ChannelController extends BaseListableController<Channel> {
 	public Object update(@Valid @ModelAttribute("channel") Channel channel){
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
 		channel.setMainPackageCode(channelPrimary.getChannelCode());
-		if(!channel.getChannelId().split("_")[0].equals(channelPrimary.getChannelCode())){
-			String[] split = channel.getChannelId().split("_",2);
-			channel.setChannelId(channelPrimary.getChannelCode()+"_"+split[1]);
-		}
 		channel.setUpdateTime(new Date());
 		this.channelService.save(channel);
 		return BaseListableController.successResult;
