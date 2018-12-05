@@ -58,19 +58,19 @@
         }, {
             field : "interestBalanceAmount",
             name : "剩余应还利息"
-        },{
-            field : "approveFeeAmount",
-            name : "应还审批费"
-        }, {
-            field : "approveFeeBalanceAmount",
-            name : "剩余应还审批费"
         }, {
             field : "guaranteeFeeAmount",
             name : "应还担保费"
         }, {
             field : "guaranteeFeeBalanceAmount",
             name : "剩余应还担保费"
-        },  {
+        }, {
+            field : "approveFeeAmount",
+            name : "应还评审费"
+        }, {
+            field : "approveFeeBalanceAmount",
+            name : "剩余应还评审费"
+        }, {
             field : "overdueFineAmount",
             name : "应还罚息"
         }, {
