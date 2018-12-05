@@ -141,13 +141,13 @@
                 srcNode: '#addOrUpdateForm'
             }).render();
 
-            var paymentTypeEnum = {'1': '等额本息', '2': '等本等息', '3': '等额本金'};
+            var paymentTypeEnum = {'EQUAL_AMOUNT_OF_INTEREST': '等额本息', 'EQUAL_INTEREST_AND_INTEREST': '等本等息', 'EQUAL_AMOUNT_OF_PRINCIPAL': '等额本金'};
 
-            var feeTypeEnum = {'1': '固定金额', '2': '固定利率'};
+            var feeTypeEnum = {'FIXED_AMOUNT': '固定金额', 'ANNUAL_INTEREST_RATE': '固定利率'};
 
-            var paymentTimeTypeEnum = {'1': '首个还款日收', '2': '按月收', '3': '放款时收', '4': '定期收取'};
+            var paymentTimeTypeEnum = {'FIRST_REPAYMENT_DAY': '首个还款日收', 'EACH_PERIOD': '按月收', 'AT_LOAN': '放款时收', 'SPECIFIED_PERIOD': '定期收取'};
 
-            var feeBaseTypeEnum = {'1': '剩余本金', '2': '放款本金'};
+            var feeBaseTypeEnum = {'RESIDUAL_PRINCIPAL': '剩余本金', 'LOAN_CAPITAL': '放款本金'};
 
             var subjectIdEnum = {'10': '审批费', '11': '担保费', '12': '居间人服务费'}
 

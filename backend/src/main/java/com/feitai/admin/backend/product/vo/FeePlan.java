@@ -2,6 +2,8 @@ package com.feitai.admin.backend.product.vo;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 /**
  * 期数计划请求结构体
  */
@@ -15,6 +17,7 @@ public class FeePlan {
     /**
      * 科目
      */
+    @Valid
     private List<FeePlanDetail> subject;
 
     public Integer getTerm() {

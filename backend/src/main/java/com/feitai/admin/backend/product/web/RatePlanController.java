@@ -129,13 +129,12 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
         ratePlanRequest.setId(null);
         RatePlanMore ratePlan = new RatePlanMore();
         BeanUtils.copyProperties(ratePlanRequest, ratePlan);        
-        ratePlan.setCreatedTime(date);
-        ratePlan.setUpdateTime(date);
         ratePlan.setCurrentVersion(0);
         ratePlan = ratePlanService.save(ratePlan);
         //复制到快照表
         SnapshotRatePlan snapshotRatePlan = new SnapshotRatePlan();
         BeanUtils.copyProperties(ratePlan, snapshotRatePlan);
+        snapshotRatePlan.setId(null);
         snapshotRatePlan = snapshotRatePlanService.save(snapshotRatePlan);
         for (Weight weight : ratePlanRequest.getWeight()) {
             RatePlanTermMore ratePlanTerm = new RatePlanTermMore();
@@ -143,12 +142,11 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
             ratePlanTerm.setTerm(weight.getTerm());
             ratePlanTerm.setWeight(weight.getWeight());
             ratePlanTerm.setVersion("0");
-            ratePlanTerm.setCreatedTime(date);
-            ratePlanTerm.setUpdateTime(date);
             ratePlanTerm = ratePlanTermService.save(ratePlanTerm);
             // 复制到快照表
             SnapshotRatePlanTerm snapshotRatePlanTerm = new SnapshotRatePlanTerm();
             BeanUtils.copyProperties(ratePlanTerm, snapshotRatePlanTerm);
+            snapshotRatePlanTerm.setId(null);
             snapshotRatePlanTerm.setRatePlanId(snapshotRatePlan.getId());
             snapshotRatePlanTerm.setVersion(0);
             snapshotRatePlanTerm = snapshotRatePlanTermService.save(snapshotRatePlanTerm);
@@ -172,25 +170,11 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
                         if (ratePlanDetail.getPaymentType() == null) {
                             ratePlanDetail.setPaymentType(PaymentType.DEFAULT);
                         }
-                        for(CalculationMode calculationMode:CalculationMode.values()){
-                        	if(calculationMode.getValue()==(int)feePlanDetail.getCalculationMode()){
-                        		ratePlanDetail.setCalculationMode(calculationMode);
-                        		break;
-                        	}
-                        }
-                        for(PaymentTimeType paymentTimeType:PaymentTimeType.values()){
-                        	if(paymentTimeType.getValue()==(int)feePlanDetail.getPaymentTimeType()){
-                        		ratePlanDetail.setPaymentTimeType(paymentTimeType);
-                        		break;
-                        	}
-                        }
-                        ratePlanDetail.setUpdateTime(date);
-                        ratePlanDetail.setCreatedTime(date);
                         ratePlanDetailService.save(ratePlanDetail);
                         // 复制到快照表
                         RatePlanDetailSnapshot snapshotRatePlanDetail = new RatePlanDetailSnapshot();
                         BeanUtils.copyProperties(ratePlanDetail, snapshotRatePlanDetail);
-                       // snapshotRatePlanDetail.setPaymentTimeType(ratePlanDetail.getPaymentTimeType());
+                        snapshotRatePlanDetail.setId(null);
                         snapshotRatePlanDetail.setRatePlanTermId(snapshotRatePlanTerm.getRatePlanId());
                         snapshotRatePlanDetailService.save(snapshotRatePlanDetail);
                     }
