@@ -69,7 +69,7 @@
                     产品名称：
                 </td>
                 <td width="100px" height="50px">
-                    ${product.name}
+                    ${product.remark}
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     资金方：
@@ -186,19 +186,25 @@
                     利率(%年）：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.interestRate*100}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     评审费率(%)：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.approveFeeRate*100}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     担保费率（%）：
                 </td>
                 <td name="pres" width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="4" minFractionDigits="4">
                     ${productIdAndTerm.guaranteeFeeRate*100}
+                    </fmt:formatNumber>
                 </td>
             </tr>
             <tr>
@@ -206,19 +212,25 @@
                     提现金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.loanAmount}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     授信金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${shouxin}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     净收金额(合同本金-首期各种费用)：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.netReceiveAmount}
+                    </fmt:formatNumber>
                 </td>
             </tr>
             <tr>
@@ -226,13 +238,17 @@
                     待还余额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.balanceAmount}
+                    </fmt:formatNumber>
                 </td>
                 <td bgcolor="#F2F2F2" width="100px" height="50px">
                     已还金额：
                 </td>
                 <td width="100px" height="50px">
+                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">
                     ${loanOrder.paidAmount}
+                    </fmt:formatNumber>
                 </td>
                 <c:if test="${not empty tongDunData }">
                     <td bgcolor="#F2F2F2" width="100px" height="50px">
@@ -256,21 +272,21 @@
             <div style="display:block;word-break: break-all;word-wrap: break-word;">${tongDunData.blackBox}</div>
         </div>
 
-        <c:if test="${not empty commonPhoto}">
+        <c:if test="${not empty loanVoucherPhoto}">
             <div style="margin-top: 20px;">
                 <h3 style="background-color:#ADADAD">
-                    <span style="font-size:20px;padding: 5px;">提现影像信息</span>
+                    <span style="font-size:20px;padding: 5px;">借款凭证影像</span>
                 </h3>
                 <br/>
                 <div>
-                    <c:forEach items="${commonPhoto}" var="common">
+                    <c:forEach items="${loanVoucherPhoto}" var="loanVoucher">
                         <div style="float: left;margin: auto 20px;">
                             <div>
                                 <img style="max-height: 200px;max-width: 200px;"
-                                     class="photo-${common.typeName} dialog" src="${common.path}">
+                                     class="photo-${loanVoucher.typeName} dialog" src="${loanVoucher.path}">
                             </div>
                             <div style="text-align: center;margin-top: 5px;margin-bottom: 5px;">
-                                <span>${common.name}</span>
+                                <span>${loanVoucher.name}</span>
                             </div>
                         </div>
                     </c:forEach>
@@ -318,11 +334,15 @@
 
         <ul id="tabHeader" class="nav-tabs">
             <li id="li_base" class="active"><a href="javascript:void(0)" onclick="load(this,'baseData')">基本资料</a></li>
+
+            <shiro:hasPermission name='/backend/loan/repayOrder:list'>
             <li id="li_bond"><a href="javascript:void(0)" onclick="load(this,'repayPlan')">还款计划</a></li>
+            </shiro:hasPermission>
+
             <c:forEach items="${faddDetails}" var="fadd">
                 <li id="li_credit"><a href="javascript:void(0)" onclick="load(this,'${fadd.id}')">${fadd.contractName}</a></li>
             </c:forEach>
-            <c:if test="${hasAuthdata}">
+            <c:if test="${xinwangAuth}">
               <li id="li_xinwangAuth"><a href="javascript:void(0)" onclick="load(this,'xinwangAuth')">新网授信数据</a></li>
             </c:if>
             <c:if test="${tobaccoAuth}">
@@ -335,9 +355,14 @@
             <div id = "baseData">
                 <iframe frameborder="no" border="0" src="${ctx}/backend/customer/detail/${user.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
+
+            <!-- 还款计划 -->
+            <shiro:hasPermission name='/backend/loan/repayOrder:list'>
             <div id = "repayPlan" style="display:none;">
                 <iframe frameborder="no" border="0" src="${ctx}/backend/loan/repayOrder/repayPlan/${loanOrder.id}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe>
             </div>
+            </shiro:hasPermission>
+
             <c:forEach items="${faddDetails}" var="fadd">
                 <div id="${fadd.id}" style="display:none;"><iframe frameborder="no" border="0" src="${fadd.viewpdfUrl}" style="width: 1517px;min-height: 1000px;overflow-x: hidden;overflow-y: auto"></iframe></div>
             </c:forEach>
@@ -351,10 +376,10 @@
 
     </div>
     <c:if test="${dataApprovePass}">
-        <div id="dataApprovePass" style="background-color: white;">
+        <div id="dataApprovePass" style="background-color: white;" hidden="hidden">
             <button style="width: 90px;height: 50px;float: right" onclick="dataApprovePass();"><span style="color: #ac2925;size: 30px">内审通过</span></button>
+            <br/><br/><br/><br/><br/>
         </div>
-        <br/><br/><br/><br/><br/>
 
     </c:if>
 
@@ -364,6 +389,10 @@
 </body>
 <script type="text/javascript">
 
+    <shiro:hasPermission name="/backend/loanOrder:approve">
+    document.getElementById("dataApprovePass").removeAttribute("hidden");
+
+    </shiro:hasPermission>
 
     function dataApprovePass() {
         BUI.use('bui/overlay',function (Overlay){

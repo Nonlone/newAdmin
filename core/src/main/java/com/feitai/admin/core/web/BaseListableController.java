@@ -59,6 +59,7 @@ public abstract class BaseListableController<T> extends BaseController {
     }
 
 
+    @Deprecated
     public String getCommonSqls(ServletRequest request, String selectMultiTableSql) {
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(selectMultiTableSql);

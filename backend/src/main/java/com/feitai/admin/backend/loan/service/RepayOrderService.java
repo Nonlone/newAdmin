@@ -44,4 +44,8 @@ public class RepayOrderService extends ClassPrefixDynamicSupportService<RepayOrd
         return "未知银行";
     }
 
+    public List<RepayOrderMore> findByRepayPlanId(Long repayPlanId) {
+        Example example = Example.builder(RepayOrderMore.class).andWhere(Sqls.custom().andEqualTo("repayPlanId",repayPlanId)).build();
+        return getMapper().selectByExample(example);
+    }
 }

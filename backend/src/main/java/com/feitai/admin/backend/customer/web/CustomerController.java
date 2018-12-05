@@ -109,7 +109,6 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
                     json.put("birthday",IdCardUtils.getBirthByIdCard(idCardDataExtend.getIdCard()));
                     json.put("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
                 }
-
                 resultList.add(json);
             } catch (Exception e) {
                 log.error(String.format("this json handle fail:[{}]! message:{}", json, e.getMessage()), e);
@@ -216,9 +215,10 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         model.addObject("work", work);
         if (work != null) {
             model.addObject("hyWorkContactPhone", Desensitization.phone(work.getContactPhone()));
-            model.addObject("belongIndustry", appConfigService.findByTypeCodeAndCode("belongIndustry", work.getBelongIndustry()));
+            model.addObject("tradeType", appConfigService.findByTypeCodeAndValue("tradeType", work.getBelongIndustry()));
             model.addObject("jobsType", appConfigService.findByTypeCodeAndCode("jobsType", work.getJobsType()));
         } else {
+            model.addObject("registerTime","无");
             model.addObject("belongIndustry", "无");
             model.addObject("jobsType", "无");
         }

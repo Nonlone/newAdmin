@@ -16,11 +16,8 @@ import com.feitai.admin.mop.base.enums.SuperPartnerOrderStatusEnum;
 import com.feitai.admin.mop.withdraworder.request.UpdateRequest;
 import com.feitai.admin.mop.withdraworder.vo.DownloadInfo;
 import com.feitai.admin.mop.withdraworder.vo.WithdrawOrderExcelModel;
-import com.feitai.jieya.server.utils.OkHttpClientUtil;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.feitai.utils.http.OkHttpClientUtils;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,7 +114,7 @@ public class AdminWithdrawOrderService {
         return orderReceiverInfoMapper.selectOneByExample(example);
     }
 
-    public boolean updateWithdrawOrderStatus(long userId, long orderId, int status, String operator, String remark, String type) {
+    public boolean updateWithdrawOrderStatus(long userId, long orderId, int status, String operator, String remark, String type) throws IOException {
 
         if (SuperPartnerOrderStatusEnum.AUDIT_PASS.getValue() != status && SuperPartnerOrderStatusEnum.AUDIT_REJECT.getValue() != status) {
             throw new BusinessException("提交了非法审核状态");
@@ -131,7 +128,7 @@ public class AdminWithdrawOrderService {
         }
     }
 
-    private RpcResult doUpdateWithdrawOrderStatus(long userId, long orderId, int status, String operator, String remark, String type) {
+    private RpcResult doUpdateWithdrawOrderStatus(long userId, long orderId, int status, String operator, String remark, String type) throws IOException {
         UpdateRequest updateRequest = new UpdateRequest();
         updateRequest.setOperator(operator);
         updateRequest.setOrderId(orderId);
@@ -139,7 +136,7 @@ public class AdminWithdrawOrderService {
         updateRequest.setStatus(status);
         updateRequest.setUserId(userId);
         updateRequest.setType(type);
-        String resultStr = OkHttpClientUtil.postJson(orderUpdateUrl, JSON.toJSONString(updateRequest));
+        String resultStr = OkHttpClientUtils.postReturnBody(orderUpdateUrl, JSON.toJSONString(updateRequest));
         return JSON.parseObject(resultStr, RpcResult.class);
     }
 
@@ -241,14 +238,14 @@ public class AdminWithdrawOrderService {
         String reverse = jsonObject.get("reverse").toString();
 
         Path frontPath = Paths.get(path + withdrawOrder.getId() + "-01.jpg");
-        Response response = OkHttpClientUtil.client.newCall(new Request.Builder().url(front).build()).execute();
+        Response response = OkHttpClientUtils.get(front);
         if (response.isSuccessful()) {
             Files.copy(response.body().byteStream(), frontPath);
             fileList.add(frontPath);
         }
 
         Path reversePath = Paths.get(path + withdrawOrder.getId() + "-02.jpg");
-        Response response2 = OkHttpClientUtil.client.newCall(new Request.Builder().url(reverse).build()).execute();
+        Response response2 = OkHttpClientUtils.get(reverse);
         if (response2.isSuccessful()) {
             Files.copy(response2.body().byteStream(), reversePath);
             fileList.add(reversePath);

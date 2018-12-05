@@ -27,13 +27,14 @@ public class PhotoService extends ClassPrefixDynamicSupportService<PhotoAttach> 
                                 PhotoType.NOD.getValue(),
                                 PhotoType.BLINK.getValue(),
                                 PhotoType.SHAKE.getValue(),
-                                PhotoType.MOUTH.getValue()
+                                PhotoType.MOUTH.getValue(),
+                                PhotoType.QC_LIVING_IMG.getValue(),
                         }))
         ).orderByAsc("type").build();
         return mapper.selectByExample(example);
     }
 
-    public List<PhotoAttach> findCommonPhotoByUserId(long userId) {
+    public List<PhotoAttach> findLoanVoucherPhotoByUserId(long userId) {
         Example example = Example.builder(PhotoAttach.class).andWhere(
                 Sqls.custom().andEqualTo("userId", userId)
                         .andIn("type", Arrays.asList(new Integer[]{

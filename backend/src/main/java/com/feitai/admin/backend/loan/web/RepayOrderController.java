@@ -10,7 +10,6 @@ package com.feitai.admin.backend.loan.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.csvreader.CsvWriter;
-import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.customer.service.AreaService;
 import com.feitai.admin.backend.customer.service.IdCardService;
 import com.feitai.admin.backend.customer.service.UserService;
@@ -33,7 +32,6 @@ import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.bank.model.UserBankCard;
-import com.feitai.jieya.server.dao.contract.model.ContractFaddDetail;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
 import com.feitai.jieya.server.dao.data.model.LocationData;
 import com.feitai.jieya.server.dao.fund.model.Fund;
@@ -43,28 +41,24 @@ import com.feitai.jieya.server.dao.loan.model.RepayPlan;
 import com.feitai.jieya.server.dao.product.model.Product;
 import com.feitai.jieya.server.dao.product.model.ProductTermFeeFeature;
 import com.feitai.jieya.server.dao.user.model.User;
-import com.feitai.jieya.server.utils.IdCardUtils;
 import com.feitai.utils.Desensitization;
 import com.feitai.utils.ObjectUtils;
 import com.feitai.utils.datetime.DateUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -165,12 +159,6 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         return modelAndView;
     }
 
-    @RequestMapping(value = "listOut")
-    @ResponseBody
-    public Map<String, Object> listOut(ServletRequest request){
-        return listSupport(request);
-    }
-
 	@RequiresPermissions("/backend/loan/repayOrder:list")
     @RequestMapping(value = "list")
     @ResponseBody
@@ -180,10 +168,17 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     }
 
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
-    //@RequiresPermissions("/admin/loan/loanOrder:auth")
+    @RequiresPermissions("/backend/loan/repayOrder:list")
     public ModelAndView auth(@PathVariable("id") String id) {
         ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/detail");
         RepayOrderMore repayOrder = repayOrderService.findOneBySql(getOneSql(id));
+        List<RepayOrderMore> repayOrderMores = repayOrderService.findByRepayPlanId(repayOrder.getRepayPlanId());
+        double amount = new Double(0);
+        for(RepayOrderMore repayOrderMore:repayOrderMores){
+            amount +=  repayOrderMore.getAmount().doubleValue();;
+        }
+        modelAndView.addObject("amount",amount);
+
         Long userId = repayOrder.getUserId();
         User user = userService.findOne(userId);
         IdCardData idcard = idcardService.findByUserId(userId);
@@ -194,6 +189,8 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         modelAndView.addObject("repayOrder", repayOrder);
         modelAndView.addObject("user", user);
         modelAndView.addObject("idcard", idcard);
+        String hyIdcard = Desensitization.idCard(idcard.getIdCard());
+        modelAndView.addObject("hyIdcard", hyIdcard);
 
         //基本信息
         String statu = mapProperties.getRepayOrderStatus(repayOrder.getStatus().toString());
@@ -230,7 +227,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         if(bankCardDetail.length()>0){
             repayCardString = bankCardDetail.substring(0, bankCardDetail.length() - 1);
         }
-        modelAndView.addObject("payCard", repayCardString);
+        modelAndView.addObject("repayCard", repayCardString);
 
         //收款银行卡
         List<UserBankCard> byUserIdAndPay = repayOrderService.findByUserIdAndPay(userId);
@@ -258,9 +255,6 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         }
         modelAndView.addObject("areaList",areaList);
 
-        //发大大合同
-        List<ContractFaddDetail> faddDetails = loanOrderService.getFaddByLoanOrder(loanOrder.getId());
-        modelAndView.addObject("faddDetails",faddDetails);
 
         //日期类
         if(loanOrder.getPayLoanTime()!=null){
@@ -307,7 +301,11 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         //根据request获取page
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
-        Page<RepayOrderMore> repayOrderMorePage = list(getCommonSqls(request,getSelectMultiTable().buildSqlString()), pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        StringBuffer sbSql = new StringBuffer();
+        sbSql.append(getSelectMultiTable().buildSqlString());
+        sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
+        sbSql.append(" GROUP BY " + SelectMultiTable.MAIN_ALAIS + ".repay_plan_id");
+        Page<RepayOrderMore> repayOrderMorePage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC", pageNo, pageSize, getCountSqls(request), SelectMultiTable.RCOUNT_ALIAS);
         List<RepayOrderMore> content = repayOrderMorePage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
         for (RepayOrderMore repayOrderMore :
@@ -378,7 +376,13 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
             substring = stringBuffer.substring(0, stringBuffer.length() - 1);
         }
         json.put("payCard", substring);
-
+        List<RepayOrderMore> repayOrderMores = repayOrderService.findByRepayPlanId((Long)json.get("repayPlanId"));
+        double amount = new Double(0);
+        for(RepayOrderMore repayOrder:repayOrderMores){
+            amount +=  repayOrder.getAmount().doubleValue();;
+        }
+        DecimalFormat df = new DecimalFormat("0.00");
+        json.put("amount",df.format(amount));
         json.put("status",mapProperties.getRepayOrderStatus(json.getString("status")));
         return json;
     }
@@ -393,6 +397,8 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
             sbSql.append(getSelectMultiTable().buildCountSqlString());
         }
         sbSql.append(searchSql);
+        sbSql.append(" Group by " + SelectMultiTable.MAIN_ALAIS + ".repay_plan_id )tcount");
+        sbSql.insert(0,"select count(tcount." + SelectMultiTable.COUNT_ALIAS + ") AS " + SelectMultiTable.RCOUNT_ALIAS + " from (" );
         return sbSql.toString();
     }
 

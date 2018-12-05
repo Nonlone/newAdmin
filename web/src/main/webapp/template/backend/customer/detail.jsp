@@ -206,7 +206,7 @@
                 <tbody>
                 <tr>
                     <td bgcolor="#F2F2F2" width="150px">所属行业</td>
-                    <td >${belongIndustry}</td>
+                    <td >${tradeType}</td>
                 </tr>
                 <tr>
                     <td bgcolor="#F2F2F2" width="150px">工作类型</td>
@@ -217,8 +217,12 @@
                     <td >${work.companyName}</td>
                 </tr>
                 <tr>
-                    <td bgcolor="#F2F2F2" width="150px">单位地址</td>
+                    <td bgcolor="#F2F2F2" width="150px">单位地址(注册地址)</td>
                     <td >${work.provinceName}&nbsp;${work.cityName}&nbsp;${districtName}&nbsp;${work.companyAddress}</td>
+                </tr>
+                <tr>
+                    <td bgcolor="#F2F2F2" width="150px">单位联系人名称</td>
+                    <td >${work.contactName}</td>
                 </tr>
                 <tr>
                     <td bgcolor="#F2F2F2" width="150px">单位联系人手机</td>
@@ -237,18 +241,35 @@
                                 test="${not empty work.contactTelephoneExtension}">&nbsp;-&nbsp;${work.contactTelephoneExtension}</c:if></td>
                     </c:if>
                 </tr>
-                <c:if test="${not empty work.organizationCode}">
+                <c:if test="${work.jobsType!=1}">
                     <tr>
                         <td bgcolor="#F2F2F2" width="200px">公司企业机构代码</td>
                         <td >${work.organizationCode}</td>
                     </tr>
-                </c:if>
-                <c:if test="${not empty work.businessLicenseUrl}">
                     <tr>
                         <td bgcolor="#F2F2F2" width="200px">公司营业执照</td>
                         <td >
                             <img class="photo-businessLicenseUrl dialog" src="${work.businessLicenseUrl}" style="max-height: 200px;max-width: 200px;"/>
                         </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#F2F2F2" width="200px">注册时间</td>
+                        <td >
+                            <c:if test="${ not empty work.registerTime }">
+                                <fmt:formatDate value="${work.registerTime}" pattern="yyyy-MM-dd"/>
+                            </c:if>
+                            <c:if test="${ empty work.registerTime }">
+                                无
+                            </c:if>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#F2F2F2" width="200px">注册资本(万元)</td>
+                        <td >${work.registerCapital}</td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#F2F2F2" width="200px">经营范围</td>
+                        <td >${work.businessScope}</td>
                     </tr>
                 </c:if>
                 </tbody>
@@ -259,6 +280,7 @@
 </div>
 </body>
 <script type="text/javascript">
+
     $(function () {
         //放大图片
         $('img.dialog').on('click', function () {

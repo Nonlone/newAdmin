@@ -140,10 +140,12 @@ public class OpenCardController extends BaseListableController<CardMore> {
      * @return
      */
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
+    @RequiresPermissions("/backend/opencard:list")
     public ModelAndView detail(@PathVariable("id") Long id) {
         ModelAndView model = new ModelAndView("/backend/opencard/detail");
         //授信信息
         CardMore card = cardService.findOne(id);
+
         if (card != null) {
             model.addObject("cardStatus", mapProperties.getCardStatus(card.getStatus()));
             if (StringUtils.isNotBlank(card.getRejectReason())) {
@@ -161,6 +163,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
             model.addObject("user", user);
             model.addObject("userAuth", mapProperties.getUserAuth(user.getAuthStatus()));
             model.addObject("hyPhone", Desensitization.phone(user.getPhone()));
+            model.addObject("hyPhone", user.getPhone());
         }
 
         // 征信项

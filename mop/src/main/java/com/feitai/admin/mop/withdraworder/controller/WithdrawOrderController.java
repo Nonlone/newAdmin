@@ -84,7 +84,7 @@ public class WithdrawOrderController extends BaseListableController<WithdrawOrde
     @RequiresPermissions("/admin/mop/partner/withdrawOrder:update")
     @RequestMapping("status/update")
     @ResponseBody
-    public Object updateWithdrawOrderStatus(@ModelAttribute UpdateRequest updateRequest) {
+    public Object updateWithdrawOrderStatus(@ModelAttribute UpdateRequest updateRequest) throws IOException {
         adminWithdrawOrderService.updateWithdrawOrderStatus(
                 updateRequest.getUserId(),
                 updateRequest.getOrderId(),

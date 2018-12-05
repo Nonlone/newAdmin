@@ -127,27 +127,7 @@
         var ViewBtn = true;
         var spantrue = "<span style='color:#32CD32'>";
         var spanfalse = "<span style='color:#FF4500'>";
-        var statusEmun = {
-            "VALVE_REJECT": spanfalse + "阀门拒绝</span>",
-            "AUTHORIZED_REJECT": spanfalse + "授信拒绝</span>",
-            "CUSTOMER_REJECT": spanfalse + "主体拒绝</span>",
-            "WITHDRAW_REJECT": spantrue + "提现拒绝</span>",
-            "QUOTACHANGE_REJECT": spantrue + "提额拒绝</span>",
-            "RENEWAL_REJECT": spanfalse + "续卡拒绝</span>",
-            "RENEWAL_APPROVING": spanfalse + "续卡审核中"
-            ,
-            "QUOTACHAGNE_APPROVING": spantrue + "提额审核中</span>",
-            "WITHDRAW_APPROVING": spantrue + "提现审核中</span>",
-            "OPENCARD_APPROVING": "授信审核中",
-            "FILLING": "资料填写中",
-            "LOANING": spantrue + "放款中</span>",
-            "UNACTIVE": "未激活",
-            "NORMAL": spantrue + "授信（未提现）</span>",
-            "DEBT": spantrue + "授信（已提现）"
-            ,
-            "OVERDUE": spantrue + "逾期</span>",
-            "ABANDONED": spanfalse + "卡废弃</span>"
-        };
+
 
         //定义页面权限
         var add = false, update = false, del = false, list = false;
@@ -183,27 +163,27 @@
                         return '<span style="color:#ff9955">未填写</span>';
                     }
                 }},
-            {title:'注册手机号',dataIndex:'user',width:'10%',renderer:function (value) {
+            {title:'注册手机号',dataIndex:'user',width:'100px',renderer:function (value) {
                     if(value){
                         return value.phone;
                     }else{
                         return "";
                     }
                 }},
-            {title:'产品名称',dataIndex:'product',width:'10%',renderer:function(value){
+            {title:'产品名称',dataIndex:'product',width:'100px',renderer:function(value){
                     if(value){
-                        return value.name;
+                        return value.remark;
                     }
                     return "";
                 }},
-            {title:'授信状态',dataIndex:'cardStatusName',width:'10%'},
+            {title:'授信状态',dataIndex:'cardStatusName',width:'100px'},
             {title:"授权项",dataIndex:'auths',width:'150px'},
-            {title:'授信额度',dataIndex:'creditSum',width:'10%'},
-            {title:'注册渠道',dataIndex:'registChannelId',width:'10%'},
+            {title:'授信额度',dataIndex:'creditSum',width:'80px'},
+            {title:'注册渠道',dataIndex:'registChannelId',width:'100px'},
             {title:'创建时间',dataIndex:'createdTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'进件渠道',dataIndex:'applyChannelId',width:'10%'},
+            {title:'进件渠道',dataIndex:'applyChannelId',width:'80px'},
             {title:'提交审批时间',dataIndex:'submitTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'注册客户端',dataIndex:'user',width:'10%',renderer:function(value) {
+            {title:'注册客户端',dataIndex:'user',width:'80px',renderer:function(value) {
                     if (value) {
                         return value.osType;
                     }

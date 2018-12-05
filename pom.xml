@@ -4,7 +4,7 @@
 
     <groupId>com.feitai</groupId>
     <artifactId>admin</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>2.0.0</version>
     <packaging>pom</packaging>
     <name>Admin</name>
     <description>Feitai Admin</description>
@@ -98,8 +98,8 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
                     <!--git 账号密码-->
-                    <username>linguocheng</username>
-                    <password>Feitai1234</password>
+                    <username>maven-releases</username>
+                    <password>maven-releases</password>
                     <!--禁用超级pom中的profile文件-->
                     <useReleaseProfile>true</useReleaseProfile>
                 </configuration>

@@ -29,7 +29,7 @@
                        </c:choose>                       
                     </td>
                     <td bgcolor="#F2F2F2" width="50px" height="30px" style="vertical-align: middle; ">
-                        年度毛利润：
+                        年度毛利润(万元)：
                     </td>
                     <td width="100px" height="30px" style="vertical-align: middle;">
                          <c:choose>
@@ -42,7 +42,7 @@
                 </tr>
                 <tr>
                     <td bgcolor="#F2F2F2" width="50px" height="30px" style="vertical-align: middle;">
-                        经营主体年收入：
+                        经营主体年收入(万元)：
                     </td>
                     <td width="100px" height="30px" style="vertical-align: middle; ">
                         <c:choose>
@@ -53,7 +53,7 @@
                        </c:choose>  
                     </td>
                     <td bgcolor="#F2F2F2" width="50px" height="30px" style="vertical-align: middle; ">
-                       近六个月营业额：
+                       近六个月营业额(万元)：
                     </td>
                     <td width="100px" height="30px" style="vertical-align: middle;">
                         <c:choose>
@@ -84,7 +84,7 @@
                           <c:when test="${empty attachUserBusiInfor.createdTime}">
                           未填写
                           </c:when>
-                          <c:otherwise>${attachUserBusiInfor.createdTime}</c:otherwise>
+                          <c:otherwise><fmt:formatDate value="${attachUserBusiInfor.createdTime}" pattern="yyyy-MM-dd"/></c:otherwise>
                        </c:choose>  
                     </td>  
                 </tr>
@@ -92,6 +92,28 @@
                 </tbody>
             </table>
         </div>
+         <c:if test="${not empty tobaccoPhoto}">
+            <div style="margin-top: 20px;">
+                <h3 style="background-color:#ADADAD">
+                    <span style="font-size:20px;padding: 5px;">影像信息</span>
+                </h3>
+                <br/>
+                    <div>
+                        <c:forEach items="${tobaccoPhoto}" var="tobacco">
+                            <div style="float: left;margin: auto 20px;">
+                                <div>
+                                    <img style="max-height: 200px;max-width: 200px;"
+                                         class="photo-${tobacco.typeName} dialog" src="${tobacco.path}">
+                                </div>
+                                <div style="text-align: center;margin-top: 5px;margin-bottom: 5px;">
+                                    <span>${tobacco.name}</span>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                    <div style="clear: both"></div>
+            </div>
+        </c:if>
     </div>
 </div>
 </body>
