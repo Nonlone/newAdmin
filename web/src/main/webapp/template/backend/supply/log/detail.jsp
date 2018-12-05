@@ -45,7 +45,7 @@
         <hr/>
         <c:forEach items="${history}" var="his" varStatus="">
 
-            <div style="font-size: 15px">提交补件时间：${his.createdTime}<button style="width: 60px;height: 30px;float: right" onclick="supply2dashu('${his.id}');"><span style="color: #ac2925;size: 30px">发送总部</span></button></div>
+            <div style="font-size: 15px">提交补件时间：${his.createdTime}<button  name="sendDashu"  style="width: 60px;height: 30px;float: right" hidden="hidden" onclick="supply2dashu('${his.id}');"><span style="color: #ac2925;size: 30px">发送总部</span></button></div>
             <br/>
             <table cellspacing="0" class="table table-bordered">
                 <thead>
@@ -106,6 +106,14 @@
 </div>
 </body>
 <script type="text/javascript">
+
+    <shiro:hasPermission name="/backend/supply/log:supply">
+    debugger;
+        var elementsByName = document.getElementsByName("sendDashu");
+        for(var i = 0;i<elementsByName.length;i++){
+            elementsByName[i].removeAttribute("hidden");
+        }
+    </shiro:hasPermission>
 
     function supply2dashu(id) {
         BUI.use('bui/overlay',function (Overlay){

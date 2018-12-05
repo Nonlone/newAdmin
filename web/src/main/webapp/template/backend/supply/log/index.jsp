@@ -95,6 +95,13 @@
                     return '';
                 }
             }},
+        {title:'用户ID',dataIndex:'user',width:'135px',renderer:function (value) {
+                if(value){
+                    return value.id;
+                }else{
+                    return '';
+                }
+            }},
         {title:'注册手机号',dataIndex:'user',width:"150px",renderer:function (value) {
 				if(value){
 				    return value.phone;
@@ -120,13 +127,6 @@
                      }
                  }
                  return '';
-             }},
-		 {title:'用户ID',dataIndex:'user',width:'135px',renderer:function (value) {
-				 if(value){
-				     return value.id;
-				 }else{
-				     return '';
-				 }
              }}
         ];
     
@@ -140,12 +140,13 @@
         showRemoveBtn : del,
         columns : columns,
         operationColumnRenderer : function(value, obj){//操作列最追加按钮
-            return CrudGrid.createLink({
+            return CrudGrid.createLinkCustomSpan({
+                class:"page-action grid-command x-icon x-icon-info",
                 id: obj.id,
-                title:  '补件详细记录',
-                text: '<li class="icon icon-list-alt"></li>',
+                title: obj.idCardData.name+"补件记录",
+                text: '<i class="icon icon-white icon-list-alt"></i>',
                 href: $ctx+"/backend/supply/log/detail/"+obj.id
-            });
+            })
      },
         storeCfg:{//定义store的排序，如果是复合主键一定要修改
             sortInfo : {

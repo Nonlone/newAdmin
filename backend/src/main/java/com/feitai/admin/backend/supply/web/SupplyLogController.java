@@ -85,7 +85,7 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
      * @return
      */
     @PostMapping(value = "/supplyLog2Dashu/{supplyLogId}")
-    @RequiresPermissions("/backend/supply/log:auth")
+    @RequiresPermissions("/backend/supply/log:supply")
     @ResponseBody
     public Object supplyLog2Dashu(@PathVariable("supplyLogId") String supplyLogId) {
         SupplyLogMore supplyLogMore = supplyLogService.findOne(supplyLogId);

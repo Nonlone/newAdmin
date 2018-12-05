@@ -1,6 +1,5 @@
 package com.feitai.admin.system.model;
 
-import com.feitai.jieya.server.dao.base.model.BaseModel;
 import lombok.Data;
 import lombok.ToString;
 
@@ -16,7 +15,7 @@ import java.util.Date;
 @Data
 @ToString
 @Table(name = "sys_supply_count_info")
-public class SupplyCountInfo extends BaseModel {
+public class SupplyCountInfo{
 
     @Id
     private Long id;
