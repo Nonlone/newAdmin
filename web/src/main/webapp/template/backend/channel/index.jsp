@@ -76,9 +76,6 @@
 						<input name="mainPackgage" type="hidden" id="mainPackgage" onchange="findPrimary(this.value);">
 					</div>
 				</div>
-				<div class="row">
-					<span style='color:#ffbc00'>请先选择一级渠道!自动抉择渠道标识前缀与渠道大类</span>
-				</div>
 			</div>
 			<div class="row">
 				<div class="control-group span8">
@@ -306,6 +303,9 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     });
 
     var beforeAddShow = function(dialog,form){
+        form.getField("channelSort").disable();
+        form.getField("primaryCode").disable();
+        select.enable();
         update = false;
     };
     crudGrid.on('beforeAddShow', beforeAddShow);
@@ -316,7 +316,8 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
         select.setSelectedValue('');
         select.setSelectedValue(record.mainPackgage);
         select.disable();
-        form.getField("primaryCode").disable();   
+        form.getField("channelSort").disable();
+        form.getField("primaryCode").disable();
     };
 
     crudGrid.on('beforeUpdateShow', beforeUpdateShow);
