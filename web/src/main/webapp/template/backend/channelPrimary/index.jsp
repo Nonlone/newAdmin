@@ -134,6 +134,7 @@ BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
         ];
     
 	var crudGrid = new CrudGrid({
+
 		entityName : '一级渠道',
     	pkColumn : 'id',//主键
       	storeUrl : '${ctx}/backend/channelPrimary/list',
