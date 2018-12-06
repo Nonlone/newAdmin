@@ -22,7 +22,7 @@ import tk.mybatis.mapper.util.Sqls;
 public class WorkService extends ClassPrefixDynamicSupportService<WorkData> {
 
 	public WorkData findByUserId(Long userId) {
-		Example example = Example.builder(WorkData.class).andWhere(Sqls.custom().andEqualTo("userId",userId)).build();
+		Example example = Example.builder(WorkData.class).andWhere(Sqls.custom().andEqualTo("userId",userId).andEqualTo("enable",true)).build();
 		return getMapper().selectOneByExample(example);
 	}
 

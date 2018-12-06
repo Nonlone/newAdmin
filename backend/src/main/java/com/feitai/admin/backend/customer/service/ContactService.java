@@ -13,7 +13,7 @@ import tk.mybatis.mapper.util.Sqls;
 public class ContactService extends ClassPrefixDynamicSupportService<ContactData> {
 
     public ContactData findByUserId(Long userId) {
-        return getMapper().selectOneByExample(Example.builder(ContactData.class).andWhere(Sqls.custom().andEqualTo("userId",userId)).build());
+        return getMapper().selectOneByExample(Example.builder(ContactData.class).andWhere(Sqls.custom().andEqualTo("userId",userId).andEqualTo("enable",true)).build());
     }
 
 }

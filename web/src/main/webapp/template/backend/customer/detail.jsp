@@ -99,9 +99,9 @@
                 <table cellspacing="0" class="table table-bordered" style="margin-top: 15px;">
                     <tbody>
                     <tr>
-                        <td bgcolor="#F2F2F2" width="250px" height="30px" style="vertical-align: middle;text-align: center; ">活体对比公安4K</td>
+                        <td bgcolor="#F2F2F2" width="250px" height="30px" style="vertical-align: middle;text-align: center; ">身份证人像对比公安4KK</td>
                         <td width="250px" style="vertical-align: middle;text-align: center; ">${authVerify}</td>
-                        <td bgcolor="#F2F2F2" width="218px" height="30px" style="vertical-align: middle;text-align: center; ">活体对比身份证正面</td>
+                        <td bgcolor="#F2F2F2" width="218px" height="30px" style="vertical-align: middle;text-align: center; ">活体对比身份证人像</td>
                         <td width="250px" style="vertical-align: middle;text-align: center; ">${livingVerify}</td>
                     </tr>
                     </tbody>
@@ -257,9 +257,6 @@
                         <td >
                             <c:if test="${ not empty work.registerTime }">
                                 <fmt:formatDate value="${work.registerTime}" pattern="yyyy-MM-dd"/>
-                            </c:if>
-                            <c:if test="${ empty work.registerTime }">
-                                无
                             </c:if>
                         </td>
                     </tr>
