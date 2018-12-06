@@ -152,6 +152,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
             JSONObject jsonObject = JSON.parseObject(jsonString.getBody());
             return new BackendResponse((int) jsonObject.get("code"), (String) jsonObject.get("message"));
         } catch (Exception e) {
+            log.info(String.format("send backend[{%s}]",appProperties.getDataApprovePassUrl()),e);
             return new BackendResponse(-1, "连接服务器失败！");
         }
 
