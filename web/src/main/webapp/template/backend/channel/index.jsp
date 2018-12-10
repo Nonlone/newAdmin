@@ -316,6 +316,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
         select.setSelectedValue('');
         select.setSelectedValue(record.mainPackgage);
         select.disable();
+        form.getField("channelId").disable();
         form.getField("channelSort").disable();
         form.getField("primaryCode").disable();
     };
