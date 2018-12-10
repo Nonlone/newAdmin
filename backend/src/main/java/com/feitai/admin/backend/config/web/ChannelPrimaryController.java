@@ -120,7 +120,7 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("channelPrimary") ChannelPrimary channelPrimary){
 		channelPrimary.setUpdateTime(new Date());
-		this.channelPrimaryService.save(channelPrimary);
+		this.channelPrimaryService.saveChannelPrimaryAndChannel(channelPrimary);
 		return this.successResult;
 	}
 	
