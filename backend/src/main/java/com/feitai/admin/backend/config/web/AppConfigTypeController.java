@@ -36,6 +36,8 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 
 	@Autowired
 	private AppConfigTypeService appConfigTypeService;
+
+	private static final String TYPE_CODE = "typeCode";
 	
 	@RequestMapping(value = "index")
 	public String index() {
@@ -76,7 +78,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(HttpServletRequest request,HttpServletResponse response){
-		String typeCode = (String) request.getParameter("typeCode");
+		String typeCode = (String) request.getParameter(TYPE_CODE);
 		String name = (String) request.getParameter("name");
 		String remark = (String) request.getParameter("remark");
 		AppConfigType appConfigType = new AppConfigType();
@@ -93,7 +95,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(HttpServletRequest request,HttpServletResponse response){
-		String typeCode = (String) request.getParameter("typeCode");
+		String typeCode = (String) request.getParameter(TYPE_CODE);
 		String name = (String) request.getParameter("name");
 		String remark = (String) request.getParameter("remark");
 		AppConfigType appConfigType = appConfigTypeService.findOne(typeCode);
@@ -144,14 +146,14 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	protected String getSingleSql(String typeCode){
 		String sql = SelectMultiTable.builder(AppConfigType.class)
 				.leftJoin(AppConfig.class,"app_config",new OnCondition[]{
-						new OnCondition(SelectMultiTable.ConnectType.AND, "typeCode", Operator.EQ, "typeCode"),
+						new OnCondition(SelectMultiTable.ConnectType.AND, TYPE_CODE, Operator.EQ, TYPE_CODE),
 				}).buildSqlString()+"where maintable.type_Code = '"+typeCode+"' GROUP BY type_code";
 		return sql;
 	}
 	  private SelectMultiTable getSelectMultiTable() {
 	        return SelectMultiTable.builder(AppConfigType.class)
 					.leftJoin(AppConfig.class,"app_config",new OnCondition[]{
-							new OnCondition(SelectMultiTable.ConnectType.AND, "typeCode", Operator.EQ, "typeCode"),
+							new OnCondition(SelectMultiTable.ConnectType.AND, TYPE_CODE, Operator.EQ, TYPE_CODE),
 					});
 	    }
 	  

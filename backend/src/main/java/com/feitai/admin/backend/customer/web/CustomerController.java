@@ -129,35 +129,26 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         IdCardDataExtend idCardDataExtend = idcardService.findByUserId(userId);
         model.addObject("idCardDataExtend", idCardDataExtend);
         //脱敏处理
-        if (idCardDataExtend != null) {
-            if (StringUtils.isNotBlank(idCardDataExtend.getIdCard())) {
+        if (idCardDataExtend != null&&StringUtils.isNotBlank(idCardDataExtend.getIdCard())) {
                 // 年龄
                 model.addObject("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
                 // 生日
                 model.addObject("birthday", IdCardUtils.getBirthByIdCard(idCardDataExtend.getIdCard()));
                 // 身份证
                 model.addObject("hyIdcard", Desensitization.idCard(idCardDataExtend.getIdCard()));
-            } else {
-                // 年龄
-                model.addObject("age", "无");
-                // 生日
-                model.addObject("birthday", "无");
-                // 身份证
-                model.addObject("hyIdcard", "无");
-            }
-            if (!Objects.isNull(idCardDataExtend.getStartTime()) && !Objects.isNull(idCardDataExtend.getEndTime())) {
-                model.addObject("startTime", DateUtils.format(idCardDataExtend.getStartTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD));
-                model.addObject("endTime", DateUtils.format(idCardDataExtend.getEndTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD));
-            } else {
-                model.addObject("startTime", "无");
-                model.addObject("endTime", "无");
-            }
-        } else {
+        }else {
             // 年龄
             model.addObject("age", "无");
             // 生日
             model.addObject("birthday", "无");
+            // 身份证
             model.addObject("hyIdcard", "无");
+        }
+
+        if (idCardDataExtend != null&&!Objects.isNull(idCardDataExtend.getStartTime()) && !Objects.isNull(idCardDataExtend.getEndTime())) {
+            model.addObject("startTime", DateUtils.format(idCardDataExtend.getStartTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD));
+            model.addObject("endTime", DateUtils.format(idCardDataExtend.getEndTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD));
+        } else {
             model.addObject("startTime", "无");
             model.addObject("endTime", "无");
         }
