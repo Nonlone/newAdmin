@@ -15,6 +15,12 @@ import org.springframework.stereotype.Component;
 @ToString
 public class AppProperties {
 
+    /***
+     * 补件总部发送次数限制
+     */
+    @Value("${backend.supply2dashu:3}")
+    private int supply2dashu;
+
     /**
      * 资金方充值接口
      */
@@ -33,5 +39,10 @@ public class AppProperties {
     @Value("${api.server.dataApprovePass}")
     private String dataApprovePassUrl;
 
+    /***
+     * 补件发送至orderCenter
+     */
+    @Value("${api.orderCenter.supply2OrderCenter}")
+    private String supply2OrderCenter;
 
 }

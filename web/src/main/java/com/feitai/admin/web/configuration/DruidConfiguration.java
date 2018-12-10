@@ -1,6 +1,5 @@
 package com.feitai.admin.web.configuration;
 
-import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.alibaba.druid.support.spring.stat.DruidStatInterceptor;
@@ -14,9 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.sql.DataSource;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Druid的DataResource配置类

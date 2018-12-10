@@ -3,6 +3,7 @@ package com.feitai.admin.system.model;
 // Generated 2014-6-19 17:10:12 by Hibernate Tools 3.4.0.CR1
 
 import lombok.Data;
+import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 public class Permission {
 
 	@Id
+	@KeySql(useGeneratedKeys = true)
 	private Integer id;
 
 	private String name;

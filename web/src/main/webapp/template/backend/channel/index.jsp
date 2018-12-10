@@ -73,11 +73,8 @@
 				<div class="control-group span10">
 					<label class="control-label"><s>*</s>一级渠道</label>
 					<div class="controls" id ="primaryList" name='primaryList'>
-						<input name="mainPackgage" type="hidden" id="mainPackgage" onchange="findPrimary(this.value);">
+						<input name="mainPackgage" type="hidden" data-rules="{required:true,}" id="mainPackgage" onchange="findPrimary(this.value);">
 					</div>
-				</div>
-				<div class="row">
-					<span style='color:#ffbc00'>请先选择一级渠道!自动抉择渠道标识前缀与渠道大类</span>
 				</div>
 			</div>
 			<div class="row">
@@ -85,7 +82,7 @@
 					<label class="control-label"><s>*</s>应用名称:</label>
 					<div class="controls bui-form-field-select" data-items="{'借呀':'借呀'}"
 						 class="control-text input-small">
-						<input name="appName" type="hidden" value="">
+						<input name="appName" type="hidden" data-rules="{required:true,}" value="">
 					</div>
 				</div>
 				<div class="control-group span8">
@@ -110,7 +107,7 @@
 					<div class="controls">
 						<input id="primaryCode" name="primaryCode" class="input-minimum" readonly="true" data-rules="{required:false,}" type="text">
 						<input id="channelId" name="channelId" type="text"
-							data-remote="${ctx}/backend/channel/checkChannelId"
+							data-remote="${ctx}/backend/channel/checkChannelId" data-rules="{required:false,}"
 							class="input-minimum control-text">
 					</div>
 				</div>
@@ -118,7 +115,7 @@
 			</div>
 			<div class="row">
 				<div class="control-group span8">
-					<label class="control-label"><s>*</s>开发主体:</label>
+					<label class="control-label">开发主体:</label>
 					<div class="controls">
 						<input name="devBody" type="text"
 							   data-rules="{required:false,}"
@@ -126,7 +123,7 @@
 					</div>
 				</div>
 				<div class="control-group span8">
-					<label class="control-label"><s>*</s>渠道终端:</label>
+					<label class="control-label">渠道终端:</label>
 					<div class="controls bui-form-field-select" data-items="{'APP':'APP','H5':'H5','PC':'PC'}"
 						 class="control-text input-small">
 						<input name="channelTerminal" type="hidden" value="">
@@ -231,7 +228,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
         ];
     
 	var crudGrid = new CrudGrid({
-		entityName : 'Channel',
+		entityName : '二级渠道',
     	pkColumn : 'id',//主键
       	storeUrl : '${ctx}/backend/channel/list',
         addUrl : '${ctx}/backend/channel/add',
@@ -248,7 +245,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     	},
 		storeCfg:{//定义store的排序，如果是复合主键一定要修改
 			sortInfo : {
-				field : 'id',//排序字段
+				field : 'createdTime',//排序字段
 				direction : 'DESC' //升序ASC，降序DESC
 				}
 			}
@@ -306,6 +303,9 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     });
 
     var beforeAddShow = function(dialog,form){
+        form.getField("channelSort").disable();
+        form.getField("primaryCode").disable();
+        select.enable();
         update = false;
     };
     crudGrid.on('beforeAddShow', beforeAddShow);
@@ -316,7 +316,9 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
         select.setSelectedValue('');
         select.setSelectedValue(record.mainPackgage);
         select.disable();
-        form.getField("primaryCode").disable();   
+        form.getField("channelId").disable();
+        form.getField("channelSort").disable();
+        form.getField("primaryCode").disable();
     };
 
     crudGrid.on('beforeUpdateShow', beforeUpdateShow);

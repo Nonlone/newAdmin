@@ -25,8 +25,6 @@ import com.feitai.admin.system.model.User;
 import com.feitai.admin.system.service.UserService;
 import com.feitai.jieya.server.dao.fund.model.Fund;
 import com.feitai.jieya.server.dao.fund.model.FundAmountDetail;
-import com.feitai.utils.SnowFlakeIdGenerator;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -117,7 +115,7 @@ public class FundController extends BaseListableController<Fund> {
     }
 
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "index")
     public String index() {
         return "/backend/fund/index";
     }

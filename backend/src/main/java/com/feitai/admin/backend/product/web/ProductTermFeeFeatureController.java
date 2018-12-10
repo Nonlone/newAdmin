@@ -13,10 +13,8 @@ import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.jieya.server.dao.product.model.ProductTermFeeFeature;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
@@ -30,7 +28,7 @@ public class ProductTermFeeFeatureController extends BaseListableController<Prod
 	@Autowired
 	private ProductTermFeeFeatureService productTermFeeFeatureService;
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/productTermFeeFeature/index";
 	}

@@ -186,10 +186,13 @@
         selectProduct.render();
 
         //定义页面权限
-        var add=false,update=false,list=false,del=false;
+        var add=false,update=false,list=false,del=false,stop=false;
         //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
         <framwork:crudPermission resource="/backend/loanOrder"/>
 
+		<shiro:hasPermission name="/backend/loanOrder:stop">
+        	stop = true;
+		</shiro:hasPermission>
 
 
 
@@ -272,6 +275,10 @@
             showAddBtn : add,
             showUpdateBtn : update,
             showRemoveBtn : del,
+            gridCfg:{
+                innerBorder:true,
+
+            },
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
 
                 var editStr = '';
@@ -289,10 +296,10 @@
                     href: detailUrl + id
                 })
 
-                if(obj.status=="40"||obj.status=="20"){
-                    if(obj.cancelLoan==null){
+                if(obj.status=="3"||obj.status=="-10"||obj.status=="10"){
+                    if(obj.cancelLoan==null&&stop){
                         editStr= detail+'&nbsp'+'<span class="x-icon x-icon-error" title="终止放款" onclick="stop(\'\'+id+\'\');"><i class="icon icon-white icon-ban-circle"></i></span>';
-                    }else if(obj.cancelLoan==0){
+                    }else if(obj.cancelLoan==0&&stop){
                         editStr= detail+'&nbsp'+'<span class="x-icon x-icon-error" title="终止放款" onclick="stop(\'\'+id+\'\');"><i class="icon icon-white icon-ban-circle"></i></span>';
                     }else{
                         editStr = detail;

@@ -8,7 +8,6 @@
 package com.feitai.admin.backend.content.service;
 
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
-import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.cms.model.Advertise;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

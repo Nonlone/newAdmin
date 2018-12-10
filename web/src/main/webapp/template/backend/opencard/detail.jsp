@@ -108,7 +108,7 @@
                         授信额度
                     </td>
                     <td width="70px" height="30px">
-                        ${card.creditSum}
+                      <fmt:formatNumber type="number" value="${card.creditSum}" pattern="0.00" maxFractionDigits="2"/>                       
                     </td>
                 </tr>
                 <tr>
@@ -131,18 +131,7 @@
                         ${creditTime}
                     </td>
                 </tr>
-                <tr>
-                    <td bgcolor="#F2F2F2" width="30px" height="30px">
-                        是否授信拒绝
-                    </td>
-                    <td width="70px" height="30px">
-                        <c:if test="${empty rejectReason}">
-                            没拒绝
-                        </c:if>
-                        <c:if test="${not empty rejectReason}">
-                            拒绝
-                        </c:if>
-                    </td>
+                <tr>                   
                     <td bgcolor="#F2F2F2" width="30px" height="30px">
                         拒绝原因
                     </td>
@@ -152,6 +141,12 @@
                     <td bgcolor="#F2F2F2" width="30px" height="30px">
                     </td>
                     <td width="70px" height="30px">
+                    </td>
+                     <td bgcolor="#F2F2F2" width="30px" height="30px">
+                        
+                    </td>
+                    <td width="70px" height="30px">
+
                     </td>
                 </tr>
                 <c:if test="${not empty tongDunData }">

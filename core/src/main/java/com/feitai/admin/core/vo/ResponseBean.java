@@ -2,7 +2,6 @@ package com.feitai.admin.core.vo;
 
 import com.feitai.admin.core.contants.ResultCode;
 import lombok.Data;
-import lombok.NonNull;
 import lombok.ToString;
 
 @Data
@@ -13,12 +12,7 @@ public class ResponseBean<T> {
 
     private String message;
 
-    @NonNull
     private T data;
-
-    public ResponseBean() {
-    }
-
 
     public ResponseBean(ResultCode resultCode, T data) {
         this.code = resultCode.getCode();

@@ -27,7 +27,7 @@
 					</div>
 				</div>
 				<div class="control-group span_width">
-					<label class="control-label">时间T:</label>
+					<label class="control-label">还款日后3天:</label>
 					<div class="controls bui-form-group height_auto">
 						<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
 						<input type="text" class="calendar" onchange="changeDueDate(this)"
@@ -46,8 +46,6 @@
 			</div>
 			</div>
 			<input type="hidden" name="search_EQ_repayPlan.paidOff" value="1">
-			<!-- 	     <input type="hidden" name="search_GTE_repayPlan.overdueDays" value="1">
-		     <input type="hidden" name="search_LTE_repayPlan.overdueDays" value="3"> -->
 			<input id="GTE_dueDate" type="hidden"
 				name="search_GTE_repayPlan.dueDate"> <input
 				id="LTE_dueDate" type="hidden" name="search_LTE_repayPlan.dueDate">
@@ -152,7 +150,7 @@
 				width : '166px'
 			}, {
 				title : '客户姓名',
-				dataIndex : 'idCard',
+				dataIndex : 'idcard',
 				width : "166px",
 				renderer : function(value) {
 					if (value) {

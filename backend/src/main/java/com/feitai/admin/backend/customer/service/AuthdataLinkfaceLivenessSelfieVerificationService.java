@@ -1,8 +1,6 @@
 package com.feitai.admin.backend.customer.service;
 
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
-import com.feitai.admin.core.service.DynamitSupportService;
-import com.feitai.jieya.server.dao.callback.model.linkface.LinkfaceLivenessIdNumberVerifcation;
 import com.feitai.jieya.server.dao.callback.model.linkface.LinkfaceLivenessSelfieVerification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,8 @@
 package com.feitai.admin.backend.creditdata.service;
 
-import org.springframework.stereotype.Service;
-
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.jieya.server.dao.attach.model.AttachUserBusiInfor;
-
+import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 

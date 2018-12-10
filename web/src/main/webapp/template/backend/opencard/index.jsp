@@ -177,12 +177,12 @@
                     return "";
                 }},
             {title:'授信状态',dataIndex:'cardStatusName',width:'100px'},
-            {title:"授权项",dataIndex:'auths',width:'150px'},
+            {title:"授权项",dataIndex:'auths',width:'140px'},
             {title:'授信额度',dataIndex:'creditSum',width:'80px'},
             {title:'注册渠道',dataIndex:'registChannelId',width:'100px'},
-            {title:'创建时间',dataIndex:'createdTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'创建时间',dataIndex:'createdTime',width:'140px',renderer:BUI.Grid.Format.datetimeRenderer},
             {title:'进件渠道',dataIndex:'applyChannelId',width:'80px'},
-            {title:'提交审批时间',dataIndex:'submitTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'提交审批时间',dataIndex:'submitTime',width:'140px',renderer:BUI.Grid.Format.datetimeRenderer},
             {title:'注册客户端',dataIndex:'user',width:'80px',renderer:function(value) {
                     if (value) {
                         return value.osType;
@@ -212,12 +212,13 @@
                 if(!jQuery.isEmptyObject(obj.idCard)){
                     title = obj.idCard.name + "—授信信息"
                 }
-                return CrudGrid.createLink({
-                    id : obj.id,
-                    title : title,
-                    text : '<li class="icon-user"></li>',
-                    href : $ctx+"/backend/opencard/detail/" +obj.id
-                });
+                return CrudGrid.createLinkCustomSpan({
+                    class:"page-action grid-command x-icon x-icon-info",
+                    id: obj.id,
+                    title: title,
+                    text: '<i class="icon icon-white icon-list-alt"></i>',
+                    href: $ctx+"/backend/opencard/detail/" +obj.id
+                })
             },
             storeCfg:{//定义store的排序，如果是复合主键一定要修改
                 sortInfo : {

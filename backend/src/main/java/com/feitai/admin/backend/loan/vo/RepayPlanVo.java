@@ -1,12 +1,8 @@
 package com.feitai.admin.backend.loan.vo;
 
-import com.feitai.jieya.server.dao.loan.model.RepayOrder;
 import com.feitai.jieya.server.dao.loan.model.RepayPlan;
 import lombok.Builder;
 import lombok.Data;
-import lombok.ToString;
-import tk.mybatis.mapper.annotation.NameStyle;
-import tk.mybatis.mapper.code.Style;
 
 /**
  * detail:还款计划视图(Amount为应还，BalanceAmount为实还)

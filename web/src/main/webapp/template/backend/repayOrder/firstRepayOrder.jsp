@@ -25,7 +25,7 @@
 				</div>
 			</div>
 			<div class="control-group span_width">
-				<label class="control-label">时间T:</label>
+				<label class="control-label">还款日前5天:</label>
 				<div class="controls bui-form-group height_auto" >
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
 					<input  type="text" class="calendar" onchange="changeDueDate(this)"  data-tip="{text : '还款日前5天'}">
@@ -127,7 +127,7 @@
 
     var columns = [
         {title:'用户ID',dataIndex:'userId',width:'150px'},
-        {title:'客户姓名',dataIndex:'idCard',width:"150px",renderer: function (value) {
+        {title:'客户姓名',dataIndex:'idcard',width:"150px",renderer: function (value) {
                 if(value){
                     return value.name;
                 }else{

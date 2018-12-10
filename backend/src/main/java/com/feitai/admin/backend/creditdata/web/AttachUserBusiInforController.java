@@ -1,17 +1,5 @@
 package com.feitai.admin.backend.creditdata.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.creditdata.service.AttachUserBusiInforService;
 import com.feitai.admin.backend.creditdata.vo.PhotoAttachViewVo;
 import com.feitai.admin.backend.customer.service.PhotoService;
@@ -20,6 +8,16 @@ import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.jieya.server.dao.attach.model.AttachUserBusiInfor;
 import com.feitai.jieya.server.dao.attach.model.PhotoAttach;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/backend/xinwang")

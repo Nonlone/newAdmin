@@ -131,8 +131,9 @@ public class ChannelController extends BaseListableController<Channel> {
 	public Object add(@Valid Channel channel){
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
 		channel.setMainPackageCode(channelPrimary.getChannelCode().toString());
-		channel.setChannelId(channelPrimary.getChannelCode().toString()+"_"+channel.getChannelId());
+		channel.setChannelId(channelPrimary.getChannelCode()+"_"+channel.getChannelId());
 		channel.setCreatedTime(new Date());
+		channel.setChannelSort(channelPrimary.getChannelSort());
 		channel.setUpdateTime(new Date());
 		this.channelService.save(channel);
 		return BaseListableController.successResult;
@@ -143,9 +144,9 @@ public class ChannelController extends BaseListableController<Channel> {
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("channel") Channel channel){
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
-		channel.setMainPackageCode(channelPrimary.getChannelCode().toString());
-		channel.setChannelId(channelPrimary.getChannelCode().toString()+"_"+channel.getChannelId());
+		channel.setMainPackageCode(channelPrimary.getChannelCode());
 		channel.setUpdateTime(new Date());
+		channel.setMainPackageCode(channelPrimary.getChannelCode());
 		this.channelService.save(channel);
 		return BaseListableController.successResult;
 	}

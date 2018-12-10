@@ -7,24 +7,16 @@ import com.feitai.admin.system.mapper.RoleMapper;
 import com.feitai.admin.system.mapper.UserRoleMapper;
 import com.feitai.admin.system.model.*;
 import com.feitai.admin.system.vo.Menu;
-import com.feitai.base.mybatis.ManyAnnotationFieldWalkProcessor;
 import com.feitai.base.mybatis.OneAnnotationFieldWalkProcessor;
 import com.feitai.utils.ObjectUtils;
-import com.feitai.utils.digest.SHAUtils;
-import com.feitai.utils.encode.HexUtils;
 import com.feitai.utils.identity.Encodes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
-import java.security.GeneralSecurityException;
 import java.util.*;
 
 @Service

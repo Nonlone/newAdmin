@@ -78,7 +78,7 @@
 					<label class="control-label"><s>*</s>渠道大类:</label>
  					 <div id="channelSortUpdateSelect" class="controls"
 						 class="control-text input-small">
-						<input id="channelSortUpdate" name="channelSort" type="hidden" value="">
+						<input id="channelSortUpdate" name="channelSort" data-rules="{required:true,}" type="hidden" value="">
 					</div>
 				</div>
 			</div>
@@ -134,6 +134,7 @@ BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
         ];
     
 	var crudGrid = new CrudGrid({
+
 		entityName : '一级渠道',
     	pkColumn : 'id',//主键
       	storeUrl : '${ctx}/backend/channelPrimary/list',
@@ -151,7 +152,7 @@ BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
     	},
 		storeCfg:{//定义store的排序，如果是复合主键一定要修改
 			sortInfo : {
-				field : 'updateTime',//排序字段
+				field : 'createdTime',//排序字段
 				direction : 'DESC' //升序ASC，降序DESC
 				}
 			}
