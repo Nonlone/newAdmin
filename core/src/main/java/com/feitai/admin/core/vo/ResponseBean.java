@@ -13,7 +13,6 @@ public class ResponseBean<T> {
 
     private String message;
 
-    @NonNull
     private T data;
 
     public ResponseBean(ResultCode resultCode, T data) {
