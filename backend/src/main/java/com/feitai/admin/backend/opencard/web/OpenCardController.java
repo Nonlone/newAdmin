@@ -169,16 +169,15 @@ public class OpenCardController extends BaseListableController<CardMore> {
         // 征信项
         List<BaseAuthData> baseAuthDataList = authDataService.getAuthValueString(card.getId());
         if (!CollectionUtils.isEmpty(baseAuthDataList)) {
-            List<JSONObject> authsList = new ArrayList<JSONObject>(){{
-                for(BaseAuthData baseAuthData:baseAuthDataList){
-                    if(authListSet.contains(baseAuthData.getCode())) {
-                        JSONObject json = (JSONObject) JSON.toJSON(baseAuthData);
-                        json.put("function",baseAuthData.getCode().getValue()+"_"+ baseAuthData.getSource().getValue());
-                        json.put("name", mapProperties.getAuthValue(baseAuthData.getCode(), baseAuthData.getSource()));
-                        this.add(json);
-                    }
+            List<JSONObject> authsList = new ArrayList<>();
+            for(BaseAuthData baseAuthData:baseAuthDataList){
+                if(authListSet.contains(baseAuthData.getCode())) {
+                    JSONObject json = (JSONObject) JSON.toJSON(baseAuthData);
+                    json.put("function",baseAuthData.getCode().getValue()+"_"+ baseAuthData.getSource().getValue());
+                    json.put("name", mapProperties.getAuthValue(baseAuthData.getCode(), baseAuthData.getSource()));
+                    authsList.add(json);
                 }
-            }};
+            }
             if(!CollectionUtils.isEmpty(authsList)) {
                 model.addObject("authsList", authsList);
             }

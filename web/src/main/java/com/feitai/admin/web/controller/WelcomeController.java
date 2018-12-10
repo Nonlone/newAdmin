@@ -21,9 +21,9 @@ public class WelcomeController {
     @RequestMapping("/index")
     public ModelAndView index(HttpServletRequest request) {
         log.debug(JSON.toJSONString(request.getParameterMap()));
-        return new ModelAndView("/welcome/index") {{
-            this.addObject("value", RandomStringUtils.randomAlphanumeric(20));
-        }};
+        ModelAndView modelAndView = new ModelAndView("/welcome/index");
+        modelAndView.addObject("value", RandomStringUtils.randomAlphanumeric(20));
+        return modelAndView;
     }
 
 

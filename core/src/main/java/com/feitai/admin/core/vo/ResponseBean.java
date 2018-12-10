@@ -16,10 +16,6 @@ public class ResponseBean<T> {
     @NonNull
     private T data;
 
-    public ResponseBean() {
-    }
-
-
     public ResponseBean(ResultCode resultCode, T data) {
         this.code = resultCode.getCode();
         this.message = resultCode.getMessage();

@@ -96,9 +96,8 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         //根据request获取page
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
-        List<SearchParams> extraSearchParamList = new ArrayList<SearchParams>() {{
-            this.add(new SearchParams("certified", Operator.EQ, 1));
-        }};
+        List<SearchParams> extraSearchParamList = new ArrayList<SearchParams>();
+        extraSearchParamList.add(new SearchParams("certified", Operator.EQ, 1));
         Page<IdCardDataExtend> idCardPage = list(getSql(request, getSelectMultiTable(), extraSearchParamList), pageNo, pageSize, getCountSql(request, getSelectMultiTable(), extraSearchParamList), SelectMultiTable.COUNT_ALIAS);
         List<IdCardDataExtend> idCardDataExtendList = idCardPage.getContent();
         List<JSONObject> resultList = new ArrayList();

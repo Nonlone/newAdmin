@@ -428,7 +428,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         Integer loanTerm = (Integer) json.get("loanTerm");
         Long cardId = (Long) json.get("cardId");
 
-        search = productTermFeeFeatureService.findByProductIdAndTerm(productId.longValue(), loanTerm.shortValue());
+        search = productTermFeeFeatureService.findByProductIdAndTerm(productId, loanTerm.shortValue());
 
         if (search.size() > 0) {
             ProductTermFeeFeature productTermFeeFeature = search.get(0);
