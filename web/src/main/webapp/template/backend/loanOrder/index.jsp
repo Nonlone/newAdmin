@@ -296,7 +296,7 @@
                     href: detailUrl + id
                 })
 
-                if(obj.status=="40"||obj.status=="20"){
+                if(obj.status=="3"||obj.status=="-10"||obj.status=="10"){
                     if(obj.cancelLoan==null&&stop){
                         editStr= detail+'&nbsp'+'<span class="x-icon x-icon-error" title="终止放款" onclick="stop(\'\'+id+\'\');"><i class="icon icon-white icon-ban-circle"></i></span>';
                     }else if(obj.cancelLoan==0&&stop){
