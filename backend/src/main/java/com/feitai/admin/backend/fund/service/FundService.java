@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
-@Transactional
 @Slf4j
 public class FundService extends ClassPrefixDynamicSupportService<Fund> {
             
