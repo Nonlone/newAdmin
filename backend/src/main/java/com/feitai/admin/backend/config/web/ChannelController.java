@@ -146,6 +146,7 @@ public class ChannelController extends BaseListableController<Channel> {
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
 		channel.setMainPackageCode(channelPrimary.getChannelCode());
 		channel.setUpdateTime(new Date());
+		channel.setMainPackageCode(channelPrimary.getChannelCode());
 		this.channelService.save(channel);
 		return BaseListableController.successResult;
 	}
