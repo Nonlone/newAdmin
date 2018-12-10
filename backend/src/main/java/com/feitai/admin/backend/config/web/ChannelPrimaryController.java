@@ -112,6 +112,7 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 	@ResponseBody
 	public Object add(@Valid ChannelPrimary channelPrimary){
 		channelPrimary.setId(SnowFlakeIdGenerator.getDefaultNextId());
+		channelPrimary.setUpdateTime(new Date());
 		this.channelPrimaryService.save(channelPrimary);
 		return this.successResult;
 
