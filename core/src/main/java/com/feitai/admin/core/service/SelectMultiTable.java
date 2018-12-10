@@ -161,12 +161,12 @@ public class SelectMultiTable {
      * @return
      */
     private SelectMultiTable join(JoinType joinType, Class<?> joinClass, String tableAlias, List<OnCondition> onConditionList) {
-        this.getTableJoinList().add(new TableJoin() {{
-            this.setJoinType(JoinType.LEFT);
-            this.setJoinClass(joinClass);
-            this.setTableAlias(tableAlias);
-            this.setConditions(onConditionList);
-        }});
+        TableJoin tableJoin = new TableJoin();
+        tableJoin.setJoinType(JoinType.LEFT);
+        tableJoin.setJoinClass(joinClass);
+        tableJoin.setTableAlias(tableAlias);
+        tableJoin.setConditions(onConditionList);
+        this.getTableJoinList().add(tableJoin);
         return this;
     }
 

@@ -13,7 +13,6 @@ import lombok.Data;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
 
 
 @Table(name = "t_app_config_type")
@@ -39,10 +38,6 @@ public class AppConfigType extends BaseModel implements Serializable {
 	private String name;
 
 	private String remark;
-
-	private Date createdTime;
-
-	private Date updateTime;
 
 }
 

@@ -9,13 +9,10 @@ package com.feitai.admin.backend.customer.web;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.feitai.admin.backend.customer.service.AuthdataLinkfaceLivenessIdnumberVerificationService;
-import com.feitai.admin.backend.customer.service.AuthdataLinkfaceLivenessSelfieVerificationService;
 import com.feitai.admin.backend.config.service.AppConfigService;
 import com.feitai.admin.backend.customer.entity.IdCardDataExtend;
 import com.feitai.admin.backend.customer.service.*;
 import com.feitai.admin.backend.properties.MapProperties;
-import com.feitai.admin.backend.customer.service.PhotoService;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
@@ -34,7 +31,6 @@ import com.feitai.utils.datetime.DateTimeStyle;
 import com.feitai.utils.datetime.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,9 +92,8 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         //根据request获取page
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
-        List<SearchParams> extraSearchParamList = new ArrayList<SearchParams>() {{
-            this.add(new SearchParams("certified", Operator.EQ, 1));
-        }};
+        List<SearchParams> extraSearchParamList = new ArrayList<SearchParams>();
+        extraSearchParamList.add(new SearchParams("certified", Operator.EQ, 1));
         Page<IdCardDataExtend> idCardPage = list(getSql(request, getSelectMultiTable(), extraSearchParamList), pageNo, pageSize, getCountSql(request, getSelectMultiTable(), extraSearchParamList), SelectMultiTable.COUNT_ALIAS);
         List<IdCardDataExtend> idCardDataExtendList = idCardPage.getContent();
         List<JSONObject> resultList = new ArrayList();
@@ -134,35 +129,26 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
         IdCardDataExtend idCardDataExtend = idcardService.findByUserId(userId);
         model.addObject("idCardDataExtend", idCardDataExtend);
         //脱敏处理
-        if (idCardDataExtend != null) {
-            if (StringUtils.isNotBlank(idCardDataExtend.getIdCard())) {
+        if (idCardDataExtend != null&&StringUtils.isNotBlank(idCardDataExtend.getIdCard())) {
                 // 年龄
                 model.addObject("age", IdCardUtils.getAgeByIdCard(idCardDataExtend.getIdCard()));
                 // 生日
                 model.addObject("birthday", IdCardUtils.getBirthByIdCard(idCardDataExtend.getIdCard()));
                 // 身份证
                 model.addObject("hyIdcard", Desensitization.idCard(idCardDataExtend.getIdCard()));
-            } else {
-                // 年龄
-                model.addObject("age", "无");
-                // 生日
-                model.addObject("birthday", "无");
-                // 身份证
-                model.addObject("hyIdcard", "无");
-            }
-            if (!Objects.isNull(idCardDataExtend.getStartTime()) && !Objects.isNull(idCardDataExtend.getEndTime())) {
-                model.addObject("startTime", DateUtils.format(idCardDataExtend.getStartTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD));
-                model.addObject("endTime", DateUtils.format(idCardDataExtend.getEndTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD));
-            } else {
-                model.addObject("startTime", "无");
-                model.addObject("endTime", "无");
-            }
-        } else {
+        }else {
             // 年龄
             model.addObject("age", "无");
             // 生日
             model.addObject("birthday", "无");
+            // 身份证
             model.addObject("hyIdcard", "无");
+        }
+
+        if (idCardDataExtend != null&&!Objects.isNull(idCardDataExtend.getStartTime()) && !Objects.isNull(idCardDataExtend.getEndTime())) {
+            model.addObject("startTime", DateUtils.format(idCardDataExtend.getStartTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD));
+            model.addObject("endTime", DateUtils.format(idCardDataExtend.getEndTime(), DateTimeStyle.DEFAULT_YYYY_MM_DD));
+        } else {
             model.addObject("startTime", "无");
             model.addObject("endTime", "无");
         }

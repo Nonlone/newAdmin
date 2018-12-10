@@ -1,8 +1,7 @@
 package com.feitai.admin.backend.product.vo;
 
-import java.util.List;
-
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 期数计划请求结构体

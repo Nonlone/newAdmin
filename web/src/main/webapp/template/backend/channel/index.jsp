@@ -245,7 +245,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     	},
 		storeCfg:{//定义store的排序，如果是复合主键一定要修改
 			sortInfo : {
-				field : 'id',//排序字段
+				field : 'createdTime',//排序字段
 				direction : 'DESC' //升序ASC，降序DESC
 				}
 			}

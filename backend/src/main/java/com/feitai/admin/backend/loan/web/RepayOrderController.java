@@ -173,7 +173,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/detail");
         RepayOrderMore repayOrder = repayOrderService.findOneBySql(getOneSql(id));
         List<RepayOrderMore> repayOrderMores = repayOrderService.findByRepayPlanId(repayOrder.getRepayPlanId());
-        double amount = new Double(0);
+        Double amount = new Double(0);
         for(RepayOrderMore repayOrderMore:repayOrderMores){
             amount +=  repayOrderMore.getAmount().doubleValue();;
         }
@@ -377,7 +377,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         }
         json.put("payCard", substring);
         List<RepayOrderMore> repayOrderMores = repayOrderService.findByRepayPlanId((Long)json.get("repayPlanId"));
-        double amount = new Double(0);
+        Double amount = new Double(0);
         for(RepayOrderMore repayOrder:repayOrderMores){
             amount +=  repayOrder.getAmount().doubleValue();;
         }

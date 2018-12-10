@@ -11,7 +11,6 @@ import com.feitai.jieya.server.dao.rateplan.model.RatePlanDetail;
 import lombok.Data;
 
 import javax.persistence.Table;
-import java.io.Serializable;
 import java.util.List;
 
 

@@ -10,9 +10,11 @@ package com.feitai.admin.backend.loan.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.config.service.AppConfigService;
-import com.feitai.admin.backend.creditdata.service.AuthdataAuthService;
 import com.feitai.admin.backend.creditdata.vo.PhotoAttachViewVo;
-import com.feitai.admin.backend.customer.service.*;
+import com.feitai.admin.backend.customer.service.AreaService;
+import com.feitai.admin.backend.customer.service.AuthDataService;
+import com.feitai.admin.backend.customer.service.BankSupportService;
+import com.feitai.admin.backend.customer.service.PhotoService;
 import com.feitai.admin.backend.fund.service.FundService;
 import com.feitai.admin.backend.loan.entity.LoanOrderMore;
 import com.feitai.admin.backend.loan.entity.RepayOrderMore;
@@ -24,7 +26,6 @@ import com.feitai.admin.backend.loan.vo.BackendLoanRequest;
 import com.feitai.admin.backend.loan.vo.OrderPlande;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.opencard.service.TongDunDataService;
-import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
 import com.feitai.admin.backend.properties.AppProperties;
 import com.feitai.admin.backend.properties.MapProperties;
@@ -428,7 +429,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         Integer loanTerm = (Integer) json.get("loanTerm");
         Long cardId = (Long) json.get("cardId");
 
-        search = productTermFeeFeatureService.findByProductIdAndTerm(productId.longValue(), loanTerm.shortValue());
+        search = productTermFeeFeatureService.findByProductIdAndTerm(productId, loanTerm.shortValue());
 
         if (search.size() > 0) {
             ProductTermFeeFeature productTermFeeFeature = search.get(0);

@@ -1,7 +1,5 @@
 package com.feitai.admin.core.service;
 
-import com.feitai.admin.core.service.Operator;
-import com.feitai.admin.core.service.SelectMultiTable;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import tk.mybatis.mapper.util.StringUtil;
@@ -53,71 +51,87 @@ public class OnCondition {
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " = " + tableAlias + "." + secondParam;
                 }
+                return null;
             case OREQ:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " = " + tableAlias + "." + secondParam;
                 }
+                return null;
             case LIKE:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " like " + tableAlias + "." + secondParam;
                 }
+                return null;
             case ORLIKE:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " like " + tableAlias + "." + secondParam;
                 }
+                return null;
             case ANDLIKE:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " like " + tableAlias + "." + secondParam;
                 }
+                return null;
             case GT:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " > " + tableAlias + "." + secondParam;
                 }
+                return null;
             case LT:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " < " + tableAlias + "." + secondParam;
                 }
+                return null;
             case GTE:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " >= " + tableAlias + "." + secondParam;
                 }
+                return null;
             case LTE:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " <= " + tableAlias + "." + secondParam;
                 }
+                return null;
             case NOTLIKE:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " not like " + tableAlias + "." + secondParam;
                 }
+                return null;
             case ANDNOTLIKE:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " not like " + tableAlias + "." + secondParam;
                 }
+                return null;
             case NOTEQ:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " <> " + tableAlias + "." + secondParam;
                 }
-
+                return null;
             case ANDNOTEQ:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " <> " + tableAlias + "." + secondParam;
                 }
+                return null;
             case ISNULL:
                 if (!StringUtils.isAnyBlank(firstParam)) {
                     return "maintable." + firstParam + " is null ";
                 }
+                return null;
             case ISNOTNULL:
                 if (!StringUtils.isAnyBlank(firstParam)) {
                     return "maintable." + firstParam + " is not null ";
                 }
+                return null;
             case IN:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " in ( " + tableAlias + "." + secondParam + " ) ";
                 }
+                return null;
             case NOTIN:
                 if (!StringUtils.isAnyBlank(firstParam, secondParam)) {
                     return "maintable." + firstParam + " not in ( " + tableAlias + "." + secondParam + " ) ";
                 }
+                return null;
             default:
                 return null;
         }

@@ -1,6 +1,5 @@
 package com.feitai.admin.backend.creditdata.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.creditdata.model.CreditData;
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.jieya.server.dao.base.constant.AuthSource;

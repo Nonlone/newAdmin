@@ -9,7 +9,6 @@ import com.feitai.admin.system.model.DictionaryType;
 import com.feitai.admin.system.service.DictionaryTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;

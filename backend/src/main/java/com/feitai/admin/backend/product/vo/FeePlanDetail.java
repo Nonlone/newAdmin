@@ -1,14 +1,12 @@
 package com.feitai.admin.backend.product.vo;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
-
 import com.feitai.jieya.server.dao.base.constant.CalculationMode;
 import com.feitai.jieya.server.dao.base.constant.FeeBaseType;
 import com.feitai.jieya.server.dao.base.constant.PaymentTimeType;
 import com.feitai.jieya.server.dao.base.constant.PaymentType;
-
 import lombok.Data;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 费率详细

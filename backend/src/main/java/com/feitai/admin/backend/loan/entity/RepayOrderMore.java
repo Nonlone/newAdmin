@@ -8,13 +8,10 @@
 package com.feitai.admin.backend.loan.entity;
 
 import com.feitai.admin.backend.loan.mapper.LoanOrderMoreMapper;
-import com.feitai.base.mybatis.Many;
 import com.feitai.base.mybatis.One;
 import com.feitai.jieya.server.dao.data.mapper.IdCardDataMapper;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
-import com.feitai.jieya.server.dao.loan.mapper.LoanOrderMapper;
 import com.feitai.jieya.server.dao.loan.mapper.RepayPlanMapper;
-import com.feitai.jieya.server.dao.loan.model.LoanOrder;
 import com.feitai.jieya.server.dao.loan.model.RepayPlan;
 import com.feitai.jieya.server.dao.user.mapper.UserMapper;
 import com.feitai.jieya.server.dao.user.model.User;
