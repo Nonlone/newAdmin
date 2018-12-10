@@ -9,7 +9,6 @@ package com.feitai.admin.backend.config.service;
 
 import com.feitai.admin.backend.config.entity.AppConfigType;
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
-import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.vo.ListItem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,6 @@ package com.feitai.admin.backend.customer.service;
 
 import com.feitai.admin.backend.customer.entity.IdCardDataExtend;
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
-import com.feitai.jieya.server.dao.data.model.IdCardData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;

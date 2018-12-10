@@ -2,7 +2,6 @@ package com.feitai.admin.core.vo;
 
 import com.feitai.admin.core.contants.ResultCode;
 import lombok.Data;
-import lombok.NonNull;
 import lombok.ToString;
 
 @Data

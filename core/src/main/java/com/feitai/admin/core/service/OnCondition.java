@@ -1,7 +1,5 @@
 package com.feitai.admin.core.service;
 
-import com.feitai.admin.core.service.Operator;
-import com.feitai.admin.core.service.SelectMultiTable;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import tk.mybatis.mapper.util.StringUtil;

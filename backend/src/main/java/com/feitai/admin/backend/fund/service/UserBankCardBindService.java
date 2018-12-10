@@ -6,8 +6,8 @@
  */
 
 package com.feitai.admin.backend.fund.service;
+
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
-import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.bank.model.UserBankCardBind;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

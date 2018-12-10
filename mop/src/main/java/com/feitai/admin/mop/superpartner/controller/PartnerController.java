@@ -16,7 +16,6 @@ import com.feitai.admin.mop.superpartner.service.SettleRateHelper;
 import com.feitai.admin.mop.superpartner.service.SettleRateHelper.RateInfo;
 import com.feitai.admin.mop.superpartner.service.SettleRateHelper.RateRange;
 import com.feitai.admin.mop.superpartner.vo.PartnerSettleResp;
-import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;

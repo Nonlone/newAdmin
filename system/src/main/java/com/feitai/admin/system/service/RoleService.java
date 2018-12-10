@@ -1,20 +1,15 @@
 package com.feitai.admin.system.service;
 
 import com.feitai.admin.core.service.DynamitSupportService;
+import com.feitai.admin.system.mapper.RoleAuthMapper;
 import com.feitai.admin.system.model.Role;
 import com.feitai.admin.system.model.RoleAuth;
-import com.feitai.admin.system.mapper.RoleAuthMapper;
 import com.feitai.admin.system.shiro.ShiroDbRealm;
-import com.feitai.base.mybatis.ManyAnnotationFieldWalkProcessor;
-import com.feitai.utils.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.RealmSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

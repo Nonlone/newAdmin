@@ -2,7 +2,6 @@ package com.feitai.admin.backend.loan.service;
 
 import com.feitai.admin.backend.loan.entity.RepayOrderMore;
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
-import com.feitai.jieya.server.dao.bank.BankBinDao;
 import com.feitai.jieya.server.dao.bank.mapper.BankBinMapper;
 import com.feitai.jieya.server.dao.bank.mapper.UserBankCardMapper;
 import com.feitai.jieya.server.dao.bank.model.BankBin;

@@ -15,22 +15,19 @@ import com.feitai.utils.SnowFlakeIdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 
 
 @Controller
 @RequestMapping(value = "/backend/advertise")
 @Slf4j
-public class AdvertiseController extends BaseListableController<Advertise> {
+public class  AdvertiseController extends BaseListableController<Advertise> {
     @Autowired
     private AdvertiseService advertiseService;
 

@@ -1,7 +1,6 @@
 package com.feitai.admin.backend.fund.service;
 
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
-import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.jieya.server.dao.fund.model.FundAmountDetail;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
