@@ -7,7 +7,6 @@ import com.feitai.admin.backend.creditdata.service.CreditDataService;
 import com.feitai.admin.backend.creditdata.service.MoxieDataService;
 import com.feitai.admin.core.contants.ResultCode;
 import com.feitai.admin.core.vo.ResponseBean;
-import com.feitai.jieya.server.dao.base.constant.AuthSource;
 import com.feitai.jieya.server.dao.callback.model.moxie.MoxieData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -60,7 +59,7 @@ public class CreditDataController {
 
     @PostMapping("/suanhua")
     @ResponseBody Object suanhua(@RequestParam("userId") Long userId,@RequestParam("cardId")Long cardId){
-        CreditData creditData = creditDataService.findByCardIdAndUserIdAndSource(userId,cardId, AuthSource.SUANHUA);
+        CreditData creditData = creditDataService.findByUserIdAndSource(userId, "SUANHUA");
         if(!Objects.isNull(creditData)){
             JSONObject json = (JSONObject) JSON.toJSON(creditData);
             json.put("report",JSON.parse(creditData.getCreditData()));

@@ -73,7 +73,7 @@
 				<div class="control-group span10">
 					<label class="control-label"><s>*</s>一级渠道</label>
 					<div class="controls" id ="primaryList" name='primaryList'>
-						<input name="mainPackgage" type="hidden" data-rules="{required:true,}" id="mainPackgage" onchange="findPrimary(this.value);">
+						<input name="mainPackgage" type="hidden" data-rules="{required:true}" id="mainPackgage" onchange="findPrimary(this.value);">
 					</div>
 				</div>
 			</div>
@@ -82,7 +82,7 @@
 					<label class="control-label"><s>*</s>应用名称:</label>
 					<div class="controls bui-form-field-select" data-items="{'借呀':'借呀'}"
 						 class="control-text input-small">
-						<input name="appName" type="hidden" data-rules="{required:true,}" value="">
+						<input name="appName" type="hidden" data-rules="{required:true}">
 					</div>
 				</div>
 				<div class="control-group span8">
@@ -107,7 +107,7 @@
 					<div class="controls">
 						<input id="primaryCode" name="primaryCode" class="input-minimum" readonly="true" data-rules="{required:false,}" type="text">
 						<input id="channelId" name="channelId" type="text"
-							data-remote="${ctx}/backend/channel/checkChannelId" data-rules="{required:false,}"
+							data-remote="${ctx}/backend/channel/checkChannelId" data-rules="{required:true,channel:true}"
 							class="input-minimum control-text">
 					</div>
 				</div>
@@ -115,15 +115,15 @@
 			</div>
 			<div class="row">
 				<div class="control-group span8">
-					<label class="control-label">开发主体:</label>
+					<label class="control-label"><s>*</s>开发主体:</label>
 					<div class="controls">
 						<input name="devBody" type="text"
-							   data-rules="{required:false,}"
+							   data-rules="{required:true,}"
 							   class="input-normal control-text">
 					</div>
 				</div>
 				<div class="control-group span8">
-					<label class="control-label">渠道终端:</label>
+					<label class="control-label"><s>*</s>渠道终端:</label>
 					<div class="controls bui-form-field-select" data-items="{'APP':'APP','H5':'H5','PC':'PC'}"
 						 class="control-text input-small">
 						<input name="channelTerminal" type="hidden" value="">
@@ -189,7 +189,19 @@
 
 
 BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGrid,Select,Data,Form) {
-	
+
+
+    Form.Rules.add({
+        name: 'channel',
+        msg: '不允许包含非英文或数字的标识',
+        validator: function (value, baseValue, formatMsg) {
+            var regexp = new RegExp(/^[0-9a-zA-Z]+$/g)
+            if (!regexp.test(value)) {
+                return formatMsg
+            }
+        }
+    });
+
 	//定义页面权限
 	var add=false,update=false,del=false,list=false;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值

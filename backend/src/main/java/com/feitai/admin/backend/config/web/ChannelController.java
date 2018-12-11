@@ -15,6 +15,7 @@ import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
+import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.jieya.server.dao.channel.model.Channel;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tk.mybatis.mapper.util.StringUtil;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
@@ -129,6 +131,12 @@ public class ChannelController extends BaseListableController<Channel> {
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid Channel channel){
+		if(StringUtil.isEmpty(channel.getAppName())){
+			return new AjaxResult(false, "请选择应用名称！");
+		}
+		if(StringUtil.isEmpty(channel.getChannelTerminal())){
+			return new AjaxResult(false, "请选择渠道终端！");
+		}
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
 		channel.setMainPackageCode(channelPrimary.getChannelCode().toString());
 		channel.setChannelId(channelPrimary.getChannelCode()+"_"+channel.getChannelId());
@@ -143,6 +151,12 @@ public class ChannelController extends BaseListableController<Channel> {
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("channel") Channel channel){
+		if(StringUtil.isEmpty(channel.getAppName())){
+			return new AjaxResult(false, "请选择应用名称！");
+		}
+		if(StringUtil.isEmpty(channel.getChannelTerminal())){
+			return new AjaxResult(false, "请选择渠道终端！");
+		}
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
 		channel.setMainPackageCode(channelPrimary.getChannelCode());
 		channel.setUpdateTime(new Date());
