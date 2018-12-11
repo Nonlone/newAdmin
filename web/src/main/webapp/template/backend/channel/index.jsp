@@ -107,7 +107,7 @@
 					<div class="controls">
 						<input id="primaryCode" name="primaryCode" class="input-minimum" readonly="true" data-rules="{required:false,}" type="text">
 						<input id="channelId" name="channelId" type="text"
-							data-remote="${ctx}/backend/channel/checkChannelId" data-rules="{required:false,channel:true}"
+							data-remote="${ctx}/backend/channel/checkChannelId" data-rules="{required:true,channel:true}"
 							class="input-minimum control-text">
 					</div>
 				</div>
