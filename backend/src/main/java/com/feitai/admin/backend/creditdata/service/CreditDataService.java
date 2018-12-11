@@ -31,14 +31,16 @@ public class CreditDataService extends ClassPrefixDynamicSupportService<CreditDa
         return null;
     }
 
-    public String findByCardIdAndSource(long cardId, String source) {
-        Example example = Example.builder(CreditData.class).andWhere(Sqls.custom().andEqualTo("cardId", cardId).andEqualTo("source", source)).orderByDesc("createdTime").build();
-        List<CreditData> byCardIdAndSource = getMapper().selectByExample(example);
-        if (byCardIdAndSource.size() != 0) {
-            CreditData creditData = byCardIdAndSource.get(0);
-            return creditData.getCreditData();
-        } else {
-            return null;
+    public CreditData findByUserIdAndSource(Long userId, String authSource) {
+        List<CreditData> creditDataList = getMapper().selectByExample(Example.builder(CreditData.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo("userId",userId)
+                        .andEqualTo("source", authSource))
+                .orderByDesc("createdTime").build());
+        if (!CollectionUtils.isEmpty(creditDataList)) {
+            CreditData creditData = creditDataList.get(0);
+            return creditData;
         }
+        return null;
     }
 }
