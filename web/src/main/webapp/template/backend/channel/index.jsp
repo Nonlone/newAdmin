@@ -73,7 +73,7 @@
 				<div class="control-group span10">
 					<label class="control-label"><s>*</s>一级渠道</label>
 					<div class="controls" id ="primaryList" name='primaryList'>
-						<input name="mainPackgage" type="hidden" data-rules="{required:true,}" id="mainPackgage" onchange="findPrimary(this.value);">
+						<input name="mainPackgage" type="hidden" data-rules="{required:true}" id="mainPackgage" onchange="findPrimary(this.value);">
 					</div>
 				</div>
 			</div>
@@ -82,7 +82,7 @@
 					<label class="control-label"><s>*</s>应用名称:</label>
 					<div class="controls bui-form-field-select" data-items="{'借呀':'借呀'}"
 						 class="control-text input-small">
-						<input name="appName" type="hidden" data-rules="{required:true,}" value="">
+						<input name="appName" type="hidden" data-rules="{required:true}">
 					</div>
 				</div>
 				<div class="control-group span8">
@@ -115,15 +115,15 @@
 			</div>
 			<div class="row">
 				<div class="control-group span8">
-					<label class="control-label">开发主体:</label>
+					<label class="control-label"><s>*</s>开发主体:</label>
 					<div class="controls">
 						<input name="devBody" type="text"
-							   data-rules="{required:false,}"
+							   data-rules="{required:true,}"
 							   class="input-normal control-text">
 					</div>
 				</div>
 				<div class="control-group span8">
-					<label class="control-label">渠道终端:</label>
+					<label class="control-label"><s>*</s>渠道终端:</label>
 					<div class="controls bui-form-field-select" data-items="{'APP':'APP','H5':'H5','PC':'PC'}"
 						 class="control-text input-small">
 						<input name="channelTerminal" type="hidden" value="">

@@ -19,7 +19,6 @@
 				</div>
 			</div>
 			<%--<div class="control-group span_width">--%>
-				<%--<label class="control-label">申请日期:</label>--%>
 				<%--<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">--%>
 					<%--<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->--%>
 					<%--<input type="text" class="calendar" name="search_GTE_applyTime" data-tip="{text : '开始日期'}"> <span>--%>

@@ -28,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tk.mybatis.mapper.util.StringUtil;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
@@ -107,6 +108,9 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid ChannelPrimary channelPrimary){
+		if(StringUtil.isEmpty(channelPrimary.getChannelSort())){
+			return new AjaxResult(false,"请选择渠道大类");
+		}
 		channelPrimary.setId(SnowFlakeIdGenerator.getDefaultNextId());
 		channelPrimary.setUpdateTime(new Date());
 		this.channelPrimaryService.save(channelPrimary);
@@ -119,6 +123,9 @@ public class ChannelPrimaryController extends BaseListableController<ChannelPrim
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("channelPrimary") ChannelPrimary channelPrimary){
+		if(StringUtil.isEmpty(channelPrimary.getChannelSort())){
+			return new AjaxResult(false,"请选择渠道大类");
+		}
 		channelPrimary.setUpdateTime(new Date());
 		this.channelPrimaryService.saveChannelPrimaryAndChannel(channelPrimary);
 		return this.successResult;
