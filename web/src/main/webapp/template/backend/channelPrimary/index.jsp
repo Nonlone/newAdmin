@@ -55,7 +55,7 @@
 						<input id="channelCode"
 							   name="channelCode"
 							   type="text"
-							   data-rules="{required:true,}"
+							   data-rules="{required:true,channel:true}"
 							   data-remote="${ctx}/backend/channelPrimary/checkChannelCode"
 							   class="input-normal control-text"
 							   >
@@ -101,7 +101,19 @@
         }
     }
 
-BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
+BUI.use(['bui/ux/crudgrid','bui/select','bui/form'],function (CrudGrid,Select,Form) {
+
+
+    Form.Rules.add({
+        name: 'channel',
+        msg: '不允许包含非英文或数字的标识',
+        validator: function (value, baseValue, formatMsg) {
+            var regexp = new RegExp(/^[0-9a-zA-Z]+$/g)
+            if (!regexp.test(value)) {
+                return formatMsg
+            }
+        }
+    });
 
 	  var channelSortSearchSelect = new Select.Select({
 	        render:'#channelSortSearchSelect',

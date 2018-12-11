@@ -107,7 +107,7 @@
 					<div class="controls">
 						<input id="primaryCode" name="primaryCode" class="input-minimum" readonly="true" data-rules="{required:false,}" type="text">
 						<input id="channelId" name="channelId" type="text"
-							data-remote="${ctx}/backend/channel/checkChannelId" data-rules="{required:false,}"
+							data-remote="${ctx}/backend/channel/checkChannelId" data-rules="{required:false,channel:true}"
 							class="input-minimum control-text">
 					</div>
 				</div>
@@ -189,7 +189,19 @@
 
 
 BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGrid,Select,Data,Form) {
-	
+
+
+    Form.Rules.add({
+        name: 'channel',
+        msg: '不允许包含非英文或数字的标识',
+        validator: function (value, baseValue, formatMsg) {
+            var regexp = new RegExp(/^[0-9a-zA-Z]+$/g)
+            if (!regexp.test(value)) {
+                return formatMsg
+            }
+        }
+    });
+
 	//定义页面权限
 	var add=false,update=false,del=false,list=false;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
