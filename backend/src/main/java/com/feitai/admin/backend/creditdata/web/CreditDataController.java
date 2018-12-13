@@ -35,8 +35,8 @@ public class CreditDataController {
 
     @PostMapping("/moxie")
     @ResponseBody
-    public Object moxie(@RequestParam("userId") Long userId,@RequestParam("cardId")Long cardId){
-        MoxieData moxieData = moxieDataService.findByUserIdAndCardId(userId,cardId);
+    public Object moxie(@RequestParam("userId") Long userId){
+        MoxieData moxieData = moxieDataService.findByUserId(userId);
         if(!Objects.isNull(moxieData)){
             return new ResponseBean<>(ResultCode.SUCCESS,moxieData);
         }
@@ -46,8 +46,8 @@ public class CreditDataController {
 
     @PostMapping("/sauron")
     @ResponseBody
-    public Object sauron(@RequestParam("userId") Long userId,@RequestParam("cardId")Long cardId){
-        CreditData creditData = creditDataService.findByCardIdAndUserIdAndSource(userId,cardId, "DAIHOUBANG");
+    public Object sauron(@RequestParam("userId") Long userId){
+        CreditData creditData = creditDataService.findByUserIdAndSource(userId, "DAIHOUBANG");
         if(!Objects.isNull(creditData)){
             JSONObject json = (JSONObject) JSON.toJSON(creditData);
             json.put("report",JSON.parse(creditData.getCreditData()));
@@ -58,7 +58,7 @@ public class CreditDataController {
 
 
     @PostMapping("/suanhua")
-    @ResponseBody Object suanhua(@RequestParam("userId") Long userId,@RequestParam("cardId")Long cardId){
+    @ResponseBody Object suanhua(@RequestParam("userId") Long userId){
         CreditData creditData = creditDataService.findByUserIdAndSource(userId, "SUANHUA");
         if(!Objects.isNull(creditData)){
             JSONObject json = (JSONObject) JSON.toJSON(creditData);
@@ -67,6 +67,5 @@ public class CreditDataController {
         }
         return new ResponseBean<Void>(ResultCode.FAIL);
     }
-
 
 }
