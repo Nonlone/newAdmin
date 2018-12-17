@@ -67,7 +67,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletRequest;
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -162,18 +161,26 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
     /***
      * 取消放款
-     * @param dataApprovePassRequest
+     * @param loanId
      * @return
      */
-    @PostMapping("/rejectCash")
+    @PostMapping("/rejectCash/{loanId}")
     @RequiresPermissions("/backend/loanOrder:stop")
     @ResponseBody
-    public Object rejectCash(@Valid BackendLoanRequest dataApprovePassRequest) {
-        String requestJsonString = JSON.toJSONString(dataApprovePassRequest);
-        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getRejectCash(), requestJsonString, String.class);
-        return jsonString.getBody();
+    public Object rejectCash(@PathVariable("loanId") String loanId) {
+        BackendLoanRequest backendLoanRequest = new BackendLoanRequest();
+        backendLoanRequest.setLoanOrderId(Long.parseLong(loanId));
+        String requestJsonString = JSON.toJSONString(backendLoanRequest);
+        try {
+            restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+            ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getRejectCash(), requestJsonString, String.class);
+            return jsonString.getBody();
+        } catch (Exception e) {
+            log.error(String.format("send backend[{%s}] fail",appProperties.getRejectCash()),e);
+            return new BackendResponse(-1, "连接服务端失败！");
+        }
     }
+
 
 
 

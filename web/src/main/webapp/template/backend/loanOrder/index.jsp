@@ -119,23 +119,27 @@
     }
 
     function stop(id) {
+        debugger;
         BUI.use('bui/overlay',function (Overlay){
             BUI.Message.Confirm('确认要终止放款么？',function(){
                 $.ajax({
-                    url:'${ctx}/backend/loanOrder/rejectCash',
+                    url:'${ctx}/backend/loanOrder/rejectCash/'+id,
                     dataType:'JSON',
                     headers: {'Content-type':'application/json'},
                     type:'POST',
                     async:true,
-                    data:"{\"loanOrderId\":\""+id+"\"}",
                     //contentType: 'application/json;charset=utf-8',
-                    success:function(result){dev_admin
+                    success:function(result){
+                        debugger;
                         if(result.code=="SUC000"){
                             BUI.Message.Alert('操作成功！',function(){
                             },'success');
+                        }else if(result.code=="-1"){
+                            BUI.Message.Alert(result.message,function(){
+                            },'error');
                         }else{
                             BUI.Message.Alert('提交终止放款失败！',function(){
-                            },'false');
+                            },'error');
                         }
                     }});
 
@@ -166,10 +170,10 @@
         });
 
         selectStatus = new Select.Select({
-                render:'#statusSelect',
-                valueField:'#search_EQ_status',
-            	store:selectStatusStore
-            });
+            render:'#statusSelect',
+            valueField:'#search_EQ_status',
+            store:selectStatusStore
+        });
         selectStatus.render();
 
 
@@ -190,9 +194,9 @@
         //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
         <framwork:crudPermission resource="/backend/loanOrder"/>
 
-		<shiro:hasPermission name="/backend/loanOrder:stop">
-        	stop = true;
-		</shiro:hasPermission>
+        <shiro:hasPermission name="/backend/loanOrder:stop">
+        stop = true;
+        </shiro:hasPermission>
 
 
 
@@ -287,9 +291,10 @@
                     title = obj.idcard.name + "—提现信息"
                 }
                 var detail="";
+
                 var id = String(obj.id);
                 detail = CrudGrid.createLinkCustomSpan({
-					class:"page-action grid-command x-icon x-icon-info",
+                    class:"page-action grid-command x-icon x-icon-info",
                     id: 'auth' + id,
                     title: title,
                     text: '<i class="icon icon-white icon-list-alt"></i>',
@@ -298,9 +303,9 @@
 
                 if(obj.status=="3"||obj.status=="-10"||obj.status=="10"){
                     if(obj.cancelLoan==null&&stop){
-                        editStr= detail+'&nbsp'+'<span class="x-icon x-icon-error" title="终止放款" onclick="stop(\'\'+id+\'\');"><i class="icon icon-white icon-ban-circle"></i></span>';
+                        editStr= detail+'&nbsp'+'<span class="x-icon x-icon-error" title="终止放款" onclick="stop(\''+id+'\');"><i class="icon icon-white icon-ban-circle"></i></span>';
                     }else if(obj.cancelLoan==0&&stop){
-                        editStr= detail+'&nbsp'+'<span class="x-icon x-icon-error" title="终止放款" onclick="stop(\'\'+id+\'\');"><i class="icon icon-white icon-ban-circle"></i></span>';
+                        editStr= detail+'&nbsp'+'<span class="x-icon x-icon-error" title="终止放款" onclick="stop(\''+id+'\');"><i class="icon icon-white icon-ban-circle"></i></span>';
                     }else{
                         editStr = detail;
                     }
