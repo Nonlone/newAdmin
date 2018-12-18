@@ -12,6 +12,18 @@
 		<!-- 查询 -->
 		<form id="searchForm" class="form-horizontal search-form">
 		<div class="row">
+		   <div class="control-group span7">
+				<label class="control-label">订单号:</label>
+				<div class="controls">
+					<input type="text" class="input-normal control-text" name="search_LIKE_loanOrderId">
+				</div>
+			</div>
+			<div class="control-group span7">
+				<label class="control-label">身份证号:</label>
+				<div class="controls">
+					<input type="text" class="input-normal control-text" name="search_LIKE_idcard.idCard">
+				</div>
+			</div>
 			<div class="control-group span7">
 				<label class="control-label">客户姓名:</label>
 				<div class="controls">
@@ -21,7 +33,7 @@
            <div class="control-group span7">
 				<label class="control-label">产品:</label>
 				<div id="selectProduct" class="controls">
-					<input id="searchProduct" type="hidden" name="search_LIKE_loanOrder.productId">
+					<input id="searchProduct" type="hidden" name="search_EQ_loanOrder.productId">
 				</div>
 			</div>
 			<div class="control-group span_width">
@@ -29,7 +41,7 @@
 				<div class="controls bui-form-group height_auto" >
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
 					<input  type="text" class="calendar" onchange="changeDueDate(this)"  data-tip="{text : '还款日前5天'}">
-					<input id="repayPlan_dueDate" type="hidden" name="search_EQ_repay_plan.dueDate" >
+					<input id="repayPlan_dueDate" type="hidden" name="search_EQ_dueDate" >
 				</div>
 			</div>
 			<div class="span1 offset2">
@@ -43,7 +55,8 @@
 			  <button type="button" class="button button-primary" onclick="downLoad();">导出</button>
 			</div>
 		</div>
-		<input type="hidden" name="search_EQ_repay_plan.term" value="1" />
+		<input type="hidden" name="search_EQ_term" value="1" />
+		<input type="hidden" name="search_EQ_paidOff" value="0" />
 		</form>
 		<!-- 修改新增 -->
 		<div id="addOrUpdate" class="hide">
@@ -76,7 +89,7 @@
            return format;
        };
        function downLoad(){
-    		 var downLoadUrl='${ctx}/backend/loan/repayOrder/downLoadFirstRepayOrder';
+    		 var downLoadUrl='${ctx}/backend/loan/debt/downLoadFirstRepayOrder';
     		 var $form=$("#searchForm");
     		 var oldAction=$form.attr("action");
     		 $form.attr("action",downLoadUrl);
@@ -122,7 +135,7 @@
         //定义页面权限
 	var add=false,update=false,del=false,list=false;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-	<framwork:crudPermission resource="/backend/loan/firstRepayOrder"/>
+	<framwork:crudPermission resource="/backend/loan/debt"/>
 
 
     var columns = [
@@ -148,9 +161,9 @@
 				 return '';
 			 }
         }},
-        {title:'首个还款日',dataIndex:'repayPlan',width:'150px',renderer:function (value) {
+        {title:'首个还款日',dataIndex:'dueDate',width:'150px',renderer:function (value) {
 			 if(value){
-					return BUI.Grid.Format.dateRenderer(value.dueDate);
+					return BUI.Grid.Format.dateRenderer(value);
 				 }else{
 					 return '';
 				 }
@@ -190,7 +203,7 @@
 	var crudGrid = new CrudGrid({
 		entityName : '首期还款列表',
     	pkColumn : 'id',//主键
-      	storeUrl : '${ctx}/backend/loan/repayOrder/list',
+      	storeUrl : '${ctx}/backend/loan/debt/list',
         columns : columns,
 		showAddBtn : add,
 		showUpdateBtn : update,

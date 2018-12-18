@@ -80,5 +80,41 @@ public class RepayPlanComponentService extends ClassPrefixDynamicSupportService<
         }
         return orderPlandes;
     }
+    
+    /**
+     * 根据放款订单id,还款计划id 查询 RepayPlanComponent
+     * @param loanOrderId
+     * @param repayPlanId
+     * @return
+     */
+    public OrderPlande getOrderPlande(Long loanOrderId,Long repayPlanId){
+    	OrderPlande orderPlande = new OrderPlande();
+    	Example example = Example.builder(RepayPlanComponent.class).andWhere(Sqls.custom().andEqualTo("repayPlanId", repayPlanId).andEqualTo("loanOrderId", loanOrderId)).build();
+    	 List<RepayPlanComponent> repayPlanComponentList= getMapper().selectByExample(example);
+         for (RepayPlanComponent repayPlanComponent :
+        	 repayPlanComponentList) {
+        switch (repayPlanComponent.getComponentType()) {
+        case 1:
+            orderPlande.setPincipalAmount(repayPlanComponent.getAmount().doubleValue());
+            orderPlande.setPincipalBalance(repayPlanComponent.getBalanceAmount().doubleValue());
+            break;
+        case 2:
+            orderPlande.setInterestAmount(repayPlanComponent.getAmount().doubleValue());
+            orderPlande.setInterestBalance(repayPlanComponent.getBalanceAmount().doubleValue());
+            break;
 
+        case 10:
+            orderPlande.setApproveFeeAmount(repayPlanComponent.getAmount().doubleValue());
+            orderPlande.setApproveFeeBalance(repayPlanComponent.getBalanceAmount().doubleValue());
+            break;
+        case 11:
+            orderPlande.setGuaranteeFeeAmount(repayPlanComponent.getAmount().doubleValue());
+            orderPlande.setGuaranteeFeeBalance(repayPlanComponent.getBalanceAmount().doubleValue());
+            break;
+
+      }
+      
+     }
+         return orderPlande;
+    }
 }
