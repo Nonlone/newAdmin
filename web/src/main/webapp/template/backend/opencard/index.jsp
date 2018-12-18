@@ -46,7 +46,7 @@
                 <label class="control-label">授信状态:</label>
                 <div class="controls">
                     <div id="statusSelect" class="controls">
-                        <input id = "search_EQ_status" name="search_EQ_status" type="hidden" >
+                        <input id = "statusSearch" name="search_OREQ_status" type="hidden" value="">
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
             <div class="control-group span7">
                 <label class="control-label">产品:</label>
                 <div class="controls" id="selectProduct">
-                    <input id="searchProduct" type="hidden" name="search_EQ_product.id">
+                    <input id="searchProduct" type="hidden" name="search_OREQ_product.id" value="">
                 </div>
             </div>
             <div class="control-group span7">
@@ -116,11 +116,16 @@
 
     BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
 
-         
+        var selectStatusStore = new Data.Store({
+            url: '/admin/backend/opencard/openCardStatus',
+            autoLoad: true
+        });
+
         selectStatus = new Select.Select({
             render:'#statusSelect',
-            valueField:'#search_EQ_status',
-            items:JSON.parse('${itemList}')
+            valueField:'#statusSearch',
+            multipleSelect:true,
+            store:selectStatusStore
         });
         selectStatus.render();
 
@@ -134,6 +139,7 @@
         //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
         <framwork:crudPermission resource="/backend/opencard"/>
 
+
         var selectProductStore = new Data.Store({
             url: '/admin/backend/product/productNameList',
             autoLoad: true
@@ -142,6 +148,7 @@
         selectProduct = new Select.Select({
             render: '#selectProduct',
             valueField: '#searchProduct',
+            multipleSelect:true,
             store: selectProductStore
         });
         selectProduct.render();

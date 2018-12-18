@@ -16,6 +16,7 @@ import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.opencard.service.TongDunDataService;
 import com.feitai.admin.backend.properties.MapProperties;
+import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
@@ -89,18 +90,24 @@ public class OpenCardController extends BaseListableController<CardMore> {
     @RequestMapping("/index")
     public ModelAndView index() {
     	ModelAndView mav=new ModelAndView("/backend/opencard/index");
-    	List<ListItem> itemList = new ArrayList<>();
-    	 itemList.add(new ListItem("全部", ""));
-    	for(CardStatus cs:CardStatus.values()){
-    	  String text=mapProperties.getCardStatus(cs);
-    	  if(!StringUtils.isEmpty(text)){
-    	   itemList.add(new ListItem(text, cs.getValue().toString()));
-    	  }
-    	}
-    	mav.addObject("itemList",JSONObject.toJSONString(itemList));
         return mav;
     }
-  
+
+
+    @RequestMapping(value = "/openCardStatus")
+    @ResponseBody
+    @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
+    public Object openCardStatus(){
+        List<ListItem> itemList = new ArrayList<>();
+        itemList.add(new ListItem("全部", ""));
+        for(CardStatus cs:CardStatus.values()){
+            String text=mapProperties.getCardStatus(cs);
+            if(!StringUtils.isEmpty(text)){
+                itemList.add(new ListItem(text, cs.getValue().toString()));
+            }
+        }
+        return itemList;
+    }
 
     @RequiresPermissions("/backend/opencard:list")
     @RequestMapping(value = "list")
