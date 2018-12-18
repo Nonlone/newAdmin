@@ -49,20 +49,20 @@
 			<div class="control-group span_width">
 				<label class="control-label">放款状态：</label>
 				<div id="statusSelect"  class="controls">
-					<input id="search_EQ_status" name="search_EQ_status" type="hidden" >
+					<input id="search_EQ_status" name="search_OREQ_status" type="hidden" >
 				</div>
 			</div>
 
 			<div class="control-group span6">
 				<label class="control-label">产品名称:</label>
 				<div class="controls" id="selectProduct">
-					<input id="searchProduct" type="hidden" name="search_EQ_product.id">
+					<input id="searchProduct" type="hidden" name="search_OREQ_product.id">
 				</div>
 			</div>
 			<div class="control-group span6">
 				<label class="control-label">资金方：</label>
 				<div id="selectPayFund" class="controls">
-					<input id="search_EQ_payFundId" name="search_EQ_payFundId" type="hidden" >
+					<input id="search_EQ_payFundId" name="search_OREQ_payFundId" type="hidden" >
 				</div>
 			</div>
 
@@ -160,6 +160,7 @@
         selectFundStatus = new Select.Select({
             render:'#selectPayFund',
             valueField:'#search_EQ_payFundId',
+            multipleSelect:true,
             store:selectFundStore
         });
         selectFundStatus.render();
@@ -172,6 +173,7 @@
         selectStatus = new Select.Select({
             render:'#statusSelect',
             valueField:'#search_EQ_status',
+            multipleSelect:true,
             store:selectStatusStore
         });
         selectStatus.render();
@@ -185,6 +187,7 @@
         selectProduct = new Select.Select({
             render:'#selectProduct',
             valueField:'#searchProduct',
+            multipleSelect:true,
             store:selectProductStore
         });
         selectProduct.render();
