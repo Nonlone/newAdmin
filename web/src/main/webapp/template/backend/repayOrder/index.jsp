@@ -45,8 +45,8 @@
 
 			<div class="control-group span_width">
 				<label class="control-label">还款状态：</label>
-				<div class="controls bui-form-field-select height_auto"  data-items="{' ':'全部','10':'初始状态','90':'还款成功','100':'还款成功且结清','-10':'失败'}" class="control-text input-small">
-					<input name="search_EQ_status" type="hidden" >
+				<div id="selectStatus" class="controls">
+					<input id="searchStatus" name="search_OREQ_status" type="hidden" >
 				</div>
 			</div>
 			<div class="control-group span_width">
@@ -72,7 +72,7 @@
 			</div>
 			<div class="control-group span7" hidden="true">
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_EQ_userId" value="${userId}">
+					<input type="text" class="input-normal control-text" name="search_OREQ_userId" value="${userId}">
 				</div>
 			</div>
 			<%--<div class="control-group span_width">--%>
@@ -124,9 +124,25 @@
         selectProduct = new Select.Select({
             render: '#selectProduct',
             valueField: '#searchProduct',
+            multipleSelect:true,
             store: selectProductStore
         });
         selectProduct.render();
+
+        var selectStatusStore = new Data.Store({
+            url: '${ctx}/backend/loan/repayOrder/repayOrderStatus',
+            autoLoad: true
+        });
+
+        selectStatus = new Select.Select({
+            render: '#selectStatus',
+            valueField: '#searchStatus',
+            multipleSelect:true,
+            store: selectStatusStore
+        });
+        selectStatus.render();
+
+
 
         //定义页面权限
         var add=false,update=false,del=false,list=false;
