@@ -19,9 +19,9 @@
 				</div>
 			</div>
 			<div class="control-group span7">
-				<label class="control-label">身份证号:</label>
+				<label class="control-label">用户ID:</label>
 				<div class="controls">
-					<input type="text" data-tip="{text : '请输入身份证号'}" class="input-normal control-text" name="search_LIKE_idcard.idCard">
+					<input type="text" data-tip="{text : '请输入用户ID'}" class="input-normal control-text" name="search_LIKE_userId">
 				</div>
 			</div>
 				<div class="control-group span7">
@@ -44,15 +44,23 @@
 					<input id="searchPayFund" type="hidden" name="search_EQ_loanOrder.payFundId">
 				</div>
 			</div>
-				<div class="control-group span_width">
-					<label class="control-label">还款日后3天:</label>
-					<div class="controls bui-form-group height_auto">
-						<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-						<input type="text" class="calendar" onchange="changeDueDate(this)"
-							data-tip="{text : ''}"> <input id="repayPlan_dueDate"
-							type="hidden" name="search_EQ_dueDate">
-					</div>
+
+			<div class="control-group span_width">
+				<label class="control-label">还款日:</label>
+				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
+					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
+					<input  type="text" class="calendar" name="search_GTE_dueDate" data-tip="{text : '开始日期'}"> <span>
+             - </span><input  name="search_LTE_dueDate" type="text" class="calendar" data-tip="{text : '结束日期'}">
 				</div>
+			</div>
+			<div class="control-group span7">
+				<label class="control-label">逾期天数:</label>
+				<div class="controls">
+					<input type="text" class="input-normal control-text" onchange="changeOverdueDays(this)" >
+				</div>
+				<input id="search_LTE_overdueDays" type="hidden" class="input-normal control-text" value="3"   name="search_LTE_overdueDays">
+				<input type="hidden" class="input-normal control-text" value="0"  name="search_GTE_overdueDays">
+			</div>
 				<div class="span1 offset2">
 					<button type="button" id="btnSearch" class="button button-primary">搜索</button>
 				</div>
@@ -64,9 +72,9 @@
 			</div>
 			</div>
 			<input type="hidden" name="search_EQ_paidOff" value="0">
-			<input id="GTE_dueDate" type="hidden"
-				name="search_GTE_dueDate"> <input
-				id="LTE_dueDate" type="hidden" name="search_LT_dueDate">
+			<!-- <input id="GTE_dueDate" type="hidden" name="search_GTE_dueDate">
+			<input id="LTE_dueDate" type="hidden" name="search_LT_dueDate"> -->
+			<input id="today" type="hidden" name="search_LT_dueDate">
 		</form>
 		<!-- 修改新增 -->
 		<div id="addOrUpdate" class="hide"></div>
@@ -98,9 +106,12 @@
 			}
 			return format;
 		};
+		
 		var oneday = 1000 * 60 * 60 * 24;
 		var today = Date.now();
 		var date = new Date(today - oneday * 3);
+		$("#today").val(new Date(today).format("yyyy-MM-dd"));
+		
 		$("#GTE_dueDate").val(date.format("yyyy-MM-dd"));
 		$("#LTE_dueDate").val(new Date(today).format("yyyy-MM-dd"));
 		function changeDueDate(obj) {
@@ -287,6 +298,11 @@
 			});
 			var grid = crudGrid.get('grid');
 		});
+		
+		function changeOverdueDays(obj){
+			alert($(obj).val())
+			$("#search_LTE_overdueDays").val($(obj).val());
+		}
 	</script>
 
 </body>

@@ -19,9 +19,9 @@
 				</div>
 			</div>
 			<div class="control-group span7">
-				<label class="control-label">身份证号:</label>
+				<label class="control-label">用户ID:</label>
 				<div class="controls">
-					<input type="text" data-tip="{text : '请输入身份证号'}" class="input-normal control-text" name="search_LIKE_idcard.idCard">
+					<input type="text" data-tip="{text : '请输入用户ID'}" class="input-normal control-text" name="search_LIKE_userId">
 				</div>
 			</div>
 			<div class="control-group span7">
@@ -42,14 +42,7 @@
 					<input id="searchPayFund" type="hidden" name="search_EQ_loanOrder.payFundId">
 				</div>
 			</div>
-			<div class="control-group span_width">
-				<label class="control-label">还款日前5天:</label>
-				<div class="controls bui-form-group height_auto" >
-					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input  type="text" class="calendar" onchange="changeDueDate(this)"  data-tip="{text : '还款日前5天'}">
-					<input id="repayPlan_dueDate" type="hidden" name="search_EQ_dueDate" >
-				</div>
-			</div>
+			<input id="repayPlan_dueDate" type="hidden" name="search_EQ_dueDate" >
 			<div class="span1 offset2">
 			  <button  type="button" id="btnSearch" class="button button-primary">搜索</button>
 			</div>
