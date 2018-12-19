@@ -66,7 +66,7 @@
 			<input type="hidden" name="search_EQ_paidOff" value="0">
 			<input id="GTE_dueDate" type="hidden"
 				name="search_GTE_dueDate"> <input
-				id="LTE_dueDate" type="hidden" name="search_LTE_dueDate">
+				id="LTE_dueDate" type="hidden" name="search_LT_dueDate">
 		</form>
 		<!-- 修改新增 -->
 		<div id="addOrUpdate" class="hide"></div>
@@ -234,6 +234,17 @@
 			}, {
 				title : '应还金额',
 				dataIndex : 'amount',
+				width : '10%',
+				renderer : function(value) {
+					if (value) {
+						return value;
+					} else {
+						return '';
+					}
+				}
+			}, {
+				title : '逾期金额',
+				dataIndex : 'balanceAmount',
 				width : '10%',
 				renderer : function(value) {
 					if (value) {
