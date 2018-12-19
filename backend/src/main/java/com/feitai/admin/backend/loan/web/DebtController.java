@@ -122,7 +122,7 @@ public class DebtController extends BaseListableController<Debt>{
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(getSelectMultiTable().buildSqlString());
         sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
-        Page<Debt> debtPage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC", pageNo, pageSize, getCountSqls(request), SelectMultiTable.RCOUNT_ALIAS);
+        Page<Debt> debtPage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC", pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
         List<Debt> content = debtPage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
         for (Debt debt :content) {
@@ -200,8 +200,6 @@ public class DebtController extends BaseListableController<Debt>{
             sbSql.append(getSelectMultiTable().buildCountSqlString());
         }
         sbSql.append(searchSql);
-        sbSql.insert(0,"select count(tcount." + SelectMultiTable.COUNT_ALIAS + ") AS " + SelectMultiTable.RCOUNT_ALIAS + " from (" );
-        sbSql.append(")tcount");
         return sbSql.toString();
     }
     /**
