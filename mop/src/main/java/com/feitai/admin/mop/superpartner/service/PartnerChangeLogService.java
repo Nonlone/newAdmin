@@ -1,7 +1,7 @@
 package com.feitai.admin.mop.superpartner.service;
 
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
-import com.feitai.admin.mop.base.dao.entity.PartnerChangeLog;
+import com.feitai.admin.mop.superpartner.dao.entity.PartnerChangeLog;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 

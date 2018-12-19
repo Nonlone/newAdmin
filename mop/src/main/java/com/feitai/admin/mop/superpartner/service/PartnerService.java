@@ -3,9 +3,9 @@ package com.feitai.admin.mop.superpartner.service;
 
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
 import com.feitai.admin.mop.base.BusinessException;
-import com.feitai.admin.mop.base.dao.entity.Partner;
-import com.feitai.admin.mop.base.dao.entity.SettleInfo;
-import com.feitai.admin.mop.base.dao.mapper.SettleInfoMapper;
+import com.feitai.admin.mop.superpartner.dao.entity.Partner;
+import com.feitai.admin.mop.superpartner.dao.entity.SettleInfo;
+import com.feitai.admin.mop.superpartner.dao.mapper.SettleInfoMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
