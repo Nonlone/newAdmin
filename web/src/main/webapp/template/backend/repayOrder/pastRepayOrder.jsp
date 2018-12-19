@@ -38,6 +38,12 @@
 							name="search_EQ_loanOrder.productId">
 					</div>
 				</div>
+			<div class="control-group span7">
+				<label class="control-label">资金方:</label>
+				<div id="selectPayFund" class="controls">
+					<input id="searchPayFund" type="hidden" name="search_EQ_loanOrder.payFundId">
+				</div>
+			</div>
 				<div class="control-group span_width">
 					<label class="control-label">还款日后3天:</label>
 					<div class="controls bui-form-group height_auto">
@@ -134,6 +140,18 @@
 				items : JSON.parse('${productList}')
 			});
 			selectProduct.render();
+			
+			  var selectFundStore = new Data.Store({
+		            url : '${ctx}/backend/fund/getFundList',
+		            autoLoad : true
+		        });
+
+		        selectFundStatus = new Select.Select({
+		            render:'#selectPayFund',
+		            valueField:'#searchPayFund',
+		            store:selectFundStore
+		        });
+		        selectFundStatus.render();
 
 			selectRepayDay = new Select.Select({
 				render : '#selectRepayDay',
@@ -245,9 +263,9 @@
 				pkColumn : 'id',//主键
 				storeUrl : '${ctx}/backend/loan/debt/list',
 				columns : columns,
-				showAddBtn : add,
-				showUpdateBtn : update,
-				showRemoveBtn : del,
+				showAddBtn : false,
+				showUpdateBtn : false,
+				showRemoveBtn : false,
 				storeCfg : {//定义store的排序，如果是复合主键一定要修改
 					sortInfo : {
 						field : 'repayPlan.dueDate',//排序字段（冲突以此未标准）
