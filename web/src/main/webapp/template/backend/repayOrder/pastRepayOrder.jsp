@@ -15,19 +15,19 @@
 			<div class="control-group span7">
 				<label class="control-label">订单号:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_loanOrderId">
+					<input type="text" data-tip="{text : '请输入订单号'}" class="input-normal control-text" name="search_LIKE_loanOrderId">
 				</div>
 			</div>
 			<div class="control-group span7">
 				<label class="control-label">身份证号:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_idcard.idCard">
+					<input type="text" data-tip="{text : '请输入身份证号'}" class="input-normal control-text" name="search_LIKE_idcard.idCard">
 				</div>
 			</div>
 				<div class="control-group span7">
 					<label class="control-label">客户姓名:</label>
 					<div class="controls">
-						<input type="text" class="input-normal control-text"
+						<input type="text" data-tip="{text : '请输入客户姓名'}" class="input-normal control-text"
 							name="search_LIKE_idcard.name">
 					</div>
 				</div>
@@ -174,7 +174,8 @@
 			//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
 			<framwork:crudPermission resource="/backend/loan/debt"/>
 
-			var columns = [ {
+			var columns = [ 
+			                {
 				title : '用户ID',
 				dataIndex : 'userId',
 				width : '166px'
