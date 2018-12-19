@@ -150,7 +150,7 @@ public class DebtController extends BaseListableController<Debt>{
         //实还款日repayDate
         json.put("dueDate",DateUtils.format(debt.getDueDate(),DATE_FORMAT));
         //当期/总期termPre
-        json.put("termPre", debt.getTerm().toString() + "/" + loanTerm);
+        json.put("termPre", debt.getTerm().toString() + "/" + loanTerm+" ");
         //还款银行卡
         Fund fund=fundService.getFund(debt.getLoanOrder().getPayFundId());
         json.put("fundName", Optional.ofNullable(fund).map(f ->f.getFundName()).orElse(""));
@@ -214,12 +214,12 @@ public class DebtController extends BaseListableController<Debt>{
     	try{
     		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
     		List<String[]> dataList=getDataList(downSupport(request),(obj,rowList)->{
-    			rowList.add(obj.getString("userId"));
+    			rowList.add(obj.getString("userId")+"\t");
         		rowList.add(obj.getJSONObject("idcard").getString("name"));
-        		rowList.add(obj.getJSONObject("user").get("phone").toString());
+        		rowList.add(obj.getJSONObject("user").get("phone").toString()+"\t");
         		rowList.add(obj.getJSONObject("loanOrder").get("loanAmount").toString());
         		Date dueDate=obj.getDate("dueDate");
-        		rowList.add(sdf.format(dueDate));  		
+        		rowList.add(sdf.format(dueDate)+"\t");  		
         		rowList.add(obj.getDouble("amount").toString());
         		rowList.add(obj.getJSONObject("orderPlande").get("approveFeeAmount").toString());
         		rowList.add(obj.getJSONObject("orderPlande").get("guaranteeFeeAmount").toString());
@@ -228,7 +228,7 @@ public class DebtController extends BaseListableController<Debt>{
         		rowList.add(obj.getJSONObject("product").getString("name"));
     		});
     	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","首个还款日","首期总费用","评审费","担保费","本息","资金方","产品名称"});
-    	  downLoad(request,response, dataList,"首期还款列表.cvs");
+    	  downLoad(request,response, dataList,"首期还款列表.csv");
     	}catch(Exception e){
     		log.error("",e);
     	}
@@ -243,20 +243,20 @@ public class DebtController extends BaseListableController<Debt>{
     	try{
     		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
     		List<String[]> dataList=getDataList(downSupport(request),(obj,rowList)->{
-    			rowList.add(obj.getString("userId"));
+    			rowList.add(obj.getString("userId")+"\t");
         		rowList.add(obj.getJSONObject("idcard").getString("name"));
-        		rowList.add(obj.getJSONObject("user").get("phone").toString());
+        		rowList.add(obj.getJSONObject("user").get("phone").toString()+"\t");
         		rowList.add(obj.getJSONObject("loanOrder").get("loanAmount").toString());
         		Date dueDate=obj.getDate("dueDate");
-        		rowList.add(sdf.format(dueDate));  	
+        		rowList.add(sdf.format(dueDate)+"\t");  	
         		rowList.add(obj.get("overdueDays").toString());
-        		rowList.add(obj.getString("termPre"));
+        		rowList.add(obj.getString("termPre")+"\t");
         		rowList.add(obj.get("balanceAmount").toString());
         		rowList.add(obj.getString("fundName"));
         		rowList.add(obj.getJSONObject("product").getString("name"));
     		});
     	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","还款日","逾期天数","当期/总期","应还金额","资金方","产品名称"});
-    	  downLoad(request,response, dataList,"逾期还款列表.cvs");
+    	  downLoad(request,response, dataList,"逾期还款列表.csv");
     	}catch(Exception e){
     		log.error("",e);
     	}
@@ -271,10 +271,12 @@ public class DebtController extends BaseListableController<Debt>{
 		        // 非IE浏览器的处理：  
 		    	fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");  
 		    }
-           response.setCharacterEncoding("utf-8");
-		  response.setHeader("content-type", "application/octet-stream");
-		  response.setContentType("application/octet-stream");
+          // response.setCharacterEncoding("utf-8");
+		  //response.setHeader("content-type", "application/octet-stream");
+		  response.setContentType("application/csv");
 		 response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));  
+		 byte[] uft8bom={(byte)0xef,(byte)0xbb,(byte)0xbf};
+		 response.getOutputStream().write(uft8bom);
 		 write(response.getOutputStream(),dataList, fileName);
 		}catch(Exception e){
 			log.error("",e);
@@ -298,11 +300,11 @@ public class DebtController extends BaseListableController<Debt>{
     private interface DownLoadProcesser{
     	 void process(JSONObject obj,List<String> rowList);
     }
-    private void write(OutputStream os,List<String[]> dataList,String fileName){
+    private void write(OutputStream os,List<String[]> dataList,String fileName){    	
     	CsvWriter writer=new CsvWriter(os, ',', Charset.forName("UTF-8"));
     	dataList.forEach(data->{
     		try {
-				writer.writeRecord(data);
+				writer.writeRecord(data,true);
 			} catch (Exception e) {
 				log.error("",e);
 			}
