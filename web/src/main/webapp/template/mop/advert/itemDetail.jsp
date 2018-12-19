@@ -60,9 +60,9 @@
 
             <div class="control-group span12">
                 <label class="control-label"><s>*</s>展示日期：</label>
-                <div class="controls">
-                    <input type="text" name="beginTime" class="calendar calendar-time"><label>&nbsp;-&nbsp;</label>
-                    <input type="text" name="endTime" class="calendar calendar-time">
+                <div class="controls bui-form-group" data-rules="{dateRange : true}">
+                    <input type="text" name="beginTime" class="calendar calendar-time" data-tip="{text : '开始日期'}"><label>&nbsp;-&nbsp;</label>
+                    <input type="text" name="endTime" class="calendar calendar-time" data-tip="{text : '结束日期'}">
                 </div>
             </div>
     </div>

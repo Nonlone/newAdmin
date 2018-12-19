@@ -66,18 +66,16 @@
                     </div>
                 </div>
                 <div class="row">
-                  <div class="control-group span8">
-                      <label class="control-label">开始日期：</label>
-                      <div class="controls">
-                        <input type="text" name="beginTime" class="calendar calendar-time">
-                      </div>
-                  </div>
-                  <div class="control-group span8">
-                    <label class="control-label">结束日期：</label>
-                    <div class="controls">
-                      <input type="text" name="endTime"  class="calendar calendar-time">
+
+                <div class="control-group span16">
+                    <label class="control-label">时间：</label>
+                    <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
+                        <input type="text" name="beginTime" class="calendar calendar-time" data-tip="{text : '开始日期'}" >
+                        <span>- </span>
+                        <input type="text" name="endTime"  class="calendar calendar-time" data-tip="{text : '结束日期'}">
                     </div>
-                  </div>
+                </div>
+
                 </div>
                 <div class="row">
                     <div class="control-group span8">

@@ -195,7 +195,7 @@ public class AdvertGroupService {
         param.put("groupId", id);
         JSONObject data = new JSONObject();
         data.put("data", param);
-        String resultStr = OkHttpClientUtils.postReturnBody(groupEvictUrl, data.toJSONString());
+        String resultStr = OkHttpClientUtils.postReturnBody(groupEvictUrl, data);
         return JSON.parseObject(resultStr, RpcResult.class);
     }
 

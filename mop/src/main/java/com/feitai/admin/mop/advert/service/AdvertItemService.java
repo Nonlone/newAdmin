@@ -859,7 +859,7 @@ public class AdvertItemService {
 		param.put("itemId", id);
 		JSONObject data = new JSONObject();
 		data.put("data", param);
-		String resultStr = OkHttpClientUtils.postReturnBody(itemEvictCacheUrl, data.toJSONString());
+		String resultStr = OkHttpClientUtils.postReturnBody(itemEvictCacheUrl, data);
 		return JSON.parseObject(resultStr, RpcResult.class);
 	}
 }
