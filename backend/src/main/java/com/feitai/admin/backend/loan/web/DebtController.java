@@ -249,11 +249,12 @@ public class DebtController extends BaseListableController<Debt>{
         		rowList.add(sdf.format(dueDate)+"\t");  	
         		rowList.add(obj.get("overdueDays").toString());
         		rowList.add(obj.getString("termPre")+"\t");
+        		rowList.add(obj.get("amount").toString());
         		rowList.add(obj.get("balanceAmount").toString());
         		rowList.add(obj.getString("fundName"));
         		rowList.add(obj.getJSONObject("product").getString("name"));
     		});
-    	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","还款日","逾期天数","当期/总期","应还金额","资金方","产品名称"});
+    	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","还款日","逾期天数","当期/总期","应还金额","逾期金额","资金方","产品名称"});
     	  downLoad(request,response, dataList,"逾期还款列表.csv");
     	}catch(Exception e){
     		log.error("",e);
