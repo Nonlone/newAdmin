@@ -178,6 +178,7 @@
 					 return '';
 				 }
 	        }},
+	    {title:'总期数',dataIndex:'orderTerm',width:'100px'},
         {title:'首期总费用',dataIndex:'amount',width:'150px'},
         {title:"评审费",dataIndex:"orderPlande",width:"150px",renderer:function (value) {
 			 if(value){
@@ -203,8 +204,8 @@
 					 return '';
 				 }
 	        }},
-        {title:"资金方",dataIndex:"fundName",width:"150px"},
-        {title:'产品名称',dataIndex:'product',width:'150px',renderer: function (value) {
+        {title:"资金方",dataIndex:"fundName",width:"100px"},
+        {title:'产品名称',dataIndex:'product',width:'100px',renderer: function (value) {
                 if(value){
                     return value.name;
                 }else{
