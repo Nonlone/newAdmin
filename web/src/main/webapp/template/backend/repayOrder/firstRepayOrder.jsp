@@ -195,7 +195,10 @@
         }},
         {title:"本息",dataIndex:"orderPlande",width:"150px",renderer:function (value) {
 			 if(value){
-					return value.pincipalAmount;
+				   if(value.interestAmount){
+					   return value.pincipalAmount+value.interestAmount;
+				   }				   
+					return value.interestAmount;
 				 }else{
 					 return '';
 				 }
