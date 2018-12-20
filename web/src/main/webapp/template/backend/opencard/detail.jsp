@@ -312,7 +312,7 @@
             $.ajax({
                 type: "post",
                 url: "/backend/creditdata/sauron",
-                data:"cardId=${card.id}&userId=${card.userId}",
+                data:"userId=${card.userId}",
                 dataType: "json",
                 success: function (response) {
                     console.log(response)
@@ -377,7 +377,7 @@
             $.ajax({
                 type: "post",
                 url: "/backend/creditdata/suanhua",
-                data:"cardId=${card.id}&userId=${card.userId}",
+                data:"userId=${card.userId}",
                 dataType: "json",
                 success: function (response) {
                     console.log(response)
