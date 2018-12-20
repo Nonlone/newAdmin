@@ -30,13 +30,13 @@
 					<input type="text" data-tip="{text : '请输入客户姓名'}" class="input-normal control-text" name="search_LIKE_idcard.name">
 				</div>
 			</div>
-           <div class="control-group span7">
+           <div class="control-group span6">
 				<label class="control-label">产品:</label>
 				<div id="selectProduct" class="controls">
 					<input id="searchProduct" type="hidden" name="search_EQ_loanOrder.productId">
 				</div>
 			</div>
-			<div class="control-group span7">
+			<div class="control-group span6">
 				<label class="control-label">资金方:</label>
 				<div id="selectPayFund" class="controls">
 					<input id="searchPayFund" type="hidden" name="search_EQ_loanOrder.payFundId">
