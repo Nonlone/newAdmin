@@ -271,6 +271,40 @@
     }
 
     /**
+     * 税务贷（金财）
+     * */
+    function tax_jchl(){
+        getCreditData("/static/template/jincai_tax.tpl",function(resp){
+            $.ajax({
+                type: "post",
+                url: "/backend/creditdata/jincaiTax",
+                data:"userId=${card.userId}",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response)
+                    if(response.code==0
+                        && !jQuery.isEmptyObject(response.data)){
+                        var html = template.render(resp,response.data.report);
+                        $("#tax_jchl").html("").html(html);
+                    }else{
+                        BUI.use('bui/overlay', function (Overlay) {
+                            new Overlay.Dialog({
+                                title: '提示窗口',
+                                width: 300,
+                                height: 150,
+                                mask: false,
+                                buttons: [],
+                                bodyContent: '<p>该用户的此类征信信息错误</p>'
+                            }).show();
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+
+    /**
      * 贷后帮（索伦-葫芦数据）
      * */
     function sauron_daihoubang(){
