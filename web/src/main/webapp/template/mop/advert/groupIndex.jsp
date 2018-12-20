@@ -71,13 +71,13 @@
                     <div class="control-group span8">
                         <label class="control-label">展示限制数量:</label>
                         <div class="controls">
-                            <input type="text" name="showLimit" class="control-text">
+                            <input type="text" name="showLimit" class="control-text" data-rules="{number:true}">
                         </div>
                     </div>
                     <div class="control-group span8">
                         <label class="control-label">播放时间(秒):</label>
                         <div class="controls">
-                            <input type="text" name="playTime" class="control-text">
+                            <input type="text" name="playTime" class="control-text" data-rules="{number:true}">
                         </div>
                     </div>
                 </div>

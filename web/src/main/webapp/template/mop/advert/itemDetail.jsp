@@ -53,7 +53,7 @@
             <div class="control-group span10">
                 <label class="control-label"><s>*</s>位置权重:</label>
                 <div class="controls">
-                    <input name="weight" type="text" class="control-text" placeholder="请输入数字,数字越小位置越靠前">
+                    <input name="weight" type="text" class="control-text" placeholder="请输入数字,数字越小位置越靠前" data-rules="{number:true}">
                 </div>
             </div>
 
