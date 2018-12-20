@@ -231,7 +231,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
             ];
 
     var preview_store = new Store({
-         url: '${ctx}/admin/mop/advert/block/preview',
+         url: '${ctx}/mop/advert/block/preview',
          autoLoad:true
     });
     var preview_grid = new Grid.Grid({

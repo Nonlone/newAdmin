@@ -129,6 +129,8 @@ public class AdvertItemService {
 		
 		List<AdvertItem> list = mergeEditCopyAdvertItems(items, editCopyItems);
 		
+		list = filterAndSort(list);
+		
 		if (0 < limit && limit < list.size()) {
 			list = list.subList(0, limit);
 		}
@@ -455,7 +457,7 @@ public class AdvertItemService {
 		List<Long> blockIds = getBlockIdsWithEditCopy(itemId, read.getEditCopyId());
 
 		// 更新编辑副本
-		updateWithEditCopy(itemId, read.getEditCopyId(), read, blockIds, operator);
+		updateWithEditCopy(itemId, read.getEditCopyId(), updateEntity, blockIds, operator);
 	}
 	
 	private void checkUpdateStatus(AdvertItem readItem, AdvertItem editCopyItem, AdvertItemStatusEnum updateStatus) {
