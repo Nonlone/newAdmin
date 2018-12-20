@@ -62,6 +62,11 @@
             <artifactId>mop</artifactId>
             <version>2.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.feitai.admin</groupId>
+            <artifactId>message-center</artifactId>
+            <version>2.0.0</version>
+        </dependency>
 
         <!--打印logback的日志到redis-->
         <dependency>
