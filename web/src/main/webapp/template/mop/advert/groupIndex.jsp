@@ -47,13 +47,13 @@
                     <div class="control-group span8">
                         <label class="control-label">模组编码：</label>
                         <div class="controls">
-                            <input type="text" name="code" class="control-text">
+                            <input type="text" name="code" class="control-text" data-rules="{required : true}">
                         </div>
                     </div>
                     <div class="control-group span8">
                         <label class="control-label">模组名称：</label>
                         <div class="controls">
-                          <input type="text" name="title" class="control-text">
+                          <input type="text" name="title" class="control-text" data-rules="{required : true}">
                         </div>
                     </div>
                 </div>

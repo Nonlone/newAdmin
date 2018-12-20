@@ -16,7 +16,7 @@
         <div class="control-group span10">
             <label class="control-label"><s>*</s>内容名称：</label>
             <div class="controls">
-                <input name="title" type="text" class="control-text" placeholder="请输入名称">
+                <input name="title" type="text" class="control-text" placeholder="请输入名称" data-rules="{required : true}">
             </div>
         </div>
 
@@ -46,7 +46,7 @@
             <div class="control-group span10">
                 <label class="control-label"><s>*</s>关联模块:</label>
                 <div id="s1" class="controls">
-                    <input type="hidden" id="code" name="code">
+                    <input type="hidden" id="code" name="code" data-rules="{required : true}">
                 </div>
             </div>
 

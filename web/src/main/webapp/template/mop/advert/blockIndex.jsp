@@ -61,7 +61,7 @@
                     <div class="control-group span8">
                         <label class="control-label">标题：</label>
                         <div class="controls">
-                          <input type="text" name="title" class="control-text">
+                          <input type="text" name="title" class="control-text" data-rules="{required : true}">
                         </div>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                     <div class="control-group span8">
                         <label class="control-label">关联模组：</label>
                         <div id="refGroupIdsDiv" class="controls" >
-                            <input type="hidden" id="refGroupIdsInput" name="groupIds" width="200px;">
+                            <input type="hidden" id="refGroupIdsInput" name="groupIds" width="200px;" data-rules="{required : true}">
                         </div>
                     </div>
                     <div class="control-group span8">
