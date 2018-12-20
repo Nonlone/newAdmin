@@ -6,6 +6,12 @@
 	<title><spring:eval expression="@webConf['admin.title']" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<%@include file="../../common/import-static.jsp"%>
+	<style>
+		.text-size{
+			height: 60px;
+			width: 500px;
+		}
+	</style>
 </head>
 <body>
 	<div class="container">
@@ -15,13 +21,13 @@
 			<div class="control-group span7">
 				<label class="control-label">模板code:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="noticeCode">
+					<input type="text" class="input-normal control-text" name="code">
 				</div>
 			</div>
 			<div class="control-group span7">
-				<label class="control-label">模板标题:</label>
+				<label class="control-label">模板名称:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="noticeTitle">
+					<input type="text" class="input-normal control-text" name="name">
 				</div>
 			</div>
 			<div class="span1 offset2">
@@ -34,50 +40,57 @@
 		</form>
 		<!-- 修改新增 -->
 		<div id="addOrUpdate" class="hide">
-			<form id="addOrUpdateForm" class="form-inline">
-				<div class="row">
-					<div class="control-group span4">
-						<label class="control-label">模板code:</label>
-						<div class="controls">
-							<input type="text" class="input-normal control-text" name="code">
-						</div>
-					</div>
-					<div class="control-group span10">
-						<label class="control-label">模板名称:</label>
-						<div class="controls">
-							<input type="text" class="input-normal control-text" name="name">
-						</div>
-					</div>
-					<div class="control-group span10">
-						<label class="control-label">内容标题:</label>
-						<div class="controls">
-							<input type="text" class="input-normal control-text" name="title">
-						</div>
-					</div>
+			<form id="addOrUpdateForm" role="form" class="form-horizontal">
+				<div class="form-group">
+					<label for="code">模板code</label>
+					<input type="text" class="form-control" id="code" name="code" placeholder="模板code">
 				</div>
-				<div class="row">
-					<div class="control-group">
-						<label class="control-label">站内信内容:</label>
-						<div class="controls">
-							<input type="text" class="input-normal control-text" name="mailContent">
-						</div>
-					</div>
+				<div class="form-group">
+					<label for="name">模板名称</label>
+					<input type="text" class="form-control" id="name" name="name" placeholder="模板名称">
 				</div>
-				<div class="row">
-					<div class="control-group">
-						<label class="control-label">短信内容:</label>
-						<div class="controls">
-							<input type="text" class="input-normal control-text" name="smsContent">
-						</div>
-					</div>
+				<div class="form-group">
+					<label for="title">模板名称</label>
+					<input type="text" class="form-control" name="title"  id="title" placeholder="内容标题">
 				</div>
-				<div class="row">
-					<div class="control-group">
-						<label class="control-label">推送内容:</label>
-						<div class="controls">
-							<input type="text" class="input-normal control-text" name="pushContent">
-						</div>
-					</div>
+				<div class="form-group">
+					<label for="mailContent">站内信内容</label>
+					<textarea class="form-control text-size" name="mailContent" id="mailContent"  rows="3"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="smsContent">短信内容</label>
+					<textarea class="form-control text-size" name="smsContent" id="smsContent"  rows="3"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="pushContent">推送内容</label>
+					<textarea class="form-control text-size" name="pushContent" id="pushContent" rows="3"></textarea>
+				</div>
+				<label for="name">是否禁用推送极光通知</label>
+				<div>
+					<label class="radio-inline">
+						<input type="radio" name="disablePushNotice" value="0" checked>启用
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="disablePushNotice" value="1">禁用
+					</label>
+				</div>
+				<label for="name">是否禁用推送极光消息</label>
+				<div>
+					<label class="radio-inline">
+						<input type="radio" name="disablePushMsg" value="0" checked>启用
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="disablePushMsg" value="1">禁用
+					</label>
+				</div>
+				<label for="name">是否禁用模板</label>
+				<div>
+					<label class="radio-inline">
+						<input type="radio" name="status" value="0" checked>启用
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="status" value="1">禁用
+					</label>
 				</div>
 			</form>
 		</div>
@@ -139,7 +152,6 @@ BUI.use(['bui/ux/crudgrid'],function (CrudGrid) {
 });
  
 </script>
- 
 </body>
 </html>
 

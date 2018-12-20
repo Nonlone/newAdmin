@@ -4,6 +4,7 @@ import com.feitai.admin.core.service.Page;
 import com.feitai.admin.core.web.BaseController;
 import com.feitai.admin.messagecenter.config.MessageConfig;
 import com.feitai.admin.messagecenter.constants.MessageConstants;
+import com.feitai.admin.messagecenter.dto.NoticeTemplateQueryParam;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -13,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.WebUtils;
 
 import javax.servlet.ServletRequest;
 import java.net.URI;
@@ -68,10 +70,17 @@ public class NoticeTemplateController {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        Map<String, Object> param = new HashMap<>();
-        param.put("pageNum",1);
-        param.put("pageSize",10);
-        PageInfo pageInfo = restTemplate.postForObject(uri, param, PageInfo.class);
+        Map<String, Object> searchMap = WebUtils.getParametersStartingWith(request, "");
+        NoticeTemplateQueryParam queryParam = new NoticeTemplateQueryParam();
+        queryParam.setPageNum(Integer.valueOf(searchMap.get("pageIndex").toString()) + 1);
+        queryParam.setPageSize(Integer.valueOf(searchMap.get("limit").toString()));
+        if (searchMap.get("code") != null) {
+            queryParam.setCode(searchMap.get("code").toString());
+        }
+        if (searchMap.get("name") != null) {
+            queryParam.setName(searchMap.get("name").toString());
+        }
+        PageInfo pageInfo = restTemplate.postForObject(uri, queryParam, PageInfo.class);
         Page page = convert(pageInfo);
         return page;
     }
