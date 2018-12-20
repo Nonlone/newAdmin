@@ -126,7 +126,6 @@ public class DebtController extends BaseListableController<Debt>{
         List<Debt> content = debtPage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
         for (Debt debt :content) {
-        	System.out.println(debt.getUserId());
             try{
                 JSONObject jsonObject = handleDebtOrder(debt);
                 resultList.add(jsonObject);
