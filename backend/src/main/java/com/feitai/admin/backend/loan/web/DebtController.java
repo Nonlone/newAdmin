@@ -122,7 +122,7 @@ public class DebtController extends BaseListableController<Debt>{
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(getSelectMultiTable().buildSqlString());
         sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
-        Page<Debt> debtPage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".due_date DESC", pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        Page<Debt> debtPage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".due_date ", pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
         List<Debt> content = debtPage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
         for (Debt debt :content) {
@@ -164,7 +164,7 @@ public class DebtController extends BaseListableController<Debt>{
         sbSql.append(getSelectMultiTable().buildSqlString())
         .append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS))
         .append(" ORDER BY ")
-        .append(SelectMultiTable.MAIN_ALAIS).append(".created_time DESC");
+        .append(SelectMultiTable.MAIN_ALAIS).append(".due_date ");
         List<Debt> debtList= getService().findAll(sbSql.toString());
         List<JSONObject> resultList = new ArrayList<>();
         for (Debt debt :debtList) {
