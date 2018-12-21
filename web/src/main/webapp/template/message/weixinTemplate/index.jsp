@@ -44,57 +44,64 @@
 				<input type="hidden" name="id" value="">
 				<div class="row">
 					<div class="control-group span10">
-						<label for="weixinCode">模板code</label>
+						<label for="weixinCode" class="control-label">模板code</label>
 						<div class="controls">
-							<input type="text" class="form-control" id="weixinCode" name="weixinCode" placeholder="模板code">
+							<input type="text" class="form-control" id="weixinCode"
+								   style="width:100%" name="weixinCode" placeholder="模板code">
 						</div>
 					</div>
 					<div class="control-group span10">
-						<label for="title">微信消息名称</label>
+						<label for="title" class="control-label">微信消息名称</label>
 						<div class="controls">
-							<input type="text" class="form-control" id="title" name="title" placeholder="微信消息名称">
+							<input type="text" class="form-control" id="title" name="title" style="width:100%"
+								   placeholder="微信消息名称">
 						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="control-group span24">
-						<label for="weixinTempId">消息模板id</label>
+						<label for="weixinTempId" class="control-label">消息模板id</label>
 						<div class="controls">
-							<input type="text" class="form-control" name="weixinTempId"  id="weixinTempId" placeholder="消息模板id">
+							<input type="text" class="form-control" style="width:350px" name="weixinTempId"
+								   id="weixinTempId" placeholder="消息模板id">
 						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="control-group span24">
-						<label for="tempContent">消息模板内容</label>
-						<div class="controls control-row4">
-							<textarea class="form-control" name="tempContent" id="tempContent"  rows="3"></textarea>
+						<label for="tempContent" class="control-label">模板内容</label>
+						<div class="controls control-row6">
+							<textarea class="form-control text-size" name="tempContent"
+									  id="tempContent"rows="6"></textarea>
 						</div>
 					</div>
 				</div>
+				<br/><br/>
 				<div class="row">
 					<div class="control-group span24">
-						<label for="tempFirstDetail">消息模板的首行内容</label>
-						<div class="controls control-row4">
-							<textarea class="form-control" name="tempFirstDetail" id="tempFirstDetail"  rows="3"></textarea>
+						<label for="tempFirstDetail" class="control-label">模板的首行内容</label>
+						<div class="controls control-row6">
+							<textarea class="form-control text-size" name="tempFirstDetail"
+									  id="tempFirstDetail"rows="6"></textarea>
 						</div>
 					</div>
 				</div>
+				<br/><br/>
 				<div class="row">
-					<div class="control-group span6">
-						<label for="keyword1">消息模板关键字1</label>
+					<div class="control-group span8">
+						<label for="keyword1" class="control-label">模板关键字1</label>
 						<div class="controls">
 							<input name = "keyword1" id="keyword1" type="text" class="input-normal control-text">
 						</div>
 					</div>
-					<div class="control-group span6">
-						<label for="keyword2">消息模板关键字2</label>
+					<div class="control-group span8">
+						<label for="keyword2" class="control-label">模板关键字2</label>
 						<div class="controls">
 							<input name = "keyword2" id="keyword2" type="text" class="input-normal control-text">
 						</div>
 					</div>
-					<div class="control-group span6">
-						<label for="keyword3">消息模板关键字3</label>
+					<div class="control-group span8">
+						<label for="keyword3" class="control-label">模板关键字3</label>
 						<div class="controls">
 							<input name = "keyword3" id="keyword3" type="text" class="input-normal control-text">
 						</div>
@@ -102,13 +109,13 @@
 				</div>
 				<div class="row">
 					<div class="control-group span8">
-						<label for="keyword4">消息模板关键字4</label>
+						<label for="keyword4" class="control-label">模板关键字4</label>
 						<div class="controls">
 							<input name = "keyword4" id="keyword4" type="text" class="input-normal control-text">
 						</div>
 					</div>
 					<div class="control-group span8">
-						<label for="keyword5">消息模板关键字5</label>
+						<label for="keyword5" class="control-label">模板关键字5</label>
 						<div class="controls">
 							<input name = "keyword5" id="keyword5" type="text" class="input-normal control-text">
 						</div>
@@ -116,9 +123,10 @@
 				</div>
 				<div class="row">
 					<div class="control-group span24">
-						<label for="tempRemarkDetail">消息模板的末行备注内容</label>
+						<label for="tempRemarkDetail" class="control-label">模板备注</label>
 						<div class="controls">
-							<input name = "tempRemarkDetail" id="tempRemarkDetail" type="text" class="input-normal control-text">
+							<input name = "tempRemarkDetail" style="width: 550px" id="tempRemarkDetail" type="text"
+								   class="input-normal control-text">
 						</div>
 					</div>
 				</div>
