@@ -41,6 +41,7 @@
 		<!-- 修改新增 -->
 		<div id="addOrUpdate" class="hide">
 			<form id="addOrUpdateForm" role="form" class="form-horizontal">
+				<input type="hidden" name="id" value="">
 				<div class="form-group">
 					<label for="code">模板code</label>
 					<input type="text" class="form-control" id="code" name="code" placeholder="模板code">
@@ -50,7 +51,7 @@
 					<input type="text" class="form-control" id="name" name="name" placeholder="模板名称">
 				</div>
 				<div class="form-group">
-					<label for="title">模板名称</label>
+					<label for="title">内容标题</label>
 					<input type="text" class="form-control" name="title"  id="title" placeholder="内容标题">
 				</div>
 				<div class="form-group">
@@ -86,7 +87,7 @@
 				<label for="name">是否禁用模板</label>
 				<div>
 					<label class="radio-inline">
-						<input type="radio" name="status" value="0" checked>启用
+						<input type="radio" name="status" value="0">启用
 					</label>
 					<label class="radio-inline">
 						<input type="radio" name="status" value="1">禁用
@@ -130,9 +131,9 @@ BUI.use(['bui/ux/crudgrid'],function (CrudGrid) {
 		entityName : '消息模板',
     	pkColumn : 'id',//主键
       	storeUrl : '/message/noticeTemplate/list',
-        addUrl : '/backend/appConfigType/add',
-        updateUrl : '/backend/appConfigType/update',
-        removeUrl : '/backend/appConfigType/del',
+        addUrl : '/message/noticeTemplate/add',
+        updateUrl : '/message/noticeTemplate/update',
+        removeUrl : '/message/noticeTemplate/delete',
         columns : columns,
 		showAddBtn : add,
 		showUpdateBtn : update,

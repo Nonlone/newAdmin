@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @ToString
-public class NoticeTemplateQueryParam extends BasePageReq implements Serializable {
+public class NoticeTemplateQueryDto extends BasePageReq implements Serializable {
     private static final long serialVersionUID = -1737607617808345081L;
     /**
      * 模板code
