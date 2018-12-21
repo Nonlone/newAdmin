@@ -61,6 +61,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
         this.add(AuthCode.PBCCRC);
         this.add(AuthCode.TOBACCO);
         this.add(AuthCode.XYL_TOBACCO);
+        this.add(AuthCode.TAX);
     }};
 
     @Autowired

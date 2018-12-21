@@ -31,11 +31,12 @@ public class CreditDataService extends ClassPrefixDynamicSupportService<CreditDa
         return null;
     }
 
-    public CreditData findByUserIdAndSource(Long userId, String authSource) {
+    public CreditData findByUserIdAndSourceAndCode(Long userId, String authSource,String code) {
         List<CreditData> creditDataList = getMapper().selectByExample(Example.builder(CreditData.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo("userId",userId)
-                        .andEqualTo("source", authSource))
+                        .andEqualTo("source", authSource)
+                        .andEqualTo("code",code))
                 .orderByDesc("createdTime").build());
         if (!CollectionUtils.isEmpty(creditDataList)) {
             CreditData creditData = creditDataList.get(0);

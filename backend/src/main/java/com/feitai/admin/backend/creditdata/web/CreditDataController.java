@@ -43,11 +43,22 @@ public class CreditDataController {
         return new ResponseBean<Void>(ResultCode.FAIL);
     }
 
+    @PostMapping("/jincaiTax")
+    @ResponseBody
+    public Object jincaiTax(@RequestParam("userId") Long userId){
+        CreditData creditData = creditDataService.findByUserIdAndSourceAndCode(userId, "JCHL","TAX");
+        if(!Objects.isNull(creditData)){
+            JSONObject json = (JSONObject) JSON.toJSON(creditData);
+            json.put("report",JSON.parse(creditData.getCreditData()));
+            return new ResponseBean<>(ResultCode.SUCCESS,json);
+        }
+        return new ResponseBean<Void>(ResultCode.FAIL);
+    }
 
     @PostMapping("/sauron")
     @ResponseBody
     public Object sauron(@RequestParam("userId") Long userId){
-        CreditData creditData = creditDataService.findByUserIdAndSource(userId, "DAIHOUBANG");
+        CreditData creditData = creditDataService.findByUserIdAndSourceAndCode(userId, "DAIHOUBANG","DAIHOUBANG");
         if(!Objects.isNull(creditData)){
             JSONObject json = (JSONObject) JSON.toJSON(creditData);
             json.put("report",JSON.parse(creditData.getCreditData()));
@@ -59,7 +70,7 @@ public class CreditDataController {
 
     @PostMapping("/suanhua")
     @ResponseBody Object suanhua(@RequestParam("userId") Long userId){
-        CreditData creditData = creditDataService.findByUserIdAndSource(userId, "SUANHUA");
+        CreditData creditData = creditDataService.findByUserIdAndSourceAndCode(userId, "SUANHUA","PBCCRC");
         if(!Objects.isNull(creditData)){
             JSONObject json = (JSONObject) JSON.toJSON(creditData);
             json.put("report",JSON.parse(creditData.getCreditData()));

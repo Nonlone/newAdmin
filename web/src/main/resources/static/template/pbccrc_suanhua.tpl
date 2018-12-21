@@ -14,7 +14,6 @@
                                 </TR>
                                 <TR>
                                     <TD width=377 colSpan=2 align=left><STRONG>报告编号：</STRONG><STRONG class=p>{{report.reportinfo.reportSN }} </STRONG></TD>
-                                    <TD width=300 colSpan=2 align=left><STRONG>查询时间：</STRONG><STRONG class=p><%=  $imports.dateFormat(report.reportinfo.querytime) %> </STRONG></TD>
                                     <TD width=300 colSpan=2 align=right><STRONG>报告时间：</STRONG><STRONG class=p><%= $imports.dateFormat(report.reportinfo.reporttime) %> </STRONG></TD>
                                 </TR>
                             </TBODY>

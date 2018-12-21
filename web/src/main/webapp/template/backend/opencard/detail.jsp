@@ -284,6 +284,7 @@
                     console.log(response)
                     if(response.code==0
                         && !jQuery.isEmptyObject(response.data)){
+                        debugger;
                         var html = template.render(resp,response.data.report);
                         $("#tax_jchl").html("").html(html);
                     }else{
