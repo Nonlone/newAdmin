@@ -31,6 +31,24 @@ public abstract class BaseListableController<T> extends BaseController {
         return getSql(request, selectMultiTable, null);
     }
 
+    protected String getSql(SearchParams search,ServletRequest request, SelectMultiTable selectMultiTable) {
+        return getSql(search,request, selectMultiTable, null);
+    }
+
+    protected String getSql(SearchParams search,ServletRequest request, SelectMultiTable selectMultiTable, List<SearchParams> extraSearchParamsList) {
+
+        StringBuffer sbSql = new StringBuffer();
+        sbSql.append(selectMultiTable.buildSqlString());
+        List<SearchParams> searchParamsList = bulidSearchParamsList(request);
+        searchParamsList.add(search);
+        if (!CollectionUtils.isEmpty(extraSearchParamsList)) {
+            searchParamsList.addAll(extraSearchParamsList);
+        }
+        sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
+        sbSql.append(" GROUP BY " + SelectMultiTable.MAIN_ALAIS + ".id ");
+        return sbSql.toString();
+    }
+
     protected String getSql(ServletRequest request, SelectMultiTable selectMultiTable, List<SearchParams> extraSearchParamsList) {
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(selectMultiTable.buildSqlString());
@@ -104,21 +122,6 @@ public abstract class BaseListableController<T> extends BaseController {
         return list(request, sqlHead, SelectMultiTable.MAIN_ALAIS, "id");
     }
 
-    /**
-     * Sql 搜索并分页
-     *
-     * @param sqls
-     * @param pageNo
-     * @param pageSize
-     * @param countSqls
-     * @param countAlias
-     * @return
-     */
-    protected Page<T> list(String search, String sqls, int pageNo, int pageSize, String countSqls, String countAlias) {
-        Integer totalSize = getService().countBySqls(countSqls, countAlias);
-        List<T> resultList = getService().findAllBySqls(sqls, pageNo, pageSize);
-        return buildPage(resultList, totalSize, pageNo, pageSize);
-    }
 
     /**
      * Sql 搜索并分页

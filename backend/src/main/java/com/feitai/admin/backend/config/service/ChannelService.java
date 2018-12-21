@@ -37,7 +37,7 @@ public class ChannelService extends ClassPrefixDynamicSupportService<Channel> {
             Example example = Example.builder(Channel.class).andWhere(Sqls.custom().andEqualTo("mainPackageCode",code)).build();
             List<Channel> channels = channelMapper.selectByExample(example);
             for (Channel channel:channels) {
-                channelIds.add(channel.getChannelId());
+                channelIds.add("'"+channel.getChannelId()+"'");
             }
         }
         return channelIds;

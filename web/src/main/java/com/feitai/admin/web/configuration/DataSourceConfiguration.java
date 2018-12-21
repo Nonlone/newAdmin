@@ -72,6 +72,9 @@ public class DataSourceConfiguration implements EnvironmentAware {
         classPrefixMap.put("com.feitai.admin.wisdomTooth",ADMIN_DATASOURCE);
         // 管理后台超级合伙人
         classPrefixMap.put("com.feitai.admin.mop",MOP_DATASOURCE);
+        // 渠道商
+        classPrefixMap.put("com.feitai.admin.channel.channel",BACKEND_DATASOURCE);
+        classPrefixMap.put("com.feitai.admin.channel.userChannel",ADMIN_DATASOURCE);
 
         return classPrefixMap;
     }

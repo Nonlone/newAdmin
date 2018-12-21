@@ -219,6 +219,7 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
         return buildSqlWhereCondition(searchParamsList, null);
     }
 
+
     /***
      * 构建搜索条件语句
      *

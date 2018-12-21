@@ -9,97 +9,6 @@
 </head>
 <body>
 <div class="container">
-	<!-- 查询 -->
-	<form id="searchForm" class="form-horizontal search-form">
-
-		<div class="row">
-			<div class="control-group span7">
-				<label class="control-label">订单号:</label>
-				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_id">
-				</div>
-			</div>
-			<div class="control-group span7">
-				<label class="control-label">客户姓名:</label>
-				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_idcard.name">
-				</div>
-			</div>
-			<div class="control-group span7">
-				<label class="control-label">客户Id:</label>
-				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_userId">
-				</div>
-			</div>
-
-			<div class="control-group span7">
-				<label class="control-label">身份证号:</label>
-				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_idcard.idCard">
-				</div>
-			</div>
-
-			<div class="control-group span7">
-				<label class="control-label">注册手机号:</label>
-				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_user.phone">
-				</div>
-			</div>
-
-			<div class="control-group span_width">
-				<label class="control-label">放款状态：</label>
-				<div id="statusSelect"  class="controls">
-					<input id="search_EQ_status" name="search_OREQ_status" type="hidden" >
-				</div>
-			</div>
-
-			<div class="control-group span6">
-				<label class="control-label">产品名称:</label>
-				<div class="controls" id="selectProduct">
-					<input id="searchProduct" type="hidden" name="search_OREQ_product.id">
-				</div>
-			</div>
-			<div class="control-group span6">
-				<label class="control-label">资金方：</label>
-				<div id="selectPayFund" class="controls">
-					<input id="search_EQ_payFundId" name="search_OREQ_payFundId" type="hidden" >
-				</div>
-			</div>
-
-			<div class="control-group span_width">
-				<label class="control-label">申请时间:</label>
-				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
-					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_applyTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_applyTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
-				</div>
-			</div>
-			<div class="control-group span_width">
-				<label class="control-label">放款时间:</label>
-				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
-					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_payLoanTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_payLoanTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
-				</div>
-			</div>
-
-			<div class="control-group span7" hidden="true">
-				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_EQ_userId" value="${userId}">
-				</div>
-			</div>
-			<div class="span1 offset2">
-				<button  type="button" id="btnSearch" class="button button-primary">搜索</button>
-			</div>
-			<div class="span1 offset2">
-				<button class="button button-danger" onclick="flushall();">清空</button>
-			</div>
-		</div>
-	</form>
-	<!-- 修改新增 -->
-	<div id="addOrUpdate" class="hide">
-
-	</div>
 	<div class="search-grid-container">
 		<div id="grid"></div>
 	</div>
@@ -107,166 +16,80 @@
 
 <script type="text/javascript">
 
-    function flushall(){
-        var elementsByTagName = document.getElementsByTagName("input");
-        for(var i = 0;i<elementsByTagName.length;i++){
-            elementsByTagName[i].innerText = "";
-        }
-    }
-
-    function openout(id) {
-        window.open('${IP}'+'${ctx}/backend/loanOrder/auth/'+id);
-    }
-
-    function stop(id) {
-        debugger;
-        BUI.use('bui/overlay',function (Overlay){
-            BUI.Message.Confirm('确认要终止放款么？',function(){
-                $.ajax({
-                    url:'${ctx}/backend/loanOrder/rejectCash/'+id,
-                    dataType:'JSON',
-                    headers: {'Content-type':'application/json'},
-                    type:'POST',
-                    async:true,
-                    //contentType: 'application/json;charset=utf-8',
-                    success:function(result){
-                        debugger;
-                        if(result.code=="SUC000"){
-                            BUI.Message.Alert('操作成功！',function(){
-                            },'success');
-                        }else if(result.code=="-1"){
-                            BUI.Message.Alert(result.message,function(){
-                            },'error');
-                        }else{
-                            BUI.Message.Alert('提交终止放款失败！',function(){
-                            },'error');
-                        }
-                    }});
-
-            },'question');
-        });
-    }
-
 
     BUI.use(['bui/ux/crudgrid','bui/common/search','bui/common/page','bui/overlay','bui/select','bui/data'],function (CrudGrid,Search,Grid,Overlay,Select,Data) {
 
-        var  detailUrl = '${ctx}/backend/loanOrder/detail/';
-
-        var selectFundStore = new Data.Store({
-            url : '${ctx}/backend/fund/getFundList',
-            autoLoad : true
-        });
-
-        selectFundStatus = new Select.Select({
-            render:'#selectPayFund',
-            valueField:'#search_EQ_payFundId',
-            multipleSelect:true,
-            store:selectFundStore
-        });
-        selectFundStatus.render();
-
-        var selectStatusStore = new Data.Store({
-            url : '${ctx}/backend/loanOrder/getLoanStatusList',
-            autoLoad : true
-        });
-
-        selectStatus = new Select.Select({
-            render:'#statusSelect',
-            valueField:'#search_EQ_status',
-            multipleSelect:true,
-            store:selectStatusStore
-        });
-        selectStatus.render();
-
-
-        var selectProductStore = new Data.Store({
-            url : '${ctx}/backend/product/productNameList',
-            autoLoad : true
-        });
-
-        selectProduct = new Select.Select({
-            render:'#selectProduct',
-            valueField:'#searchProduct',
-            multipleSelect:true,
-            store:selectProductStore
-        });
-        selectProduct.render();
 
         //定义页面权限
-        var add=false,update=false,list=false,del=false,stop=false;
+        var add=false,update=false,list=false,del=false
         //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-        <framwork:crudPermission resource="/backend/loanOrder"/>
-
-        <shiro:hasPermission name="/backend/loanOrder:stop">
-        stop = true;
-        </shiro:hasPermission>
-
-
-
-
-
-
-
-        var enumObj = ${loanStatusMap};
-
+        <framwork:crudPermission resource="/channel/channelList"/>
 
         var columns = [
-            {title:'订单编号',dataIndex:'id',width:'150px'},
-            {title:'客户姓名',dataIndex:'idcard',width:"80px",renderer: function (value) {
+            {title:'注册时间',dataIndex:'user',width:'150px',renderer: function (value) {
+					if(value){
+					    return value.createdTime;
+					}
+                }},
+            {title:'注册渠道ID',dataIndex:'card',width:"80px",renderer: function (value) {
+                    if(value){
+                        return value.registChannelId;
+                    }else{
+                        return '';
+                    }
+                }},
+            {title:'客户名字',dataIndex:'idcard',width:"150px",renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '';
                     }
                 }},
-            {title:'身份证',dataIndex:'idcard',width:"150px",renderer: function (value) {
-                    if(value){
-                        return value.idCard;
-                    }else{
-                        return '';
-                    }
-                }},
-            {title:'客户ID',dataIndex:'user',width:"150px",renderer:function (value) {
+            {title:'手机号码',dataIndex:'user',width:"150px",renderer:function (value) {
                     if(value) {
-                        return value.id;
+                        return value.phone;
                     }else{
                         return '';
                     }
                 }},
 
-            {title:'注册手机号',dataIndex:'user',renderer:function (value) {
-                    if(value){
-                        return value.phone;
-                    }else{
-                        return "";
-                    }
-                }},
-            {title:'订单状态',dataIndex:'status',width:'100px',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
-            {title:'授信金额',dataIndex:'card.creditSum',width:'100px',renderer: function (value) {
-                    if(value){
-                        return value;
-                    }else{
-                        return null;
-                    }
-                }},
-            {title:'提现金额',dataIndex:'loanAmount',width:'100px'},
-            {title:'期限(月)',dataIndex:'loanTerm',width:'80px'},
-            {title:'资金方',dataIndex:'fundName',width:'100px',renderer: function (value) {
-                    if(value){
-                        return value;
-                    }else{
-                        return null;
-                    }
-                }},
-            {title:'申请时间',dataIndex:'applyTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'放款时间',dataIndex:'payLoanTime',width:'130px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'产品名称',dataIndex:'product',width:'100px',renderer: function (value) {
+            {title:'所属产品',dataIndex:'product',renderer:function (value) {
                     if(value){
                         return value.remark;
                     }else{
                         return '';
                     }
+                }},
+            {title:'状态',dataIndex:'card',width:'100px',renderer: function (value) {
+                    if(value){
+                        return value.status;
+                    }else{
+                        return null;
+                    }
+                }},
+            {title:'授信额度',dataIndex:'card',width:'100px',renderer: function (value) {
+                    if(value){
+                        return value.creditSum;
+                    }else{
+                        return null;
+                    }
+                }},
+            {title:'提现金额',dataIndex:'loanAmount',width:'80px'},
+            {title:'所在城市',dataIndex:'person',width:'130px',renderer: function (value) {
+                    if(value){
+                        return value.cityName;
+                    }else{
+                        return null;
+                    }
+                }},
+            {title:'邀请码',dataIndex:'user',width:'130px',renderer:function (value) {
+					if(value){
+                        return value.invitationCode;
+					}else{
+					    return null;
+					}
                 }}
+
         ];
 
 
@@ -274,10 +97,10 @@
         var crudGrid = new CrudGrid({
             entityName : '借款订单表',
             pkColumn : 'id',//主键
-            storeUrl : '${ctx}/backend/loanOrder/list',
-            addUrl : '${ctx}/backend/loanOrder/add',
-            updateUrl : '${ctx}/backend/loanOrder/update',
-            removeUrl : '${ctx}/backend/loanOrder/del',
+            storeUrl : '${ctx}/channel/channelList/list',
+            addUrl : '${ctx}/channel/channelList/add',
+            updateUrl : '${ctx}/channel/channelList/update',
+            removeUrl : '${ctx}/channel/channelList/del',
             columns : columns,
             showAddBtn : add,
             showUpdateBtn : update,
@@ -285,43 +108,6 @@
             gridCfg:{
                 innerBorder:true,
 
-            },
-            operationColumnRenderer : function(value, obj){//操作列最追加按钮
-
-                var editStr = '';
-                var title = obj.id+"—提现信息";
-                if(!jQuery.isEmptyObject(obj.idcard)){
-                    title = obj.idcard.name + "—提现信息"
-                }
-                var detail="";
-
-                var id = String(obj.id);
-                detail = CrudGrid.createLinkCustomSpan({
-                    class:"page-action grid-command x-icon x-icon-info",
-                    id: 'auth' + id,
-                    title: title,
-                    text: '<i class="icon icon-white icon-list-alt"></i>',
-                    href: detailUrl + id
-                })
-
-                if(obj.status=="3"||obj.status=="-10"||obj.status=="10"){
-                    if(obj.cancelLoan==null&&stop){
-                        editStr= detail+'&nbsp'+'<span class="x-icon x-icon-error" title="终止放款" onclick="stop(\''+id+'\');"><i class="icon icon-white icon-ban-circle"></i></span>';
-                    }else if(obj.cancelLoan==0&&stop){
-                        editStr= detail+'&nbsp'+'<span class="x-icon x-icon-error" title="终止放款" onclick="stop(\''+id+'\');"><i class="icon icon-white icon-ban-circle"></i></span>';
-                    }else{
-                        editStr = detail;
-                    }
-                }else{
-                    editStr = detail;
-                }
-                return "<div style='text-align:left'>&nbsp;&nbsp;"+editStr+"</div>";
-            },
-            storeCfg:{//定义store的排序，如果是复合主键一定要修改
-                sortInfo : {
-                    field : 'createdTime',//排序字段（冲突以此未标准）
-                    direction : 'DESC' //升序ASC，降序DESC
-                }
             }
         });
 

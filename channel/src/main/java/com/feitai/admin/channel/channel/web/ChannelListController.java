@@ -14,7 +14,6 @@ import com.feitai.jieya.server.dao.data.model.IdCardData;
 import com.feitai.jieya.server.dao.data.model.PersonData;
 import com.feitai.jieya.server.dao.product.model.Product;
 import com.feitai.jieya.server.dao.user.model.User;
-import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,11 +60,22 @@ public class ChannelListController extends BaseListableController<ChannelList> {
         //根据request获取page
         List<String> channelCodes = userChannelService.findChannelCodeByUserId();
         List<String> channelIdByMainPackageCode = channelService.findChannelIdByMainPackageCode(channelCodes);
-        String sqlInChannel = Joiner.on(",").join(channelIdByMainPackageCode);
-
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
-        String sql = getSql(request, getSelectMultiTable()) + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC";
+        SearchParams search = new SearchParams();
+        if(channelIdByMainPackageCode.size()>0){
+            search.setName("card.registChannelId");
+            search.setOperator(Operator.OREQ);
+            search.setValues(channelIdByMainPackageCode.toArray());
+        }else{
+            search.setName("id");
+            search.setOperator(Operator.EQ);
+            String[] array = new String[1];
+            array[0] = "null";
+            search.setValues(array);
+        }
+
+        String sql = getSql(search ,request, getSelectMultiTable()) + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC";
         Page<ChannelList> loanOrderMorePage = list(sql, pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
         List<ChannelList> content = loanOrderMorePage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
