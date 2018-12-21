@@ -114,12 +114,27 @@ public abstract class BaseListableController<T> extends BaseController {
      * @param countAlias
      * @return
      */
-    protected Page<T> list(String sqls, int pageNo, int pageSize, String countSqls, String countAlias) {
+    protected Page<T> list(String search, String sqls, int pageNo, int pageSize, String countSqls, String countAlias) {
         Integer totalSize = getService().countBySqls(countSqls, countAlias);
         List<T> resultList = getService().findAllBySqls(sqls, pageNo, pageSize);
         return buildPage(resultList, totalSize, pageNo, pageSize);
     }
 
+    /**
+     * Sql 搜索并分页
+     *
+     * @param sqls
+     * @param pageNo
+     * @param pageSize
+     * @param countSqls
+     * @param countAlias
+     * @return
+     */
+    protected Page<T> list(String sqls, int pageNo, int pageSize, String countSqls, String countAlias) {
+        Integer totalSize = getService().countBySqls(countSqls, countAlias);
+        List<T> resultList = getService().findAllBySqls(sqls, pageNo, pageSize);
+        return buildPage(resultList, totalSize, pageNo, pageSize);
+    }
 
     protected Page<T> list(ServletRequest request, String sqlHead, String sqlMainTableAlias, String sqlHeadId) {
         int pageNo = PageBulider.getPageNo(request);
