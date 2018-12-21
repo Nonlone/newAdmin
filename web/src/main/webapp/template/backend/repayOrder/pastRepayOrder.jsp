@@ -12,10 +12,22 @@
 		<!-- 查询 -->
 		<form id="searchForm" class="form-horizontal search-form">
 			<div class="row">
+			<div class="control-group span7">
+				<label class="control-label">订单号:</label>
+				<div class="controls">
+					<input type="text" data-tip="{text : '请输入订单号'}" class="input-normal control-text" name="search_LIKE_loanOrderId">
+				</div>
+			</div>
+			<div class="control-group span7">
+				<label class="control-label">用户ID:</label>
+				<div class="controls">
+					<input type="text" data-tip="{text : '请输入用户ID'}" class="input-normal control-text" name="search_LIKE_userId">
+				</div>
+			</div>
 				<div class="control-group span7">
 					<label class="control-label">客户姓名:</label>
 					<div class="controls">
-						<input type="text" class="input-normal control-text"
+						<input type="text" data-tip="{text : '请输入客户姓名'}" class="input-normal control-text"
 							name="search_LIKE_idcard.name">
 					</div>
 				</div>
@@ -23,18 +35,32 @@
 					<label class="control-label">产品:</label>
 					<div id="selectProduct" class="controls">
 						<input id="searchProduct" type="hidden"
-							name="search_LIKE_loanOrder.product.name">
+							name="search_EQ_loanOrder.productId">
 					</div>
 				</div>
-				<div class="control-group span_width">
-					<label class="control-label">还款日后3天:</label>
-					<div class="controls bui-form-group height_auto">
-						<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-						<input type="text" class="calendar" onchange="changeDueDate(this)"
-							data-tip="{text : ''}"> <input id="repayPlan_dueDate"
-							type="hidden" name="search_EQ_repay_plan.dueDate">
-					</div>
+			<div class="control-group span7">
+				<label class="control-label">资金方:</label>
+				<div id="selectPayFund" class="controls">
+					<input id="searchPayFund" type="hidden" name="search_EQ_loanOrder.payFundId">
 				</div>
+			</div>
+
+			<div class="control-group span_width">
+				<label class="control-label">还款日:</label>
+				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
+					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
+					<input  type="text" class="calendar" name="search_GTE_dueDate" data-tip="{text : '开始日期'}"> <span>
+             - </span><input  name="search_LTE_dueDate" type="text" class="calendar" data-tip="{text : '结束日期'}">
+				</div>
+			</div>
+			<div class="control-group span7">
+				<label class="control-label">逾期天数:</label>
+				<div class="controls">
+					<input type="text" class="input-normal control-text" onchange="changeOverdueDays(this)" >
+				</div>
+				<input id="search_LTE_overdueDays" type="hidden" class="input-normal control-text" value="3"   name="search_LTE_overdueDays">
+				<input type="hidden" class="input-normal control-text" value="0"  name="search_GT_overdueDays">
+			</div>
 				<div class="span1 offset2">
 					<button type="button" id="btnSearch" class="button button-primary">搜索</button>
 				</div>
@@ -45,10 +71,10 @@
 			  <button type="button" class="button button-primary" onclick="downLoad();">导出</button>
 			</div>
 			</div>
-			<input type="hidden" name="search_EQ_repayPlan.paidOff" value="1">
-			<input id="GTE_dueDate" type="hidden"
-				name="search_GTE_repayPlan.dueDate"> <input
-				id="LTE_dueDate" type="hidden" name="search_LTE_repayPlan.dueDate">
+			<input type="hidden" name="search_EQ_paidOff" value="0">
+			<!-- <input id="GTE_dueDate" type="hidden" name="search_GTE_dueDate">
+			<input id="LTE_dueDate" type="hidden" name="search_LT_dueDate"> -->
+			<input id="today" type="hidden" name="search_LT_dueDate">
 		</form>
 		<!-- 修改新增 -->
 		<div id="addOrUpdate" class="hide"></div>
@@ -80,9 +106,12 @@
 			}
 			return format;
 		};
+		
 		var oneday = 1000 * 60 * 60 * 24;
 		var today = Date.now();
 		var date = new Date(today - oneday * 3);
+		$("#today").val(new Date(today).format("yyyy-MM-dd"));
+		
 		$("#GTE_dueDate").val(date.format("yyyy-MM-dd"));
 		$("#LTE_dueDate").val(new Date(today).format("yyyy-MM-dd"));
 		function changeDueDate(obj) {
@@ -93,7 +122,7 @@
 		}
 		
 		 function downLoad(){
-    		 var downLoadUrl='${ctx}/backend/loan/repayOrder/downLoadPastRepayOrder';
+    		 var downLoadUrl='${ctx}/backend/loan/debt/downLoadPastRepayOrder';
     		 var $form=$("#searchForm");
     		 var oldAction=$form.attr("action");
     		 $form.attr("action",downLoadUrl);
@@ -122,6 +151,18 @@
 				items : JSON.parse('${productList}')
 			});
 			selectProduct.render();
+			
+			  var selectFundStore = new Data.Store({
+		            url : '${ctx}/backend/fund/getFundList',
+		            autoLoad : true
+		        });
+
+		        selectFundStatus = new Select.Select({
+		            render:'#selectPayFund',
+		            valueField:'#searchPayFund',
+		            store:selectFundStore
+		        });
+		        selectFundStatus.render();
 
 			selectRepayDay = new Select.Select({
 				render : '#selectRepayDay',
@@ -142,9 +183,10 @@
 			//定义页面权限
 			var add = false, update = false, del = false, list = false;
 			//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-			<framwork:crudPermission resource="/backend/loan/firstRepayOrder"/>
+			<framwork:crudPermission resource="/backend/loan/debt"/>
 
-			var columns = [ {
+			var columns = [ 
+			                {
 				title : '用户ID',
 				dataIndex : 'userId',
 				width : '166px'
@@ -183,37 +225,41 @@
 				}
 			}, {
 				title : '还款日',
-				dataIndex : 'repayPlan',
+				dataIndex : 'dueDate',
 				width : '166px',
 				renderer : function(value) {
 					if (value) {
-						return BUI.Grid.Format.dateRenderer(value.dueDate);
+						return BUI.Grid.Format.dateRenderer(value);
 					} else {
 						return '';
 					}
 				}
 			}, {
 				title : '逾期天数',
-				dataIndex : 'repayPlan',
-				width : '166px',
-				renderer : function(value) {
-					if (value) {
-						return value.overdueDays;
-					} else {
-						return '';
-					}
-				}
+				dataIndex : 'overdueDays',
+				width : '166px'
 			}, {
 				title : '当期/总期',
 				dataIndex : 'termPre',
 				width : '166px'
 			}, {
 				title : '应还金额',
-				dataIndex : 'repayPlan',
+				dataIndex : 'amount',
 				width : '10%',
 				renderer : function(value) {
 					if (value) {
-						return value.amount;
+						return value;
+					} else {
+						return '';
+					}
+				}
+			}, {
+				title : '逾期金额',
+				dataIndex : 'balanceAmount',
+				width : '10%',
+				renderer : function(value) {
+					if (value) {
+						return value;
 					} else {
 						return '';
 					}
@@ -238,11 +284,11 @@
 			var crudGrid = new CrudGrid({
 				entityName : '逾期还款列表',
 				pkColumn : 'id',//主键
-				storeUrl : '${ctx}/backend/loan/repayOrder/list',
+				storeUrl : '${ctx}/backend/loan/debt/list',
 				columns : columns,
-				showAddBtn : add,
-				showUpdateBtn : update,
-				showRemoveBtn : del,
+				showAddBtn : false,
+				showUpdateBtn : false,
+				showRemoveBtn : false,
 				storeCfg : {//定义store的排序，如果是复合主键一定要修改
 					sortInfo : {
 						field : 'repayPlan.dueDate',//排序字段（冲突以此未标准）
@@ -252,6 +298,10 @@
 			});
 			var grid = crudGrid.get('grid');
 		});
+		
+		function changeOverdueDays(obj){
+			$("#search_LTE_overdueDays").val($(obj).val());
+		}
 	</script>
 
 </body>

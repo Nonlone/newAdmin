@@ -314,15 +314,21 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
                     case OREQ:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
                             int i = 0;
-                            for (Object val : searchParams.getValues()) {
+                            String[] values = (searchParams.getValues()[0].toString()).split(",");
+                            for (Object val : values) {
+                                if(StringUtils.isBlank(getValue(val))){
+                                    break;
+                                }
                                 if (i == 0) {
-                                    sql.append(" and (" + leftParam + " = " + getValue(val));
+                                    sql.append(" and (" + leftParam + " = " + val.toString());
                                 } else {
-                                    sql.append(" or " + leftParam + " = " + getValue(val));
+                                    sql.append(" or " + leftParam + " = " + val.toString());
                                 }
                                 i++;
+                                if(i==values.length){
+                                    sql.append(")");
+                                }
                             }
-                            sql.append(")");
                         }
                         break;
                     case ANDNOTEQ:

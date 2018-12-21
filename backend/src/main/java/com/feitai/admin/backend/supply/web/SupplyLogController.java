@@ -69,7 +69,7 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
 
     private final static String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private final static String PHOTE_TYPE = "PNG";
+    private final static String PHOTE_TYPE = "JPG";
 
     private RestTemplate restTemplate = new RestTemplate();
 
