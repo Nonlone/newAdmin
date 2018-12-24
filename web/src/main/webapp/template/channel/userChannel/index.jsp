@@ -25,12 +25,7 @@
             <input type="text" class="control-text input-small" name="search_LIKE_name">
           </div>
         </div>
-        <div class="control-group span_width">
-          <label class="control-label">E-mail：</label>
-          <div class="controls height_auto">
-            <input type="text" class="control-text input-small" name="search_LIKE_email">
-          </div>
-        </div>
+
         <div class="control-group span_width">
           <label class="control-label">状态：</label>
            <div class="controls bui-form-field-select height_auto"  data-items="{' ':'全部','1':'启用','2':'停用'}" class="control-text input-small">
@@ -49,9 +44,6 @@
         <div class="span_width">
           <button  type="button" id="btnSearch" class="button button-primary">搜索</button>
         </div>
-        <div class="span1 offset2">
-			  <button class="button button-danger" onclick="flushall();">清空</button>
-			</div>
       </div>
     </form>
     <!-- 修改新增 -->
@@ -59,53 +51,18 @@
       <form id="addOrUpdateForm" class="form-horizontal">
         <div class="row">
           <div class="control-group span8">
-            <label class="control-label"><s>*</s>登录名</label>
-            <div class="controls">
-              <input name="loginName" type="text" data-rules="{required:true}" data-remote="${ctx}/system/user/checkLoginName" class="input-normal control-text">
-            </div>
-          </div>
-          <div class="control-group span8">
-            <label class="control-label"><s>*</s>姓名</label>
+            <label class="control-label">姓名</label>
             <div class="controls">
               <input name="name" type="text" data-rules="{required:true}" class="input-normal control-text">
             </div>
           </div>
         </div>
+
         <div class="row">
           <div class="control-group span8">
-            <label class="control-label"><s>*</s>E-mail</label>
-            <div class="controls">
-              <input name="email" type="text" data-rules="{required:true,email:true}" class="input-normal control-text">
-            </div>
-          </div>
-          <div class="control-group span8" >
-          	
-            <label class="control-label"><s>*</s>角色</label>
-            <div class="controls" id ="roles" name='roles'>
-              <input name="roleIds" type="hidden" id="roleIds" value='' data-rules="{required:true}">
-            </div>
-          </div>
-        </div>
-        <div class="row" id="password">
-          <div class="control-group span8">
-            <label class="control-label"><s>*</s>密码</label>
-            <div class="controls">
-              <input id="plainPassword" name="plainPassword" data-rules="{required:true,minlength:6,password:true}"
-               class="input-normal control-text" type="password" data-tip="{text : '长度大于6的数字与字母'}">
-            </div>
-          </div>
-          <div class="control-group span8">
-            <label class="control-label"><s>*</s>确认密码</label>
-            <div class="controls">
-              <input id="plainPassword2" name="plainPassword2" data-rules="{equalTo:'#plainPassword'}" class="input-normal control-text"  type="password">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="control-group span8">
-            <label class="control-label"><s>*</s>状态</label>
+            <label class="control-label"><s>*</s>可看渠道</label>
            <div class="controls bui-form-field-select"  data-items="{'1':'启用','2':'停用'}" class="control-text input-small">
-            <input name="status" type="hidden" value="" >
+            <input name="status" type="hidden" value="">
           </div>
           </div>
         </div>
@@ -117,21 +74,6 @@
       <div id="grid"></div>
     </div>
 
-	<!-- 修改密码框 -->
-	<div id="chPwdFormDiv" class="hide">
-      <form id="chPwdFormId"  class="form-horizontal " method="post" >
-      <div id="passwordDiv" class="control-group" >
-        <label class="control-label"><s>*</s>新密码：</label>
-        <div class="controls">
-          <input id="plainPassword_change" name="plainPassword" type="password" class="input-normal" data-messages="{required:'密码不能为空'"  data-rules="{required:true,minlength:6,password:true}">
-        </div>
-      </div>
-      <div id="repasswordDiv" class="control-group">
-        <label class="control-label"><s>*</s>新密码确认：</label>
-        <div class="controls">
-          <input id="plainPassword1" name="plainPassword1" type="password" class="input-normal" data-messages="{required:'确认密码不能为空'}"  data-rules="{required : true,equalTo:'#plainPassword_change'}">
-        </div>
-      </div>
      <input type="hidden" name="id" value="">
       </form>
 	</div> 
@@ -190,16 +132,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
     var columns = [
           {title:'ID',dataIndex:'id',width:'5%'},
           {title:'姓名',dataIndex:'name',width:'15%'},
-          {title:'登录名',dataIndex:'loginName',width:'15%'},
-          {title:'角色', dataIndex:'roles',width:'15%',renderer: function (value) {
-        	  var roles = '';
-        	  BUI.each(value,function(role){
-        	        roles += role.name+',';
-        	      });
-              return roles.substring(0,roles.length-1);
-           }},
-          {title:'E-mail', dataIndex:'email',width:'20%'},
-          {title:'注册时间',dataIndex:'createTime',width:'20%',renderer:BUI.Grid.Format.datetimeRenderer},
+          {title:'可看渠道', dataIndex:'channel',width:'20%'},
           {title:'状态',dataIndex:'status',width:'20%',renderer:BUI.Grid.Format.enumRenderer(enumObj)}
         ];
 
@@ -216,13 +149,6 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
         addOrUpdateFormId : 'addOrUpdateForm',
         searchBtnId :'btnSearch',
         dialogContentId : 'addOrUpdate',
-        operationColumnRenderer : function(value, obj){//操作列最追加按钮
-        	var editStr = '';
-        	if(changePasswdBtn){
-        		editStr= '<span class="grid-command" title="修改密码"><i class="icon-lock"></i></span>';
-        	}
-          	return editStr;
-          }
     });
     
    	var grid = crudGrid.get('grid');
@@ -246,24 +172,8 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
     	}
 	});
     
-    var beforeAddShow = function(dialog,form){
-    	update = false;
-    	$('#password').show();
-    	//form.getField('plainPassword').enable();
-    	//form.getField('plainPassword2').enable();
-    	
-    	//form.getField('loginName').enable();
-    	select.setSelectedValue('');
-    };
-    crudGrid.on('beforeAddShow', beforeAddShow);
-   
-    
     var beforeUpdateShow = function(dialog,form,record){
-    	update = true;
-    	$('#password').hide();
-    	form.getField('plainPassword').disable();
-    	form.getField('plainPassword2').disable();
-    	form.getField('loginName').disable();
+        form.getField("channelId").disable();
     	var roles = record.roles;
   	  	var roleList = '';
 	  	BUI.each(roles,function(role){
