@@ -19,9 +19,9 @@
 				</div>
 			</div>
 			<div class="control-group span7">
-				<label class="control-label">用户ID:</label>
+				<label class="control-label">客户ID:</label>
 				<div class="controls">
-					<input type="text" data-tip="{text : '请输入用户ID'}" class="input-normal control-text" name="search_LIKE_userId">
+					<input type="text" data-tip="{text : '请输入客户ID'}" class="input-normal control-text" name="search_LIKE_userId">
 				</div>
 			</div>
 				<div class="control-group span7">
@@ -49,8 +49,8 @@
 				<label class="control-label">还款日:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input  type="text" class="calendar" name="search_GTE_dueDate" data-tip="{text : '开始日期'}"> <span>
-             - </span><input  name="search_LTE_dueDate" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input id="start_dueDate" readonly="true" type="text" class="calendar-monthpicker" name="search_GTE_dueDateFormat" data-tip="{text : '开始日期'}"> <span>
+             - </span><input id="end_dueDate" readonly="true"  name="search_LTE_dueDateFormat" type="text" class="calendar-monthpicker" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 			<div class="control-group span7">
@@ -142,8 +142,8 @@
 			//$("#repayPlan_dueDate").val(new Date(today+oneday*5));
 		}
 
-		BUI.use([ 'bui/ux/crudgrid', 'bui/select', 'bui/data' ], function(
-				CrudGrid, Select, Data) {
+		BUI.use([ 'bui/ux/crudgrid', 'bui/select', 'bui/data','bui/calendar' ], function(
+				CrudGrid, Select, Data,Calendar) {
 
 			selectProduct = new Select.Select({
 				render : '#selectProduct',
@@ -187,7 +187,7 @@
 
 			var columns = [ 
 			                {
-				title : '用户ID',
+				title : '客户ID',
 				dataIndex : 'userId',
 				width : '166px'
 			}, {
@@ -297,6 +297,17 @@
 				}
 			});
 			var grid = crudGrid.get('grid');
+			
+			 var datepicker = new Calendar.DatePicker({
+		            trigger:'#start_dueDate',
+		            dateMask : 'mm-dd',
+		            autoRender : true
+		          });
+			 var datepicker1 = new Calendar.DatePicker({
+		            trigger:'#end_dueDate',
+		            dateMask : 'mm-dd',
+		            autoRender : true
+		          });
 		});
 		
 		function changeOverdueDays(obj){
