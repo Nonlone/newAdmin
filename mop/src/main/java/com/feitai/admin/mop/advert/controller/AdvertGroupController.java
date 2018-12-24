@@ -1,16 +1,7 @@
 package com.feitai.admin.mop.advert.controller;
 
-import com.feitai.admin.core.service.DynamitSupportService;
-import com.feitai.admin.core.service.Page;
-import com.feitai.admin.core.web.BaseListableController;
-import com.feitai.admin.mop.advert.dao.entity.AdvertGroup;
-import com.feitai.admin.mop.advert.enums.AdvertGroupStatusEnum;
-import com.feitai.admin.mop.advert.request.QueryRequest;
-import com.feitai.admin.mop.advert.service.AdvertBlockService;
-import com.feitai.admin.mop.advert.service.AdvertGroupService;
-import com.feitai.admin.mop.base.AdaptDateEditor;
-import com.github.pagehelper.PageInfo;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Date;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +12,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
+import com.feitai.admin.core.service.DynamitSupportService;
+import com.feitai.admin.core.service.Page;
+import com.feitai.admin.core.web.BaseListableController;
+import com.feitai.admin.mop.advert.dao.entity.AdvertGroup;
+import com.feitai.admin.mop.advert.enums.AdvertGroupStatusEnum;
+import com.feitai.admin.mop.advert.request.QueryRequest;
+import com.feitai.admin.mop.advert.service.AdvertGroupService;
+import com.feitai.admin.mop.base.AdaptDateEditor;
+import com.github.pagehelper.PageInfo;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Author qiuyunlong
@@ -38,9 +39,6 @@ public class AdvertGroupController extends BaseListableController<AdvertGroup> {
 
     @Autowired
     private AdvertGroupService advertGroupService;
-
-    @Autowired
-    private AdvertBlockService advertBlockService;
 
     @RequestMapping()
     public String index() {

@@ -1,5 +1,20 @@
 package com.feitai.admin.mop.advert.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -22,17 +37,9 @@ import com.feitai.utils.SnowFlakeIdGenerator;
 import com.feitai.utils.http.OkHttpClientUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * @Author qiuyunlong
@@ -365,6 +372,7 @@ public class AdvertItemService {
 			blockIds = advertBlockItemMapper.queryBlockIdsByItemId(readItem.getId());
 		}
 
+		setActiveVersion(advertItem, ObjectUtils.defaultIfNull(advertItem.getBeginTime(), readItem.getBeginTime()));
 		updateBlockItem(advertItem, blockIds);
 
 		advertItemMapper.updateByPrimaryKeySelective(advertItem);
@@ -385,6 +393,8 @@ public class AdvertItemService {
 		updateItem.setStatus(refItem.getStatus());
 		updateItem.setEditCopyId(refItem.getEditCopyId());
 		updateItem.setShowConfig(refItem.getShowConfig());
+		setActiveVersion(updateItem, ObjectUtils.firstNonNull(
+				updateItem.getBeginTime(), refItem.getBeginTime(), readItem.getBeginTime()));
 		
 		if (null != updateItem.getBeginTime() 
 				&& updateItem.getBeginTime().after(new Date())) {
@@ -537,6 +547,7 @@ public class AdvertItemService {
 		advertItem.setEvent(Symbol.EMPTY_JSON);
 		advertItem.setExt(Symbol.EMPTY_JSON);
 		advertItem.setVersion(System.currentTimeMillis());
+		setActiveVersion(advertItem, advertItem.getBeginTime());
 		advertItemMapper.insertSelective(advertItem);
 		if (StringUtils.isNotEmpty(blockIds)) {
 			String[] blockIdArr = blockIds.split(",");
@@ -693,6 +704,16 @@ public class AdvertItemService {
 		// 2.再更新block版本
 		list.forEach(advertBlockItem -> advertBlockService.updateVersion(advertBlockItem.getBlockId()));
 	}
+	
+	
+	private void setActiveVersion(AdvertItem updateEntity, Date beginTime) {
+    	if (null == beginTime || beginTime.before(new Date())) {
+    		updateEntity.setActiveVersion(System.currentTimeMillis());
+    	}
+    	else {
+    		updateEntity.setActiveVersion(0L);
+    	}
+    }
 
 	/**
 	 * 更新编辑副本内容

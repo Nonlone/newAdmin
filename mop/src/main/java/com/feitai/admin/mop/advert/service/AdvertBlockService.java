@@ -1,5 +1,18 @@
 package com.feitai.admin.mop.advert.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.mop.advert.dao.entity.AdvertBlock;
@@ -18,15 +31,9 @@ import com.feitai.utils.SnowFlakeIdGenerator;
 import com.feitai.utils.http.OkHttpClientUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * @Author qiuyunlong
@@ -122,6 +129,7 @@ public class AdvertBlockService {
 		advertBlock.setStatus(1);
 		advertBlock.setVersion(System.currentTimeMillis());
 		advertBlock.setUpdateTime(new Date());
+		setActiveVersion(advertBlock, advertBlock.getBeginTime());
 		
 		if (StringUtils.isNotEmpty(groupIds)) {
 			String[] groupIdArray = groupIds.split(",");
@@ -147,7 +155,7 @@ public class AdvertBlockService {
 
 		advertBlock.setUpdateTime(new Date());
 		advertBlock.setVersion(System.currentTimeMillis());
-		
+		setActiveVersion(advertBlock, block.getBeginTime());
 		
 		List<Long> groupIdList = new ArrayList<Long>();
 
@@ -176,6 +184,8 @@ public class AdvertBlockService {
 		updateBlock.setCreatedTime(refBlock.getCreatedTime());
 		updateBlock.setUpdateTime(new Date());
 		updateBlock.setPublishTime(refBlock.getPublishTime());
+		setActiveVersion(updateBlock, ObjectUtils.firstNonNull(
+				updateBlock.getBeginTime(), refBlock.getBeginTime(), readBlock.getBeginTime()));
 
 		List<Long> groupIds = new ArrayList<Long>();
 		if (StringUtils.isNotBlank(groupIdString)) {
@@ -191,6 +201,15 @@ public class AdvertBlockService {
 	public List<AdvertBlock> list() {
 		return advertBlockMapper.selectAll();
 	}
+	
+	private void setActiveVersion(AdvertBlock updateEntity, Date beginTime) {
+    	if (null == beginTime || beginTime.before(new Date())) {
+    		updateEntity.setActiveVersion(System.currentTimeMillis());
+    	}
+    	else {
+    		updateEntity.setActiveVersion(0L);
+    	}
+    }
 
 	public int updateVersion(long id) {
 		Example example = Example.builder(AdvertGroupBlock.class)

@@ -70,6 +70,10 @@ public class AdvertGroup implements Serializable{
      */
     private Long version;
     /**
+     * 激活版本号
+     */
+    private Long activeVersion;
+    /**
      * 发布时间
      */
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")

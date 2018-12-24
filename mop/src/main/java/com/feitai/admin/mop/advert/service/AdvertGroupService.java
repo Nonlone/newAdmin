@@ -1,5 +1,14 @@
 package com.feitai.admin.mop.advert.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.mop.advert.dao.entity.AdvertGroup;
@@ -12,16 +21,8 @@ import com.feitai.utils.SnowFlakeIdGenerator;
 import com.feitai.utils.http.OkHttpClientUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import tk.mybatis.mapper.entity.Example;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import tk.mybatis.mapper.entity.Example;
 
 @Service
 public class AdvertGroupService {
@@ -74,6 +75,7 @@ public class AdvertGroupService {
         advertGroup.setStatus(AdvertGroupStatusEnum.NEW.getValue());
         advertGroup.setVersion(System.currentTimeMillis());
         advertGroup.setUpdateTime(new Date());
+        setActiveVersion(advertGroup, advertGroup.getBeginTime());
         return advertGroupMapper.insertSelective(advertGroup);
     }
 
@@ -87,12 +89,22 @@ public class AdvertGroupService {
     	
     	AdvertGroup readGroup = get(advertGroup.getId());
         advertGroup.setUpdateTime(new Date());
+        setActiveVersion(advertGroup, advertGroup.getBeginTime());
     	advertGroupMapper.updateByPrimaryKeySelective(advertGroup);
     	
     	//非新建状态刷新版本号
         if (AdvertGroupStatusEnum.NEW.getValue() != readGroup.getStatus()) {
         	updateVersion(advertGroup.getId());
         }
+    }
+    
+    private void setActiveVersion(AdvertGroup updateEntity, Date beginTime) {
+    	if (null == beginTime || beginTime.before(new Date())) {
+    		updateEntity.setActiveVersion(System.currentTimeMillis());
+    	}
+    	else {
+    		updateEntity.setActiveVersion(0L);
+    	}
     }
 
     public List<AdvertGroup> list() {
