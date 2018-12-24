@@ -79,13 +79,13 @@
                 </div>
                 <div class="row">
                     <div class="control-group span8">
-                        <label class="control-label">关联模组：</label>
+                        <label class="control-label"><s>*</s>关联模组：</label>
                         <div id="refGroupIdsDiv" class="controls" >
                             <input type="hidden" id="refGroupIdsInput" name="groupIds" width="200px;" data-rules="{required : true}">
                         </div>
                     </div>
                     <div class="control-group span8">
-                        <label class="control-label">模块类型:</label>
+                        <label class="control-label"><s>*</s>模块类型:</label>
                         <div id="blockTypeInputDiv" class="controls">
                             <select name="blockType" id="selectType">
                                 <option value="1">横幅组</option>
