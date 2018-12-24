@@ -54,7 +54,7 @@ public class AdvertBlockService {
 
 	@Autowired
 	private AdvertGroupService advertGroupService;
-
+	
 	@Autowired
 	private AdvertItemService advertItemService;
 
@@ -93,19 +93,7 @@ public class AdvertBlockService {
 				JSONObject obj = (JSONObject) JSONObject.toJSON(block);
 				Long count = advertBlockItemMapper.countByBlockId(block.getId());
 
-				List<Long> groupIds = new ArrayList<Long>();
-
-				if (0 < block.getEditCopyId()) {
-					AdvertEditCopy editCopy = advertEditCopyService.getEditCopy(block.getEditCopyId());
-
-					AdvertEditCopyContent content = JSONObject.parseObject(editCopy.getContent(),
-							AdvertEditCopyContent.class);
-					groupIds = content.getRelations();
-					obj = (JSONObject) JSONObject.parseObject(content.getEditInfo());
-				}
-				else{
-					groupIds = advertGroupBlockMapper.queryGroupIdsByBlockId(block.getId());
-				}
+				List<Long> groupIds = advertGroupBlockMapper.queryGroupIdsByBlockId(block.getId());
 				
 				long childEditCount = advertEditCopyService.countByTargetRelId(block.getId(), AdvertEditCopyRelTypeEnum.ADVERT_BLOCK);
 
@@ -146,13 +134,6 @@ public class AdvertBlockService {
 		
 		AdvertBlock block = get(advertBlock.getId());
 
-		// 新建状态不需要保存编辑副本
-		if (AdvertBlockStatusEnum.NEW.getValue() != block.getStatus() 
-				|| 0 < block.getEditCopyId()) {
-			updateBlockEditCopy(block, advertBlock, groupIds, operator);
-			return;
-		}
-
 		advertBlock.setUpdateTime(new Date());
 		advertBlock.setVersion(System.currentTimeMillis());
 		setActiveVersion(advertBlock, block.getBeginTime());
@@ -168,34 +149,6 @@ public class AdvertBlockService {
 		updateGroupBlock(advertBlock, groupIdList);
 		
 		advertBlockMapper.updateByPrimaryKeySelective(advertBlock);
-	}
-	
-	
-	private void updateBlockEditCopy(AdvertBlock readBlock, AdvertBlock updateBlock, String groupIdString, String operator) {
-		AdvertBlock refBlock = readBlock;
-
-		if (0 < readBlock.getEditCopyId()) {
-			refBlock = advertEditCopyService.getEditInfoObj(readBlock.getEditCopyId(), AdvertBlock.class);
-		}
-
-		updateBlock.setEditCopyId(refBlock.getEditCopyId());
-		updateBlock.setVersion(refBlock.getVersion());
-		updateBlock.setStatus(refBlock.getStatus());
-		updateBlock.setCreatedTime(refBlock.getCreatedTime());
-		updateBlock.setUpdateTime(new Date());
-		updateBlock.setPublishTime(refBlock.getPublishTime());
-		setActiveVersion(updateBlock, ObjectUtils.firstNonNull(
-				updateBlock.getBeginTime(), refBlock.getBeginTime(), readBlock.getBeginTime()));
-
-		List<Long> groupIds = new ArrayList<Long>();
-		if (StringUtils.isNotBlank(groupIdString)) {
-			groupIds = ListUtils.toLongList(groupIdString, ",");
-		} else {
-			groupIds = getGroupIdsWithEditCopy(readBlock.getId(),readBlock.getEditCopyId());
-		}
-
-		// 更新编辑副本
-		updateWithEditCopy(readBlock.getId(), readBlock.getEditCopyId(), updateBlock, groupIds, operator);
 	}
 
 	public List<AdvertBlock> list() {
@@ -265,8 +218,6 @@ public class AdvertBlockService {
 
 		AdvertBlock read = get(blockId);
 		
-		AdvertBlock updateEntity = read;
-
 		if (null == read) {
 			throw new BusinessException("广告模块不存在");
 		}
@@ -275,72 +226,17 @@ public class AdvertBlockService {
 			return;
 		}
 		
-		if (0 < read.getEditCopyId()) {
-			updateEntity = getAdvertBlockFromEditCopy(read.getEditCopyId());
-		}
-		
-		updateEntity.setId(blockId);
-		updateEntity.setStatus(updateStatus.getValue());
+		AdvertBlock update = new AdvertBlock();
+        update.setId(blockId);
+        update.setStatus(updateStatus.getValue());
+        advertBlockMapper.updateByPrimaryKeySelective(update);
 
-		List<Long> groupIds = getGroupIdsWithEditCopy(blockId, read.getEditCopyId());
-		
-		// 更新编辑副本
-		updateWithEditCopy(blockId, read.getEditCopyId(), updateEntity, groupIds, operator);
-	}
-	
-	private List<Long> getGroupIdsWithEditCopy(long blockId, long editCopyId) {
-
-		if (0 < editCopyId) {
-			return getGroupIdsFromEditCopy(editCopyId);
-		}
-
-		return advertGroupBlockMapper.queryGroupIdsByBlockId(blockId);
-	}
-	
-	private List<Long> getGroupIdsFromEditCopy(long editCopyId) {
-		AdvertEditCopy editCopy = advertEditCopyService.getEditCopy(editCopyId);
-
-		if (null == editCopy) {
-			return null;
-		}
-
-		AdvertEditCopyContent content = JSONObject.parseObject(editCopy.getContent(), AdvertEditCopyContent.class);
-
-		if (null == content) {
-			return null;
-		}
-
-		return content.getRelations();
-	}
-
-
-	private AdvertBlock getAdvertBlockFromEditCopy(long editCopyId) {
-		AdvertEditCopy editCopy = advertEditCopyService.getEditCopy(editCopyId);
-
-		if (null == editCopy) {
-			return null;
-		}
-
-		AdvertEditCopyContent content = JSONObject.parseObject(editCopy.getContent(), AdvertEditCopyContent.class);
-
-		if (null == content) {
-			return null;
-		}
-
-		return content.getEditInfoObj(AdvertBlock.class);
+        updateVersion(blockId);
 	}
 	
 
 	public AdvertBlock get(long blockId) {
 		return advertBlockMapper.selectByPrimaryKey(blockId);
-	}
-
-	public AdvertBlock getWithEditCopy(long blockId) {
-		AdvertBlock block = advertBlockMapper.selectByPrimaryKey(blockId);
-		if (0 == block.getEditCopyId()) {
-			return block;
-		}
-		return getAdvertBlockFromEditCopy(block.getEditCopyId());
 	}
 	
 	private long itemCount(long blockId) {
@@ -348,131 +244,6 @@ public class AdvertBlockService {
 		return null == count ? 0L : count;
 	}
 
-	
-	/**
-	 * 更新编辑副本内容
-	 * 
-	 * @param blockId
-	 * @param editCopyId
-	 * @param editInfo
-	 * @param operator
-	 */
-	private void updateWithEditCopy(long blockId, long editCopyId, AdvertBlock editInfo,
-			List<Long> editBlockIds, String operator) {
-
-		if (0 == editCopyId) {
-			long copyId = SnowFlakeIdGenerator.getDefaultNextId();
-			editInfo.setEditCopyId(copyId);
-
-			// 添加副本
-			advertEditCopyService.addEditCopy(copyId, AdvertEditCopyRelTypeEnum.ADVERT_BLOCK, blockId, editInfo,
-					AdvertEditCopyRelTypeEnum.ADVERT_GROUP, editBlockIds, operator);
-
-			AdvertBlock update = new AdvertBlock();
-			update.setId(blockId);
-			update.setEditCopyId(copyId);
-			advertBlockMapper.updateByPrimaryKeySelective(update);
-		} else {
-			advertEditCopyService.updateEditCopy(editCopyId, AdvertEditCopyRelTypeEnum.ADVERT_ITEM, blockId, editInfo,
-					AdvertEditCopyRelTypeEnum.ADVERT_BLOCK, editBlockIds, operator);
-		}
-	}
-	
-	public void publishEditCopy(long blockId, String operator) {
-		publishAdvertBlockEditCopy(blockId, operator);
-		
-		List<Long> itemIds = advertEditCopyService.queryRelIdsByTargetRelId(blockId, AdvertEditCopyRelTypeEnum.ADVERT_BLOCK);
-		
-		if (ListUtils.isEmpty(itemIds)) {
-			return;
-		}
-		
-		for (Long itemId : itemIds) {
-			advertItemService.publishAdvertItemEditCopy(itemId, operator);
-		}
-	}
-
-	/**
-	 * 发布广告模块编辑副本为正式数据
-	 * 
-	 * @param blockId
-	 * @param operator
-	 */
-	public void publishAdvertBlockEditCopy(long blockId, String operator) {
-
-		// 1.查询广告模块
-		AdvertBlock read = get(blockId);
-
-		// 判断广告模块是否存在
-		if (null == read) {
-			throw new BusinessException("广告模块不存在");
-		}
-
-		// 是否关联有判断编辑副本
-		if (0 >= read.getEditCopyId()) {
-			return;
-		}
-
-		AdvertEditCopy editCopy = advertEditCopyService.getEditCopy(read.getEditCopyId());
-
-		// 判断广告模块编辑副本是否存在
-		if (null == editCopy) {
-			throw new BusinessException("广告模块编辑副本不存在");
-		}
-
-		// 2.发布编辑副本内容
-		AdvertEditCopyContent content = JSONObject.parseObject(editCopy.getContent(), AdvertEditCopyContent.class);
-
-		AdvertBlock block = content.getEditInfoObj(AdvertBlock.class);
-		block.setEditCopyId(0L);
-		block.setPublishTime(new Date());
-
-		// 更新编辑副本内容
-		advertBlockMapper.updateByPrimaryKeySelective(block);
-
-		updateGroupBlock(block, content.getRelations());
-
-		// 3.更新编辑副本发布信息记录
-		advertEditCopyService.publishEditCopy(editCopy.getId(), operator);
-
-		// 4.执行版本更新
-		updateVersion(blockId);
-
-		// 5.执行清除缓存
-		evictCache(blockId);
-	}
-	
-	
-	/**
-	 * 重置副本
-	 * @param blockId
-	 * @param operator
-	 */
-	public void resetAdvertBlockEditCopy(long blockId, String operator) {
-		// 1.查询广告模块
-		AdvertBlock read = get(blockId);
-
-		// 判断广告模块是否存在
-		if (null == read) {
-			throw new BusinessException("广告模块不存在");
-		}
-
-		// 是否关联有判断编辑副本
-		if (0 >= read.getEditCopyId()) {
-			return;
-		}
-
-		advertEditCopyService.deleteEditCopy(read.getEditCopyId());
-
-		AdvertBlock block = new AdvertBlock();
-		block.setId(blockId);
-		block.setEditCopyId(0L);
-
-		// 更新编辑副本内容
-		advertBlockMapper.updateByPrimaryKeySelective(block);
-	}
-	
-	
 	private void updateGroupBlock(AdvertBlock block, List<Long> groupIds) {
 		Example example = new Example(AdvertGroupBlock.class);
 		example.createCriteria().andEqualTo("blockId", block.getId());
@@ -501,6 +272,19 @@ public class AdvertBlockService {
 		});
 	}
 	
+	
+	public void publishEditCopy(long blockId, String operator) {
+		
+		List<Long> itemIds = advertEditCopyService.queryRelIdsByTargetRelId(blockId, AdvertEditCopyRelTypeEnum.ADVERT_BLOCK);
+		
+		if (ListUtils.isEmpty(itemIds)) {
+			return;
+		}
+		
+		for (Long itemId : itemIds) {
+			advertItemService.publishAdvertItemEditCopy(itemId, operator);
+		}
+	}
 
 	public boolean evictCache(long blockId) {
 		RpcResult result = null;

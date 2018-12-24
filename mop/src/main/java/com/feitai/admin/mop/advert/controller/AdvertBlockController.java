@@ -1,5 +1,19 @@
 package com.feitai.admin.mop.advert.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
 import com.feitai.admin.core.web.BaseListableController;
@@ -15,20 +29,8 @@ import com.feitai.admin.mop.advert.vo.PreviewVo;
 import com.feitai.admin.mop.advert.vo.SelectItem;
 import com.feitai.admin.mop.base.AdaptDateEditor;
 import com.github.pagehelper.PageInfo;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
@@ -86,6 +88,7 @@ public class AdvertBlockController extends BaseListableController<AdvertBlock>{
     @ResponseBody
     public Object update(@ModelAttribute AdvertBlock advertBlock, String groupIds) {
         advertBlockService.updateBlock(advertBlock, groupIds, getOperator());
+        advertBlockService.evictCache(advertBlock.getId());
         return BaseListableController.successResult;
     }
 
@@ -130,14 +133,6 @@ public class AdvertBlockController extends BaseListableController<AdvertBlock>{
     	advertBlockService.evictCache(id);
         return BaseListableController.successResult;
     }
-    
-    @RequiresPermissions("/mop/advert/block:update")
-    @RequestMapping("reset")
-    @ResponseBody
-    public Object reset(Long id) {
-    	advertBlockService.resetAdvertBlockEditCopy(id, getOperator());
-        return BaseListableController.successResult;
-    }
 
 
     @RequestMapping("/groupItems")
@@ -155,7 +150,7 @@ public class AdvertBlockController extends BaseListableController<AdvertBlock>{
     @RequestMapping("preview")
     @ResponseBody
     public Object preview(Long blockId) {
-        AdvertBlock block = advertBlockService.getWithEditCopy(blockId);
+        AdvertBlock block = advertBlockService.get(blockId);
         List<AdvertItem> items = advertItemService.previewListByBlockId(blockId, block.getShowLimit());
         
         return PreviewVo.from(items);
