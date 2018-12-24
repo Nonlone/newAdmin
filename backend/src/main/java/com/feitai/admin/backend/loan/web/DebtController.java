@@ -74,6 +74,11 @@ public class DebtController extends BaseListableController<Debt>{
     
     private final static String DATE_FORMAT = "yyyy-MM-dd";
     
+    private final static String DUE_DATE_FORMAT_PARAM="maintable.due_date_format";
+    
+    private final static String DUE_DATE_FORMAT="DATE_FORMAT(maintable.due_date,'%m-%d')";
+    
+    
 
     /**
      * 首期还款列表页面
@@ -91,7 +96,7 @@ public class DebtController extends BaseListableController<Debt>{
 		List<ListItem> list = new ArrayList<ListItem>();
 		list.add(new ListItem("全部"," "));
 		for(Product product:products){
-			list.add(new ListItem(product.getName(), product.getId().toString()));
+			list.add(new ListItem(product.getRemark(), product.getId().toString()));
 		}
 		modelAndView.addObject("productList",JSONObject.toJSONString(list));
 	}
@@ -122,7 +127,11 @@ public class DebtController extends BaseListableController<Debt>{
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(getSelectMultiTable().buildSqlString());
         sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
-        Page<Debt> debtPage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".due_date,"+SelectMultiTable.MAIN_ALAIS+".id", pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        String sql=sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".due_date,"+SelectMultiTable.MAIN_ALAIS+".id";
+        String countSql=getCountSqls(request);
+        countSql=countSql.replace(DUE_DATE_FORMAT_PARAM, DUE_DATE_FORMAT);
+        sql=sql.replace(DUE_DATE_FORMAT_PARAM, DUE_DATE_FORMAT);
+        Page<Debt> debtPage = list(sql, pageNo, pageSize,countSql , SelectMultiTable.COUNT_ALIAS);
         List<Debt> content = debtPage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
         for (Debt debt :content) {
@@ -165,7 +174,8 @@ public class DebtController extends BaseListableController<Debt>{
         .append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS))
         .append(" ORDER BY ")
         .append(SelectMultiTable.MAIN_ALAIS).append(".due_date ,").append(SelectMultiTable.MAIN_ALAIS).append(".id");
-        List<Debt> debtList= getService().findAll(sbSql.toString());
+        String sql=sbSql.toString().replace(DUE_DATE_FORMAT_PARAM, DUE_DATE_FORMAT);
+        List<Debt> debtList= getService().findAll(sql);
         List<JSONObject> resultList = new ArrayList<>();
         for (Debt debt :debtList) {
             try{
@@ -236,7 +246,7 @@ public class DebtController extends BaseListableController<Debt>{
     				log.error("downLoadFirstRepayOrder has errer",e);
     			}
     		});
-    	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","首个还款日","总期数","首期总费用","评审费","担保费","本息","资金方","产品名称"});
+    	  dataList.add(0, new String[]{"客户ID","客户姓名","注册手机号","贷款金额","首个还款日","总期数","首期总费用","评审费","担保费","本息","资金方","产品名称"});
     	  downLoad(request,response, dataList,"首期还款列表.csv");
     	}catch(Exception e){
     		log.error("",e);
@@ -269,7 +279,7 @@ public class DebtController extends BaseListableController<Debt>{
     				log.error("downLoadPastRepayOrder has errer",e);
     			}
     		});
-    	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","还款日","逾期天数","当期/总期","应还金额","逾期金额","资金方","产品名称"});
+    	  dataList.add(0, new String[]{"客户ID","客户姓名","注册手机号","贷款金额","还款日","逾期天数","当期/总期","应还金额","逾期金额","资金方","产品名称"});
     	  downLoad(request,response, dataList,"逾期还款列表.csv");
     	}catch(Exception e){
     		log.error("",e);
