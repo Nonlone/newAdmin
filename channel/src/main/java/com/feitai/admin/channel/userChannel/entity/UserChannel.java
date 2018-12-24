@@ -1,8 +1,8 @@
 package com.feitai.admin.channel.userChannel.entity;
 
+import com.feitai.utils.SnowFlakeIdGenerator;
 import lombok.Data;
 import lombok.ToString;
-import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,7 +18,6 @@ import javax.persistence.Table;
 public class UserChannel {
 
     @Id
-    @KeySql(useGeneratedKeys = true)
     private Long id;
 
     private Long userId;
@@ -28,6 +27,7 @@ public class UserChannel {
     public UserChannel(Long userId,String primaryChannelCode){
         this.userId = userId;
         this.primaryChannelCode = primaryChannelCode;
+        this.id = SnowFlakeIdGenerator.getDefaultNextId();
     }
 
 }

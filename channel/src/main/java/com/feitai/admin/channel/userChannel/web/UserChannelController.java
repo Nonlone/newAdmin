@@ -69,7 +69,7 @@ public class UserChannelController extends BaseListableController<User> {
      * @param request
      * @return
      */
-    @RequiresPermissions("/channel/userChannelr:list")
+    @RequiresPermissions("/channel/userChannel:list")
     @RequestMapping(value = "list")
     @ResponseBody
     @LogAnnotation(value = true, writeRespBody = false)
@@ -115,10 +115,9 @@ public class UserChannelController extends BaseListableController<User> {
     @RequiresPermissions(value = "/channel/userChannel:update")
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
-    public Object update(@RequestParam(value = "loginName") String loginName,
-                         @RequestParam(value = "channelIds") List<String> channelIds) {
-        User user = this.userService.findByLoginName(loginName);
-        userChannelService.saveAll(user.getId(),channelIds);
+    public Object update(@RequestParam(value = "id") Long id,
+                         @RequestParam(value = "channels") List<String> channelIds) {
+        userChannelService.saveAll(id,channelIds);
         return successResult;
     }
 

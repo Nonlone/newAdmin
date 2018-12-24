@@ -53,7 +53,7 @@
             <div class="control-group span8">
                 <label class="control-label"><s>*</s>登录名</label>
                 <div class="controls">
-                    <input name="loginName" type="text" class="input-normal control-text">
+                    <input name="loginName" id="loginName" type="text" class="input-normal control-text">
                 </div>
             </div>
             <div class="control-group span8">
@@ -68,7 +68,7 @@
           <div class="control-group span8">
             <label class="control-label"><s>*</s>可看渠道</label>
               <div class="controls" id ="channels" name='channels'>
-                  <input name="channels" type="hidden" id="channelIds" value='' data-rules="{required:true}">
+                  <input  name="channels" type="hidden" id="channelIds" value='' data-rules="{required:true}">
               </div>
           </div>
         </div>
@@ -94,44 +94,11 @@
 	}
 
 BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (CrudGrid,Form,SaveDialog) {
-	
+
 	//定义页面权限
 	var add=false,update=false,del=false,list=false;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-	<framwork:crudPermission resource="/system/user"/>
-	var changePasswdBtn = false;
-  	//管理员修改密码部分
-  	<shiro:hasRole name='Admin'>
-		changePasswdBtn = true;
-	   	var saveDialog = new SaveDialog({
-	   		entityName: '密码', 
-	  	     url :{
-	  	    	 update : '${ctx}/system/user/changePasswd'
-	  	     }, 
-	      	 dialogContentId:'chPwdFormDiv',
-	  		 formId:'chPwdFormId'
-	     });
-	</shiro:hasRole>
-
-  	
-  	
-    //添加 密码校验规则
-    Form.Rules.add({
-      name : 'password',  //规则名称
-      msg : '密码必须同时包括数字和字母',//默认显示的错误信息
-      validator : function(value,baseValue,formatMsg){ //验证函数，验证值、基准值、格式化后的错误信息
-        var d = new RegExp('\\d+');
-        var w = new RegExp('[a-zA-Z]+');
-        var a = d.test(value);
-        var b = w.test(value);
-        if(!(d.test(value) && w.test(value))){
-          return formatMsg;
-        }
-      }
-    });
-    
-    
-
+	<framwork:crudPermission resource="/channel/userChannel"/>
 	
 	var enumObj = {"1":"启用","2":"停用"};
 	
@@ -149,9 +116,9 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
         updateUrl : '${ctx}/channel/userChannel/update',
         removeUrl : '${ctx}/channel/userChannel/del',
         columns : columns,
-        showAddBtn : false,
+        showAddBtn : add,
         showUpdateBtn : update,
-        showRemoveBtn : false,
+        showRemoveBtn : del,
         addOrUpdateFormId : 'addOrUpdateForm',
         searchBtnId :'btnSearch',
         dialogContentId : 'addOrUpdate',
