@@ -9,6 +9,18 @@
 </head>
 <body>
 	<div class="container">
+	    <p>
+          <div class="tips tips-small tips-info">
+            <span class="x-icon x-icon-small x-icon-info"><i class="icon icon-white icon-info"></i></span>
+            <div class="tips-content">权重数字越小前端展示位置越靠前。若模块中，多个内容的权重相同时，则以内容的创建时间判断；新创建的优先展示，早创建的排后。</div>
+          </div>
+        </p>
+        <p>
+          <div class="tips tips-small tips-info">
+            <span class="x-icon x-icon-small x-icon-info"><i class="icon icon-white icon-info"></i></span>
+            <div class="tips-content">模块下的内容编辑后，需要操作“发布更新”才能将修改的内容在线上生效。</div>
+          </div>
+        </p>
 		<!-- 查询 -->
 		<form id="searchForm" class="form-horizontal search-form">
 		    <div class="row">
@@ -278,11 +290,6 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
 
             if (update) {
                rtv += '<span class="grid-command btnedit">编辑</span>';
-            }
-
-            if (0 < obj.editCopyId) {
-                rtv += '<span class="grid-command publish" >发布</span> ';
-                rtv += '<span class="grid-command rollback" >清除修改</span> ';
             }
 
             return rtv;

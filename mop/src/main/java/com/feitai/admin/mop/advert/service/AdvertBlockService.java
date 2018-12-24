@@ -83,6 +83,8 @@ public class AdvertBlockService {
 			} else {
 				example.orderBy(orderField).asc();
 			}
+		} else {
+			example.orderBy("createdTime").desc();
 		}
 		List<AdvertBlock> advertBlockList = advertBlockMapper.selectByExample(example);
 		PageInfo pageInfo = new PageInfo(advertBlockList);

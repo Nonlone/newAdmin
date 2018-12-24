@@ -22,11 +22,17 @@
             <div class="tips-content">若模块中，使用中的内容多于模块设置的前端展示内容数量限制，则以内容创建时间判断：新创建的优先展示，超过数量限制后前端直接不展示创建时间较早的内容。</div>
           </div>
         </p>
+        <p>
+          <div class="tips tips-small tips-info">
+            <span class="x-icon x-icon-small x-icon-info"><i class="icon icon-white icon-info"></i></span>
+            <div class="tips-content">模块下的内容编辑后，需要操作“发布更新”才能将修改的内容在线上生效。</div>
+          </div>
+        </p>
 		<!-- 查询 -->
 		<form id="searchForm" class="form-horizontal search-form">
 		    <div class="row">
 		        <div class="control-group span7">
-		        <label class="control-label">关联模块:</label>
+		        <label class="control-label">模块名称:</label>
                     <div id="s1" class="controls">
                       <input type="hidden" id="blockId" name="blockId" >
                     </div>
@@ -94,13 +100,13 @@
                     <div id="showLimitInput" class="control-group span8">
                         <label class="control-label"><s>*</s>展示内容数量限制:</label>
                         <div class="controls">
-                            <input type="text" name="showLimit" class="control-text" data-rules="{number:true, required : true, max:50}" placeholder="在前端，模块每次最多可展示的内容数量">
+                            <input type="text" name="showLimit" class="control-text" data-rules="{number:true, max:50}" placeholder="在前端，模块每次最多可展示的内容数量">
                         </div>
                     </div>
                     <div id="showTimeInput" class="control-group span8">
                         <label class="control-label"><s>*</s>内容停留时长/s:</label>
                         <div class="controls">
-                            <input type="text" name="playTime" class="control-text" data-rules="{number:true, required : true, max:999}" placeholder="控制模块下的内容每隔Ns自动切换、或内容停留Ns后会自动跳过">
+                            <input type="text" name="playTime" class="control-text" data-rules="{number:true, max:999}" placeholder="控制模块下的内容每隔Ns自动切换、或内容停留Ns后会自动跳过">
                         </div>
                     </div>
                 </div>
@@ -310,18 +316,8 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                 }
     			
                 return description;
-             }},
-             {title:'发布后状态',dataIndex:'status',width:'8%', renderer:function(value, obj){
-                var description = value;
-                if (1 == value) {
-                    description = '未启用';
-                } else if (2 == value) {
-                    description = '<span style="color:#00CC00">使用中</span>';
-                } else if (3 == value) {
-                    description = '<span style="color:#F00">停用中</span>';
-                }
-                return description;
              }}
+
             ];
 
 	var crudGrid = new CrudGrid({

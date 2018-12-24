@@ -84,7 +84,9 @@ public class AdvertItemService {
         param.put("title", StringUtils.isNotEmpty(title) ? title : null);
         if (StringUtils.isNotEmpty(orderFiled)) {
             param.put("orderFiled","order by " + com.feitai.utils.StringUtils.humpToLine(orderFiled) + " " +order);
-        }
+        } else {
+			param.put("orderFiled","order by created_time desc");
+		}
 		List<AdvertItem> itemList = advertItemMapper.listByBlockId(param);
 		PageInfo result = new PageInfo(itemList);
 		List<Object> list = new ArrayList<Object>();

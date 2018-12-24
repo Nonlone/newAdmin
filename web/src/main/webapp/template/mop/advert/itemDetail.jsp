@@ -341,7 +341,7 @@
 
         form.on('beforesubmit', function () {
 
-            if (confirm('确定要更新吗') != true) {
+            if (confirm('确定要更新吗，需对该模块操作“发布更新”才能将修改的内容生效到线上') != true) {
                 return false;
             }
 
