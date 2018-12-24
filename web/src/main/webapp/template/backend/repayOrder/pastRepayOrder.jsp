@@ -49,8 +49,8 @@
 				<label class="control-label">还款日:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input id="start_dueDate"  type="text" class="calendar-monthpicker" name="search_GTE_dueDateFormat" data-tip="{text : '开始日期'}"> <span>
-             - </span><input id="end_dueDate"  name="search_LTE_dueDateFormat" type="text" class="calendar-monthpicker" data-tip="{text : '结束日期'}">
+					<input id="start_dueDate" readonly="true" type="text" class="calendar-monthpicker" name="search_GTE_dueDateFormat" data-tip="{text : '开始日期'}"> <span>
+             - </span><input id="end_dueDate" readonly="true"  name="search_LTE_dueDateFormat" type="text" class="calendar-monthpicker" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 			<div class="control-group span7">
