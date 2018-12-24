@@ -144,14 +144,14 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
 
     var crudGrid = new CrudGrid({
     	entityName : '用户',
-    	storeUrl : '${ctx}/system/user/list',
-        addUrl : '${ctx}/system/user/add',
-        updateUrl : '${ctx}/system/user/update',
-        removeUrl : '${ctx}/system/user/del',
+    	storeUrl : '${ctx}/channel/userChannel/list',
+        addUrl : '${ctx}/channel/userChannel/add',
+        updateUrl : '${ctx}/channel/userChannel/update',
+        removeUrl : '${ctx}/channel/userChannel/del',
         columns : columns,
-        showAddBtn : add,
+        showAddBtn : false,
         showUpdateBtn : update,
-        showRemoveBtn : del,
+        showRemoveBtn : false,
         addOrUpdateFormId : 'addOrUpdateForm',
         searchBtnId :'btnSearch',
         dialogContentId : 'addOrUpdate',
@@ -194,7 +194,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
     Data = BUI.Data;
 
   	var store = new Data.Store({
-    	url : '${ctx}/backend/channel/primaryList',
+    	url : '${ctx}/channel/userChannel/primaryList',
     	autoLoad : true
   	}),
   	select = new Select.Select({  
