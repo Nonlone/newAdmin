@@ -16,6 +16,12 @@
           overflow-y : auto;
         }
     </style>
+        <p>
+          <div class="tips tips-small tips-info">
+            <span class="x-icon x-icon-small x-icon-info"><i class="icon icon-white icon-info"></i></span>
+            <div class="tips-content">若模块中，使用中的内容多于模块设置的前端展示内容数量限制，则以内容创建时间判断：新创建的优先展示，超过数量限制后前端直接不展示创建时间较早的内容。</div>
+          </div>
+        </p>
 		<!-- 查询 -->
 		<form id="searchForm" class="form-horizontal search-form">
 		    <div class="row">
@@ -362,7 +368,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                 rtv += '<span class="grid-command btnAct">启用</span>';
             }
             else if (2 == obj.status){
-                rtv += '<span class="grid-command btnP" >暂停</span>';
+                rtv += '<span class="grid-command btnP" >停用</span>';
             }
 
             rtv += '<span class="grid-command btn-edit">编辑</span>';

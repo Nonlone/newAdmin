@@ -213,7 +213,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                 rtv += '<span class="grid-command btnAct">启用</span>';
             }
             else if (2 == obj.status){
-                rtv += '<span class="grid-command btnP" >暂停</span>';
+                rtv += '<span class="grid-command btnP" >停用</span>';
             }
             if (update) {
                 rtv += '<span class="grid-command btn-edit">编辑</span>';
