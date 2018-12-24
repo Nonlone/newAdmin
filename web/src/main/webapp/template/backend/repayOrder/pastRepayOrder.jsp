@@ -59,7 +59,7 @@
 					<input type="text" class="input-normal control-text" onchange="changeOverdueDays(this)" >
 				</div>
 				<input id="search_LTE_overdueDays" type="hidden" class="input-normal control-text" value="3"   name="search_LTE_overdueDays">
-				<input type="hidden" class="input-normal control-text" value="0"  name="search_GTE_overdueDays">
+				<input type="hidden" class="input-normal control-text" value="0"  name="search_GT_overdueDays">
 			</div>
 				<div class="span1 offset2">
 					<button type="button" id="btnSearch" class="button button-primary">搜索</button>
@@ -300,7 +300,6 @@
 		});
 		
 		function changeOverdueDays(obj){
-			alert($(obj).val())
 			$("#search_LTE_overdueDays").val($(obj).val());
 		}
 	</script>

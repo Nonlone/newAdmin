@@ -122,7 +122,7 @@ public class DebtController extends BaseListableController<Debt>{
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(getSelectMultiTable().buildSqlString());
         sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
-        Page<Debt> debtPage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC", pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
+        Page<Debt> debtPage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".due_date,"+SelectMultiTable.MAIN_ALAIS+".id", pageNo, pageSize, getCountSqls(request), SelectMultiTable.COUNT_ALIAS);
         List<Debt> content = debtPage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
         for (Debt debt :content) {
@@ -164,7 +164,7 @@ public class DebtController extends BaseListableController<Debt>{
         sbSql.append(getSelectMultiTable().buildSqlString())
         .append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS))
         .append(" ORDER BY ")
-        .append(SelectMultiTable.MAIN_ALAIS).append(".created_time DESC");
+        .append(SelectMultiTable.MAIN_ALAIS).append(".due_date ,").append(SelectMultiTable.MAIN_ALAIS).append(".id");
         List<Debt> debtList= getService().findAll(sbSql.toString());
         List<JSONObject> resultList = new ArrayList<>();
         for (Debt debt :debtList) {
@@ -218,18 +218,25 @@ public class DebtController extends BaseListableController<Debt>{
         		rowList.add(obj.getJSONObject("user").get("phone").toString()+"\t");
         		rowList.add(obj.getJSONObject("loanOrder").get("loanAmount").toString());
         		Date dueDate=obj.getDate("dueDate");
-        		rowList.add(sdf.format(dueDate)+"\t");  		
+        		rowList.add(sdf.format(dueDate)+"\t"); 
+        		rowList.add(obj.get("orderTerm").toString());
         		rowList.add(obj.getDouble("amount").toString());
         		rowList.add(obj.getJSONObject("orderPlande").get("approveFeeAmount").toString());
         		rowList.add(obj.getJSONObject("orderPlande").get("guaranteeFeeAmount").toString());
-        		rowList.add(obj.getJSONObject("orderPlande").get("pincipalAmount").toString());
+        		Double pincipalAmount=(Double) obj.getJSONObject("orderPlande").get("pincipalAmount");
+        		Double interestAmount= (Double) obj.getJSONObject("orderPlande").get("interestAmount");
+        		Double amount=pincipalAmount;
+        		if(interestAmount!=null){
+        			amount+=interestAmount;
+        		}
+        		rowList.add(amount.toString());
         		rowList.add(obj.getString("fundName"));
         		rowList.add(obj.getJSONObject("product").getString("name"));
     			}catch(Exception e){
     				log.error("downLoadFirstRepayOrder has errer",e);
     			}
     		});
-    	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","首个还款日","首期总费用","评审费","担保费","本息","资金方","产品名称"});
+    	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","首个还款日","总期数","首期总费用","评审费","担保费","本息","资金方","产品名称"});
     	  downLoad(request,response, dataList,"首期还款列表.csv");
     	}catch(Exception e){
     		log.error("",e);
