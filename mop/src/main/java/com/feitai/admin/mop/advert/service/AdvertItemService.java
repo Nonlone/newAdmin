@@ -2,6 +2,7 @@ package com.feitai.admin.mop.advert.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -138,13 +139,57 @@ public class AdvertItemService {
 		
 		List<AdvertItem> list = mergeEditCopyAdvertItems(items, editCopyItems);
 		
+		list = filterAndSub(list, limit);
+		
 		list = filterAndSort(list);
 		
-		if (0 < limit && limit < list.size()) {
-			list = list.subList(0, limit);
+		return list;
+	}
+	
+	
+	public List<AdvertItem> filterAndSub(List<AdvertItem> items, int limit) {
+		
+		if (0 >= limit) {
+			return items;
 		}
 		
-		return list;
+		if (ListUtils.isEmpty(items)) {
+			return items;
+		}
+		
+		List<AdvertItem> list = new ArrayList<>();
+		
+		items.forEach(item -> {
+			
+			Date now = new Date();
+			
+			//状态过滤
+			if (AdvertItemStatusEnum.ENABLE.getValue() != item.getStatus()) {
+				return;
+			}
+			
+			//开始时间过滤
+			if (null != item.getBeginTime() && 0 > now.compareTo(item.getBeginTime())) {
+				return;
+			}
+			
+			//结束时间过滤
+			if (null != item.getEndTime() && 0 < now.compareTo(item.getEndTime())) {
+				return;
+			}
+			
+			list.add(item);
+		});
+		
+		Collections.sort(items, new Comparator<AdvertItem>() {
+
+			@Override
+			public int compare(AdvertItem o1, AdvertItem o2) {
+				return o2.getCreatedTime().compareTo(o1.getCreatedTime());
+			}
+		});
+		
+		return items.subList(0, limit);
 	}
 	
 	
@@ -249,6 +294,7 @@ public class AdvertItemService {
 		advertItem.setWeight(ObjectUtils.defaultIfNull(editCopyItem.getWeight(), item.getWeight()));
 		advertItem.setBeginTime(ObjectUtils.defaultIfNull(editCopyItem.getBeginTime(), item.getBeginTime()));
 		advertItem.setEndTime(ObjectUtils.defaultIfNull(editCopyItem.getEndTime(), item.getEndTime()));
+		advertItem.setCreatedTime(item.getCreatedTime());
 		
 		return advertItem;
 	}

@@ -1,5 +1,10 @@
 package com.feitai.admin.mop.advert.vo;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -9,13 +14,10 @@ import com.feitai.admin.mop.advert.dao.entity.AdvertItem.AdvertItemShowConfigIte
 import com.feitai.admin.mop.advert.dao.entity.AdvertItem.CommonJSONConfig;
 import com.feitai.admin.mop.advert.enums.AdvertItemEventTypeEnum;
 import com.feitai.admin.mop.base.ListUtils;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Author qiuyunlong
@@ -26,8 +28,10 @@ import java.util.List;
 public class PreviewVo {
     private String type;
     private String content;
-    private String eventType;
-    private String event;
+    private String appEventType;
+    private String appEvent;
+    private String h5EventType;
+    private String h5Event;
     
     public static List<PreviewVo> from(List<AdvertItem> advertItems) {
     	List<PreviewVo> list = new ArrayList<>();
@@ -55,13 +59,17 @@ public class PreviewVo {
     	
     	String type = "";
     	String content = "";
-    	String eventType = "";
-    	String event = "";
+    	String appEventType = "";
+    	String appEvent = "";
+    	String h5EventType = "";
+    	String h5Event = "";
     	
     	//获得默认展示配置
     	AdvertItemShowConfigItem defaultItem = getDefaultShowConfig(advertItem.getShowConfig());
-    	//获得默认事件配置
-    	AdvertItemEvent defaultEvent = getDefaultEventConfig(advertItem.getEvent());
+    	//获得事件配置
+    	AdvertItemEvent appEventConfig = getAppEventConfig(advertItem.getEvent());
+    	//获得事件配置
+    	AdvertItemEvent h5pEventConfig = getH5EventConfig(advertItem.getEvent());
     	
     	if (null == defaultItem) {
     		content = advertItem.getContent();
@@ -71,13 +79,19 @@ public class PreviewVo {
     		content = defaultItem.getUrl();
     	}
     	
-    	if (null != defaultEvent) {
-			AdvertItemEventTypeEnum typeEnum = AdvertItemEventTypeEnum.fromValue(defaultEvent.getType());
-    		eventType = null == typeEnum ? "" : typeEnum.getDesc();
-    		event = defaultEvent.getLink();
+    	if (null != appEventConfig) {
+			AdvertItemEventTypeEnum typeEnum = AdvertItemEventTypeEnum.fromValue(appEventConfig.getType());
+			appEventType = null == typeEnum ? "" : typeEnum.getDesc();
+			appEvent = appEventConfig.getLink();
     	}
     	
-    	return new PreviewVo(type, content, eventType, event);
+    	if (null != h5pEventConfig) {
+			AdvertItemEventTypeEnum typeEnum = AdvertItemEventTypeEnum.fromValue(h5pEventConfig.getType());
+			h5EventType = null == typeEnum ? "" : typeEnum.getDesc();
+			h5Event = h5pEventConfig.getLink();
+    	}
+    	
+    	return new PreviewVo(type, content, appEventType, appEvent, h5EventType, h5Event);
     }
     
     
@@ -111,7 +125,17 @@ public class PreviewVo {
 	}
 	
 	
-	public static AdvertItemEvent getDefaultEventConfig(String configValue) {
+	private static AdvertItemEvent getAppEventConfig(String configValue) {
+		return getEventConfig(configValue, CommonJSONConfig.APP);
+	}
+	
+	
+	private static AdvertItemEvent getH5EventConfig(String configValue) {
+		return getEventConfig(configValue, CommonJSONConfig.H5);
+	}
+	
+	
+	private static AdvertItemEvent getEventConfig(String configValue, String type) {
 
 		if (StringUtils.isBlank(configValue)) {
 			return null;
@@ -119,12 +143,6 @@ public class PreviewVo {
 		
 		JSONObject config = JSON.parseObject(configValue);
 
-		AdvertItemEvent event = config.getObject(CommonJSONConfig.APP, AdvertItemEvent.class);
-		
-		if (null != event) {
-			return event;
-		}
-		
-		return config.getObject(CommonJSONConfig.H5, AdvertItemEvent.class);
+		return config.getObject(type, AdvertItemEvent.class);
 	}
 }

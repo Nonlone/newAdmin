@@ -236,11 +236,23 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                                 return value;
                             }},
 
-            {title:'点击事件',dataIndex:'event',width:'40%', renderer: function(value, obj){
-                                if (obj.eventType) {
-                                    return obj.eventType + "<br/>" + value;
+            {title:'点击事件',dataIndex:'appEventType',width:'40%', renderer: function(value, obj){
+                                var event = "";
+            					if (obj.appEventType) {
+            						event += "APP:"+obj.appEventType + "<br/>" + obj.appEvent;
                                 }
-                                return "无事件";
+            					if (obj.h5EventType) {
+            						if ("" != event) {
+            							event += "<br/>";
+            						}
+            						event += "H5:"+obj.h5EventType + "<br/>" + obj.h5Event;
+                                }
+            					
+            					if ("" == event) {
+            						return "无事件";
+            					}
+            					
+                                return event;
                             }}
             ];
 
