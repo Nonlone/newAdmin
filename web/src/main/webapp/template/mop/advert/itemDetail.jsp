@@ -103,7 +103,7 @@
     <input name="event" type="hidden" value="{}">
     <div class="row">
         <div class="control-group span10">
-            <label class="control-label"><s>*</s>APP类型：</label>
+            <label class="control-label"><s>*</s>在APP上使用：</label>
             <div class="controls">
                 <select name="appEventType">
                     <option value="">无</option>
@@ -113,7 +113,7 @@
         </div>
 
         <div class="control-group span10">
-            <label class="control-label">APP连接：</label>
+            <label class="control-label">APP链接：</label>
             <div class="controls">
                 <input name="appLink" type="text" class="control-text" style="width: 260px;">
             </div>
@@ -130,7 +130,7 @@
 
     <div class="row" style="margin-top: 30px;">
         <div class="control-group span10">
-            <label class="control-label"><s>*</s>H5类型：</label>
+            <label class="control-label"><s>*</s>在H5上使用：</label>
             <div class="controls">
                 <select name="h5EventType">
                     <option value="">无</option>
@@ -140,7 +140,7 @@
         </div>
 
         <div class="control-group span10">
-            <label class="control-label">H5连接：</label>
+            <label class="control-label">H5链接：</label>
             <div class="controls">
                 <input name="h5Link" type="text" class="control-text" style="width: 260px;">
             </div>

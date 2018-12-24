@@ -121,7 +121,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
 	//定义页面权限
 	var add=false,update=false,list=false, del = false;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-	<framwork:crudPermission resource="/mop/advert/block"/>
+	<framwork:crudPermission resource="/mop/advert/group"/>
 
     //清空
     $("#btnClear").click(function(){
@@ -174,7 +174,6 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                      }
                      return value;
              }},
-    		 {title:'版本号',dataIndex:'version',width:'10%'},
     		 {title:'状态',dataIndex:'status',width:'5%',renderer:function(value, obj){
     		    var description = value;
                 if (1 == value) {
@@ -195,7 +194,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
         addUrl : '${ctx}/mop/advert/group/add',
         updateUrl : '${ctx}/mop/advert/group/update',
         columns : columns,
-		showAddBtn : true,
+		showAddBtn : add,
 		showUpdateBtn : false,
 		showRemoveBtn : false,
 		addOrUpdateFormId : 'addOrUpdateForm',
@@ -207,7 +206,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                 rtv += '<span class="grid-command btnDel">删除</span>';
             }
 
-            rtv +=  '<span class="grid-command btnCache">清除缓存</span>';
+            rtv +=  '<span class="grid-command btnCache">刷新</span>';
 
             if (1 == obj.status || 3 == obj.status) {
                 rtv += '<span class="grid-command btnAct">启用</span>';

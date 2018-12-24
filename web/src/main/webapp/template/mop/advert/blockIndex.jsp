@@ -65,23 +65,11 @@
                 <input type="hidden" name="code" class="control-text">
                 <div class="row">
                     <div class="control-group span8">
-                        <label class="control-label">标题：</label>
+                        <label class="control-label"><s>*</s>标题：</label>
                         <div class="controls">
                           <input type="text" name="title" class="control-text" data-rules="{required : true}">
                         </div>
                     </div>
-                </div>
-                <div class="row">
-
-                <div class="control-group span16">
-                    <label class="control-label">时间：</label>
-                    <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
-                        <input type="text" name="beginTime" class="calendar calendar-time" data-tip="{text : '开始日期'}" >
-                        <span>- </span>
-                        <input type="text" name="endTime"  class="calendar calendar-time" data-tip="{text : '结束日期'}">
-                    </div>
-                </div>
-
                 </div>
                 <div class="row">
                     <div class="control-group span8">
@@ -93,7 +81,7 @@
                     <div class="control-group span8">
                         <label class="control-label">模块类型:</label>
                         <div id="blockTypeInputDiv" class="controls">
-                            <select name="blockType">
+                            <select name="blockType" id="selectType">
                                 <option value="1">横幅组</option>
                                 <option value="2">轮播图</option>
                                 <option value="3">公告</option>
@@ -103,16 +91,16 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="control-group span8">
-                        <label class="control-label">展示限制:</label>
+                    <div id="showLimitInput" class="control-group span8">
+                        <label class="control-label"><s>*</s>展示内容数量限制:</label>
                         <div class="controls">
-                            <input type="text" name="showLimit" class="control-text" data-rules="{number:true}">
+                            <input type="text" name="showLimit" class="control-text" data-rules="{number:true, required : true, max:50}" placeholder="在前端，模块每次最多可展示的内容数量">
                         </div>
                     </div>
-                    <div class="control-group span8">
-                        <label class="control-label">播放时间(秒):</label>
+                    <div id="showTimeInput" class="control-group span8">
+                        <label class="control-label"><s>*</s>内容停留时长/s:</label>
                         <div class="controls">
-                            <input type="text" name="playTime" class="control-text" data-rules="{number:true}">
+                            <input type="text" name="playTime" class="control-text" data-rules="{number:true, required : true, max:999}" placeholder="控制模块下的内容每隔Ns自动切换、或内容停留Ns后会自动跳过">
                         </div>
                     </div>
                 </div>
@@ -153,6 +141,20 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                .removeAttr('checked')
     });
 
+    //
+    $("#selectType").change(function(){
+        var value = $("#selectType").val();
+        if ('1' == value) {
+            showLimitInput.removeAttr("disabled");
+        } else if('2' == value) {
+            showLimitInput.removeAttr("disabled");
+        } else if('3' == value) {
+            showLimitInput.removeAttr("disabled");
+        } else if('4' == value) {
+            showLimitInput.val(1);
+            showLimitInput.attr("disabled","disabled");
+        }
+    });
     var suggestData;
 
     var loadSuggestData = function() {
@@ -294,51 +296,32 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
 	                 return value;
 	         }},
              {title:'关联数量',dataIndex:'itemCount',width:'6%'},
-             {title:'展示时间',dataIndex:'beginTime',width:'20%',renderer:function(value, obj){
-                     var html = '';
-
-                     if ( (null == value || '' == value)
-                         && (null == obj.endTime || '' == obj.endTime) ) {
-                         return "不限制";
-                     }
-
-                     if (null == value || '' == value) {
-                         html += "~~";
-                     }
-                     else {
-                         html += value;
-                     }
-
-                     html += "至";
-
-                     if (null == obj.endTime || '' == obj.endTime) {
-                         html += "~~";
-                     }
-                     else {
-                         html += obj.endTime;
-                     }
-
-                     return html;
-             }},
              {title:'创建时间',dataIndex:'createdTime',width:'10%'},
              {title:'发布时间',dataIndex:'publishTime',width:'10%'},
-    		 {title:'状态',dataIndex:'originalStatus',width:'8%',renderer:function(value, obj){
+    		 {title:'线上状态',dataIndex:'originalStatus',width:'8%',renderer:function(value, obj){
     			
-    			var desc = statusDesc(value);
-    			 
-    			if (obj.status != value) {
-    				desc += '('+statusDesc(obj.status)+')'
-    			}
-    			 
-    			if (2 == value) {
-    				desc = '<span style="color:#00CC00">'+desc+'</span>';
+    			var description = value;
+                if (1 == value) {
+                    description = '未启用';
+                } else if (2 == value) {
+                    description = '<span style="color:#00CC00">使用中</span>';
                 } else if (3 == value) {
-                	desc = '<span style="color:#F00">'+desc+'</span>';
+                    description = '<span style="color:#F00">停用中</span>';
                 }
     			
-                return desc;
+                return description;
              }},
-
+             {title:'发布后状态',dataIndex:'status',width:'8%', renderer:function(value, obj){
+                var description = value;
+                if (1 == value) {
+                    description = '未启用';
+                } else if (2 == value) {
+                    description = '<span style="color:#00CC00">使用中</span>';
+                } else if (3 == value) {
+                    description = '<span style="color:#F00">停用中</span>';
+                }
+                return description;
+             }}
             ];
 
 	var crudGrid = new CrudGrid({
@@ -348,7 +331,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
         addUrl : '${ctx}/mop/advert/block/add',
         updateUrl : '${ctx}/mop/advert/block/update',
         columns : columns,
-		showAddBtn : true,
+		showAddBtn : add,
 		showUpdateBtn : false,
 		showRemoveBtn : false,
 		addOrUpdateFormId : 'addOrUpdateForm',
@@ -360,7 +343,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                 rtv += '<span class="grid-command btnDel">删除</span>';
             }
 
-            rtv +=  '<span class="grid-command btnCache">清除缓存</span>';
+            rtv +=  '<span class="grid-command btnCache">刷新</span>';
 
             rtv +=  '<span class="grid-command btnManage">内容管理</span>';
 
@@ -375,7 +358,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
 
             if (0 < obj.editCopyId || 0 < obj.childEditCount) {
                 rtv += '<span class="grid-command publish" >发布</span> ';
-                rtv += '<span class="grid-command rollback" >回滚</span> ';
+                rtv += '<span class="grid-command rollback" >清除修改</span> ';
             }
 
             rtv += '<span class="grid-command btnPreview">预览</span>';
@@ -392,7 +375,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
 				field : 'id',//排序字段
 				direction : 'DESC' //升序ASC，降序DESC
             }
-        },
+        }
 
 		});
 
@@ -462,11 +445,14 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
 
 
     var beforeUpdateShow = function(dialog,form,record){
+        $("#selectType").attr("disabled","disabled");
 
         groupIdSelect.setSelectedValue('');
         groupIdSelect.setSelectedValue(record.groupIds);
     };
-
+    crudGrid.on('beforeAddShow', function(ev){
+        $("#selectType").removeAttr("disabled");
+    });
     crudGrid.on('beforeUpdateShow', beforeUpdateShow);
 
 

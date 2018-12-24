@@ -223,21 +223,30 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                      }
                      return description;
     		 }},
-    		 {title:'状态',dataIndex:'originalStatus',width:'8%',renderer:function(value, obj){
-    			var desc = statusDesc(value);
-    			 
-     			if (obj.status != value) {
-     				desc += '('+statusDesc(obj.status)+')'
-     			}
-     			 
-     			if (2 == value) {
-     				desc = '<span style="color:#00CC00">'+desc+'</span>';
-                } else if (3 == value) {
-                 	desc = '<span style="color:#F00">'+desc+'</span>';
-                }
-     			
-                return desc;
-             }}
+    		 {title:'线上状态',dataIndex:'originalStatus',width:'8%',renderer:function(value, obj){
+
+                var description = value;
+                 if (1 == value) {
+                     description = '未启用';
+                 } else if (2 == value) {
+                     description = '<span style="color:#00CC00">使用中</span>';
+                 } else if (3 == value) {
+                     description = '<span style="color:#F00">停用中</span>';
+                 }
+
+                 return description;
+             }},
+             {title:'发布后状态',dataIndex:'status',width:'8%', renderer:function(value, obj){
+                 var description = value;
+                 if (1 == value) {
+                     description = '未启用';
+                 } else if (2 == value) {
+                     description = '<span style="color:#00CC00">使用中</span>';
+                 } else if (3 == value) {
+                     description = '<span style="color:#F00">停用中</span>';
+                 }
+                 return description;
+              }}
             ];
 
 	var crudGrid = new CrudGrid({
@@ -258,7 +267,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                 rtv += '<span class="grid-command btnDel">删除</span>';
             }
 
-            rtv +=  '<span class="grid-command btnCache">清除缓存</span>';
+            rtv +=  '<span class="grid-command btnCache">刷新</span>';
 
             if (1 == obj.status || 3 == obj.status) {
                 rtv += '<span class="grid-command btnAct">启用</span>';
@@ -273,7 +282,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
 
             if (0 < obj.editCopyId) {
                 rtv += '<span class="grid-command publish" >发布</span> ';
-                rtv += '<span class="grid-command rollback" >回滚</span> ';
+                rtv += '<span class="grid-command rollback" >清除修改</span> ';
             }
 
             return rtv;
