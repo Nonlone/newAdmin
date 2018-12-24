@@ -2,6 +2,8 @@ package com.feitai.admin.web.advice;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.feitai.admin.core.vo.AjaxResult;
+import com.feitai.admin.mop.base.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -89,6 +91,21 @@ public class ControllerExceptionAdvice {
     public JSONObject exceptionHandler(Exception exception) {
         log.error(String.format("Exception Error %s", exception.getMessage()), exception);
         return buildJson(exception);
+    }
+
+    /**
+     * 业务异常
+     *
+     * @param exception
+     * @return
+     */
+    @ExceptionHandler(BusinessException.class)
+    @ResponseBody
+    public AjaxResult businessExceptionHandler(Exception exception) {
+        log.error(String.format("Exception Error %s", exception.getMessage()), exception);
+        AjaxResult ajaxResult = new AjaxResult(false, exception.getMessage());
+        ajaxResult.setHasError(true);
+        return ajaxResult;
     }
 
 

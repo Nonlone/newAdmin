@@ -30,8 +30,4 @@ public class AdminApplication {
         app.run(args);
 
     }
-
 }
-
-
-
