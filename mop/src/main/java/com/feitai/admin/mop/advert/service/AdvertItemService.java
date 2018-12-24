@@ -483,6 +483,10 @@ public class AdvertItemService {
 		Example delExample = new Example(AdvertItem.class);
 		delExample.createCriteria().andEqualTo("id", itemId);
 		advertItemMapper.deleteByExample(delExample);
+		
+		Example delBlockItemExample = new Example(AdvertBlockItem.class);
+		delBlockItemExample.createCriteria().andEqualTo("itemId", itemId);
+		advertBlockItemMapper.deleteByExample(delBlockItemExample);
 	}
 
 	public void updateStatus(long itemId, AdvertItemStatusEnum updateStatus, String operator) {
