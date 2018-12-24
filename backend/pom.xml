@@ -11,7 +11,6 @@
     <artifactId>backend</artifactId>
     <version>2.0.0</version>
 
-
     <dependencies>
         <dependency>
             <groupId>com.feitai.admin</groupId>
@@ -29,6 +28,5 @@
 			<version>2.0</version>
 		</dependency>
     </dependencies>
-
 
 </project>
