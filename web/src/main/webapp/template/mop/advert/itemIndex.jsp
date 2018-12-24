@@ -327,6 +327,8 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
         if (id) {
             title = '修改广告配置';
             href += '?id=' + id;
+        } else {
+            title = '新增广告配置';
         }
 
         if (top.topManager) {

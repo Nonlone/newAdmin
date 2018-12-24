@@ -372,6 +372,14 @@
 
         select.render();
 
+        select.on('change', function(ev){
+              if ("首页公告" == ev.text) {
+                    $("#textContent").show();
+              } else {
+                    $("#textContent").hide();
+              }
+        });
+
         var editing = new BUI.Grid.Plugins.CellEditing({
                   triggerSelected : false //触发编辑的时候不选中行
         });

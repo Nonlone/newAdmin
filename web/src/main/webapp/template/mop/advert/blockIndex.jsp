@@ -329,8 +329,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
     			
                 return description;
              }}
-
-            ];
+             ];
 
 	var crudGrid = new CrudGrid({
 		entityName : '广告模块',
