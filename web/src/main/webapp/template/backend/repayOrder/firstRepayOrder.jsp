@@ -19,9 +19,9 @@
 				</div>
 			</div>
 			<div class="control-group span7">
-				<label class="control-label">用户ID:</label>
+				<label class="control-label">客户ID:</label>
 				<div class="controls">
-					<input type="text" data-tip="{text : '请输入用户ID'}" class="input-normal control-text" name="search_LIKE_userId">
+					<input type="text" data-tip="{text : '请输入客户ID'}" class="input-normal control-text" name="search_LIKE_userId">
 				</div>
 			</div>
 			<div class="control-group span7">
@@ -149,7 +149,7 @@
 
 
     var columns = [
-        {title:'用户ID',dataIndex:'userId',width:'150px'},
+        {title:'客户ID',dataIndex:'userId',width:'150px'},
         {title:'客户姓名',dataIndex:'idcard',width:"150px",renderer: function (value) {
                 if(value){
                     return value.name;
