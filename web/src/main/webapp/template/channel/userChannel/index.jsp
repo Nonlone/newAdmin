@@ -50,20 +50,26 @@
    <div id="addOrUpdate" class="hide">
       <form id="addOrUpdateForm" class="form-horizontal">
         <div class="row">
-          <div class="control-group span8">
-            <label class="control-label">姓名</label>
-            <div class="controls">
-              <input name="name" type="text" data-rules="{required:true}" class="input-normal control-text">
+            <div class="control-group span8">
+                <label class="control-label"><s>*</s>登录名</label>
+                <div class="controls">
+                    <input name="loginName" type="text" class="input-normal control-text">
+                </div>
             </div>
-          </div>
+            <div class="control-group span8">
+              <label class="control-label">姓名</label>
+                <div class="controls">
+                    <input name="name" type="text" class="input-normal control-text">
+                </div>
+            </div>
         </div>
 
         <div class="row">
           <div class="control-group span8">
             <label class="control-label"><s>*</s>可看渠道</label>
-           <div class="controls bui-form-field-select"  data-items="{'1':'启用','2':'停用'}" class="control-text input-small">
-            <input name="status" type="hidden" value="">
-          </div>
+              <div class="controls" id ="channels" name='channels'>
+                  <input name="channels" type="hidden" id="channelIds" value='' data-rules="{required:true}">
+              </div>
           </div>
         </div>
         <input type="hidden" name="extFlag" value="0">
@@ -165,23 +171,19 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
     var addOrUpdateForm = crudGrid.get('addOrUpdateForm');
 
     var update = true;
-    //当
-    addOrUpdateForm.getField('loginName').on('remotecomplete',function(){
-    	if(update){
-    		addOrUpdateForm.getField('loginName').clearErrors();
-    	}
-	});
+
     
     var beforeUpdateShow = function(dialog,form,record){
-        form.getField("channelId").disable();
-    	var roles = record.roles;
-  	  	var roleList = '';
-	  	BUI.each(roles,function(role){
-	  		roleList += role.id+',';
+        form.getField("name").disable();
+        form.getField("loginName").disable();
+    	var channels = record.channels;
+  	  	var channelList = '';
+	  	BUI.each(channels,function(channel){
+            channelList += channel.id+',';
 	    });
-	  	roleList =  roleList.substring(0,roleList.length-1);
+        channelList =  channelList.substring(0,channelList.length-1);
 	  	select.setSelectedValue('');
-    	select.setSelectedValue(roleList);
+    	select.setSelectedValue(channelList);
     };
 
     crudGrid.on('beforeUpdateShow', beforeUpdateShow);
@@ -192,12 +194,12 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
     Data = BUI.Data;
 
   	var store = new Data.Store({
-    	url : '${ctx}/system/role/roleCheckList',
+    	url : '${ctx}/backend/channel/primaryList',
     	autoLoad : true
   	}),
   	select = new Select.Select({  
-    	render:'#roles',
-    	valueField:'#roleIds',
+    	render:'#channels',
+    	valueField:'#channelIds',
     	multipleSelect : true,
     	store : store
   	});

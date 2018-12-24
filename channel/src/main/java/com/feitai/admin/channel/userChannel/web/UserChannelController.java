@@ -3,10 +3,13 @@ package com.feitai.admin.channel.userChannel.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.feitai.admin.backend.config.entity.ChannelPrimary;
+import com.feitai.admin.backend.config.service.ChannelPrimaryService;
 import com.feitai.admin.channel.userChannel.service.UserChannelService;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
+import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.system.model.Role;
 import com.feitai.admin.system.model.User;
@@ -39,10 +42,25 @@ public class UserChannelController extends BaseListableController<User> {
     @Autowired
     private UserChannelService userChannelService;
 
+    @Autowired
+    private ChannelPrimaryService channelPrimaryService;
+
     @GetMapping(value = "/index")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("/channel/userChannel/index");
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/primaryList")
+    @ResponseBody
+    @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
+    public Object primaryList(){
+        List<ChannelPrimary> channelPrimarys = channelPrimaryService.findAll();
+        List<ListItem> list = new ArrayList<ListItem>();
+        for(ChannelPrimary channelPrimary:channelPrimarys){
+            list.add(new ListItem(channelPrimary.getPrimaryChannelName(), channelPrimary.getChannelCode()));
+        }
+        return list;
     }
 
     /**
@@ -86,12 +104,22 @@ public class UserChannelController extends BaseListableController<User> {
      * @param id
      * @return
      */
-    @RequiresPermissions("/system/user:update")
+    @RequiresPermissions("/channel/userChannel:update")
     @RequestMapping(value = "update/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Object editFrom(@PathVariable("id") Long id) {
         User user = this.userService.findOne(id);
         return user;
+    }
+
+    @RequiresPermissions(value = "/channel/userChannel:update")
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    @ResponseBody
+    public Object update(@RequestParam(value = "loginName") String loginName,
+                         @RequestParam(value = "channelIds") List<String> channelIds) {
+        User user = this.userService.findByLoginName(loginName);
+        userChannelService.saveAll(user.getId(),channelIds);
+        return successResult;
     }
 
     @Override

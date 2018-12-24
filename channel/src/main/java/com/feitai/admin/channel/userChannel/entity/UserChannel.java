@@ -25,8 +25,8 @@ public class UserChannel {
 
     private String primaryChannelCode;
 
-    public UserChannel(Long id,String primaryChannelCode){
-        this.id = id;
+    public UserChannel(Long userId,String primaryChannelCode){
+        this.userId = userId;
         this.primaryChannelCode = primaryChannelCode;
     }
 
