@@ -189,6 +189,10 @@ public class AdvertItemService {
 			}
 		});
 		
+		if (items.size() <= limit) {
+			return items;
+		}
+		
 		return items.subList(0, limit);
 	}
 	
@@ -503,12 +507,12 @@ public class AdvertItemService {
 			throw new BusinessException("广告内容不存在");
 		}
 
-		if (updateStatus.getValue() == read.getStatus()) {
-			return;
-		}
-		
 		if (0 < read.getEditCopyId()) {
 			updateEntity = getAdvertItemFromEditCopy(read.getEditCopyId());
+		}
+		
+		if (updateStatus.getValue() == updateEntity.getStatus()) {
+			return;
 		}
 		
 		checkUpdateStatus(read, updateEntity, updateStatus);
