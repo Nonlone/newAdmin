@@ -39,7 +39,7 @@
                 </tr>
             </table>
             <hr/>
-            <h3 style="background-color:#ADADAD" ><span style="font-size:20px">补件历史记录</span></h3>
+            <h3 style="background-color:#ADADAD" ><span style="font-size:20px">待补件项</span></h3>
             <hr/>
 
                 <table cellspacing="0" class="table table-bordered">
