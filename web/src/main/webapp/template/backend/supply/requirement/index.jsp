@@ -140,12 +140,13 @@
             showUpdateBtn : update,
             showRemoveBtn : del,
             columns : columns,
+            operationwidth:'80px',
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
                 return CrudGrid.createLinkCustomSpan({
-                    class:"page-action grid-command x-icon x-icon-info",
+                    class:"page-action grid-command",
                     id: obj.id,
                     title: obj.idCardData.name+"补件需求",
-                    text: '<i class="icon icon-white icon-list-alt"></i>',
+                    text: '详情',
                     href: $ctx+"/backend/supply/requirement/detail/"+obj.id
                 });
 
