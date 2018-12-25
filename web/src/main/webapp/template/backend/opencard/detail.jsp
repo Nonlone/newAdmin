@@ -182,6 +182,9 @@
                 <th width="80px">城市名</th>
                 <th width="80px">地区名</th>
                 <th >地址</th>
+                <th width="80px">经度</th>
+                <th width="80px">纬度</th>
+                <th width="80px">区域编码</th>
                 <th width="100px">ip</th>
                 </thead>
                 <tbody>
@@ -194,6 +197,9 @@
                                 <td >${area.cityName}</td>
                                 <td >${area.districtName}</td>
                                 <td >${area.location}</td>
+                                <td >${area.longitude}</td>
+                                <td >${area.latitude}</td>
+                                <td >${area.adCode}</td>
                                 <td >${area.ip}</td>
                             </tr>
                         </c:forEach>
