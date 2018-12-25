@@ -133,6 +133,15 @@ public class AdvertBlockController extends BaseListableController<AdvertBlock>{
     	advertBlockService.evictCache(id);
         return BaseListableController.successResult;
     }
+    
+    
+    @RequiresPermissions("/mop/advert/block:update")
+    @RequestMapping("reset")
+    @ResponseBody
+    public Object reset(Long id) {
+    	advertBlockService.resetAdvertBlockEditCopy(id, getOperator());
+        return BaseListableController.successResult;
+    }
 
 
     @RequestMapping("/groupItems")
