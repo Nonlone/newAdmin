@@ -237,7 +237,8 @@ public class AdvertItemController extends BaseListableController<AdvertItem>{
         AdvertItem advertItem = advertItemService.selectWithEditCopyById(itemId);
         List<AdvertItem.AdvertItemShowConfigItem> list = JSON.parseObject(advertItem.getShowConfig(), new TypeReference<List<AdvertItem.AdvertItemShowConfigItem>>(){});
         AdvertItem.AdvertItemShowConfigItem advertItemShowConfigItem = new AdvertItem.AdvertItemShowConfigItem();
-        advertItemShowConfigItem.setUrl(url.substring(0, url.lastIndexOf('?')));
+        //手动改为https
+        advertItemShowConfigItem.setUrl("https" + url.substring(0, url.lastIndexOf('?')).substring(4));
         advertItemShowConfigItem.setDpi(width + "*" + height);
         advertItemShowConfigItem.setRatio(getRatio(Integer.valueOf(width), Integer.valueOf(height)));
         advertItemShowConfigItem.setRatioValue(new BigDecimal(width).divide(new BigDecimal(height),4,BigDecimal.ROUND_HALF_UP));

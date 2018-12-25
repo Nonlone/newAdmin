@@ -53,7 +53,7 @@
             <div class="control-group span10">
                 <label class="control-label"><s>*</s>位置权重:</label>
                 <div class="controls">
-                    <input name="weight" type="text" class="control-text" placeholder="请输入数字,数字越小位置越靠前" data-rules="{number:true}">
+                    <input name="weight" type="text" class="control-text"  style="width: 200px;" placeholder="请输入数字,数字越小位置越靠前" data-rules="{number:true}">
                 </div>
             </div>
 
@@ -349,7 +349,13 @@
             collectEvent();
             commonCollectJsonField('style');
             commonCollectJsonField('ext');
-
+            if ('NOTICE' == itemType) {
+                var data = $("#textContent").val();
+                if ($.isEmptyObject(data)) {
+                    showWarning("公告文字内容不能为空");
+                    return false;
+                }
+            }
             return true;
         });
 
