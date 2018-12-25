@@ -128,6 +128,7 @@
                     success:function(result){
                         if(result.code==0){
                             BUI.Message.Alert(result.message,function(){
+                                window.location.reload();
                             },'success');
                         }else if(result.code==3){
                             BUI.Message.Alert(result.message,function(){

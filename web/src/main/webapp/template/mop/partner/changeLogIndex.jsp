@@ -31,16 +31,11 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
         ];
 	var crudGrid = new CrudGrid({
 		entityName : '变更记录',
-      	storeUrl : '${ctx}/admin/mop/partner/changeLog/list',
+      	storeUrl : '${ctx}/mop/partner/changeLog/list',
         columns : columns,
         showAddBtn : false,
         showUpdateBtn : false,
         showRemoveBtn : false,
-        storeCfg:{
-            proxy : {
-              pageStart : 1
-            }
-        },
 		gridCfg:{
     		innerBorder:true
     	}});
