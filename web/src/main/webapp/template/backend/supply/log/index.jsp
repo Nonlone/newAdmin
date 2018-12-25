@@ -95,7 +95,7 @@
                     return '';
                 }
             }},
-        {title:'用户ID',dataIndex:'user',width:'135px',renderer:function (value) {
+        {title:'客户ID',dataIndex:'user',width:'135px',renderer:function (value) {
                 if(value){
                     return value.id;
                 }else{
