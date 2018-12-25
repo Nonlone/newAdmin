@@ -212,7 +212,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                      if ("" != html) {
                          html += ",";
                      }
-                     html += value[i].title+"("+value[i].code+")";
+                     html += value[i].title;
                  }
 
                  html = "<p style='white-space:nowrap;overflow:hidden;text-overflow: ellipsis;' title='"+html+"'>"+html+"</p>";
@@ -221,7 +221,14 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
     		 }},
              {title:'位置权重',dataIndex:'weight',width:'6%'},
              {title:'展示时间',dataIndex:'beginTime',width:'24%',renderer:function(value, obj){
-                     var html = value+'至'+obj.endTime;
+                     if (typeof(value) == "undefined" ) {
+                            value = "无 "
+                     }
+                     var end = obj.endTime;
+                     if (typeof(end) == "undefined" ) {
+                             end = " 无"
+                     }
+                     var html = value+'至'+end;
 
                      return html;
              }},
@@ -292,6 +299,10 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                rtv += '<span class="grid-command btnedit">编辑</span>';
             }
 
+            if (0 < obj.editCopyId || 0 < obj.childEditCount) {
+                rtv += '<span class="grid-command rollback" >清除修改</span> ';
+            }
+
             return rtv;
         },
 
@@ -336,7 +347,8 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
             top.topManager.openPage({
                 id: 'main-menu',
                 href: href,
-                title: title
+                title: title,
+                reload: true
             });
         }
     }
