@@ -283,10 +283,37 @@ public class AdvertBlockService {
 			return;
 		}
 		
+		//1.发布广告内容
 		for (Long itemId : itemIds) {
 			advertItemService.publishAdvertItemEditCopy(itemId, operator);
 		}
+		
+		//2.更新发布时间
+		AdvertBlock update = new AdvertBlock();
+        update.setId(blockId);
+        update.setPublishTime(new Date());
+        advertBlockMapper.updateByPrimaryKeySelective(update);
 	}
+	
+	
+	/**
+	 * 重置副本
+	 * @param blockId
+	 * @param operator
+	 */
+	public void resetAdvertBlockEditCopy(long blockId, String operator) {
+		
+		List<Long> itemIds = advertEditCopyService.queryRelIdsByTargetRelId(blockId, AdvertEditCopyRelTypeEnum.ADVERT_BLOCK);
+		
+		if (ListUtils.isEmpty(itemIds)) {
+			return;
+		}
+		
+		for (Long itemId : itemIds) {
+			advertItemService.resetAdvertItemEditCopy(itemId, operator);
+		}
+	}
+	
 
 	public boolean evictCache(long blockId) {
 		RpcResult result = null;
