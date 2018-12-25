@@ -160,7 +160,7 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
         int pageSize = PageBulider.getPageSize(request);
         List<SupplyLogMore> result2PageList = new ArrayList<>();
         Map<Long,SupplyLogMore> map = new HashMap<>();
-        List<SupplyLogMore> resultList = getService().findAllBySqls(getCommonSqls(request,getSelectMultiTable().buildSqlString()), pageNo, pageSize);
+        List<SupplyLogMore> resultList = getService().findAllBySqls(getCommonSqls(request,getSelectMultiTable().buildSqlString()+ " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC"), pageNo, pageSize);
         Set<Long> set = new HashSet<>();
         for (SupplyLogMore supplyLogMore:resultList){
             if(set.add(supplyLogMore.getLoanOrderId())){

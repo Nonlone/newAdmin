@@ -67,7 +67,7 @@ public class SupplyRequirementController extends BaseListableController<SupplyRe
         int pageSize = PageBulider.getPageSize(request);
         List<SupplyRequirementMore> result2PageList = new ArrayList<>();
         Map<Long,SupplyRequirementMore> map = new HashMap<>();
-        List<SupplyRequirementMore> resultList = getService().findAll(getCommonSqls(request,getSelectMultiTable().buildSqlString()));
+        List<SupplyRequirementMore> resultList = getService().findAll(getCommonSqls(request,getSelectMultiTable().buildSqlString())+ " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC");
         Set<Long> set = new HashSet<>();
         for (SupplyRequirementMore supplyRequirementMore:resultList){
             if(set.add(supplyRequirementMore.getLoanOrderId())){
