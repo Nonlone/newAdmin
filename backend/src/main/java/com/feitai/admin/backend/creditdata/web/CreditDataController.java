@@ -1,6 +1,7 @@
 package com.feitai.admin.backend.creditdata.web;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.creditdata.model.CreditData;
 import com.feitai.admin.backend.creditdata.service.CreditDataService;
@@ -31,6 +32,11 @@ public class CreditDataController {
 
     @Autowired
     private MoxieDataService moxieDataService;
+    
+    /**
+     * 返回烟草授信数据最新记录数据
+     */
+    private final static int NEW_ORDER_COUNT=10;
 
 
     @PostMapping("/moxie")
@@ -67,6 +73,54 @@ public class CreditDataController {
         }
         return new ResponseBean<Void>(ResultCode.FAIL);
     }
+    /**
+     * 获取自建烟草授信数据
+     * @param userId
+     * @return
+     */
+    @PostMapping("/tobacco")
+    @ResponseBody
+    public Object tobacco(@RequestParam("userId") Long userId){
+    	JSONObject json=handleOrders(userId,"TOBACCO");
+        return json!=null?new ResponseBean<>(ResultCode.SUCCESS,json):new ResponseBean<Void>(ResultCode.FAIL);
+    }
+    /**
+     * 获取新云联烟草授信数据
+     * @param userId
+     * @return
+     */
+    @PostMapping("/xinyunlian")
+    @ResponseBody
+    public Object xinyunlian(@RequestParam("userId") Long userId){
+    	JSONObject json=handleOrders(userId,"XYL_TOBACCO");
+         return json!=null?new ResponseBean<>(ResultCode.SUCCESS,json):new ResponseBean<Void>(ResultCode.FAIL);
+    }
 
+
+	private JSONObject handleOrders(Long userId,String code) {
+		CreditData creditData = creditDataService.findByUserIdAndCode(userId, code);
+		JSONObject json =null;
+         if(!Objects.isNull(creditData)){
+             json = (JSONObject) JSON.toJSON(creditData);
+             JSONObject creditDataReport=(JSONObject) JSON.parse(creditData.getCreditData());
+             if(creditDataReport.getJSONObject("data")!=null){
+            	 creditDataReport=creditDataReport.getJSONObject("data");
+             }
+             JSONArray orderArray=creditDataReport.getJSONArray("orders");
+             if(orderArray==null){
+            	 return null;
+             }
+             JSONArray newOrderArray=new JSONArray();
+             for(int i=0;i<NEW_ORDER_COUNT && i<orderArray.size();i++){
+            	 JSONObject newOrder=(JSONObject) orderArray.get(i);
+            	 newOrder.remove("orderDetail");
+            	 newOrderArray.add(newOrder);
+             }
+             JSONObject orders=new JSONObject();
+             orders.put("orders", newOrderArray);
+             json.put("report", orders);          
+         }
+         return json;
+	}
 
 }

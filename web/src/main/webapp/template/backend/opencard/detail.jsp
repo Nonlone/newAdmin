@@ -209,7 +209,7 @@
         </div>
     </div>
     <div>
-        <c:if test="${not empty authsList }">
+       <c:if test="${not empty authsList }">
             <ul id="tabHeader" class="nav-tabs">
                 <li id="li_base" class="active"><a href="javascript:void(0)" onclick="load(this,'baseData')">基本资料</a></li>
                 <c:forEach items="${authsList}" var="auth">
@@ -218,6 +218,8 @@
                 <c:if test="${card.status.value!=-1&&card.status.value!=0}">
                     <li id="li_bond" data-callback="sauron_daihoubang"><a href="javascript:void(0)" onclick="load(this,'sauron_daihoubang')">贷后邦报告</a></li>
                 </c:if>
+                <li id="li_feitai" data-callback="tobacco_feitai"><a href="javascript:void(0)" onclick="load(this,'tobacco_feitai')">自建烟草</a></li>
+                <li id="li_xinyunlian" data-callback="tobacco_xinyunlian"><a href="javascript:void(0)" onclick="load(this,'tobacco_xinyunlian')">新云联烟草</a></li>
             </ul>
         </c:if>
         <div id="tabContext" style="margin-bottom: 10px;">
@@ -230,6 +232,8 @@
             </c:forEach>
             <!-- 贷后邦报告 -->
             <div id="sauron_daihoubang" style="display:none;"></div>
+            <div id="tobacco_feitai" style="display:none;"></div>
+            <div id="tobacco_xinyunlian" style="display:none;"></div>
         </div>
     </div>
 
@@ -383,6 +387,67 @@
         });
 
     });
-
+    
+    
+    function tobacco_feitai(){
+        getCreditData("/static/template/tobacco_feitai.tpl",function(resp){
+            $.ajax({
+                type: "post",
+                url: "/backend/creditdata/tobacco",
+                data:"cardId=${card.id}&userId=${card.userId}",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response)
+                    if(response.code==0
+                        && !jQuery.isEmptyObject(response.data)){
+                        var html = template.render(resp,response.data.report);
+                        console.log(html);
+                        $("#tobacco_feitai").html("").html(html);
+                    }else{
+                        BUI.use('bui/overlay', function (Overlay) {
+                            new Overlay.Dialog({
+                                title: '提示窗口',
+                                width: 300,
+                                height: 150,
+                                mask: false,
+                                buttons: [],
+                                bodyContent: '<p>该用户的此类征信信息错误</p>'
+                            }).show();
+                        });
+                    }
+                }
+            });
+        });
+    }
+    function tobacco_xinyunlian(){
+        getCreditData("/static/template/tobacco_xinyunlian.tpl",function(resp){
+            $.ajax({
+                type: "post",
+                url: "/backend/creditdata/xinyunlian",
+                data:"cardId=${card.id}&userId=${card.userId}",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response)
+                    if(response.code==0
+                        && !jQuery.isEmptyObject(response.data)){
+                        var html = template.render(resp,response.data.report);
+                        console.log(html);
+                        $("#tobacco_xinyunlian").html("").html(html);
+                    }else{
+                        BUI.use('bui/overlay', function (Overlay) {
+                            new Overlay.Dialog({
+                                title: '提示窗口',
+                                width: 300,
+                                height: 150,
+                                mask: false,
+                                buttons: [],
+                                bodyContent: '<p>该用户的此类征信信息错误</p>'
+                            }).show();
+                        });
+                    }
+                }
+            });
+        });
+    }
 </script>
 </html>

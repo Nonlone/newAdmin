@@ -43,4 +43,16 @@ public class CreditDataService extends ClassPrefixDynamicSupportService<CreditDa
         }
         return null;
     }
+    public CreditData findByUserIdAndCode(Long userId, String code) {
+        List<CreditData> creditDataList = getMapper().selectByExample(Example.builder(CreditData.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo("userId",userId)
+                        .andEqualTo("code", code))
+                .orderByDesc("createdTime").build());
+        if (!CollectionUtils.isEmpty(creditDataList)) {
+            CreditData creditData = creditDataList.get(0);
+            return creditData;
+        }
+        return null;
+    }
 }
