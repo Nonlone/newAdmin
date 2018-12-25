@@ -53,16 +53,16 @@
             <div class="control-group span10">
                 <label class="control-label"><s>*</s>位置权重:</label>
                 <div class="controls">
-                    <input name="weight" type="text" class="control-text"  style="width: 200px;" placeholder="请输入数字,数字越小位置越靠前" data-rules="{number:true}">
+                    <input name="weight" type="text" class="control-text"  style="width: 200px;" placeholder="请输入数字,数字越小位置越靠前" data-rules="{number:true, required : true}">
                 </div>
             </div>
 
 
             <div class="control-group span12">
                 <label class="control-label"><s>*</s>展示日期：</label>
-                <div class="controls bui-form-group" data-rules="{dateRange : true}">
-                    <input type="text" name="beginTime" class="calendar calendar-time" data-tip="{text : '开始日期'}"><label>&nbsp;-&nbsp;</label>
-                    <input type="text" name="endTime" class="calendar calendar-time" data-tip="{text : '结束日期'}">
+                <div class="controls bui-form-group" data-rules="{dateRange : true, required : true}">
+                    <input type="text" id="btime" name="beginTime" class="calendar calendar-time" data-tip="{text : '开始日期'}"><label>&nbsp;-&nbsp;</label>
+                    <input type="text" id="etime" name="endTime" class="calendar calendar-time" data-tip="{text : '结束日期'}">
                 </div>
             </div>
     </div>
@@ -105,7 +105,7 @@
         <div class="control-group span10">
             <label class="control-label"><s>*</s>在APP上使用：</label>
             <div class="controls">
-                <select name="appEventType">
+                <select id="appEvent" name="appEventType">
                     <option value="">无</option>
                     <option value="link">跳转</option>
                 </select>
@@ -115,7 +115,7 @@
         <div class="control-group span10">
             <label class="control-label">APP链接：</label>
             <div class="controls">
-                <input name="appLink" type="text" class="control-text" style="width: 260px;">
+                <input id="applink" name="appLink" type="text" class="control-text" style="width: 260px;">
             </div>
         </div>
 
@@ -132,7 +132,7 @@
         <div class="control-group span10">
             <label class="control-label"><s>*</s>在H5上使用：</label>
             <div class="controls">
-                <select name="h5EventType">
+                <select id="h5Event" name="h5EventType">
                     <option value="">无</option>
                     <option value="link">跳转</option>
                 </select>
@@ -142,7 +142,7 @@
         <div class="control-group span10">
             <label class="control-label">H5链接：</label>
             <div class="controls">
-                <input name="h5Link" type="text" class="control-text" style="width: 260px;">
+                <input id="h5link" name="h5Link" type="text" class="control-text" style="width: 260px;">
             </div>
         </div>
 
@@ -356,6 +356,21 @@
                     return false;
                 }
             }
+            if ($("#h5Event").val() == 'link' && $("#h5link").val() == "") {
+                showWarning("链接不能为空");
+                    return false;
+            }
+
+            if ($("#appEvent").val() == 'link' && $("#applink").val() == "") {
+                showWarning("链接不能为空");
+                return false;
+            }
+
+            if ($("#btime").val() == '' && $("#etime").val() == "") {
+                showWarning("时间不能为空");
+                return false;
+            }
+
             return true;
         });
 
