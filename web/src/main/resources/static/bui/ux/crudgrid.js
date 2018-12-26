@@ -386,8 +386,11 @@ define('bui/ux/crudgrid', ['bui/common', 'bui/grid', 'bui/form', 'bui/data', 'bu
                         showUpdateBtun = _self.get('showUpdateBtn'),
                         showRemoveOperation = _self.get('showRemoveOperation'),
                         operationColumnCfg = _self.get('operationColumnCfg'),
-                        operationwidth = _self.get('operationwidth'),
-                        cfg = {title: '操作', dataIndex: '', width:operationwidth , sortable: false};
+                        operationwidth = _self.get('operationwidth');
+                    var cfg = {title: '操作', dataIndex: '' , sortable: false};
+                    if(operationwidth){
+                        var cfg = {title: '操作', dataIndex: '', width:operationwidth , sortable: false};
+                    }
                     if (operationColumnCfg) {
                         cfg = BUI.merge(cfg, operationColumnCfg);
                     }
