@@ -219,4 +219,17 @@ public abstract class BaseListableController<T> extends BaseController {
         page.setPrevious(!page.isLast());
         return page;
     }
+
+    protected <K> Page<K> buildPage(PageInfo<K> results, int pageNo, int pageSize) {
+        Page<K> page = new Page(results.getList());
+        page.setTotalPages(results.getPages());
+        page.setTotalElements(results.getTotal());
+        page.setNumber(pageNo);
+        page.setSize(pageSize);
+        page.setFirst(results.isIsFirstPage());
+        page.setLast(results.isIsLastPage());
+        page.setNext(results.isHasNextPage());
+        page.setPrevious(results.isHasPreviousPage());
+        return page;
+    }
 }

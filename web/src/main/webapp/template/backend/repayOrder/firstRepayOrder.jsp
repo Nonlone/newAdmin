@@ -19,9 +19,9 @@
 				</div>
 			</div>
 			<div class="control-group span7">
-				<label class="control-label">用户ID:</label>
+				<label class="control-label">客户ID:</label>
 				<div class="controls">
-					<input type="text" data-tip="{text : '请输入用户ID'}" class="input-normal control-text" name="search_LIKE_userId">
+					<input type="text" data-tip="{text : '请输入客户ID'}" class="input-normal control-text" name="search_LIKE_userId">
 				</div>
 			</div>
 			<div class="control-group span7">
@@ -30,13 +30,13 @@
 					<input type="text" data-tip="{text : '请输入客户姓名'}" class="input-normal control-text" name="search_LIKE_idcard.name">
 				</div>
 			</div>
-           <div class="control-group span7">
+           <div class="control-group span6">
 				<label class="control-label">产品:</label>
 				<div id="selectProduct" class="controls">
 					<input id="searchProduct" type="hidden" name="search_EQ_loanOrder.productId">
 				</div>
 			</div>
-			<div class="control-group span7">
+			<div class="control-group span6">
 				<label class="control-label">资金方:</label>
 				<div id="selectPayFund" class="controls">
 					<input id="searchPayFund" type="hidden" name="search_EQ_loanOrder.payFundId">
@@ -149,7 +149,7 @@
 
 
     var columns = [
-        {title:'用户ID',dataIndex:'userId',width:'150px'},
+        {title:'客户ID',dataIndex:'userId',width:'150px'},
         {title:'客户姓名',dataIndex:'idcard',width:"150px",renderer: function (value) {
                 if(value){
                     return value.name;
@@ -178,6 +178,7 @@
 					 return '';
 				 }
 	        }},
+	    {title:'总期数',dataIndex:'orderTerm',width:'100px'},
         {title:'首期总费用',dataIndex:'amount',width:'150px'},
         {title:"评审费",dataIndex:"orderPlande",width:"150px",renderer:function (value) {
 			 if(value){
@@ -195,13 +196,16 @@
         }},
         {title:"本息",dataIndex:"orderPlande",width:"150px",renderer:function (value) {
 			 if(value){
-					return value.pincipalAmount;
+				   if(value.interestAmount){
+					   return value.pincipalAmount+value.interestAmount;
+				   }				   
+					return value.interestAmount;
 				 }else{
 					 return '';
 				 }
 	        }},
-        {title:"资金方",dataIndex:"fundName",width:"150px"},
-        {title:'产品名称',dataIndex:'product',width:'150px',renderer: function (value) {
+        {title:"资金方",dataIndex:"fundName",width:"100px"},
+        {title:'产品名称',dataIndex:'product',width:'100px',renderer: function (value) {
                 if(value){
                     return value.name;
                 }else{
