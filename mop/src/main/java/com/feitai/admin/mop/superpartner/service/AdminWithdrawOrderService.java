@@ -58,7 +58,7 @@ public class AdminWithdrawOrderService {
     private String TMP_FILE_PATH;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyMMddHHmmss");
 
-    @Value("${mop.server.orderUpdate.url}")
+    @Value("${superPartner.server.orderUpdate.url}")
     private String orderUpdateUrl;
 
     //使用项目相对路径，创建临时文件夹 linux下可能会有权限问题
