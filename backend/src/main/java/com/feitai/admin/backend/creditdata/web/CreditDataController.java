@@ -32,7 +32,7 @@ public class CreditDataController {
 
     @Autowired
     private MoxieDataService moxieDataService;
-    
+
     /**
      * 返回烟草授信数据最新记录数据
      */
@@ -41,19 +41,30 @@ public class CreditDataController {
 
     @PostMapping("/moxie")
     @ResponseBody
-    public Object moxie(@RequestParam("userId") Long userId,@RequestParam("cardId")Long cardId){
-        MoxieData moxieData = moxieDataService.findByUserIdAndCardId(userId,cardId);
+    public Object moxie(@RequestParam("userId") Long userId){
+        MoxieData moxieData = moxieDataService.findByUserId(userId);
         if(!Objects.isNull(moxieData)){
             return new ResponseBean<>(ResultCode.SUCCESS,moxieData);
         }
         return new ResponseBean<Void>(ResultCode.FAIL);
     }
 
+    @PostMapping("/jincaiTax")
+    @ResponseBody
+    public Object jincaiTax(@RequestParam("userId") Long userId){
+        CreditData creditData = creditDataService.findByUserIdAndSourceAndCode(userId, "JCHL","TAX");
+        if(!Objects.isNull(creditData)){
+            JSONObject json = (JSONObject) JSON.toJSON(creditData);
+            json.put("report",JSON.parse(creditData.getCreditData()));
+            return new ResponseBean<>(ResultCode.SUCCESS,json);
+        }
+        return new ResponseBean<Void>(ResultCode.FAIL);
+    }
 
     @PostMapping("/sauron")
     @ResponseBody
-    public Object sauron(@RequestParam("userId") Long userId,@RequestParam("cardId")Long cardId){
-        CreditData creditData = creditDataService.findByCardIdAndUserIdAndSource(userId,cardId, "DAIHOUBANG");
+    public Object sauron(@RequestParam("userId") Long userId){
+        CreditData creditData = creditDataService.findByUserIdAndSourceAndCode(userId, "DAIHOUBANG","DAIHOUBANG");
         if(!Objects.isNull(creditData)){
             JSONObject json = (JSONObject) JSON.toJSON(creditData);
             json.put("report",JSON.parse(creditData.getCreditData()));
@@ -64,8 +75,8 @@ public class CreditDataController {
 
 
     @PostMapping("/suanhua")
-    @ResponseBody Object suanhua(@RequestParam("userId") Long userId,@RequestParam("cardId")Long cardId){
-        CreditData creditData = creditDataService.findByUserIdAndSource(userId, "SUANHUA");
+    @ResponseBody Object suanhua(@RequestParam("userId") Long userId){
+        CreditData creditData = creditDataService.findByUserIdAndSourceAndCode(userId, "SUANHUA","PBCCRC");
         if(!Objects.isNull(creditData)){
             JSONObject json = (JSONObject) JSON.toJSON(creditData);
             json.put("report",JSON.parse(creditData.getCreditData()));
@@ -117,7 +128,7 @@ public class CreditDataController {
             	 newOrderArray.add(newOrder);
              }
              creditDataJson.put("orders", newOrderArray);
-             json.put("creditData", creditDataJson);          
+             json.put("creditData", creditDataJson);
          }
          return json;
 	}
