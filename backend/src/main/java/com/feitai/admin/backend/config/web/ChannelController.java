@@ -8,16 +8,22 @@
 package com.feitai.admin.backend.config.web;
 
 import com.alibaba.fastjson.JSONObject;
+import com.feitai.admin.backend.config.entity.AppConfigType;
 import com.feitai.admin.backend.config.entity.ChannelPrimary;
 import com.feitai.admin.backend.config.service.ChannelPrimaryService;
 import com.feitai.admin.backend.config.service.ChannelService;
 import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.DynamitSupportService;
+import com.feitai.admin.core.service.OnCondition;
+import com.feitai.admin.core.service.Operator;
 import com.feitai.admin.core.service.Page;
+import com.feitai.admin.core.service.SearchParams;
+import com.feitai.admin.core.service.SelectMultiTable;
 import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
+import com.feitai.jieya.server.dao.appconfig.model.AppConfig;
 import com.feitai.jieya.server.dao.channel.model.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
 import tk.mybatis.mapper.util.StringUtil;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -102,8 +109,8 @@ public class ChannelController extends BaseListableController<Channel> {
 	@RequestMapping(value = "/primaryList")
 	@ResponseBody
 	@LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
-	public Object primaryList(){
-		List<ChannelPrimary> channelPrimarys = channelPrimaryService.findAll();
+	public Object primaryList(HttpServletRequest request){        
+		List<ChannelPrimary> channelPrimarys = channelPrimaryService.findAll(getSql(request, null));//channelPrimaryService.findAll();
 		List<ListItem> list = new ArrayList<ListItem>();
 		for(ChannelPrimary channelPrimary:channelPrimarys){
 			list.add(new ListItem(channelPrimary.getPrimaryChannelName(), channelPrimary.getPrimaryChannelName()));
@@ -189,5 +196,17 @@ public class ChannelController extends BaseListableController<Channel> {
 	protected DynamitSupportService<Channel> getService() {
 		return this.channelService;
 	}
+	@Override
+	protected String getSql(ServletRequest request, SelectMultiTable selectMultiTable) {
+		 selectMultiTable =SelectMultiTable.builder(ChannelPrimary.class);
+	    	StringBuffer sbSql = new StringBuffer();
+	        sbSql.append(selectMultiTable.buildSqlString());
+	        List<SearchParams> searchParamsList = bulidSearchParamsList(request);
+	        sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
+	        return sbSql.toString();
+	}
 
+	  private SelectMultiTable getSelectMultiTable() {
+	        return SelectMultiTable.builder(Channel.class);
+	    }
 }
