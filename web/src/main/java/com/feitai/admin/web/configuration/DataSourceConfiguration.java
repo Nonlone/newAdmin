@@ -36,6 +36,8 @@ public class DataSourceConfiguration implements EnvironmentAware {
 
     private static final String MOP_DATASOURCE = "mop";
 
+    private static final String SUPERPARTNER_DATASOURCE = "superpartner";
+
     private static final String DEFAULT_ADMIN_PACKAGE_PREFIX = DEFAULT_ADMIN_PACKAGE + ".";
 
     private static final String DEFAULT_PROPERTIES_PREFIX = "mysql";
@@ -71,10 +73,9 @@ public class DataSourceConfiguration implements EnvironmentAware {
         // 管理后台智齿输出
         classPrefixMap.put("com.feitai.admin.wisdomTooth",ADMIN_DATASOURCE);
         // 管理后台超级合伙人
-        classPrefixMap.put("com.feitai.admin.mop",MOP_DATASOURCE);
-        // 渠道商
-        classPrefixMap.put("com.feitai.admin.channel.channel",BACKEND_DATASOURCE);
-        classPrefixMap.put("com.feitai.admin.channel.userChannel",ADMIN_DATASOURCE);
+        classPrefixMap.put("com.feitai.admin.mop.superpartner",SUPERPARTNER_DATASOURCE);
+        // 管理后台广告
+        classPrefixMap.put("com.feitai.admin.mop.advert",MOP_DATASOURCE);
 
         return classPrefixMap;
     }

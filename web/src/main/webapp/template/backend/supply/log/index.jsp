@@ -95,7 +95,7 @@
                     return '';
                 }
             }},
-        {title:'用户ID',dataIndex:'user',width:'135px',renderer:function (value) {
+        {title:'客户ID',dataIndex:'user',width:'135px',renderer:function (value) {
                 if(value){
                     return value.id;
                 }else{
@@ -139,12 +139,13 @@
         showUpdateBtn : update,
         showRemoveBtn : del,
         columns : columns,
+        operationwidth:'80px',
         operationColumnRenderer : function(value, obj){//操作列最追加按钮
             return CrudGrid.createLinkCustomSpan({
-                class:"page-action grid-command x-icon x-icon-info",
+                class:"page-action grid-command",
                 id: obj.id,
                 title: obj.idCardData.name+"补件记录",
-                text: '<i class="icon icon-white icon-list-alt"></i>',
+                text: '详情',
                 href: $ctx+"/backend/supply/log/detail/"+obj.id
             })
      },

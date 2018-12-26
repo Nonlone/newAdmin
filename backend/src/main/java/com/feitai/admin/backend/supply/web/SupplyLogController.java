@@ -69,7 +69,7 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
 
     private final static String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private final static String PHOTE_TYPE = "PNG";
+    private final static String PHOTE_TYPE = "JPG";
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -160,7 +160,7 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
         int pageSize = PageBulider.getPageSize(request);
         List<SupplyLogMore> result2PageList = new ArrayList<>();
         Map<Long,SupplyLogMore> map = new HashMap<>();
-        List<SupplyLogMore> resultList = getService().findAllBySqls(getCommonSqls(request,getSelectMultiTable().buildSqlString()), pageNo, pageSize);
+        List<SupplyLogMore> resultList = getService().findAll(getCommonSqls(request,getSelectMultiTable().buildSqlString())+ " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC");
         Set<Long> set = new HashSet<>();
         for (SupplyLogMore supplyLogMore:resultList){
             if(set.add(supplyLogMore.getLoanOrderId())){

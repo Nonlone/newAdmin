@@ -159,6 +159,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/form'],function (CrudGrid,Select,Fo
 		showRemoveBtn : del,
 		addOrUpdateFormId : 'addOrUpdateForm',
 		dialogContentId : 'addOrUpdate',
+        operationwidth:'130px',
 		gridCfg:{
     		innerBorder:true
     	},

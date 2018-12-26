@@ -194,7 +194,11 @@ public class MapProperties {
     @Value("${backend.repayOrderStatus}")
     private String repayOrderStatus;
 
-    private static Map<String, String> repayOrderStatusMap;
+    private Map<String, String> repayOrderStatusMap;
+
+    public Map<String, String> getRepayOrderStatusMap(){
+        return this.repayOrderStatusMap;
+    }
 
     /***
      * 获取补件资料名称
