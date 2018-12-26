@@ -189,6 +189,10 @@ public class AdvertItemService {
 			}
 		});
 		
+		if (items.size() <= limit) {
+			return items;
+		}
+		
 		return items.subList(0, limit);
 	}
 	
@@ -503,12 +507,12 @@ public class AdvertItemService {
 			throw new BusinessException("广告内容不存在");
 		}
 
-		if (updateStatus.getValue() == read.getStatus()) {
-			return;
-		}
-		
 		if (0 < read.getEditCopyId()) {
 			updateEntity = getAdvertItemFromEditCopy(read.getEditCopyId());
+		}
+		
+		if (updateStatus.getValue() == updateEntity.getStatus()) {
+			return;
 		}
 		
 		checkUpdateStatus(read, updateEntity, updateStatus);
@@ -593,11 +597,11 @@ public class AdvertItemService {
 		advertItem.setEditCopyId(0L);
 		advertItem.setCreatedTime(new Date());
 		advertItem.setStatus(AdvertItemStatusEnum.NEW.getValue());
-		advertItem.setMatchConfig(Symbol.EMPTY_JSON);
-		advertItem.setShowConfig(Symbol.EMPTY_JSON_ARRAY);
-		advertItem.setStyle(Symbol.EMPTY_JSON);
-		advertItem.setEvent(Symbol.EMPTY_JSON);
-		advertItem.setExt(Symbol.EMPTY_JSON);
+		advertItem.setMatchConfig(advertItem.getMatchConfig() == null ? Symbol.EMPTY_JSON : advertItem.getMatchConfig());
+		advertItem.setShowConfig(advertItem.getShowConfig() == null ? Symbol.EMPTY_JSON_ARRAY : advertItem.getShowConfig());
+		advertItem.setStyle(advertItem.getStyle() == null ? Symbol.EMPTY_JSON : advertItem.getStyle());
+		advertItem.setEvent(advertItem.getEvent() == null ? Symbol.EMPTY_JSON : advertItem.getEvent());
+		advertItem.setExt(advertItem.getExt() == null ? Symbol.EMPTY_JSON : advertItem.getExt());
 		advertItem.setVersion(System.currentTimeMillis());
 		setActiveVersion(advertItem, advertItem.getBeginTime());
 		advertItemMapper.insertSelective(advertItem);

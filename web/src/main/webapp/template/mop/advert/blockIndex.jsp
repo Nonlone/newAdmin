@@ -71,7 +71,7 @@
                 <input type="hidden" name="code" class="control-text">
                 <div class="row">
                     <div class="control-group span8">
-                        <label class="control-label"><s>*</s>标题：</label>
+                        <label class="control-label"><s>*</s>模块名称：</label>
                         <div class="controls">
                           <input type="text" name="title" class="control-text" data-rules="{required : true}">
                         </div>
@@ -97,16 +97,18 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div id="showLimitInput" class="control-group span8">
-                        <label class="control-label"><s>*</s>展示内容数量限制:</label>
+                    <div class="control-group" id="showLimitDiv">
+                        <label class="control-label" style="width: 110px;"><s>*</s>展示内容数量限制:</label>
                         <div class="controls">
-                            <input type="text" name="showLimit" class="control-text" data-rules="{number:true, max:50}" placeholder="在前端，模块每次最多可展示的内容数量">
+                            <input type="text" id="showLimitInput"  name="showLimit" class="control-text" style="width: 260px;" data-rules="{number:true, max:50}" placeholder="在前端，模块每次最多可展示的内容数量">
                         </div>
                     </div>
-                    <div id="showTimeInput" class="control-group span8">
-                        <label class="control-label"><s>*</s>内容停留时长/s:</label>
+                </div>
+                <div class = "row">
+                    <div class="control-group" id="showTimeDiv">
+                        <label class="control-label" style="width: 110px;"><s>*</s>内容停留时长/s:</label>
                         <div class="controls">
-                            <input type="text" name="playTime" class="control-text" data-rules="{number:true, max:999}" placeholder="控制模块下的内容每隔Ns自动切换、或内容停留Ns后会自动跳过">
+                            <input type="text" id="showTimeInput" name="playTime" class="control-text" style="width: 350px;" data-rules="{number:true, max:999}" placeholder="控制模块下的内容每隔Ns自动切换、或内容停留Ns后会自动跳过">
                         </div>
                     </div>
                 </div>
@@ -147,20 +149,47 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                .removeAttr('checked')
     });
 
-    //
+    var selectAction = function(value, isAdd) {
+        var showLimitDiv = $("#showLimitDiv");
+        var showTimeDiv = $("#showTimeDiv");
+        if (1 == value) {
+            $("#showLimitInput").removeAttr("readonly");
+            if (isAdd){
+               $("#showLimitInput").val("");
+            }
+            showLimitDiv.show();
+            showTimeDiv.hide();
+        } else if(2 == value) {
+            $("#showLimitInput").removeAttr("readonly");
+            if (isAdd){
+               $("#showLimitInput").val("");
+            }
+            showLimitDiv.show();
+            showTimeDiv.show();
+        } else if(3 == value) {
+            $("#showLimitInput").removeAttr("readonly");
+            if (isAdd){
+               $("#showLimitInput").val("");
+            }
+            showLimitDiv.show();
+            showTimeDiv.show();
+        } else if(4 == value) {
+            $("#showLimitInput").attr("readonly","readonly");
+            showLimitDiv.show();
+            showTimeDiv.show();
+            if (isAdd){
+               $("#showLimitInput").val("1");
+            }
+        }
+    }
+
+    //动态展示
     $("#selectType").change(function(){
         var value = $("#selectType").val();
-        if ('1' == value) {
-            showLimitInput.removeAttr("disabled");
-        } else if('2' == value) {
-            showLimitInput.removeAttr("disabled");
-        } else if('3' == value) {
-            showLimitInput.removeAttr("disabled");
-        } else if('4' == value) {
-            showLimitInput.val(1);
-            showLimitInput.attr("disabled","disabled");
-        }
+        var isAdd = true;
+        selectAction(value, isAdd);
     });
+
     var suggestData;
 
     var loadSuggestData = function() {
@@ -452,16 +481,54 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
 
 
     var beforeUpdateShow = function(dialog,form,record){
+        var type = $("#selectType").val()
         $("#selectType").attr("disabled","disabled");
-
+        var isAdd = false;
+        selectAction(type, isAdd);
         groupIdSelect.setSelectedValue('');
         groupIdSelect.setSelectedValue(record.groupIds);
+
     };
+
     crudGrid.on('beforeAddShow', function(ev){
         $("#selectType").removeAttr("disabled");
+        var x = document.getElementById("selectType");
+        x.selectedIndex = -1;
+        $("#showLimitDiv").hide();
+        $("#showTimeDiv").hide();
     });
+
     crudGrid.on('beforeUpdateShow', beforeUpdateShow);
 
+    var validFormC  = function() {
+        var type = $("#selectType").val();
+        var limit = $("#showLimitInput").val();
+        var showTime = $("#showTimeInput").val();
+        if (type == 1) {
+            if ($.isEmptyObject(limit)) {
+                showWarning("展示内容数量不能为空");
+                return false;
+            }
+        } else if (type == 2) {
+            if ($.isEmptyObject(limit) || $.isEmptyObject(showTime)) {
+                showWarning("展示内容数量和内容停留时长不能为空");
+                return false;
+            }
+        } else if (type == 3) {
+            if ($.isEmptyObject(limit) || $.isEmptyObject(showTime)) {
+                showWarning("展示内容数量和内容停留时长不能为空");
+                return false;
+            }
+        } else if (type == 4) {
+            if ($.isEmptyObject(limit) || $.isEmptyObject(showTime)) {
+                showWarning("展示内容数量和内容停留时长不能为空");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    crudGrid.on('beforeAddOrUpdateSubmit', validFormC);
 
     function confirmDialog(title, url, confirmParams) {
         var properties = {};

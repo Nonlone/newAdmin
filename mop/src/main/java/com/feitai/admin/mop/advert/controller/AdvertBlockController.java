@@ -1,6 +1,7 @@
 package com.feitai.admin.mop.advert.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -159,9 +160,11 @@ public class AdvertBlockController extends BaseListableController<AdvertBlock>{
     @RequestMapping("preview")
     @ResponseBody
     public Object preview(Long blockId) {
+        if (blockId == null) {
+            return Collections.emptyList();
+        }
         AdvertBlock block = advertBlockService.get(blockId);
         List<AdvertItem> items = advertItemService.previewListByBlockId(blockId, block.getShowLimit());
-        
         return PreviewVo.from(items);
     }
 

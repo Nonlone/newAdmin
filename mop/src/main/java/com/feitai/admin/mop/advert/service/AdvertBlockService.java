@@ -115,7 +115,7 @@ public class AdvertBlockService {
 		advertBlock.setId(id);
 		advertBlock.setCode(String.valueOf(id));
 		advertBlock.setCreatedTime(new Date());
-		advertBlock.setPlayTime(1);
+		advertBlock.setPlayTime(advertBlock.getPlayTime());
 		advertBlock.setStatus(1);
 		advertBlock.setVersion(System.currentTimeMillis());
 		advertBlock.setUpdateTime(new Date());
