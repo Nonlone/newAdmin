@@ -23,7 +23,7 @@
         <div id="textContent" class="control-group span10">
             <label class="control-label"><s>*</s>文字内容：</label>
             <div class="controls">
-                <input name="content" type="text" class="control-text">
+                <input name="content" id="textContentInput" type="text" class="control-text">
             </div>
         </div>
 
@@ -277,6 +277,9 @@
         //动态显示组件
         var itemType = '${type}';
 
+        //是否首页公告
+        var isNOTICE = false;
+
         console.log(itemType);
         if ('NOTICE' == itemType) {
            $("#textContent").show();
@@ -349,8 +352,9 @@
             collectEvent();
             commonCollectJsonField('style');
             commonCollectJsonField('ext');
-            if ('NOTICE' == itemType) {
-                var data = $("#textContent").val();
+
+            if ('NOTICE' == itemType || isNOTICE) {
+                var data = $("#textContentInput").val();
                 if ($.isEmptyObject(data)) {
                     showWarning("公告文字内容不能为空");
                     return false;
@@ -366,7 +370,7 @@
                 return false;
             }
 
-            if ($("#btime").val() == '' && $("#etime").val() == "") {
+            if ($("#btime").val() == '' || $("#etime").val() == "") {
                 showWarning("时间不能为空");
                 return false;
             }
@@ -396,8 +400,10 @@
         select.on('change', function(ev){
               if ("首页公告" == ev.text) {
                     $("#textContent").show();
+                    isNOTICE = true;
               } else {
                     $("#textContent").hide();
+                    isNOTICE = false;
               }
         });
 

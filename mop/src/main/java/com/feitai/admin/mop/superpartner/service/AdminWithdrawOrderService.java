@@ -136,7 +136,7 @@ public class AdminWithdrawOrderService {
         updateRequest.setStatus(status);
         updateRequest.setUserId(userId);
         updateRequest.setType(type);
-        String resultStr = OkHttpClientUtils.postReturnBody(orderUpdateUrl, JSON.toJSONString(updateRequest));
+        String resultStr = OkHttpClientUtils.postReturnBody(orderUpdateUrl, updateRequest);
         return JSON.parseObject(resultStr, RpcResult.class);
     }
 
