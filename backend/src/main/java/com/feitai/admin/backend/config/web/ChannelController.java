@@ -65,6 +65,14 @@ public class ChannelController extends BaseListableController<Channel> {
     		 itemList.add(new ListItem(channelSort, channelSort));
     	}); 
     	mav.addObject("channelSortList",JSONObject.toJSONString(itemList));
+    	
+    	List<ChannelPrimary> channelPrimarys = channelPrimaryService.findAll();
+		//List<String> list=new ArrayList();
+    	StringBuffer sb=new StringBuffer();
+		for(ChannelPrimary channelPrimary:channelPrimarys){
+		    sb.append(channelPrimary.getPrimaryChannelName()).append(",");
+		}
+		mav.addObject("primaryChannelList",sb.substring(0, sb.length()-1));
 		return mav;
 	}
 
@@ -109,8 +117,8 @@ public class ChannelController extends BaseListableController<Channel> {
 	@RequestMapping(value = "/primaryList")
 	@ResponseBody
 	@LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
-	public Object primaryList(HttpServletRequest request){        
-		List<ChannelPrimary> channelPrimarys = channelPrimaryService.findAll(getSql(request, null));//channelPrimaryService.findAll();
+	public Object primaryList(){        
+		List<ChannelPrimary> channelPrimarys = channelPrimaryService.findAll();
 		List<ListItem> list = new ArrayList<ListItem>();
 		for(ChannelPrimary channelPrimary:channelPrimarys){
 			list.add(new ListItem(channelPrimary.getPrimaryChannelName(), channelPrimary.getPrimaryChannelName()));
@@ -196,17 +204,5 @@ public class ChannelController extends BaseListableController<Channel> {
 	protected DynamitSupportService<Channel> getService() {
 		return this.channelService;
 	}
-	@Override
-	protected String getSql(ServletRequest request, SelectMultiTable selectMultiTable) {
-		 selectMultiTable =SelectMultiTable.builder(ChannelPrimary.class);
-	    	StringBuffer sbSql = new StringBuffer();
-	        sbSql.append(selectMultiTable.buildSqlString());
-	        List<SearchParams> searchParamsList = bulidSearchParamsList(request);
-	        sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
-	        return sbSql.toString();
-	}
 
-	  private SelectMultiTable getSelectMultiTable() {
-	        return SelectMultiTable.builder(Channel.class);
-	    }
 }

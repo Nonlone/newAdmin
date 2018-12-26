@@ -70,13 +70,9 @@
 		<div id="addOrUpdate" class="hide">
 		<form id="addOrUpdateForm" class="form-inline">
 			<div class="row">
-				    <div id='primaryListSearch' style="display: none">
-							<input type="text" class="input-minimum control-text"  onchange="getPrimaryChannel();">
-						</div>
 				<div class="control-group span10">
 					<label class="control-label"><s>*</s>一级渠道</label>
-					<input name="mainPackgage" type="hidden" data-rules="{required:true}" id="mainPackgage" onchange="findPrimary(this.value);">					
-					 <div class="controls" id ="primaryList" name='primaryList'>
+					 <div class="controls" id ="primaryList" name='primaryList' onchange="findPrimary();" data-rules="{required:true}">
 						
 					</div>
 				</div>
@@ -146,9 +142,13 @@
 
 <script type="text/javascript">
 
-    function findPrimary(primaryName) {
+    function findPrimary() {
 
-        document.getElementById("mainPackgage").value = primaryName;
+        var primaryName=$("#primaryList div input").val();
+        if(primaryName==''){
+        	return;
+        }
+        console.log(primaryName);
         var channelIdValue,channelSortValue,code;
         if(primaryName!=null||primaryName!=""){
             $.ajax({
@@ -190,27 +190,7 @@
             elementsByTagName[i].innerText = "";
         }
     }
-    var goalSelect=null;
-function getPrimaryChannel(){
-	var primaryChannelName=$("#primaryList input").val();
-	$("#primaryList").html($("#primaryListSearch").html());
-	$("#primaryList input").val(primaryChannelName);
-	BUI.use(['bui/select','bui/data'],function (Select,Data) {
-		
-	  var selectStore = new Data.Store({
-	        url : '${ctx}/backend/channel/primaryList',
-	        params:{search_LIKE_primaryChannelName:primaryChannelName},
-	        autoLoad : true
-	    });
-	  select = new Select.Select({
-		    render:'#primaryList',
-		    valueField:'#mainPackgage',
-		    store:selectStore
-		  });
-	 select.render(); 
-	 goalSelect=select;
-	})
-}
+ 
 
 BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGrid,Select,Data,Form) {
 
@@ -237,15 +217,15 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
         url : '${ctx}/backend/channel/primaryList',
         autoLoad : true
     });
+        var primayChanneStr='${primaryChannelList}';
+        var dataItems=primayChanneStr.split(",");
+    	var select = new Select.Suggest({
+    		render:'#primaryList',
+            name:'mainPackgage',
+           data:dataItems
+    	  });
+    	select.render();
 
-     select = new Select.Select({
-        render:'#primaryList',
-        valueField:'#mainPackgage',
-       // store:selectStore
-    }); 
-     $("#primaryList").html($("#primaryListSearch").html());
-      select.render();   
-      goalSelect=select;
 
     
     
@@ -302,14 +282,14 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     // }
 
 	channelId.on('remotestart',function (ev) {
-	    debugger;
+	   // debugger;
 		var data = ev.data;
 		data.primaryCode = document.getElementById("primaryCode").value;
     })
 
 	subPackage.on('remotestart',function(ev){
         var data = ev.data;
-        data.mainPackage = document.getElementById("mainPackgage").value;
+        data.mainPackage = $("#primaryList div input").val();
     });
 
 
@@ -343,8 +323,6 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     });
 
     var beforeAddShow = function(dialog,form){
-    	 goalSelect.setSelectedValue('');
-    	 $("#primaryList input").removeAttr("readOnly");
         form.getField("channelSort").disable();
         form.getField("primaryCode").disable();
         select.enable();
@@ -354,13 +332,10 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 
 
     var beforeUpdateShow = function(dialog,form,record){
-    	$("#primaryList input").val("");
-    	getPrimaryChannel();
-    	$("#primaryList input").attr("readOnly","true");
         update = true;
-        goalSelect.setSelectedValue('');
-        goalSelect.setSelectedValue(record.mainPackgage);
-        goalSelect.disable();
+        select.setSelectedValue('');
+        select.setSelectedValue(record.mainPackgage);
+        select.disable();
         form.getField("channelId").disable();
         form.getField("channelSort").disable();
         form.getField("primaryCode").disable();
