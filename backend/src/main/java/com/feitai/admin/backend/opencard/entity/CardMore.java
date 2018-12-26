@@ -37,6 +37,5 @@ public class CardMore extends Card {
 	@One(classOfMapper = UserMapper.class, sourceField = "userId")
 	private User user;
 
-
 }
 

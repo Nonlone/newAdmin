@@ -70,12 +70,17 @@
 		<div id="addOrUpdate" class="hide">
 		<form id="addOrUpdateForm" class="form-inline">
 			<div class="row">
+				    <div id='primaryListSearch' style="display: none">
+							<input type="text" class="input-minimum control-text"  onchange="getPrimaryChannel();">
+						</div>
 				<div class="control-group span10">
 					<label class="control-label"><s>*</s>一级渠道</label>
-					<div class="controls" id ="primaryList" name='primaryList'>
-						<input name="mainPackgage" type="hidden" data-rules="{required:true}" id="mainPackgage" onchange="findPrimary(this.value);">
+					<input name="mainPackgage" type="hidden" data-rules="{required:true}" id="mainPackgage" onchange="findPrimary(this.value);">					
+					 <div class="controls" id ="primaryList" name='primaryList'>
+						
 					</div>
 				</div>
+				
 			</div>
 			<div class="row">
 				<div class="control-group span8">
@@ -185,8 +190,27 @@
             elementsByTagName[i].innerText = "";
         }
     }
-
-
+    var goalSelect=null;
+function getPrimaryChannel(){
+	var primaryChannelName=$("#primaryList input").val();
+	$("#primaryList").html($("#primaryListSearch").html());
+	$("#primaryList input").val(primaryChannelName);
+	BUI.use(['bui/select','bui/data'],function (Select,Data) {
+		
+	  var selectStore = new Data.Store({
+	        url : '${ctx}/backend/channel/primaryList',
+	        params:{search_LIKE_primaryChannelName:primaryChannelName},
+	        autoLoad : true
+	    });
+	  select = new Select.Select({
+		    render:'#primaryList',
+		    valueField:'#mainPackgage',
+		    store:selectStore
+		  });
+	 select.render(); 
+	 goalSelect=select;
+	})
+}
 
 BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGrid,Select,Data,Form) {
 
@@ -206,19 +230,23 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 	var add=false,update=false,del=false,list=false;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
 	<framwork:crudPermission resource="/backend/channel"/>
-
+		
+	
     //一级渠道选择框
-    var selectStore = new Data.Store({
+    	var selectStore = new Data.Store({
         url : '${ctx}/backend/channel/primaryList',
         autoLoad : true
     });
 
-    select = new Select.Select({
+     select = new Select.Select({
         render:'#primaryList',
         valueField:'#mainPackgage',
-        store:selectStore
-    });
-    select.render();
+       // store:selectStore
+    }); 
+     $("#primaryList").html($("#primaryListSearch").html());
+      select.render();   
+      goalSelect=select;
+
     
     
     var channelSortSelect = new Select.Select({
@@ -315,6 +343,8 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     });
 
     var beforeAddShow = function(dialog,form){
+    	 goalSelect.setSelectedValue('');
+    	 $("#primaryList input").removeAttr("readOnly");
         form.getField("channelSort").disable();
         form.getField("primaryCode").disable();
         select.enable();
@@ -324,10 +354,13 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 
 
     var beforeUpdateShow = function(dialog,form,record){
+    	$("#primaryList input").val("");
+    	getPrimaryChannel();
+    	$("#primaryList input").attr("readOnly","true");
         update = true;
-        select.setSelectedValue('');
-        select.setSelectedValue(record.mainPackgage);
-        select.disable();
+        goalSelect.setSelectedValue('');
+        goalSelect.setSelectedValue(record.mainPackgage);
+        goalSelect.disable();
         form.getField("channelId").disable();
         form.getField("channelSort").disable();
         form.getField("primaryCode").disable();
