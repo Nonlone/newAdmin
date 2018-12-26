@@ -232,7 +232,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
         valueField:'#refGroupIdsInput',
         store : groupIdSelectStore,
         width:'200',
-        multipleSelect:true
+        multipleSelect:false
     });
 
     groupIdSelect.render();
@@ -379,7 +379,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                 rtv += '<span class="grid-command btnDel">删除</span>';
             }
 
-            rtv +=  '<span class="grid-command btnCache">刷新</span>';
+            rtv +=  '<span class="grid-command btnCache" style="display:none;">刷新</span>';
 
             rtv +=  '<span class="grid-command btnManage">内容管理</span>';
 
