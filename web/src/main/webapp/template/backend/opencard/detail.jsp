@@ -400,8 +400,7 @@
                     console.log(response)
                     if(response.code==0
                         && !jQuery.isEmptyObject(response.data)){
-                        var html = template.render(resp,response.data.report);
-                        console.log(html);
+                        var html = template.render(resp,response.data.creditData);
                         $("#tobacco_feitai").html("").html(html);
                     }else{
                         BUI.use('bui/overlay', function (Overlay) {
@@ -430,8 +429,7 @@
                     console.log(response)
                     if(response.code==0
                         && !jQuery.isEmptyObject(response.data)){
-                        var html = template.render(resp,response.data.report);
-                        console.log(html);
+                        var html = template.render(resp,response.data.creditData);
                         $("#tobacco_xinyunlian").html("").html(html);
                     }else{
                         BUI.use('bui/overlay', function (Overlay) {

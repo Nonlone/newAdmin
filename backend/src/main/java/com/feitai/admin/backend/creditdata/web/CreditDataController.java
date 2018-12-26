@@ -102,11 +102,11 @@ public class CreditDataController {
 		JSONObject json =null;
          if(!Objects.isNull(creditData)){
              json = (JSONObject) JSON.toJSON(creditData);
-             JSONObject creditDataReport=(JSONObject) JSON.parse(creditData.getCreditData());
-             if(creditDataReport.getJSONObject("data")!=null){
-            	 creditDataReport=creditDataReport.getJSONObject("data");
+             JSONObject creditDataJson=(JSONObject) JSON.parse(creditData.getCreditData());
+             if(creditDataJson.getJSONObject("data")!=null){
+            	 creditDataJson=creditDataJson.getJSONObject("data");
              }
-             JSONArray orderArray=creditDataReport.getJSONArray("orders");
+             JSONArray orderArray=creditDataJson.getJSONArray("orders");
              if(orderArray==null){
             	 return null;
              }
@@ -116,9 +116,8 @@ public class CreditDataController {
             	 newOrder.remove("orderDetail");
             	 newOrderArray.add(newOrder);
              }
-             JSONObject orders=new JSONObject();
-             orders.put("orders", newOrderArray);
-             json.put("report", orders);          
+             creditDataJson.put("orders", newOrderArray);
+             json.put("creditData", creditDataJson);          
          }
          return json;
 	}
