@@ -219,7 +219,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
         operationColumnRenderer : function(value, obj){//操作列最追加按钮
         	var editStr = '';
         	if(changePasswdBtn){
-        		editStr= '<span class="grid-command" title="修改密码"><i class="icon-lock"></i></span>';
+        		editStr= '<span class="grid-command" title="修改密码"></span>';
         	}
           	return editStr;
           }
