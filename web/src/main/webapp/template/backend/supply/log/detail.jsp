@@ -26,7 +26,8 @@
                     <th width="80px">资金方</th>
                     <th width="150px">产品名称</th>
                     <th width="150px">用户ID</th>
-                    <th width="60px">发送总部次数</th>
+                    <th width="60px">可发送总部次数</th>
+                    <th width="60px">已发送总部次数</th>
                 </tr>
                 </thead>
                 <tr>
@@ -37,6 +38,7 @@
                     <td><c:if test="${not empty fundName}">${fundName}</c:if></td>
                     <td><c:if test="${not empty supplyLog.loanOrder}"><c:if test="${not empty supplyLog.loanOrder.product}">${supplyLog.loanOrder.product.name}</c:if></c:if></td>
                     <td><c:if test="${not empty supplyLog.user}">${supplyLog.user.id}</c:if></td>
+                    <td>${can2dashu}</td>
                     <td>${supply2dashu}</td>
                 </tr>
             </table>
@@ -64,7 +66,7 @@
                         </thead>
                         <c:forEach items="${his.info}" var="info" varStatus="">
                             <tr>
-                                <td><c:if test="${info.supplyType eq 1}">图片</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
+                                <td><c:if test="${info.supplyType eq 1}">影像件</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
                                 <td>${info.supplyName}</td>
                                 <td>
                                     <c:if test="${info.ifPlural eq 0}">
@@ -112,7 +114,7 @@
                     <hr/>
                     <c:forEach items="${sendHistoryList}" var="his" varStatus="">
 
-                        <div style="font-size: 15px">提交总部时间：${his.createdTime}</div>
+                        <div style="font-size: 15px">提交总部时间：${his.sendTime}</div>
                         <br/>
                         <table cellspacing="0" class="table table-bordered">
                             <thead>
@@ -124,7 +126,7 @@
                             </thead>
                             <c:forEach items="${his.info}" var="info" varStatus="">
                                 <tr>
-                                    <td><c:if test="${info.supplyType eq 1}">图片</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
+                                    <td><c:if test="${info.supplyType eq 1}">影像件</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
                                     <td>${info.supplyName}</td>
                                     <td>
                                         <c:if test="${info.ifPlural eq 0}">

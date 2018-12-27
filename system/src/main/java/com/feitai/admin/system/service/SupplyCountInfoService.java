@@ -33,12 +33,12 @@ public class SupplyCountInfoService extends DynamitSupportService<SupplyCountInf
         }
     }
 
-    public boolean checkSendDashuLog(Long supplyLogId){
+    public SupplyDashuLog checkSendDashuLog(Long supplyLogId){
         SupplyDashuLog supplyDashuLog = supplyDashuLogMapper.selectByPrimaryKey(supplyLogId);
         if (supplyDashuLog==null) {
-            return false;
+            return null;
         }else{
-            return true;
+            return supplyDashuLog;
         }
     }
 }
