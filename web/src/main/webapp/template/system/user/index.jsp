@@ -216,10 +216,11 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
         addOrUpdateFormId : 'addOrUpdateForm',
         searchBtnId :'btnSearch',
         dialogContentId : 'addOrUpdate',
+        operationwidth:'160px',
         operationColumnRenderer : function(value, obj){//操作列最追加按钮
         	var editStr = '';
         	if(changePasswdBtn){
-        		editStr= '<span class="grid-command" title="修改密码"></span>';
+        		editStr= '<span class="grid-command lock" title="修改密码">修改密码</span>';
         	}
           	return editStr;
           }
@@ -229,7 +230,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
     grid.on('cellclick',function(ev){//定义点击行的出发事件
         var sender = $(ev.domTarget); //点击的Dom
         var record = ev.record;
-        if(sender.hasClass('icon-lock')){
+        if(sender.hasClass('lock')){
         	from = saveDialog.get('form');
         	from.getField('id').set('value',record.id);
         	saveDialog.update();
