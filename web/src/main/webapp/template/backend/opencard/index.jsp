@@ -208,8 +208,8 @@
                 }},
             {title:'注册渠道',dataIndex:'registChannelId',width:'120px'},
             {title:'进件渠道',dataIndex:'applyChannelId',width:'120px'},
-            {title:'授信额度',dataIndex:'creditSum',width:'80px'},
             {title:'授信状态',dataIndex:'cardStatusName',width:'120px'},
+            {title:'授信额度',dataIndex:'creditSum',width:'80px'},
             {title:"授权项",dataIndex:'auths',width:'160px'},
             {title:'创建时间',dataIndex:'createdTime',width:'160px',renderer:BUI.Grid.Format.datetimeRenderer},
             {title:'提交审批时间',dataIndex:'submitTime',width:'160px',renderer:BUI.Grid.Format.datetimeRenderer}

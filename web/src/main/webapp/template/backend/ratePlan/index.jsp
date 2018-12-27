@@ -213,7 +213,7 @@
             operationColumnRenderer: function (value, obj) {
                 var editStr = '';
                 if (update) {
-                    editStr = '<span class="grid-command edit" title="修改">修改</span>';
+                    editStr = '<span class="grid-command edit" title="修改">编辑</span>';
                 }
                 return editStr;
             }
