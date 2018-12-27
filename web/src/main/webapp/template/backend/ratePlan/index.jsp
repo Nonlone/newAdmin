@@ -213,7 +213,7 @@
             operationColumnRenderer: function (value, obj) {
                 var editStr = '';
                 if (update) {
-                    editStr = '<span class="grid-command" title="修改"><i class="icon-edit "></i></span>';
+                    editStr = '<span class="grid-command edit" title="修改">修改</span>';
                 }
                 return editStr;
             }
@@ -223,7 +223,7 @@
         grid.on('cellclick', function (ev) {
             var sender = $(ev.domTarget); //点击的Dom
             var record = ev.record;
-            if (sender.hasClass('icon-edit')) {
+            if (sender.hasClass('edit')) {
                 addOrUpdateFunction('', record.id);
             }
         });
