@@ -106,7 +106,7 @@
 				<div class="control-group span8">
 					<label class="control-label"><s>*</s>二级渠道标识:</label>
 					<div class="controls">
-						<input id="primaryCode" name="mainPackageCode" class="input-minimum" readonly="true" data-rules="{required:false,}" type="text">
+						<input id="primaryCode" name="primaryCode" class="input-minimum" readonly="true" data-rules="{required:false,}" type="text">
 						<input id="channelId" name="channelId" type="text"
 							data-remote="${ctx}/backend/channel/checkChannelId" data-rules="{required:true,channel:true}"
 							class="input-minimum control-text">
@@ -324,7 +324,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 
     var beforeAddShow = function(dialog,form){
         form.getField("channelSort").disable();
-        form.getField("mainPackageCode").disable();
+        form.getField("primaryCode").disable();
         select.enable();
         update = false;
     };
@@ -333,12 +333,11 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 
     var beforeUpdateShow = function(dialog,form,record){
         update = true;
-        select.setSelectedValue('');
-        select.setSelectedValue(record.mainPackgage);
+        findPrimary();
         select.disable();
         form.getField("channelId").disable();
         form.getField("channelSort").disable();
-        form.getField("mainPackageCode").disable();
+        form.getField("primaryCode").disable();
     };
 
     crudGrid.on('beforeUpdateShow', beforeUpdateShow);
