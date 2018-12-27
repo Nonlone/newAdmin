@@ -8,6 +8,7 @@ import com.feitai.admin.backend.properties.AppProperties;
 import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.backend.supply.entity.SupplyLogMore;
 import com.feitai.admin.backend.supply.service.SupplyLogService;
+import com.feitai.admin.backend.supply.service.SupplyRequirementService;
 import com.feitai.admin.backend.supply.vo.LoanSupplyInfo;
 import com.feitai.admin.backend.supply.vo.PicturesInfo;
 import com.feitai.admin.backend.supply.vo.SupplyLog2OrderCenterRequest;
@@ -67,6 +68,9 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
 
     @Autowired
     private AppProperties appProperties;
+
+    @Autowired
+    private SupplyRequirementService supplyRequirementService;
 
     private final static String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
@@ -258,6 +262,17 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
         List<Map<String,Object>> historyList = new ArrayList<>();
         List<Map<String,Object>> sendHistoryList = new ArrayList<>();
         for (LoanSupplyLog loanSupplyLog:supplyLogHistorys){
+            //添加原因
+            List<JSONObject> list = JSON.parseObject(loanSupplyLog.getSupplyInfo(), List.class);
+            List<JSONObject> listnew = new ArrayList<>();
+            for (JSONObject json:list) {
+                String supplyCode = (String)json.get("supplyCode");
+                String reason = supplyRequirementService.findReasonByLoanOrderAndCount(loanOrder.getId(),loanSupplyLog.getSupplyCount(),supplyCode);
+                json.put("reason",reason);
+                listnew.add(json);
+            }
+            loanSupplyLog.setSupplyInfo(JSON.toJSONString(listnew));
+
             Map<String,Object> historyInfo = new HashMap<>();
             historyInfo.put("id",loanSupplyLog.getId());
             historyInfo.put("createdTime",DateUtils.format(loanSupplyLog.getCreatedTime(),DATA_FORMAT));

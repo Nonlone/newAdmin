@@ -61,6 +61,7 @@
                             <tr style="background-color: #F2F2F2">
                                 <th width="40px">补件类型</th>
                                 <th width="50px">补件要素</th>
+                                <th width="60px">补件原因</th>
                                 <th width="520px">补件内容</th>
                             </tr>
                         </thead>
@@ -68,6 +69,7 @@
                             <tr>
                                 <td><c:if test="${info.supplyType eq 1}">影像件</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
                                 <td>${info.supplyName}</td>
+                                <td>${info.reason}</td>
                                 <td>
                                     <c:if test="${info.ifPlural eq 0}">
                                         <c:if test="${info.supplyType eq 1}">
@@ -121,6 +123,7 @@
                             <tr style="background-color: #F2F2F2">
                                 <th width="40px">补件类型</th>
                                 <th width="50px">补件要素</th>
+                                <th width="60px">补件原因</th>
                                 <th width="520px">补件内容</th>
                             </tr>
                             </thead>
@@ -128,6 +131,7 @@
                                 <tr>
                                     <td><c:if test="${info.supplyType eq 1}">影像件</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
                                     <td>${info.supplyName}</td>
+                                    <td>${info.reason}</td>
                                     <td>
                                         <c:if test="${info.ifPlural eq 0}">
                                             <c:if test="${info.supplyType eq 1}">
