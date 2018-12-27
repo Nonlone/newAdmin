@@ -2,14 +2,14 @@ package com.feitai.admin.mop.superpartner.vo;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.feitai.admin.core.annotation.NoHyposensitization;
+import com.feitai.base.annotion.NoKeyFilter;
 import lombok.Data;
 
 /**
  * @Author qiuyunlong
  */
 @Data
-@NoHyposensitization
+@NoKeyFilter
 public class OrderDetailInfo {
     private Long partnerUserId;
     private String name;
