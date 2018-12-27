@@ -110,7 +110,7 @@
                         return '';
                     }
                 }},
-            {title:'新网补件日期（收到总部补件请求时间）',dataIndex:'createdTime',width:'270px',renderer:BUI.Grid.Format.dateRenderer},
+            {title:'新网补件日期（收到总部补件请求时间）',dataIndex:'createdTime',width:'270px',renderer:BUI.Grid.Format.datetimeRenderer},
             {title:'订单当前补件次数',dataIndex:'supplyCount',width:'135px'},
             {title:'资金方',dataIndex:'fundName',width:'135px'},
             {title:'产品名称',dataIndex:'loanOrder',width:'135px',renderer:function (value) {

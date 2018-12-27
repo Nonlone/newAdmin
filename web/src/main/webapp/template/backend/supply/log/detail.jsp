@@ -21,12 +21,12 @@
                 <tr style="background-color: #F2F2F2">
                     <th width="150px">客户姓名</th>
                     <th width="155px">注册手机号</th>
-                    <th width="100px">提现金额</th>
-                    <th width="190px">最近提交补件日期</th>
+                    <th width="100px">申请提现金额</th>
+                    <th width="190px">客户提交补件时间</th>
                     <th width="80px">资金方</th>
                     <th width="150px">产品名称</th>
-                    <th width="150px">用户ID</th>
-                    <th width="60px">可发送总部次数</th>
+                    <th width="150px">客户ID</th>
+                    <th width="60px">允许再补件次数</th>
                     <th width="60px">已发送总部次数</th>
                 </tr>
                 </thead>

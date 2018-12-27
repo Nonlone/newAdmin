@@ -117,9 +117,9 @@
                     return '';
                 }
             }},
-        {title:'客户提交补件时间',dataIndex:'createdTime',width:'135px',renderer:BUI.Grid.Format.dateRenderer},
-		{title:'大数可补件次数',dataIndex:'can2dashu',width:'100px'},
-		{title:'未补件记录数',dataIndex:'remain',width:'100px'},
+        {title:'客户提交补件时间',dataIndex:'createdTime',width:'270px',renderer:BUI.Grid.Format.datetimeRenderer},
+		{title:'允许再补件次数',dataIndex:'can2dashu',width:'100px'},
+		{title:'待发送补件数',dataIndex:'remain',width:'100px'},
 		 {title:'资金方',dataIndex:'fundName',width:'135px'},
 		 {title:'产品名称',dataIndex:'loanOrder',width:'135px',renderer:function (value) {
                  if(value){
