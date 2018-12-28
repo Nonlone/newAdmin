@@ -223,7 +223,6 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     		render:'#primaryList',
             name:'mainPackgage',
            	data:dataItems,
-            :"overflow:auto;height:300px"
     	  });
     	select.render();
 
