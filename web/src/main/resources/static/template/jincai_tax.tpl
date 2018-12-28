@@ -225,8 +225,8 @@
                     <li class="table-cell">{{$value.record.rlZc}}</li>
                     <li class="table-cell">运输及仓储支出(万元)</li>
                     <li class="table-cell">{{$value.record.ysCcZc}}</li>
-                    <li class="table-cell"></li>
-                    <li class="table-cell"></li>
+                    <li class="table-cell">各费用总计(万元)</li>
+                    <li class="table-cell">{{if $value.record.sfZc+$value.record.dfZc+$value.record.rqZc+$value.record.rlZc+$value.record.ysCcZc}}{{$value.record.sfZc+$value.record.dfZc+$value.record.rqZc+$value.record.rlZc+$value.record.ysCcZc}}{{/if}}</li>
                 </ul>
             </div>
         </div>

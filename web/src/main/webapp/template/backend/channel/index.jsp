@@ -222,7 +222,8 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     	var select = new Select.Suggest({
     		render:'#primaryList',
             name:'mainPackgage',
-           data:dataItems
+           	data:dataItems,
+            :"overflow:auto;height:300px"
     	  });
     	select.render();
 
