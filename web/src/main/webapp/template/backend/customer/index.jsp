@@ -94,7 +94,7 @@
         <framwork:crudPermission resource="/backend/customer"/>
 
         var columns = [
-            {title: '客户Id', dataIndex: 'userId', width: '200px'},
+            {title: '客户Id', dataIndex: 'userId', width: '150px'},
             {title: '姓名', dataIndex: 'name', width: '130px'},
             {title: '身份证号', dataIndex: 'idCard', width: '200px'},
             {title: '性别', dataIndex: 'sex', width: '130px'},

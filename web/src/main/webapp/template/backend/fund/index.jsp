@@ -305,6 +305,7 @@
             showUpdateBtn: true,
             showRemoveBtn: false,
             addOrUpdateFormId: 'addOrUpdateForm',
+            operationwidth:'180px',
             dialogContentId: 'addOrUpdate',
             operationColumnRenderer: function (value, obj) {//操作追加
                 var operatorHtml = '';

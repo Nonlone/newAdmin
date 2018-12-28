@@ -171,15 +171,15 @@
         selectProduct.render();
 
         var columns = [
-            {title:'订单号',dataIndex:'id',width:'180px'},
-            {title:'客户姓名',dataIndex:'idCard',width:'80px',renderer: function (value) {
+            {title:'订单号',dataIndex:'id',width:'145px'},
+            {title:'客户姓名',dataIndex:'idCard',width:'70px',renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '<span style="color:#ff9955">未填写</span>';
                     }
                 }},
-            {title:'客户ID',dataIndex:'userId',width:'180px'},
+            {title:'客户ID',dataIndex:'userId',width:'150px'},
             {title:'注册手机号',dataIndex:'user',width:'100px',renderer:function (value) {
                     if(value){
                         return value.phone;
@@ -187,7 +187,7 @@
                         return "";
                     }
                 }},
-            {title:'身份证',dataIndex:'idCard',width:'150px',renderer: function (value) {
+            {title:'身份证',dataIndex:'idCard',width:'120px',renderer: function (value) {
                     if(value){
                         return value.idCard;
                     }else{
@@ -206,13 +206,13 @@
                     }
                     return "";
                 }},
-            {title:'注册渠道',dataIndex:'registChannelId',width:'120px'},
-            {title:'进件渠道',dataIndex:'applyChannelId',width:'120px'},
-            {title:'授信状态',dataIndex:'cardStatusName',width:'120px'},
+            {title:'注册渠道',dataIndex:'registChannelId',width:'100px'},
+            {title:'进件渠道',dataIndex:'applyChannelId',width:'100px'},
+            {title:'授信状态',dataIndex:'cardStatusName',width:'100px'},
             {title:'授信额度',dataIndex:'creditSum',width:'80px'},
-            {title:"授权项",dataIndex:'auths',width:'160px'},
-            {title:'创建时间',dataIndex:'createdTime',width:'160px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'提交审批时间',dataIndex:'submitTime',width:'160px',renderer:BUI.Grid.Format.datetimeRenderer}
+            {title:"授权项",dataIndex:'auths',width:'140px'},
+            {title:'创建时间',dataIndex:'createdTime',width:'140px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'提交审批时间',dataIndex:'submitTime',width:'140px',renderer:BUI.Grid.Format.datetimeRenderer}
         ];
 
         var crudGrid = new CrudGrid({
