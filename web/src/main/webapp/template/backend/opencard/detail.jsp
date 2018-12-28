@@ -224,8 +224,6 @@
                 <c:if test="${card.status.value!=-1&&card.status.value!=0}">
                     <li id="li_bond" data-callback="sauron_daihoubang"><a href="javascript:void(0)" onclick="load(this,'sauron_daihoubang')">贷后邦报告</a></li>
                 </c:if>
-                <li id="li_feitai" data-callback="tobacco_feitai"><a href="javascript:void(0)" onclick="load(this,'tobacco_feitai')">自建烟草</a></li>
-                <li id="li_xinyunlian" data-callback="tobacco_xinyunlian"><a href="javascript:void(0)" onclick="load(this,'tobacco_xinyunlian')">新云联烟草</a></li>
             </ul>
         </c:if>
         <div id="tabContext" style="margin-bottom: 10px;">
@@ -459,7 +457,7 @@
             });
         });
     }
-    function tobacco_xinyunlian(){
+    function xyl_tobacco_xinyunlian(){
         getCreditData("/static/template/tobacco_xinyunlian.tpl",function(resp){
             $.ajax({
                 type: "post",
@@ -471,7 +469,7 @@
                     if(response.code==0
                         && !jQuery.isEmptyObject(response.data)){
                         var html = template.render(resp,response.data.creditData);
-                        $("#tobacco_xinyunlian").html("").html(html);
+                        $("#xyl_tobacco_xinyunlian").html("").html(html);
                     }else{
                         BUI.use('bui/overlay', function (Overlay) {
                             new Overlay.Dialog({
