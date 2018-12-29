@@ -31,6 +31,24 @@ public abstract class BaseListableController<T> extends BaseController {
         return getSql(request, selectMultiTable, null);
     }
 
+    protected String getSql(SearchParams search,ServletRequest request, SelectMultiTable selectMultiTable) {
+        return getSql(search,request, selectMultiTable, null);
+    }
+
+    protected String getSql(SearchParams search,ServletRequest request, SelectMultiTable selectMultiTable, List<SearchParams> extraSearchParamsList) {
+
+        StringBuffer sbSql = new StringBuffer();
+        sbSql.append(selectMultiTable.buildSqlString());
+        List<SearchParams> searchParamsList = bulidSearchParamsList(request);
+        searchParamsList.add(search);
+        if (!CollectionUtils.isEmpty(extraSearchParamsList)) {
+            searchParamsList.addAll(extraSearchParamsList);
+        }
+        sbSql.append(getService().buildSqlWhereCondition(searchParamsList, SelectMultiTable.MAIN_ALAIS));
+        sbSql.append(" GROUP BY " + SelectMultiTable.MAIN_ALAIS + ".id ");
+        return sbSql.toString();
+    }
+
     protected String getSql(ServletRequest request, SelectMultiTable selectMultiTable, List<SearchParams> extraSearchParamsList) {
         StringBuffer sbSql = new StringBuffer();
         sbSql.append(selectMultiTable.buildSqlString());
@@ -104,6 +122,7 @@ public abstract class BaseListableController<T> extends BaseController {
         return list(request, sqlHead, SelectMultiTable.MAIN_ALAIS, "id");
     }
 
+
     /**
      * Sql 搜索并分页
      *
@@ -119,7 +138,6 @@ public abstract class BaseListableController<T> extends BaseController {
         List<T> resultList = getService().findAllBySqls(sqls, pageNo, pageSize);
         return buildPage(resultList, totalSize, pageNo, pageSize);
     }
-
 
     protected Page<T> list(ServletRequest request, String sqlHead, String sqlMainTableAlias, String sqlHeadId) {
         int pageNo = PageBulider.getPageNo(request);
@@ -217,6 +235,19 @@ public abstract class BaseListableController<T> extends BaseController {
         page.setLast(pageNo == page.getTotalPages());
         page.setNext(!page.isFirst());
         page.setPrevious(!page.isLast());
+        return page;
+    }
+
+    protected <K> Page<K> buildPage(PageInfo<K> results, int pageNo, int pageSize) {
+        Page<K> page = new Page(results.getList());
+        page.setTotalPages(results.getPages());
+        page.setTotalElements(results.getTotal());
+        page.setNumber(pageNo);
+        page.setSize(pageSize);
+        page.setFirst(results.isIsFirstPage());
+        page.setLast(results.isIsLastPage());
+        page.setNext(results.isHasNextPage());
+        page.setPrevious(results.isHasPreviousPage());
         return page;
     }
 }

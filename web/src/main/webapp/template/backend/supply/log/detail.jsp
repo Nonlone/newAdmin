@@ -41,64 +41,134 @@
                 </tr>
             </table>
         <hr/>
-        <h3 style="background-color:#ADADAD" ><span style="font-size:20px">补件历史记录</span></h3>
-        <hr/>
-        <c:forEach items="${history}" var="his" varStatus="">
+        <div>
+            <ul id="tabHeader" class="nav-tabs">
+                <li id="li_detail" class="active"><a href="javascript:void(0)" onclick="load(this,'detail')">补件信息</a></li>
+                <li id="li_log"><a href="javascript:void(0)" onclick="load(this,'log')">补件记录</a></li>
+            </ul>
+            <div id="tabContext" style="margin-bottom: 10px;">
+                <div id="detail">
+                    <h3 style="background-color:#ADADAD" ><span style="font-size:20px">补件信息</span></h3>
+                    <hr/>
+                    <c:forEach items="${history}" var="his" varStatus="">
 
-            <div style="font-size: 15px">提交补件时间：${his.createdTime}<button  name="sendDashu"  style="width: 60px;height: 30px;float: right" hidden="hidden" onclick="supply2dashu('${his.id}');"><span style="color: #ac2925;size: 30px">发送总部</span></button></div>
-            <br/>
-            <table cellspacing="0" class="table table-bordered">
-                <thead>
-                    <tr style="background-color: #F2F2F2">
-                        <th width="40px">补件类型</th>
-                        <th width="50px">补件要素</th>
-                        <th width="520px">补件内容</th>
-                    </tr>
-                </thead>
-                <c:forEach items="${his.info}" var="info" varStatus="">
-                    <tr>
-                        <td><c:if test="${info.supplyType eq 1}">图片</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
-                        <td>${info.supplyName}</td>
-                        <td>
-                            <c:if test="${info.ifPlural eq 0}">
-                                <c:if test="${info.supplyType eq 1}">
-                                    <div style="float: left;margin: auto 20px;">
-                                        <div>
-                                            <img class="dialog" style="max-height: 70px;max-width: 100px;"
-                                                 src="${info.supplyInfo}">
-                                        </div>
-                                    </div>
-                                </c:if>
-                                <c:if test="${info.supplyType eq 2}">
-                                    ${info.supplyInfo}
-                                </c:if>
-                            </c:if>
-                            <c:if test="${info.ifPlural eq 1}">
-                                <c:forEach items="${his.info}">
-                                    <c:if test="${info.supplyType eq 1}">
-                                        <c:forEach items="${info.supplyInfos}" var="supImg">
+                    <div style="font-size: 15px">客户提交补件时间：${his.createdTime}<button  name="sendDashu"  style="width: 60px;height: 30px;float: right" hidden="hidden" onclick="supply2dashu('${his.id}');"><span style="color: #ac2925;size: 30px">发送总部</span></button></div>
+                    <br/>
+                    <table cellspacing="0" class="table table-bordered">
+                        <thead>
+                            <tr style="background-color: #F2F2F2">
+                                <th width="40px">补件类型</th>
+                                <th width="50px">补件要素</th>
+                                <th width="520px">补件内容</th>
+                            </tr>
+                        </thead>
+                        <c:forEach items="${his.info}" var="info" varStatus="">
+                            <tr>
+                                <td><c:if test="${info.supplyType eq 1}">图片</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
+                                <td>${info.supplyName}</td>
+                                <td>
+                                    <c:if test="${info.ifPlural eq 0}">
+                                        <c:if test="${info.supplyType eq 1}">
                                             <div style="float: left;margin: auto 20px;">
                                                 <div>
                                                     <img class="dialog" style="max-height: 70px;max-width: 100px;"
-                                                         src="${supImg}">
+                                                         src="${info.supplyInfo}">
                                                 </div>
                                             </div>
-                                        </c:forEach>
+                                        </c:if>
+                                        <c:if test="${info.supplyType eq 2}">
+                                            ${info.supplyInfo}
+                                        </c:if>
+                                    </c:if>
+                                    <c:if test="${info.ifPlural eq 1}">
+                                        <c:forEach items="${his.info}">
+                                            <c:if test="${info.supplyType eq 1}">
+                                                <c:forEach items="${info.supplyInfos}" var="supImg">
+                                                    <div style="float: left;margin: auto 20px;margin-top: 20px">
+                                                        <div>
+                                                            <img class="dialog" style="max-height: 70px;max-width: 100px;"
+                                                                 src="${supImg}">
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
 
-                                    </c:if>
-                                    <c:if test="${info.supplyType eq 2}">
-                                        <c:forEach items="${info.supplyInfos}" var="supText">
-                                            ${supText}
+                                            </c:if>
+                                            <c:if test="${info.supplyType eq 2}">
+                                                <c:forEach items="${info.supplyInfos}" var="supText">
+                                                    ${supText}
+                                                </c:forEach>
+                                            </c:if>
                                         </c:forEach>
                                     </c:if>
-                                </c:forEach>
-                            </c:if>
-                        </td>
-                    </tr>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                    <hr/>
                 </c:forEach>
-            </table>
-            <hr/>
-        </c:forEach>
+                </div>
+                <div id="log" style="display:none;">
+                    <h3 style="background-color:#ADADAD" ><span style="font-size:20px">补件记录</span></h3>
+                    <hr/>
+                    <c:forEach items="${sendHistoryList}" var="his" varStatus="">
+
+                        <div style="font-size: 15px">提交总部时间：${his.createdTime}</div>
+                        <br/>
+                        <table cellspacing="0" class="table table-bordered">
+                            <thead>
+                            <tr style="background-color: #F2F2F2">
+                                <th width="40px">补件类型</th>
+                                <th width="50px">补件要素</th>
+                                <th width="520px">补件内容</th>
+                            </tr>
+                            </thead>
+                            <c:forEach items="${his.info}" var="info" varStatus="">
+                                <tr>
+                                    <td><c:if test="${info.supplyType eq 1}">图片</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
+                                    <td>${info.supplyName}</td>
+                                    <td>
+                                        <c:if test="${info.ifPlural eq 0}">
+                                            <c:if test="${info.supplyType eq 1}">
+                                                <div style="float: left;margin: auto 20px;">
+                                                    <div>
+                                                        <img class="dialog" style="max-height: 70px;max-width: 100px;"
+                                                             src="${info.supplyInfo}">
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                            <c:if test="${info.supplyType eq 2}">
+                                                ${info.supplyInfo}
+                                            </c:if>
+                                        </c:if>
+                                        <c:if test="${info.ifPlural eq 1}">
+                                            <c:forEach items="${his.info}">
+                                                <c:if test="${info.supplyType eq 1}">
+                                                    <c:forEach items="${info.supplyInfos}" var="supImg">
+                                                        <div style="float: left;margin: auto 20px; margin-top: 20px">
+                                                            <div>
+                                                                <img class="dialog" style="max-height: 70px;max-width: 100px;"
+                                                                     src="${supImg}">
+                                                            </div>
+                                                        </div>
+                                                    </c:forEach>
+
+                                                </c:if>
+                                                <c:if test="${info.supplyType eq 2}">
+                                                    <c:forEach items="${info.supplyInfos}" var="supText">
+                                                        ${supText}
+                                                    </c:forEach>
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:if>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                        <hr/>
+                    </c:forEach>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -106,6 +176,14 @@
 </div>
 </body>
 <script type="text/javascript">
+
+    function load(ele, obj) {
+        // 样式控制
+        var $ele = $(ele);
+        $ele.parent().addClass("active").siblings().removeClass("active");
+        var $content = $("#" + obj);
+        $content.show().siblings().hide();
+    }
 
     <shiro:hasPermission name="/backend/supply/log:supply">
     debugger;
@@ -128,6 +206,7 @@
                     success:function(result){
                         if(result.code==0){
                             BUI.Message.Alert(result.message,function(){
+                                window.location.reload();
                             },'success');
                         }else if(result.code==3){
                             BUI.Message.Alert(result.message,function(){

@@ -67,7 +67,7 @@
         <input type="hidden" id="userId" value="">
 
 		<div id="changeLog" class="hide">
-            <span id="changeLogLink" class="page-action grid-command" data-href="${ctx}/admin/mop/partner/changeLog/list/index" title="变更记录">查看变更记录</span>
+            <span id="changeLogLink" class="page-action grid-command" data-href="${ctx}/mop/partner/changeLog/list/index" title="变更记录">查看变更记录</span>
         </div>
 
         <div id="content" class="hide">
@@ -134,7 +134,7 @@
 			//定义页面权限
 			var add = false, update = false, list = false, del = false;
 			//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-			<framwork:crudPermission resource="/admin/mop/partner"/>
+			<framwork:crudPermission resource="/mop/partner"/>
 
             //查看变更记录
             $("#btnLogInfo").click(function(){
@@ -240,17 +240,12 @@
 			var crudGrid = new CrudGrid({
 				entityName : '账号配置信息',
 				pkColumn : 'userId',//主键
-				storeUrl : '${ctx}/admin/mop/partner/list',
+				storeUrl : '${ctx}/mop/partner/list',
 				columns : columns,
 				showAddBtn : false,
 				showUpdateBtn : false,
 				showRemoveBtn : false,
 				gridPlugins : [ colGroup, Grid.Plugins.AutoFit ],
-				storeCfg:{
-                    proxy : {
-                      pageStart : 1
-                    }
-                },
 				gridCfg : {
 					innerBorder : true
 				}
@@ -327,7 +322,7 @@
                   settle.period.push(period);
                   data.settle = JSON.stringify(settle);
                   $.ajax({
-                      url : '${ctx}/admin/mop/partner/rate/update',
+                      url : '${ctx}/mop/partner/rate/update',
                       async : false,
                       type : "POST",
                       data : data,
@@ -362,7 +357,7 @@
                     var data = {};
                     data.userId = $("#userId").val();
                     $.ajax({
-                        url : '${ctx}/admin/mop/partner/type/update',
+                        url : '${ctx}/mop/partner/type/update',
                         async : false,
                         type : "POST",
                         data : data,

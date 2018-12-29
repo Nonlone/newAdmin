@@ -386,18 +386,22 @@ define('bui/ux/crudgrid', ['bui/common', 'bui/grid', 'bui/form', 'bui/data', 'bu
                         showUpdateBtun = _self.get('showUpdateBtn'),
                         showRemoveOperation = _self.get('showRemoveOperation'),
                         operationColumnCfg = _self.get('operationColumnCfg'),
-                        cfg = {title: '操作', dataIndex: '', sortable: false};
+                        operationwidth = _self.get('operationwidth');
+                    var cfg = {title: '操作', dataIndex: '' , sortable: false};
+                    if(operationwidth){
+                        var cfg = {title: '操作', dataIndex: '', width:operationwidth , sortable: false};
+                    }
                     if (operationColumnCfg) {
                         cfg = BUI.merge(cfg, operationColumnCfg);
                     }
                     var operationColumn = new Grid.Column(cfg);
                     var rendererStr = '';
                     if (showUpdateBtun) {
-                        rendererStr += '<span class="grid-command" title="编辑"><i class="icon-edit btn-edit"></i></span>';
+                        rendererStr += '<span class="grid-command btn-edit" title="编辑">编辑</span>';
                     }
 
                     if ((showRemoveOperation.length == 0 && showRemoveBtn) || showRemoveOperation) {
-                        rendererStr += '<span class="grid-command" title="删除"><i class="icon-trash btn-del"></i></span>';
+                        rendererStr += '<span class="grid-command btn-del" title="删除">删除</span>';
                     }
 
                     if (rendererStr.length > 0 || operationColumnRenderer) {

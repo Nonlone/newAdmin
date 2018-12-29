@@ -15,19 +15,19 @@
 			<div class="control-group span7">
 				<label class="control-label">订单号:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_loanOrderId">
+					<input type="text" data-tip="{text : '请输入订单号'}" class="input-normal control-text" name="search_LIKE_loanOrderId">
 				</div>
 			</div>
 			<div class="control-group span7">
-				<label class="control-label">身份证号:</label>
+				<label class="control-label">客户ID:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_idcard.idCard">
+					<input type="text" data-tip="{text : '请输入客户ID'}" class="input-normal control-text" name="search_LIKE_userId">
 				</div>
 			</div>
 				<div class="control-group span7">
 					<label class="control-label">客户姓名:</label>
 					<div class="controls">
-						<input type="text" class="input-normal control-text"
+						<input type="text" data-tip="{text : '请输入客户姓名'}" class="input-normal control-text"
 							name="search_LIKE_idcard.name">
 					</div>
 				</div>
@@ -38,15 +38,29 @@
 							name="search_EQ_loanOrder.productId">
 					</div>
 				</div>
-				<div class="control-group span_width">
-					<label class="control-label">还款日后3天:</label>
-					<div class="controls bui-form-group height_auto">
-						<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-						<input type="text" class="calendar" onchange="changeDueDate(this)"
-							data-tip="{text : ''}"> <input id="repayPlan_dueDate"
-							type="hidden" name="search_EQ_dueDate">
-					</div>
+			<div class="control-group span7">
+				<label class="control-label">资金方:</label>
+				<div id="selectPayFund" class="controls">
+					<input id="searchPayFund" type="hidden" name="search_EQ_loanOrder.payFundId">
 				</div>
+			</div>
+
+			<div class="control-group span_width">
+				<label class="control-label">还款日:</label>
+				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
+					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
+					<input id="start_dueDate" readonly="true" type="text" class="calendar-monthpicker" name="search_GTE_dueDateFormat" data-tip="{text : '开始日期'}"> <span>
+             - </span><input id="end_dueDate" readonly="true"  name="search_LTE_dueDateFormat" type="text" class="calendar-monthpicker" data-tip="{text : '结束日期'}">
+				</div>
+			</div>
+			<div class="control-group span7">
+				<label class="control-label">逾期天数:</label>
+				<div class="controls">
+					<input type="text" class="input-normal control-text" onchange="changeOverdueDays(this)" >
+				</div>
+				<input id="search_LTE_overdueDays" type="hidden" class="input-normal control-text" value="3"   name="search_LTE_overdueDays">
+				<input type="hidden" class="input-normal control-text" value="0"  name="search_GT_overdueDays">
+			</div>
 				<div class="span1 offset2">
 					<button type="button" id="btnSearch" class="button button-primary">搜索</button>
 				</div>
@@ -58,9 +72,9 @@
 			</div>
 			</div>
 			<input type="hidden" name="search_EQ_paidOff" value="0">
-			<input id="GTE_dueDate" type="hidden"
-				name="search_GTE_dueDate"> <input
-				id="LTE_dueDate" type="hidden" name="search_LTE_dueDate">
+			<!-- <input id="GTE_dueDate" type="hidden" name="search_GTE_dueDate">
+			<input id="LTE_dueDate" type="hidden" name="search_LT_dueDate"> -->
+			<input id="today" type="hidden" name="search_LT_dueDate">
 		</form>
 		<!-- 修改新增 -->
 		<div id="addOrUpdate" class="hide"></div>
@@ -92,9 +106,12 @@
 			}
 			return format;
 		};
+		
 		var oneday = 1000 * 60 * 60 * 24;
 		var today = Date.now();
 		var date = new Date(today - oneday * 3);
+		$("#today").val(new Date(today).format("yyyy-MM-dd"));
+		
 		$("#GTE_dueDate").val(date.format("yyyy-MM-dd"));
 		$("#LTE_dueDate").val(new Date(today).format("yyyy-MM-dd"));
 		function changeDueDate(obj) {
@@ -125,8 +142,8 @@
 			//$("#repayPlan_dueDate").val(new Date(today+oneday*5));
 		}
 
-		BUI.use([ 'bui/ux/crudgrid', 'bui/select', 'bui/data' ], function(
-				CrudGrid, Select, Data) {
+		BUI.use([ 'bui/ux/crudgrid', 'bui/select', 'bui/data','bui/calendar' ], function(
+				CrudGrid, Select, Data,Calendar) {
 
 			selectProduct = new Select.Select({
 				render : '#selectProduct',
@@ -134,6 +151,18 @@
 				items : JSON.parse('${productList}')
 			});
 			selectProduct.render();
+			
+			  var selectFundStore = new Data.Store({
+		            url : '${ctx}/backend/fund/getFundList',
+		            autoLoad : true
+		        });
+
+		        selectFundStatus = new Select.Select({
+		            render:'#selectPayFund',
+		            valueField:'#searchPayFund',
+		            store:selectFundStore
+		        });
+		        selectFundStatus.render();
 
 			selectRepayDay = new Select.Select({
 				render : '#selectRepayDay',
@@ -156,8 +185,9 @@
 			//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
 			<framwork:crudPermission resource="/backend/loan/debt"/>
 
-			var columns = [ {
-				title : '用户ID',
+			var columns = [ 
+			                {
+				title : '客户ID',
 				dataIndex : 'userId',
 				width : '166px'
 			}, {
@@ -224,6 +254,17 @@
 					}
 				}
 			}, {
+				title : '逾期金额',
+				dataIndex : 'balanceAmount',
+				width : '10%',
+				renderer : function(value) {
+					if (value) {
+						return value;
+					} else {
+						return '';
+					}
+				}
+			}, {
 				title : "资金方",
 				dataIndex : "fundName",
 				width : "166px"
@@ -245,9 +286,9 @@
 				pkColumn : 'id',//主键
 				storeUrl : '${ctx}/backend/loan/debt/list',
 				columns : columns,
-				showAddBtn : add,
-				showUpdateBtn : update,
-				showRemoveBtn : del,
+				showAddBtn : false,
+				showUpdateBtn : false,
+				showRemoveBtn : false,
 				storeCfg : {//定义store的排序，如果是复合主键一定要修改
 					sortInfo : {
 						field : 'repayPlan.dueDate',//排序字段（冲突以此未标准）
@@ -256,7 +297,22 @@
 				}
 			});
 			var grid = crudGrid.get('grid');
+			
+			 var datepicker = new Calendar.DatePicker({
+		            trigger:'#start_dueDate',
+		            dateMask : 'mm-dd',
+		            autoRender : true
+		          });
+			 var datepicker1 = new Calendar.DatePicker({
+		            trigger:'#end_dueDate',
+		            dateMask : 'mm-dd',
+		            autoRender : true
+		          });
 		});
+		
+		function changeOverdueDays(obj){
+			$("#search_LTE_overdueDays").val($(obj).val());
+		}
 	</script>
 
 </body>

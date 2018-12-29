@@ -78,6 +78,7 @@
         <module>wisdomTooth</module>
         <module>mop</module>
         <module>message-center</module>
+        <module>channel</module>
     </modules>
 
     <build>

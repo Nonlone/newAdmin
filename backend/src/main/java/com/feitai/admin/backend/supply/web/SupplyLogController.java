@@ -69,7 +69,7 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
 
     private final static String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private final static String PHOTE_TYPE = "PNG";
+    private final static String PHOTE_TYPE = "JPG";
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -135,12 +135,15 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
             restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
             ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getSupply2OrderCenter(), request, String.class);
             JSONObject jsonObject = JSON.parseObject(jsonString.getBody());
-            if(jsonObject.get("code").equals("1")){
+            if(true){
                 supplyCountInfo.setUpdateTime(new Date());
                 supplyCountInfo.setCount(supplyCountInfo.getCount()+1);
-                supplyCountInfoService.save(supplyCountInfo);
+                supplyCountInfoService.saveAndLog(supplyCountInfo,Long.parseLong(supplyLogId));
                 return new BackendResponse(0,"成功");
             }else{
+                if(jsonObject.get("code").equals("1")){
+                    return new BackendResponse(1,"系统添加记录失败！但已发送总部成功");
+                }
                 log.error(String.format("order-center can't not send supplyLogPhotoInfo to dashu,supplyLog[id:{%s}]",supplyLogId));
                 return new BackendResponse(1,"订单中心发送总部失败！");
             }
@@ -160,7 +163,7 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
         int pageSize = PageBulider.getPageSize(request);
         List<SupplyLogMore> result2PageList = new ArrayList<>();
         Map<Long,SupplyLogMore> map = new HashMap<>();
-        List<SupplyLogMore> resultList = getService().findAllBySqls(getCommonSqls(request,getSelectMultiTable().buildSqlString()), pageNo, pageSize);
+        List<SupplyLogMore> resultList = getService().findAll(getCommonSqls(request,getSelectMultiTable().buildSqlString())+ " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC");
         Set<Long> set = new HashSet<>();
         for (SupplyLogMore supplyLogMore:resultList){
             if(set.add(supplyLogMore.getLoanOrderId())){
@@ -236,6 +239,7 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
         //历史补件记录
         List<LoanSupplyLog> supplyLogHistorys = supplyLogService.findByLoanOrder(supplyLog.getLoanOrderId());
         List<Map<String,Object>> historyList = new ArrayList<>();
+        List<Map<String,Object>> sendHistoryList = new ArrayList<>();
         for (LoanSupplyLog loanSupplyLog:supplyLogHistorys){
             Map<String,Object> historyInfo = new HashMap<>();
             historyInfo.put("id",loanSupplyLog.getId());
@@ -248,9 +252,14 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
                 handleInfo.add(supplyLogInfo);
             }
             historyInfo.put("info", info);
-            historyList.add(historyInfo);
+            if(supplyCountInfoService.checkSendDashuLog(loanSupplyLog.getId())){
+                sendHistoryList.add(historyInfo);
+            }else{
+                historyList.add(historyInfo);
+            }
         }
         modelAndView.addObject("history",historyList);
+        modelAndView.addObject("sendHistoryList",sendHistoryList);
         return modelAndView;
     }
 

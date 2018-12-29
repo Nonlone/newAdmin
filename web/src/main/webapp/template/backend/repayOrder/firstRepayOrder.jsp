@@ -15,35 +15,34 @@
 		   <div class="control-group span7">
 				<label class="control-label">订单号:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_loanOrderId">
+					<input type="text" data-tip="{text : '请输入订单号'}" class="input-normal control-text" name="search_LIKE_loanOrderId">
 				</div>
 			</div>
 			<div class="control-group span7">
-				<label class="control-label">身份证号:</label>
+				<label class="control-label">客户ID:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_idcard.idCard">
+					<input type="text" data-tip="{text : '请输入客户ID'}" class="input-normal control-text" name="search_LIKE_userId">
 				</div>
 			</div>
 			<div class="control-group span7">
 				<label class="control-label">客户姓名:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_LIKE_idcard.name">
+					<input type="text" data-tip="{text : '请输入客户姓名'}" class="input-normal control-text" name="search_LIKE_idcard.name">
 				</div>
 			</div>
-           <div class="control-group span7">
+           <div class="control-group span6">
 				<label class="control-label">产品:</label>
 				<div id="selectProduct" class="controls">
 					<input id="searchProduct" type="hidden" name="search_EQ_loanOrder.productId">
 				</div>
 			</div>
-			<div class="control-group span_width">
-				<label class="control-label">还款日前5天:</label>
-				<div class="controls bui-form-group height_auto" >
-					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input  type="text" class="calendar" onchange="changeDueDate(this)"  data-tip="{text : '还款日前5天'}">
-					<input id="repayPlan_dueDate" type="hidden" name="search_EQ_dueDate" >
+			<div class="control-group span6">
+				<label class="control-label">资金方:</label>
+				<div id="selectPayFund" class="controls">
+					<input id="searchPayFund" type="hidden" name="search_EQ_loanOrder.payFundId">
 				</div>
 			</div>
+			<input id="repayPlan_dueDate" type="hidden" name="search_EQ_dueDate" >
 			<div class="span1 offset2">
 			  <button  type="button" id="btnSearch" class="button button-primary">搜索</button>
 			</div>
@@ -130,6 +129,17 @@
         });
         selectProduct.render();
        
+        var selectFundStore = new Data.Store({
+            url : '${ctx}/backend/fund/getFundList',
+            autoLoad : true
+        });
+
+        selectFundStatus = new Select.Select({
+            render:'#selectPayFund',
+            valueField:'#searchPayFund',
+            store:selectFundStore
+        });
+        selectFundStatus.render();
 
 
         //定义页面权限
@@ -139,7 +149,7 @@
 
 
     var columns = [
-        {title:'用户ID',dataIndex:'userId',width:'150px'},
+        {title:'客户ID',dataIndex:'userId',width:'150px'},
         {title:'客户姓名',dataIndex:'idcard',width:"150px",renderer: function (value) {
                 if(value){
                     return value.name;
@@ -168,6 +178,7 @@
 					 return '';
 				 }
 	        }},
+	    {title:'总期数',dataIndex:'orderTerm',width:'100px'},
         {title:'首期总费用',dataIndex:'amount',width:'150px'},
         {title:"评审费",dataIndex:"orderPlande",width:"150px",renderer:function (value) {
 			 if(value){
@@ -185,13 +196,16 @@
         }},
         {title:"本息",dataIndex:"orderPlande",width:"150px",renderer:function (value) {
 			 if(value){
-					return value.pincipalAmount;
+				   if(value.interestAmount){
+					   return value.pincipalAmount+value.interestAmount;
+				   }				   
+					return value.interestAmount;
 				 }else{
 					 return '';
 				 }
 	        }},
-        {title:"资金方",dataIndex:"fundName",width:"150px"},
-        {title:'产品名称',dataIndex:'product',width:'150px',renderer: function (value) {
+        {title:"资金方",dataIndex:"fundName",width:"100px"},
+        {title:'产品名称',dataIndex:'product',width:'100px',renderer: function (value) {
                 if(value){
                     return value.name;
                 }else{
@@ -205,9 +219,9 @@
     	pkColumn : 'id',//主键
       	storeUrl : '${ctx}/backend/loan/debt/list',
         columns : columns,
-		showAddBtn : add,
-		showUpdateBtn : update,
-		showRemoveBtn : del,
+		showAddBtn : false,
+		showUpdateBtn : false,
+		showRemoveBtn : false,
         storeCfg:{//定义store的排序，如果是复合主键一定要修改
             sortInfo : {
                 field : 'repayPlan.dueDate',//排序字段（冲突以此未标准）
