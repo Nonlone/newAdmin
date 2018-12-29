@@ -20,7 +20,7 @@ public class SupplyCountInfo{
     @Id
     private Long id;
 
-    private int count;
+    private Integer count;
 
     private Date createdTime;
 

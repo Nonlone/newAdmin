@@ -182,6 +182,9 @@
                 <th width="80px">城市名</th>
                 <th width="80px">地区名</th>
                 <th >地址</th>
+                <th width="80px">经度</th>
+                <th width="80px">纬度</th>
+                <th width="80px">区域编码</th>
                 <th width="100px">ip</th>
                 </thead>
                 <tbody>
@@ -194,6 +197,9 @@
                                 <td >${area.cityName}</td>
                                 <td >${area.districtName}</td>
                                 <td >${area.location}</td>
+                                <td >${area.longitude}</td>
+                                <td >${area.latitude}</td>
+                                <td >${area.adCode}</td>
                                 <td >${area.ip}</td>
                             </tr>
                         </c:forEach>
@@ -209,7 +215,7 @@
         </div>
     </div>
     <div>
-        <c:if test="${not empty authsList }">
+       <c:if test="${not empty authsList }">
             <ul id="tabHeader" class="nav-tabs">
                 <li id="li_base" class="active"><a href="javascript:void(0)" onclick="load(this,'baseData')">基本资料</a></li>
                 <c:forEach items="${authsList}" var="auth">
@@ -230,6 +236,8 @@
             </c:forEach>
             <!-- 贷后邦报告 -->
             <div id="sauron_daihoubang" style="display:none;"></div>
+            <div id="tobacco_feitai" style="display:none;"></div>
+            <div id="tobacco_xinyunlian" style="display:none;"></div>
         </div>
     </div>
 
@@ -271,6 +279,41 @@
     }
 
     /**
+     * 税务贷（金财）
+     * */
+    function tax_jchl(){
+        getCreditData("/static/template/jincai_tax.tpl",function(resp){
+            $.ajax({
+                type: "post",
+                url: "/backend/creditdata/jincaiTax",
+                data:"userId=${card.userId}",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response)
+                    if(response.code==0
+                        && !jQuery.isEmptyObject(response.data)){
+                        debugger;
+                        var html = template.render(resp,response.data.report);
+                        $("#tax_jchl").html("").html(html);
+                    }else{
+                        BUI.use('bui/overlay', function (Overlay) {
+                            new Overlay.Dialog({
+                                title: '提示窗口',
+                                width: 300,
+                                height: 150,
+                                mask: false,
+                                buttons: [],
+                                bodyContent: '<p>该用户的此类征信信息错误</p>'
+                            }).show();
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+
+    /**
      * 贷后帮（索伦-葫芦数据）
      * */
     function sauron_daihoubang(){
@@ -278,7 +321,7 @@
             $.ajax({
                 type: "post",
                 url: "/backend/creditdata/sauron",
-                data:"cardId=${card.id}&userId=${card.userId}",
+                data:"userId=${card.userId}",
                 dataType: "json",
                 success: function (response) {
                     console.log(response)
@@ -343,7 +386,7 @@
             $.ajax({
                 type: "post",
                 url: "/backend/creditdata/suanhua",
-                data:"cardId=${card.id}&userId=${card.userId}",
+                data:"userId=${card.userId}",
                 dataType: "json",
                 success: function (response) {
                     console.log(response)
@@ -383,6 +426,65 @@
         });
 
     });
-
+    
+    
+    function tobacco_feitai(){
+        getCreditData("/static/template/tobacco_feitai.tpl",function(resp){
+            $.ajax({
+                type: "post",
+                url: "/backend/creditdata/tobacco",
+                data:"cardId=${card.id}&userId=${card.userId}",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response)
+                    if(response.code==0
+                        && !jQuery.isEmptyObject(response.data)){
+                        var html = template.render(resp,response.data.creditData);
+                        $("#tobacco_feitai").html("").html(html);
+                    }else{
+                        BUI.use('bui/overlay', function (Overlay) {
+                            new Overlay.Dialog({
+                                title: '提示窗口',
+                                width: 300,
+                                height: 150,
+                                mask: false,
+                                buttons: [],
+                                bodyContent: '<p>该用户的此类征信信息错误</p>'
+                            }).show();
+                        });
+                    }
+                }
+            });
+        });
+    }
+    function xyl_tobacco_xinyunlian(){
+        getCreditData("/static/template/tobacco_xinyunlian.tpl",function(resp){
+            $.ajax({
+                type: "post",
+                url: "/backend/creditdata/xinyunlian",
+                data:"cardId=${card.id}&userId=${card.userId}",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response)
+                    if(response.code==0
+                        && !jQuery.isEmptyObject(response.data)){
+                        var html = template.render(resp,response.data.creditData);
+                        $("#xyl_tobacco_xinyunlian").html("").html(html);
+                    }else{
+                        BUI.use('bui/overlay', function (Overlay) {
+                            new Overlay.Dialog({
+                                title: '提示窗口',
+                                width: 300,
+                                height: 150,
+                                mask: false,
+                                buttons: [],
+                                bodyContent: '<p>该用户的此类征信信息错误</p>'
+                            }).show();
+                        });
+                    }
+                }
+            });
+        });
+    }
 </script>
 </html>

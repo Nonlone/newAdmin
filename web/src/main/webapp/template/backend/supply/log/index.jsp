@@ -29,8 +29,8 @@
 				<label class="control-label">提交补件时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_createdTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar-time calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_createdTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 
@@ -95,7 +95,7 @@
                     return '';
                 }
             }},
-        {title:'用户ID',dataIndex:'user',width:'135px',renderer:function (value) {
+        {title:'客户ID',dataIndex:'user',width:'135px',renderer:function (value) {
                 if(value){
                     return value.id;
                 }else{
@@ -117,8 +117,9 @@
                     return '';
                 }
             }},
-        {title:'提交补件时间',dataIndex:'createdTime',width:'135px',renderer:BUI.Grid.Format.dateRenderer},
-		{title:'补件次数',dataIndex:'supplyCount',width:'135px'},
+        {title:'客户提交补件时间',dataIndex:'createdTime',width:'270px',renderer:BUI.Grid.Format.datetimeRenderer},
+		{title:'允许再补件次数',dataIndex:'can2dashu',width:'100px'},
+		{title:'待发送补件数',dataIndex:'remain',width:'100px'},
 		 {title:'资金方',dataIndex:'fundName',width:'135px'},
 		 {title:'产品名称',dataIndex:'loanOrder',width:'135px',renderer:function (value) {
                  if(value){
@@ -139,12 +140,13 @@
         showUpdateBtn : update,
         showRemoveBtn : del,
         columns : columns,
+        operationwidth:'80px',
         operationColumnRenderer : function(value, obj){//操作列最追加按钮
             return CrudGrid.createLinkCustomSpan({
-                class:"page-action grid-command x-icon x-icon-info",
+                class:"page-action grid-command",
                 id: obj.id,
                 title: obj.idCardData.name+"补件记录",
-                text: '<i class="icon icon-white icon-list-alt"></i>',
+                text: '详情',
                 href: $ctx+"/backend/supply/log/detail/"+obj.id
             })
      },

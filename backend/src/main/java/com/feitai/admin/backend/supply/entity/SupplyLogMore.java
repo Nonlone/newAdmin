@@ -39,4 +39,9 @@ public class SupplyLogMore extends LoanSupplyLog {
     @Transient
     private String fundName;
 
+    @Transient
+    private Integer can2dashu;
+
+    @Transient
+    private Integer remain;
 }

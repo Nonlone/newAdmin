@@ -46,13 +46,13 @@
             </div>
 
 
-            <div class="control-group span10">
+            <div class="control-group span12">
                 <label class="control-label">注册时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
+                    <input type="text" class="calendar-time calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
                     <span>
-             - </span><input name="search_LTE_createdTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+             - </span><input name="search_LTE_createdTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
                 </div>
             </div>
             <div class="span1 offset2">
@@ -94,7 +94,7 @@
         <framwork:crudPermission resource="/backend/customer"/>
 
         var columns = [
-            {title: '客户Id', dataIndex: 'userId', width: '170px'},
+            {title: '客户Id', dataIndex: 'userId', width: '150px'},
             {title: '姓名', dataIndex: 'name', width: '130px'},
             {title: '身份证号', dataIndex: 'idCard', width: '200px'},
             {title: '性别', dataIndex: 'sex', width: '130px'},
@@ -102,7 +102,7 @@
             {title: '年龄', dataIndex: 'age', width: '130px'},
             {title: '民族', dataIndex: 'nation', width: '130px'},
             {title: '注册时间', dataIndex: 'createdTime', width: '200px', renderer: BUI.Grid.Format.datetimeRenderer},
-            {title: '签发机关', dataIndex: 'orgination', width: '200px'},
+            {title: '签发机关', dataIndex: 'orgination', width: '220px'},
             {title:'是否实名',dataIndex:'certified',width:'130px',renderer:BUI.Grid.Format.enumRenderer(booleanEnumRender)}
         ];
 
@@ -120,13 +120,14 @@
             showUpdateBtn: update,
             showRemoveBtn: del,
             addOrUpdateFormId: 'addOrUpdateForm',
+            operationwidth:'80px',
             dialogContentId: 'addOrUpdate',
             operationColumnRenderer: function (value, obj) {//操作列最追加按钮
                 return CrudGrid.createLinkCustomSpan({
-                    class:"page-action grid-command x-icon x-icon-info",
+                    class:"page-action grid-command",
                     id: obj.id,
                     title: obj.name + '—客户信息',
-                    text: '<i class="icon icon-white icon-list-alt"></i>',
+                    text: '详情',
                     href: $ctx+"/backend/customer/detail/" + obj.userId
                 })
 

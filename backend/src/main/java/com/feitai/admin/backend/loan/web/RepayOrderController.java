@@ -27,6 +27,7 @@ import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
 import com.feitai.admin.backend.properties.MapProperties;
+import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
@@ -110,6 +111,20 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     private final static String LOAN_PURPOSE = "loanPurpose";
 
     private final static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+
+    @RequestMapping(value = "/repayOrderStatus")
+    @ResponseBody
+    @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
+    public Object repayOrderStatus(){
+        Map<String, String> repayOrderStatusMap = mapProperties.getRepayOrderStatusMap();
+        List<ListItem> list = new ArrayList<ListItem>();
+        list.add(new ListItem("全部", " "));
+        for (String key : repayOrderStatusMap.keySet()) {
+            list.add(new ListItem(repayOrderStatusMap.get(key), key));
+        }
+        return list;
+    }
 
     @RequestMapping(value = "index")
     public ModelAndView index() {

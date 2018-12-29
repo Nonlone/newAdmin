@@ -72,10 +72,11 @@
 			<div class="row">
 				<div class="control-group span10">
 					<label class="control-label"><s>*</s>一级渠道</label>
-					<div class="controls" id ="primaryList" name='primaryList'>
-						<input name="mainPackgage" type="hidden" data-rules="{required:true}" id="mainPackgage" onchange="findPrimary(this.value);">
+					 <div class="controls" id ="primaryList" name='primaryList' onchange="findPrimary();" data-rules="{required:true}">
+						
 					</div>
 				</div>
+				
 			</div>
 			<div class="row">
 				<div class="control-group span8">
@@ -141,9 +142,13 @@
 
 <script type="text/javascript">
 
-    function findPrimary(primaryName) {
+    function findPrimary() {
 
-        document.getElementById("mainPackgage").value = primaryName;
+        var primaryName=$("#primaryList div input").val();
+        if(primaryName==''){
+        	return;
+        }
+        console.log(primaryName);
         var channelIdValue,channelSortValue,code;
         if(primaryName!=null||primaryName!=""){
             $.ajax({
@@ -185,8 +190,7 @@
             elementsByTagName[i].innerText = "";
         }
     }
-
-
+ 
 
 BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGrid,Select,Data,Form) {
 
@@ -206,19 +210,23 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 	var add=false,update=false,del=false,list=false;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
 	<framwork:crudPermission resource="/backend/channel"/>
-
+		
+	
     //一级渠道选择框
-    var selectStore = new Data.Store({
+    	var selectStore = new Data.Store({
         url : '${ctx}/backend/channel/primaryList',
         autoLoad : true
     });
+        var primayChanneStr='${primaryChannelList}';
+        var dataItems=primayChanneStr.split(",");
+    	var select = new Select.Suggest({
+    		render:'#primaryList',
+            name:'mainPackgage',
+           	data:dataItems,
+    	  });
+    	select.render();
 
-    select = new Select.Select({
-        render:'#primaryList',
-        valueField:'#mainPackgage',
-        store:selectStore
-    });
-    select.render();
+
     
     
     var channelSortSelect = new Select.Select({
@@ -274,14 +282,14 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     // }
 
 	channelId.on('remotestart',function (ev) {
-	    debugger;
+	   // debugger;
 		var data = ev.data;
 		data.primaryCode = document.getElementById("primaryCode").value;
     })
 
 	subPackage.on('remotestart',function(ev){
         var data = ev.data;
-        data.mainPackage = document.getElementById("mainPackgage").value;
+        data.mainPackage = $("#primaryList div input").val();
     });
 
 
@@ -325,8 +333,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 
     var beforeUpdateShow = function(dialog,form,record){
         update = true;
-        select.setSelectedValue('');
-        select.setSelectedValue(record.mainPackgage);
+        findPrimary();
         select.disable();
         form.getField("channelId").disable();
         form.getField("channelSort").disable();

@@ -219,6 +219,7 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
         return buildSqlWhereCondition(searchParamsList, null);
     }
 
+
     /***
      * 构建搜索条件语句
      *
@@ -316,7 +317,7 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
                             int i = 0;
                             String[] values = (searchParams.getValues()[0].toString()).split(",");
                             for (Object val : values) {
-                                if(StringUtils.isBlank(getValue(val))){
+                                if(StringUtils.isBlank(val.toString())){
                                     break;
                                 }
                                 if (i == 0) {

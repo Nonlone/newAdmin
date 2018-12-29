@@ -43,12 +43,12 @@
 					</select>
 				</div>
 			</div>
-			<div class="control-group span10">
+			<div class="control-group span12">
 				<label class="control-label">申请提现时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
-					<input type="text" class="calendar" name="startTime" data-tip="{text : '开始日期'}">
+					<input type="text" class="calendar-time calendar" name="startTime" data-tip="{text : '开始日期'}">
 					<span>- </span>
-					<input name="endTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input name="endTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 			<div class="span1 offset1">
