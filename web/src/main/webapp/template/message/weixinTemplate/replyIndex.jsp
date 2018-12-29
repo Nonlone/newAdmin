@@ -21,13 +21,13 @@
 			<div class="control-group span7">
 				<label class="control-label">关键字类别:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="keywordsType">
+					<input type="text" maxlength="20" class="input-normal control-text" name="keywordsType">
 				</div>
 			</div>
 			<div class="control-group span7">
 				<label class="control-label">关键字词条:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="keywords">
+					<input type="text" maxlength="20" class="input-normal control-text" name="keywords">
 				</div>
 			</div>
 			<div class="span1 offset2">
@@ -46,14 +46,15 @@
 					<div class="control-group span10">
 						<label for="keywordsType" class="control-label">关键字类别</label>
 						<div class="controls">
-							<input type="text" class="form-control"  id="keywordsType" name="keywordsType" placeholder="关键字类别">
+							<input type="text" maxlength="20" class="form-control"  id="keywordsType"
+								   name="keywordsType" data-rules="{required:true,}" placeholder="关键字类别">
 						</div>
 					</div>
 					<div class="control-group span10">
 						<label for="keywords" class="control-label">关键字词条</label>
 						<div class="controls">
 							<input type="text" class="form-control" id="keywords" name="keywords" style="width:100%"
-								   placeholder="关键字词条">
+								   maxlength="20" data-rules="{required:true,}" placeholder="关键字词条">
 						</div>
 					</div>
 				</div>
@@ -62,10 +63,11 @@
 						<label for="content" class="control-label">关键字回复内容</label>
 						<div class="controls control-row10">
 							<textarea class="form-control text-size" name="content"
-									  id="content"rows="10"></textarea>
+									maxlength="500"  id="content"rows="10"></textarea>
 						</div>
 					</div>
 				</div>
+				<br/>
 			</form>
 		</div>
 		<div class="search-grid-container">

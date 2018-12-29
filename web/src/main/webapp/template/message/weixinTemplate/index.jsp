@@ -21,13 +21,13 @@
 			<div class="control-group span7">
 				<label class="control-label">模板code:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="weixinCode">
+					<input type="text" maxlength="50" class="input-normal control-text" name="weixinCode">
 				</div>
 			</div>
 			<div class="control-group span7">
 				<label class="control-label">微信消息名称:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="title">
+					<input type="text" maxlength="100" class="input-normal control-text" name="title">
 				</div>
 			</div>
 			<div class="span1 offset2">
@@ -46,15 +46,15 @@
 					<div class="control-group span10">
 						<label for="weixinCode" class="control-label">模板code</label>
 						<div class="controls">
-							<input type="text" class="form-control" id="weixinCode"
-								   style="width:100%" name="weixinCode" placeholder="模板code">
+							<input type="text" class="form-control" id="weixinCode" maxlength="10"data-rules="{required:true,}"
+								   style="width:100%" name="weixinCode" data-rules="{required:true,}"placeholder="模板code">
 						</div>
 					</div>
 					<div class="control-group span10">
 						<label for="title" class="control-label">微信消息名称</label>
 						<div class="controls">
 							<input type="text" class="form-control" id="title" name="title" style="width:100%"
-								   placeholder="微信消息名称">
+								   data-rules="{required:true,}" maxlength="20" placeholder="微信消息名称">
 						</div>
 					</div>
 				</div>
@@ -63,7 +63,7 @@
 						<label for="weixinTempId" class="control-label">消息模板id</label>
 						<div class="controls">
 							<input type="text" class="form-control" style="width:350px" name="weixinTempId"
-								   id="weixinTempId" placeholder="消息模板id">
+								   data-rules="{required:true,}" maxlength="100" id="weixinTempId" placeholder="消息模板id">
 						</div>
 					</div>
 				</div>
@@ -71,8 +71,8 @@
 					<div class="control-group span24">
 						<label for="tempContent" class="control-label">模板内容</label>
 						<div class="controls control-row6">
-							<textarea class="form-control text-size" name="tempContent"
-									  id="tempContent"rows="6"></textarea>
+							<textarea class="form-control text-size"maxlength="300" data-rules="{required:true,}"
+									  name="tempContent" id="tempContent"rows="6"></textarea>
 						</div>
 					</div>
 				</div>
@@ -81,8 +81,8 @@
 					<div class="control-group span24">
 						<label for="tempFirstDetail" class="control-label">模板的首行内容</label>
 						<div class="controls control-row6">
-							<textarea class="form-control text-size" name="tempFirstDetail"
-									  id="tempFirstDetail"rows="6"></textarea>
+							<textarea class="form-control text-size" data-rules="{required:true,}"
+									  maxlength="200" name="tempFirstDetail" id="tempFirstDetail"rows="6"></textarea>
 						</div>
 					</div>
 				</div>
@@ -91,19 +91,22 @@
 					<div class="control-group span8">
 						<label for="keyword1" class="control-label">模板关键字1</label>
 						<div class="controls">
-							<input name = "keyword1" id="keyword1" type="text" class="input-normal control-text">
+							<input name = "keyword1" id="keyword1" maxlength="50"
+								   data-rules="{required:true,}" type="text" class="input-normal control-text">
 						</div>
 					</div>
 					<div class="control-group span8">
 						<label for="keyword2" class="control-label">模板关键字2</label>
 						<div class="controls">
-							<input name = "keyword2" id="keyword2" type="text" class="input-normal control-text">
+							<input name = "keyword2" maxlength="50" id="keyword2" type="text"
+								   class="input-normal control-text">
 						</div>
 					</div>
 					<div class="control-group span8">
 						<label for="keyword3" class="control-label">模板关键字3</label>
 						<div class="controls">
-							<input name = "keyword3" id="keyword3" type="text" class="input-normal control-text">
+							<input name = "keyword3" maxlength="50" id="keyword3" type="text"
+								   class="input-normal control-text">
 						</div>
 					</div>
 				</div>
@@ -111,13 +114,15 @@
 					<div class="control-group span8">
 						<label for="keyword4" class="control-label">模板关键字4</label>
 						<div class="controls">
-							<input name = "keyword4" id="keyword4" type="text" class="input-normal control-text">
+							<input name = "keyword4" id="keyword4" maxlength="50" type="text"
+								   class="input-normal control-text">
 						</div>
 					</div>
 					<div class="control-group span8">
 						<label for="keyword5" class="control-label">模板关键字5</label>
 						<div class="controls">
-							<input name = "keyword5" id="keyword5" type="text" class="input-normal control-text">
+							<input name = "keyword5" id="keyword5" maxlength="50" type="text"
+								   class="input-normal control-text">
 						</div>
 					</div>
 				</div>
@@ -126,7 +131,7 @@
 						<label for="tempRemarkDetail" class="control-label">模板备注</label>
 						<div class="controls">
 							<input name = "tempRemarkDetail" style="width: 550px" id="tempRemarkDetail" type="text"
-								   class="input-normal control-text">
+								   maxlength="100" class="input-normal control-text">
 						</div>
 					</div>
 				</div>

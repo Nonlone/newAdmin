@@ -9,7 +9,7 @@
 	<style>
 		.text-size{
 			height: 60px;
-			width: 500px;
+			width: 600px;
 		}
 	</style>
 </head>
@@ -21,13 +21,13 @@
 			<div class="control-group span7">
 				<label class="control-label">模板code:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="code">
+					<input type="text" maxlength="10" class="input-normal control-text" name="code">
 				</div>
 			</div>
 			<div class="control-group span7">
 				<label class="control-label">模板名称:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="name">
+					<input type="text" maxlength="100" class="input-normal control-text" name="name">
 				</div>
 			</div>
 			<div class="span1 offset2">
@@ -42,56 +42,82 @@
 		<div id="addOrUpdate" class="hide">
 			<form id="addOrUpdateForm" role="form" class="form-horizontal">
 				<input type="hidden" name="id" value="">
-				<div class="form-group">
-					<label for="code">模板code</label>
-					<input type="text" class="form-control" id="code" name="code" placeholder="模板code">
+				<div class="row">
+					<div class="control-group span10">
+						<label for="code" class="control-label">模板code</label>
+						<div class="controls">
+							<input type="text" class="form-control" maxlength="10" data-rules="{required:true,}"
+								   id="code" name="code" placeholder="模板code">
+						</div>
+					</div>
+					<div class="control-group span10">
+						<label for="name" class="control-label">模板名称</label>
+						<div class="controls">
+							<input type="text" class="form-control" data-rules="{required:true,}" id="name"
+								   maxlength="100"  name="name" placeholder="模板名称">
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="name">模板名称</label>
-					<input type="text" class="form-control" id="name" name="name" placeholder="模板名称">
+				<div class="row">
+					<div class="control-group span10">
+						<label for="title" class="control-label">内容标题</label>
+						<div class="controls">
+							<input type="text" class="form-control" data-rules="{required:true,}" id="title"
+								   maxlength="100" name="title" placeholder="内容标题">
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="title">内容标题</label>
-					<input type="text" class="form-control" name="title"  id="title" placeholder="内容标题">
+				<div class="row">
+					<div class="control-group span24">
+						<label for="mailContent" class="control-label">站内信内容</label>
+						<div class="controls">
+						<textarea class="form-control text-size" maxlength="1000" name="mailContent" id="mailContent"
+								  rows="3"></textarea>
+						</div>
+					</div>
+				</div><br/><br/>
+				<div class="row">
+					<div class="control-group span24">
+						<label for="smsContent" class="control-label">短信内容</label>
+						<div class="controls">
+						<textarea class="form-control text-size" maxlength="1000" name="smsContent" id="smsContent"
+								  rows="3"></textarea>
+						</div>
+					</div>
+				</div><br/><br/>
+				<div class="row">
+					<div class="control-group span24">
+						<label for="pushContent"class="control-label">推送内容</label>
+						<div class="controls">
+						<textarea class="form-control text-size" maxlength="1000" name="pushContent" id="pushContent"
+								  rows="3"></textarea>
+						</div>
+					</div>
+				</div><br/><br/>
+				<div class="row">
+					<div class="control-group span8">
+						<label for="name" class="control-label">推送极光通知</label>
+						<div class="controls bui-form-field-select" data-items="{'0':'启用','1':'禁用'}"
+							 class="control-text input-small">
+							<input name="disablePushNotice" data-rules="{required:true,}" type="hidden"  value="">
+						</div>
+					</div>
+					<div class="control-group span10">
+						<label for="name" class="control-label">推送极光消息</label>
+						<div class="controls bui-form-field-select" data-items="{'0':'启用','1':'禁用'}"
+							 class="control-text input-small">
+							<input name="disablePushMsg" data-rules="{required:true,}" type="hidden" value="">
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="mailContent">站内信内容</label>
-					<textarea class="form-control text-size" name="mailContent" id="mailContent"  rows="3"></textarea>
-				</div>
-				<div class="form-group">
-					<label for="smsContent">短信内容</label>
-					<textarea class="form-control text-size" name="smsContent" id="smsContent"  rows="3"></textarea>
-				</div>
-				<div class="form-group">
-					<label for="pushContent">推送内容</label>
-					<textarea class="form-control text-size" name="pushContent" id="pushContent" rows="3"></textarea>
-				</div>
-				<label for="name">是否禁用推送极光通知</label>
-				<div>
-					<label class="radio-inline">
-						<input type="radio" name="disablePushNotice" value="0" checked>启用
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="disablePushNotice" value="1">禁用
-					</label>
-				</div>
-				<label for="name">是否禁用推送极光消息</label>
-				<div>
-					<label class="radio-inline">
-						<input type="radio" name="disablePushMsg" value="0" checked>启用
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="disablePushMsg" value="1">禁用
-					</label>
-				</div>
-				<label for="name">是否禁用模板</label>
-				<div>
-					<label class="radio-inline">
-						<input type="radio" name="status" value="0">启用
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="status" value="1">禁用
-					</label>
+				<div class="row">
+					<div class="control-group span10">
+						<label for="name" class="control-label">是否禁用模板</label>
+						<div class="controls bui-form-field-select" data-items="{'1':'启用','0':'禁用'}"
+							 class="control-text input-small">
+							<input name="status" type="hidden" data-rules="{required:true,}" value="">
+						</div>
+					</div>
 				</div>
 			</form>
 		</div>
@@ -115,7 +141,7 @@ BUI.use(['bui/ux/crudgrid'],function (CrudGrid) {
 	var add=true,update=true,del=true;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
 	<framwork:crudPermission resource="/message/noticeTemplate"/>
-
+    var enumObj = {"true": "启用", "false": "禁用"};
     var columns = [
 		{title:'模板code',dataIndex:'code'},
 		{title:'模板标题',dataIndex:'title'},
