@@ -192,7 +192,6 @@
     }
 
     <shiro:hasPermission name="/backend/supply/log:supply">
-    debugger;
         var elementsByName = document.getElementsByName("sendDashu");
         for(var i = 0;i<elementsByName.length;i++){
             elementsByName[i].removeAttribute("hidden");
