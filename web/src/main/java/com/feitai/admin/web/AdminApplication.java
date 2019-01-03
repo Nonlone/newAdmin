@@ -17,6 +17,7 @@ import tk.mybatis.spring.annotation.MapperScan;
         "com.feitai.admin.wisdomTooth",
         "com.feitai.admin.system",
         "com.feitai.admin.web",
+        "com.feitai.admin.messagecenter",
         "com.feitai.admin.core",
         "com.feitai.admin.mop"})
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class,})
