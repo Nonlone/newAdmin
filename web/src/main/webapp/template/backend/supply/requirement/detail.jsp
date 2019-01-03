@@ -72,7 +72,6 @@
             $('img.dialog').on('click', function () {
                 var large_image = '<img class=\'closeImg\' style=\'max-height: 800px;max-width: 800px\' src= ' + $(this).attr("src") + '></img>';
 
-                debugger;
                 var width = this.width;
                 var height = this.height;
                 var dialog = new Overlay.Dialog({

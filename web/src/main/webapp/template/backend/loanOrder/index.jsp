@@ -126,7 +126,6 @@
     }
 
     function stop(id) {
-        debugger;
         BUI.use('bui/overlay',function (Overlay){
             BUI.Message.Confirm('确认要终止放款么？',function(){
                 $.ajax({
