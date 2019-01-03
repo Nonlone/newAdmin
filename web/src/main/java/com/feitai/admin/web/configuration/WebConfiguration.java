@@ -155,6 +155,9 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
         fastJsonConfig.setSerializeFilters(new KeyFilter(hyposensitizeHandlerMap));
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.BrowserCompatible);
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.IgnoreErrorGetter);
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.IgnoreNonFieldGetter);
         fastConverter.setFastJsonConfig(fastJsonConfig);
         converters.add(fastConverter);
     }
