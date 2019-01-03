@@ -1,5 +1,7 @@
 package com.feitai.admin.web;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.DefaultBeanNameGenerator;
 import org.springframework.boot.SpringApplication;
@@ -29,6 +31,7 @@ public class AdminApplication {
         SpringApplication app = new SpringApplication(AdminApplication.class);
         app.setBeanNameGenerator(new DefaultBeanNameGenerator());
         app.run(args);
-
+        JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.IgnoreErrorGetter.getMask();
+        JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.IgnoreNonFieldGetter.getMask();
     }
 }
