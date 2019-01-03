@@ -53,8 +53,8 @@
 				<label class="control-label">还款到期日:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_repayPlan.dueDate" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_repayPlan.dueDate" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar-time calendar" name="search_GTE_repayPlan.dueDate" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_repayPlan.dueDate" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 			<div class="control-group span7">
@@ -152,28 +152,28 @@
         var authUrl = '${ctx}/backend/loan/repayOrder/detail/';
 
         var columns = [
-            {title:'订单号',dataIndex:'id',width:'170px'},
-            {title:'姓名',dataIndex:'idcard',width:"110px",renderer: function (value) {
+            {title:'订单号',dataIndex:'id',width:'150px'},
+            {title:'姓名',dataIndex:'idcard',width:"80px",renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '';
                     }
                 }},
-            {title:'客户ID',dataIndex:'user',width:"170px",renderer: function (value) {
+            {title:'客户ID',dataIndex:'user',width:"150px",renderer: function (value) {
                     if(value){
                         return value.id;
                     }else{
                         return '';
                     }
                 }},
-            {title:'注册手机号',dataIndex:'user',width:"120px",renderer:function (value) {
+            {title:'注册手机号',dataIndex:'user',width:"100px",renderer:function (value) {
                     if(value){
                         return value.phone;
                     }
                     return '';
                 }},
-            {title:'身份证号',dataIndex:'idcard',width:"150px",renderer: function (value) {
+            {title:'身份证号',dataIndex:'idcard',width:"130px",renderer: function (value) {
                     if(value){
                         return value.idCard;
                     }else{
@@ -210,7 +210,7 @@
                     }
                     return '';
                 }},
-            {title:'存储信贷系统的出账编号',dataIndex:'repayPlan',width:'180px',renderer:function (value) {
+            {title:'存储信贷系统的出账编号',dataIndex:'repayPlan',width:'150px',renderer:function (value) {
                     if(value){
                         return value.putoutno;
                     }

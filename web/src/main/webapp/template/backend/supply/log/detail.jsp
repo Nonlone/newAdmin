@@ -21,12 +21,13 @@
                 <tr style="background-color: #F2F2F2">
                     <th width="150px">客户姓名</th>
                     <th width="155px">注册手机号</th>
-                    <th width="100px">提现金额</th>
-                    <th width="190px">最近提交补件日期</th>
+                    <th width="100px">申请提现金额</th>
+                    <th width="190px">客户提交补件时间</th>
                     <th width="80px">资金方</th>
                     <th width="150px">产品名称</th>
-                    <th width="150px">用户ID</th>
-                    <th width="60px">发送总部次数</th>
+                    <th width="150px">客户ID</th>
+                    <th width="60px">允许再补件次数</th>
+                    <th width="60px">已发送总部次数</th>
                 </tr>
                 </thead>
                 <tr>
@@ -37,6 +38,7 @@
                     <td><c:if test="${not empty fundName}">${fundName}</c:if></td>
                     <td><c:if test="${not empty supplyLog.loanOrder}"><c:if test="${not empty supplyLog.loanOrder.product}">${supplyLog.loanOrder.product.name}</c:if></c:if></td>
                     <td><c:if test="${not empty supplyLog.user}">${supplyLog.user.id}</c:if></td>
+                    <td>${can2dashu}</td>
                     <td>${supply2dashu}</td>
                 </tr>
             </table>
@@ -59,13 +61,15 @@
                             <tr style="background-color: #F2F2F2">
                                 <th width="40px">补件类型</th>
                                 <th width="50px">补件要素</th>
+                                <th width="60px">补件原因</th>
                                 <th width="520px">补件内容</th>
                             </tr>
                         </thead>
                         <c:forEach items="${his.info}" var="info" varStatus="">
                             <tr>
-                                <td><c:if test="${info.supplyType eq 1}">图片</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
+                                <td><c:if test="${info.supplyType eq 1}">影像件</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
                                 <td>${info.supplyName}</td>
+                                <td>${info.reason}</td>
                                 <td>
                                     <c:if test="${info.ifPlural eq 0}">
                                         <c:if test="${info.supplyType eq 1}">
@@ -112,20 +116,22 @@
                     <hr/>
                     <c:forEach items="${sendHistoryList}" var="his" varStatus="">
 
-                        <div style="font-size: 15px">提交总部时间：${his.createdTime}</div>
+                        <div style="font-size: 15px">提交总部时间：${his.sendTime}</div>
                         <br/>
                         <table cellspacing="0" class="table table-bordered">
                             <thead>
                             <tr style="background-color: #F2F2F2">
                                 <th width="40px">补件类型</th>
                                 <th width="50px">补件要素</th>
+                                <th width="60px">补件原因</th>
                                 <th width="520px">补件内容</th>
                             </tr>
                             </thead>
                             <c:forEach items="${his.info}" var="info" varStatus="">
                                 <tr>
-                                    <td><c:if test="${info.supplyType eq 1}">图片</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
+                                    <td><c:if test="${info.supplyType eq 1}">影像件</c:if><c:if test="${info.supplyType eq 2}">文本</c:if></td>
                                     <td>${info.supplyName}</td>
+                                    <td>${info.reason}</td>
                                     <td>
                                         <c:if test="${info.ifPlural eq 0}">
                                             <c:if test="${info.supplyType eq 1}">

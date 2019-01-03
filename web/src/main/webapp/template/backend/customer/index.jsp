@@ -46,13 +46,13 @@
             </div>
 
 
-            <div class="control-group span10">
+            <div class="control-group span12">
                 <label class="control-label">注册时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
+                    <input type="text" class="calendar-time calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
                     <span>
-             - </span><input name="search_LTE_createdTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+             - </span><input name="search_LTE_createdTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
                 </div>
             </div>
             <div class="span1 offset2">
@@ -94,7 +94,7 @@
         <framwork:crudPermission resource="/backend/customer"/>
 
         var columns = [
-            {title: '客户Id', dataIndex: 'userId', width: '200px'},
+            {title: '客户Id', dataIndex: 'userId', width: '150px'},
             {title: '姓名', dataIndex: 'name', width: '130px'},
             {title: '身份证号', dataIndex: 'idCard', width: '200px'},
             {title: '性别', dataIndex: 'sex', width: '130px'},

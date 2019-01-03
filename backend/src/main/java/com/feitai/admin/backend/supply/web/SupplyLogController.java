@@ -8,6 +8,7 @@ import com.feitai.admin.backend.properties.AppProperties;
 import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.backend.supply.entity.SupplyLogMore;
 import com.feitai.admin.backend.supply.service.SupplyLogService;
+import com.feitai.admin.backend.supply.service.SupplyRequirementService;
 import com.feitai.admin.backend.supply.vo.LoanSupplyInfo;
 import com.feitai.admin.backend.supply.vo.PicturesInfo;
 import com.feitai.admin.backend.supply.vo.SupplyLog2OrderCenterRequest;
@@ -16,6 +17,7 @@ import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.admin.system.model.SupplyCountInfo;
+import com.feitai.admin.system.model.SupplyDashuLog;
 import com.feitai.admin.system.service.SupplyCountInfoService;
 import com.feitai.jieya.server.dao.data.model.IdCardData;
 import com.feitai.jieya.server.dao.fund.model.Fund;
@@ -66,6 +68,9 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
 
     @Autowired
     private AppProperties appProperties;
+
+    @Autowired
+    private SupplyRequirementService supplyRequirementService;
 
     private final static String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
@@ -135,15 +140,12 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
             restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
             ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getSupply2OrderCenter(), request, String.class);
             JSONObject jsonObject = JSON.parseObject(jsonString.getBody());
-            if(true){
+            if(jsonObject.get("code").equals("1")){
                 supplyCountInfo.setUpdateTime(new Date());
                 supplyCountInfo.setCount(supplyCountInfo.getCount()+1);
                 supplyCountInfoService.saveAndLog(supplyCountInfo,Long.parseLong(supplyLogId));
                 return new BackendResponse(0,"成功");
             }else{
-                if(jsonObject.get("code").equals("1")){
-                    return new BackendResponse(1,"系统添加记录失败！但已发送总部成功");
-                }
                 log.error(String.format("order-center can't not send supplyLogPhotoInfo to dashu,supplyLog[id:{%s}]",supplyLogId));
                 return new BackendResponse(1,"订单中心发送总部失败！");
             }
@@ -162,7 +164,7 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
         int pageNo = PageBulider.getPageNo(request);
         int pageSize = PageBulider.getPageSize(request);
         List<SupplyLogMore> result2PageList = new ArrayList<>();
-        Map<Long,SupplyLogMore> map = new HashMap<>();
+        Map<Long,SupplyLogMore> map = new LinkedHashMap<>();
         List<SupplyLogMore> resultList = getService().findAll(getCommonSqls(request,getSelectMultiTable().buildSqlString())+ " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC");
         Set<Long> set = new HashSet<>();
         for (SupplyLogMore supplyLogMore:resultList){
@@ -175,6 +177,7 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
             }
         }
         int size = set.size();
+        int supply2dashu = appProperties.getSupply2dashu()-1;
         for (SupplyLogMore supplyLogMore:map.values()){
             LoanOrderMore loanOrder = supplyLogMore.getLoanOrder();
             if(loanOrder==null){
@@ -189,6 +192,22 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
                     supplyLogMore.setFundName(fund.getFundName());
                 }
             }
+            SupplyCountInfo supplyCountInfo = supplyCountInfoService.findOne(loanOrder.getId());
+            if(supplyCountInfo!=null){
+                supplyLogMore.setCan2dashu(supply2dashu-supplyCountInfo.getCount());
+            }else {
+                supplyLogMore.setCan2dashu(supply2dashu);
+            }
+            //历史补件记录
+            List<LoanSupplyLog> supplyLogHistorys = supplyLogService.findByLoanOrder(supplyLogMore.getLoanOrderId());
+            int supplyLogHistorysSize = supplyLogHistorys.size();
+            for (LoanSupplyLog loanSupplyLog:supplyLogHistorys){
+                SupplyDashuLog supplyDashuLog = supplyCountInfoService.checkSendDashuLog(loanSupplyLog.getId());
+                if(supplyDashuLog !=null){
+                    supplyLogHistorysSize = supplyLogHistorysSize-1;
+                }
+            }
+            supplyLogMore.setRemain(supplyLogHistorysSize);
             result2PageList.add(supplyLogMore);
         }
         Page<SupplyLogMore> supplyLogMorePage = buildPage(result2PageList, size, pageNo, pageSize);
@@ -234,13 +253,26 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
             supplyCountInfoService.save(supplyCountInfo);
         }
         int supply2dashu = supplyCountInfo.getCount();
+        int can2dashu = appProperties.getSupply2dashu()-1-supply2dashu;
         modelAndView.addObject("supply2dashu",supply2dashu);
+        modelAndView.addObject("can2dashu",can2dashu);
 
         //历史补件记录
         List<LoanSupplyLog> supplyLogHistorys = supplyLogService.findByLoanOrder(supplyLog.getLoanOrderId());
         List<Map<String,Object>> historyList = new ArrayList<>();
         List<Map<String,Object>> sendHistoryList = new ArrayList<>();
         for (LoanSupplyLog loanSupplyLog:supplyLogHistorys){
+            //添加原因
+            List<JSONObject> list = JSON.parseObject(loanSupplyLog.getSupplyInfo(), List.class);
+            List<JSONObject> listnew = new ArrayList<>();
+            for (JSONObject json:list) {
+                String supplyCode = (String)json.get("supplyCode");
+                String reason = supplyRequirementService.findReasonByLoanOrderAndCount(loanOrder.getId(),loanSupplyLog.getSupplyCount(),supplyCode);
+                json.put("reason",reason);
+                listnew.add(json);
+            }
+            loanSupplyLog.setSupplyInfo(JSON.toJSONString(listnew));
+
             Map<String,Object> historyInfo = new HashMap<>();
             historyInfo.put("id",loanSupplyLog.getId());
             historyInfo.put("createdTime",DateUtils.format(loanSupplyLog.getCreatedTime(),DATA_FORMAT));
@@ -252,7 +284,9 @@ public class SupplyLogController extends BaseListableController<SupplyLogMore> {
                 handleInfo.add(supplyLogInfo);
             }
             historyInfo.put("info", info);
-            if(supplyCountInfoService.checkSendDashuLog(loanSupplyLog.getId())){
+            SupplyDashuLog supplyDashuLog = supplyCountInfoService.checkSendDashuLog(supplyLog.getId());
+            if(supplyDashuLog !=null){
+                historyInfo.put("sendTime",DateUtils.format(supplyDashuLog.getCreatedTime(),DATA_FORMAT));
                 sendHistoryList.add(historyInfo);
             }else{
                 historyList.add(historyInfo);

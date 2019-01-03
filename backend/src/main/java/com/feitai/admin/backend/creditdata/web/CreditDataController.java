@@ -3,12 +3,15 @@ package com.feitai.admin.backend.creditdata.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.feitai.admin.backend.creditdata.model.AuthdataRecord;
 import com.feitai.admin.backend.creditdata.model.CreditData;
+import com.feitai.admin.backend.creditdata.service.AuthdataRecordService;
 import com.feitai.admin.backend.creditdata.service.CreditDataService;
 import com.feitai.admin.backend.creditdata.service.MoxieDataService;
 import com.feitai.admin.core.contants.ResultCode;
 import com.feitai.admin.core.vo.ResponseBean;
 import com.feitai.jieya.server.dao.callback.model.moxie.MoxieData;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +35,9 @@ public class CreditDataController {
 
     @Autowired
     private MoxieDataService moxieDataService;
+
+    @Autowired
+    private AuthdataRecordService authdataRecordService;
 
     /**
      * 返回烟草授信数据最新记录数据
@@ -109,8 +115,18 @@ public class CreditDataController {
 
 
 	private JSONObject handleOrders(Long userId,String code) {
-		CreditData creditData = creditDataService.findByUserIdAndCode(userId, code);
-		JSONObject json =null;
+        CreditData creditData = null;
+        if(code.equals("XYL_TOBACCO")){
+            AuthdataRecord authdataRecord = authdataRecordService.findByUserAndCode(code, userId);
+            if(authdataRecord!=null){
+                creditData = new CreditData();
+                BeanUtils.copyProperties(authdataRecord,creditData);
+                creditData.setCreditData(authdataRecord.getCallDataPara());
+            }
+        }else{
+            creditData = creditDataService.findByUserIdAndCode(userId, code);
+        }
+        JSONObject json =null;
          if(!Objects.isNull(creditData)){
              json = (JSONObject) JSON.toJSON(creditData);
              JSONObject creditDataJson=(JSONObject) JSON.parse(creditData.getCreditData());

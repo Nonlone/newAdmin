@@ -42,8 +42,8 @@
           <label class="control-label">注册时间：</label>
           <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
           <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-            <input type="text" class="calendar" name="search_GTE_createTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_createTime" type="text" class="calendar" data-tip="{text : '开始日期'}">
+            <input type="text" class="calendar-time calendar" name="search_GTE_createTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_createTime" type="text" class="calendar-time calendar" data-tip="{text : '开始日期'}">
           </div>
         </div>
         <div class="span_width">
@@ -216,10 +216,11 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
         addOrUpdateFormId : 'addOrUpdateForm',
         searchBtnId :'btnSearch',
         dialogContentId : 'addOrUpdate',
+        operationwidth:'160px',
         operationColumnRenderer : function(value, obj){//操作列最追加按钮
         	var editStr = '';
         	if(changePasswdBtn){
-        		editStr= '<span class="grid-command" title="修改密码"></span>';
+        		editStr= '<span class="grid-command lock" title="修改密码">修改密码</span>';
         	}
           	return editStr;
           }
@@ -229,7 +230,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/grid'],function (
     grid.on('cellclick',function(ev){//定义点击行的出发事件
         var sender = $(ev.domTarget); //点击的Dom
         var record = ev.record;
-        if(sender.hasClass('icon-lock')){
+        if(sender.hasClass('lock')){
         	from = saveDialog.get('form');
         	from.getField('id').set('value',record.id);
         	saveDialog.update();

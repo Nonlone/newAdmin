@@ -222,7 +222,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     	var select = new Select.Suggest({
     		render:'#primaryList',
             name:'mainPackgage',
-           data:dataItems
+           	data:dataItems,
     	  });
     	select.render();
 
@@ -333,8 +333,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 
     var beforeUpdateShow = function(dialog,form,record){
         update = true;
-        select.setSelectedValue('');
-        select.setSelectedValue(record.mainPackgage);
+        findPrimary();
         select.disable();
         form.getField("channelId").disable();
         form.getField("channelSort").disable();

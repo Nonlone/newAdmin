@@ -77,16 +77,16 @@
 				<label class="control-label">申请时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_applyTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_applyTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar-time calendar" name="search_GTE_applyTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_applyTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 			<div class="control-group span_width">
 				<label class="control-label">放款时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_payLoanTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_payLoanTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar-time calendar" name="search_GTE_payLoanTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_payLoanTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 
@@ -218,15 +218,15 @@
 
 
         var columns = [
-            {title:'订单编号',dataIndex:'id',width:'180px'},
-            {title:'客户姓名',dataIndex:'idcard',width:"80px",renderer: function (value) {
+            {title:'订单编号',dataIndex:'id',width:'150px'},
+            {title:'客户姓名',dataIndex:'idcard',width:"70px",renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '';
                     }
                 }},
-            {title:'客户ID',dataIndex:'user',width:"180px",renderer:function (value) {
+            {title:'客户ID',dataIndex:'user',width:"150px",renderer:function (value) {
                     if(value) {
                         return value.id;
                     }else{
@@ -240,46 +240,46 @@
                         return "";
                     }
                 }},
-            {title:'身份证',dataIndex:'idcard',width:"150px",renderer: function (value) {
+            {title:'身份证',dataIndex:'idcard',width:"130px",renderer: function (value) {
                     if(value){
                         return value.idCard;
                     }else{
                         return '';
                     }
                 }},
-            {title:'产品名称',dataIndex:'product',width:'110px',renderer: function (value) {
+            {title:'产品名称',dataIndex:'product',width:'90px',renderer: function (value) {
                     if(value){
                         return value.remark;
                     }else{
                         return '';
                     }
                 }},
-            {title:'注册渠道',dataIndex:'user',width:'120px',renderer: function (value) {
+            {title:'注册渠道',dataIndex:'user',width:'90px',renderer: function (value) {
                     if(value){
                         return value.channelId;
                     }else{
                         return '';
                     }
                 }},
-            {title:'授信金额',dataIndex:'card.creditSum',width:'100px',renderer: function (value) {
+            {title:'授信金额',dataIndex:'card.creditSum',width:'80px',renderer: function (value) {
                     if(value){
                         return value;
                     }else{
                         return null;
                     }
                 }},
-            {title:'提现金额',dataIndex:'loanAmount',width:'100px'},
+            {title:'提现金额',dataIndex:'loanAmount',width:'80px'},
             {title:'期限(月)',dataIndex:'loanTerm',width:'80px'},
-            {title:'资金方',dataIndex:'fundName',width:'100px',renderer: function (value) {
+            {title:'资金方',dataIndex:'fundName',width:'70px',renderer: function (value) {
                     if(value){
                         return value;
                     }else{
                         return null;
                     }
                 }},
-            {title:'放款状态',dataIndex:'status',width:'150px',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
-            {title:'申请时间',dataIndex:'applyTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'放款时间',dataIndex:'payLoanTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer}
+            {title:'放款状态',dataIndex:'status',width:'140px',renderer:BUI.Grid.Format.enumRenderer(enumObj)},
+            {title:'申请时间',dataIndex:'applyTime',width:'140px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'放款时间',dataIndex:'payLoanTime',width:'140px',renderer:BUI.Grid.Format.datetimeRenderer}
 
         ];
 
@@ -296,7 +296,7 @@
             showAddBtn : add,
             showUpdateBtn : update,
             showRemoveBtn : del,
-            operationwidth:'130px',
+            operationwidth:'110px',
             gridCfg:{
                 innerBorder:true,
 

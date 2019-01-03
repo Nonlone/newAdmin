@@ -21,11 +21,11 @@
                 <tr style="background-color: #F2F2F2">
                     <th width="150px">客户姓名</th>
                     <th width="155px">注册手机号</th>
-                    <th width="100px">提现金额</th>
+                    <th width="100px">申请提现金额</th>
                     <th width="190px">新网补件日期(收到总部补件请求时间)</th>
                     <th width="80px">资金方</th>
                     <th width="150px">产品名称</th>
-                    <th width="150px">用户ID</th>
+                    <th width="150px">客户ID</th>
                 </tr>
                 </thead>
                 <tr>

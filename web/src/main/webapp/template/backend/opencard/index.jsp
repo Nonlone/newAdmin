@@ -63,20 +63,20 @@
                     <input type="text" class="input-normal control-text" name="search_LIKE_registChannelId">
                 </div>
             </div>
-            <div class="control-group span10">
+            <div class="control-group span12">
                 <label class="control-label">提交审批时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_submitTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_submitTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+                    <input type="text" class="calendar-time calendar" name="search_GTE_submitTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_submitTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
                 </div>
             </div>
-            <div class="control-group span10">
+            <div class="control-group span12">
                 <label class="control-label">订单创建时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_createdTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+                    <input type="text" class="calendar-time calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_createdTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
                 </div>
             </div>
 
@@ -114,7 +114,29 @@
         window.open('${IP}'+'/backend/opencard/detail/'+id);
     }
 
-    BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
+    BUI.use(['bui/ux/crudgrid','bui/select','bui/data',"bui/calendar"],function (CrudGrid,Select,Data,Calendar) {
+
+        var datepickerStart = new Calendar.DatePicker({
+            trigger:'.start',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 0,
+                minute:0,
+                second : 0
+            },
+            autoRender : true
+        });
+
+        var datepickerEnd = new Calendar.DatePicker({
+            trigger:'.end',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 23,
+                minute:59,
+                second : 59
+            },
+            autoRender : true
+        });
 
         var selectStatusStore = new Data.Store({
             url: '/admin/backend/opencard/openCardStatus',
@@ -149,15 +171,15 @@
         selectProduct.render();
 
         var columns = [
-            {title:'订单号',dataIndex:'id',width:'180px'},
-            {title:'客户姓名',dataIndex:'idCard',width:'80px',renderer: function (value) {
+            {title:'订单号',dataIndex:'id',width:'145px'},
+            {title:'客户姓名',dataIndex:'idCard',width:'70px',renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '<span style="color:#ff9955">未填写</span>';
                     }
                 }},
-            {title:'客户ID',dataIndex:'userId',width:'180px'},
+            {title:'客户ID',dataIndex:'userId',width:'150px'},
             {title:'注册手机号',dataIndex:'user',width:'100px',renderer:function (value) {
                     if(value){
                         return value.phone;
@@ -165,7 +187,7 @@
                         return "";
                     }
                 }},
-            {title:'身份证',dataIndex:'idCard',width:'150px',renderer: function (value) {
+            {title:'身份证',dataIndex:'idCard',width:'120px',renderer: function (value) {
                     if(value){
                         return value.idCard;
                     }else{
@@ -184,13 +206,13 @@
                     }
                     return "";
                 }},
-            {title:'注册渠道',dataIndex:'registChannelId',width:'120px'},
-            {title:'进件渠道',dataIndex:'applyChannelId',width:'120px'},
+            {title:'注册渠道',dataIndex:'registChannelId',width:'100px'},
+            {title:'进件渠道',dataIndex:'applyChannelId',width:'100px'},
+            {title:'授信状态',dataIndex:'cardStatusName',width:'100px'},
             {title:'授信额度',dataIndex:'creditSum',width:'80px'},
-            {title:'授信状态',dataIndex:'cardStatusName',width:'120px'},
-            {title:"授权项",dataIndex:'auths',width:'160px'},
-            {title:'创建时间',dataIndex:'createdTime',width:'160px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'提交审批时间',dataIndex:'submitTime',width:'160px',renderer:BUI.Grid.Format.datetimeRenderer}
+            {title:"授权项",dataIndex:'auths',width:'140px'},
+            {title:'创建时间',dataIndex:'createdTime',width:'140px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'提交审批时间',dataIndex:'submitTime',width:'140px',renderer:BUI.Grid.Format.datetimeRenderer}
         ];
 
         var crudGrid = new CrudGrid({
