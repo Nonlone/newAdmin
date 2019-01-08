@@ -300,12 +300,12 @@
 			
 			 var datepicker = new Calendar.DatePicker({
 		            trigger:'#start_dueDate',
-		            dateMask : 'mm-dd',
+		            dateMask : 'yyyy-mm-dd',
 		            autoRender : true
 		          });
 			 var datepicker1 = new Calendar.DatePicker({
 		            trigger:'#end_dueDate',
-		            dateMask : 'mm-dd',
+		            dateMask : 'yyyy-mm-dd',
 		            autoRender : true
 		          });
 		});
