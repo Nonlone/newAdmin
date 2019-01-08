@@ -409,7 +409,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         if(searchSql.equals(getService().WHERE_COMMON)){
             sbSql.append(SelectMultiTable.builder(RepayOrder.class).buildCountSqlString());
         }else{
-            sbSql.append(getSelectMultiTable().buildCountSqlString());
+            sbSql.append(getSelectMultiTable().buildCountSqlStringByDistinct("id"));
         }
         sbSql.append(searchSql);
         sbSql.append(" Group by " + SelectMultiTable.MAIN_ALAIS + ".repay_plan_id )tcount");

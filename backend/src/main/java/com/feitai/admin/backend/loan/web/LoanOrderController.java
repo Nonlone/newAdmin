@@ -475,7 +475,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         if (searchSql.equals(DynamitSupportService.WHERE_COMMON)) {
             sbSql.append(SelectMultiTable.builder(LoanOrderMore.class).buildCountSqlString());
         } else {
-            sbSql.append(getSelectMultiTable().buildCountSqlString());
+            sbSql.append(getSelectMultiTable().buildCountSqlStringByDistinct("id"));
         }
         sbSql.append(searchSql);
         return sbSql.toString();

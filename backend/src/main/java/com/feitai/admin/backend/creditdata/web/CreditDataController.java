@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Objects;
+import java.util.*;
 
 /**
  * detail:渲染模板获取数据
@@ -61,10 +61,46 @@ public class CreditDataController {
         CreditData creditData = creditDataService.findByUserIdAndSourceAndCode(userId, "JCHL","TAX");
         if(!Objects.isNull(creditData)){
             JSONObject json = (JSONObject) JSON.toJSON(creditData);
-            json.put("report",JSON.parse(creditData.getCreditData()));
+            JSONObject credit = JSON.parseObject(creditData.getCreditData());
+            List<JSONObject> qycwbbList = (List<JSONObject>) credit.get("qycwbbList");
+            if(qycwbbList!=null){
+                credit.replace("qycwbbList",sortByNd(qycwbbList));
+            }
+            JSONObject qyfpsj = (JSONObject) credit.get("qyfpsj");
+            if(qyfpsj!=null){
+                List<JSONObject> qyfpxxList = (List<JSONObject>) qyfpsj.get("qyfpxxList");
+                if(qyfpxxList!=null){
+                    qyfpsj.replace("qyfpxxList",sortByNd(qyfpxxList));
+                    credit.replace("qyfpsj",qyfpsj);
+                }
+            }
+            JSONObject nszsxx = (JSONObject) credit.get("nszsxx");
+            if(nszsxx!=null){
+                List<JSONObject> ndQyZsxxVoList = (List<JSONObject>) nszsxx.get("ndQyZsxxVoList");
+                if(ndQyZsxxVoList!=null){
+                    qyfpsj.replace("ndQyZsxxVoList",sortByNd(ndQyZsxxVoList));
+                    credit.replace("nszsxx",nszsxx);
+                }
+            }
+
+            json.put("report",credit);
             return new ResponseBean<>(ResultCode.SUCCESS,json);
         }
         return new ResponseBean<Void>(ResultCode.FAIL);
+    }
+
+    private List<JSONObject> sortByNd(List<JSONObject> list){
+        Collections.sort(list, new Comparator<JSONObject>() {
+            @Override
+            public int compare(JSONObject o1, JSONObject o2) {
+                int i = o2.getIntValue("nd") - o1.getIntValue("nd");
+                if(i == 0){
+                    return 0;
+                }
+                return i;
+            }
+        });
+        return list;
     }
 
     @PostMapping("/sauron")
