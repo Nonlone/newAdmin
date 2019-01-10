@@ -95,7 +95,7 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
                     if (!CollectionUtils.isEmpty(ratePlanTerm.getRatePlanDetails())) {
                         for (RatePlanDetail ratePlanDetail : ratePlanTerm.getRatePlanDetails()) {
                             // 利率展示乘以100
-                            if (ratePlanDetail.getCalculationMode() !=CalculationMode.FIXED_AMOUNT) {
+                            if (!CalculationMode.FIXED_AMOUNT.equals(ratePlanDetail.getCalculationMode())) {
                                 ratePlanDetail.setFee(ratePlanDetail.getFee().multiply(new BigDecimal("100")));
                             }
                         }
@@ -157,8 +157,8 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
                         ratePlanDetail.setName(subjectMap.get(ratePlanDetail.getSubjectId()));
                         ratePlanDetail.setVersion(0);
                         // 利率除以100
-                        if (ratePlanDetail.getCalculationMode() != CalculationMode.FIXED_AMOUNT) {
-                            ratePlanDetail.setFee(new BigDecimal(feePlanDetail.getFee()).multiply(new BigDecimal("100")));
+                        if (!CalculationMode.FIXED_AMOUNT.equals(ratePlanDetail.getCalculationMode())) {
+                            ratePlanDetail.setFee(feePlanDetail.getFee().divide(new BigDecimal("100")));
                         }
                         // 默认回写
                         if (ratePlanDetail.getFeeBaseType() == null) {
@@ -188,19 +188,21 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
         RatePlanMore ratePlan = ratePlanService.findOne(ratePlanRequest.getId());
         if (ratePlan != null) {
             //保留code和版本信息，删除原来记录
-            //Integer currentVersion = ratePlan.getCurrentVersion() + 1;
+            Integer currentVersion = ratePlan.getCurrentVersion() + 1;
             for (RatePlanTermMore ratePlanTerm : ratePlan.getRatePlanTerms()) {
-                for (RatePlanDetail ratePlanDetail : ratePlanTerm.getRatePlanDetails()) {
-                    ratePlanDetailService.delete(ratePlanDetail);
-                }
+            	if(ratePlanTerm.getRatePlanDetails()!=null){
+	                for (RatePlanDetail ratePlanDetail : ratePlanTerm.getRatePlanDetails()) {
+	                    ratePlanDetailService.delete(ratePlanDetail);
+	                }
+            	}
                 ratePlanTermService.delete(ratePlanTerm);
             }
             ratePlanService.delete(ratePlan);
             // 重新插入
             Date date = new Date();
             BeanUtils.copyProperties(ratePlanRequest, ratePlan);
-            ratePlan.setId(null);
-            //ratePlan.setCurrentVersion(currentVersion);
+           // ratePlan.setId(null);
+            ratePlan.setCurrentVersion(currentVersion);
             ratePlan.setCreatedTime(date);
             ratePlan.setUpdateTime(date);
             ratePlan = ratePlanService.save(ratePlan);
@@ -212,12 +214,13 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
                 ratePlanTerm.setRatePlanId(ratePlan.getId());
                 ratePlanTerm.setTerm(weight.getTerm());
                 ratePlanTerm.setWeight(weight.getWeight());
-                //ratePlanTerm.setVersion(currentVersion);
+                ratePlanTerm.setVersion(currentVersion+"");
                 ratePlanTerm.setCreatedTime(date);
                 ratePlanTerm.setUpdateTime(date);
                 ratePlanTerm = ratePlanTermService.save(ratePlanTerm);
                 SnapshotRatePlanTerm snapshotRatePlanTerm = new SnapshotRatePlanTerm();
                 BeanUtils.copyProperties(ratePlanTerm, snapshotRatePlanTerm);
+                snapshotRatePlanTerm.setVersion(currentVersion);
                 snapshotRatePlanTerm.setRatePlanId(snapshotRatePlan.getId());
                 snapshotRatePlanTermService.save(snapshotRatePlanTerm);
                 for (FeePlan feePlan : ratePlanRequest.getFeePlan()) {
@@ -228,10 +231,10 @@ public class RatePlanController extends BaseListableController<RatePlanMore> {
                             BeanUtils.copyProperties(feePlanDetail, ratePlanDetail);
                             ratePlanDetail.setRatePlanTermId(ratePlanTerm.getId());
                             ratePlanDetail.setName(subjectMap.get(ratePlanDetail.getSubjectId()));
-                           //ratePlanDetail.setVersion(currentVersion);
+                           ratePlanDetail.setVersion(currentVersion);
                             // 利率除以100
-                            if (ratePlanDetail.getCalculationMode() != CalculationMode.FIXED_AMOUNT) {
-                                ratePlanDetail.setFee(ratePlanDetail.getFee().multiply(new BigDecimal("100")));
+                            if (!CalculationMode.FIXED_AMOUNT.equals(ratePlanDetail.getCalculationMode())) {
+                                ratePlanDetail.setFee(ratePlanDetail.getFee().divide(new BigDecimal("100")));
                             }
                             // 默认回写
                             if (ratePlanDetail.getFeeBaseType() == null) {
