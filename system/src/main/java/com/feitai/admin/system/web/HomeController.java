@@ -51,7 +51,11 @@ public class HomeController {
     public Collection<Menu> loadMenu(ServletRequest request) {
         HttpServletRequest r = (HttpServletRequest) request;
         String ctx = r.getContextPath();
-        Collection<Menu> menu = userService.loadMenu(getCurrentUserId(), ctx);
+        Long currentUserId = getCurrentUserId();
+        if(currentUserId == null){
+            return null;
+        }
+        Collection<Menu> menu = userService.loadMenu(currentUserId, ctx);
         return menu;
     }
 
@@ -79,6 +83,9 @@ public class HomeController {
      */
     private Long getCurrentUserId() {
         ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+        if(user == null){
+            return null;
+        }
         return user.getId();
     }
 

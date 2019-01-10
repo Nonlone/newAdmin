@@ -174,7 +174,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         try {
             restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
             ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getRejectCash(), requestJsonString, String.class);
-            return jsonString.getBody();
+            return JSONObject.parseObject(jsonString.getBody());
         } catch (Exception e) {
             log.error(String.format("send backend[{%s}] fail",appProperties.getRejectCash()),e);
             return new BackendResponse(-1, "连接服务端失败！");

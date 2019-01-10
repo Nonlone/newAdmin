@@ -137,7 +137,7 @@
                     //contentType: 'application/json;charset=utf-8',
                     success:function(result){
                         debugger;
-                        if(result.code=="0"){
+                        if(result.code== 0){
                             BUI.Message.Alert('操作成功！',function(){
                             },'success');
                         }else {
