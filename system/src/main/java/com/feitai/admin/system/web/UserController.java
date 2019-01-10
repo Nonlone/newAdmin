@@ -43,6 +43,7 @@ public class UserController extends BaseListableController<User> {
     private UserService userService;
 
     @RequestMapping(value = "")
+    @RequiresPermissions("/system/user:list")
     public String index() {
         return "/system/user/index";
     }

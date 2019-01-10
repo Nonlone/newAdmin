@@ -3,24 +3,21 @@ package com.feitai.admin.messagecenter.controller;
 import com.feitai.admin.core.service.Page;
 import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.messagecenter.base.MessageBaseController;
-import com.feitai.admin.messagecenter.config.MessageConfig;
 import com.feitai.admin.messagecenter.constants.MessageConstants;
 import com.feitai.admin.messagecenter.dto.NoticeTemplateDto;
 import com.feitai.admin.messagecenter.dto.NoticeTemplateQueryDto;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.ServletRequest;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +28,8 @@ import java.util.Map;
 @RequestMapping(value = "/message/noticeTemplate")
 @Slf4j
 public class NoticeTemplateController extends MessageBaseController {
+
+    @RequiresPermissions("/message/noticeTemplate:list")
     @RequestMapping(value = "index",method = RequestMethod.GET)
     public String index() {
         return "/message/noticeTemplate/index";

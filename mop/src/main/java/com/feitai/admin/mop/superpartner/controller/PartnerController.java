@@ -50,6 +50,7 @@ public class PartnerController extends BaseListableController<Partner> {
         return partnerPage;
     }
 
+	@RequiresPermissions("/mop/partner:list")
     @RequestMapping()
    	public String index() {
    		return "/mop/partner/index";

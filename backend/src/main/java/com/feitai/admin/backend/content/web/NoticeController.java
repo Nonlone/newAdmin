@@ -34,6 +34,7 @@ public class NoticeController extends BaseListableController<Notice> {
 	private NoticeService noticeService;
 	
 	@RequestMapping(value = "index")
+	@RequiresPermissions("/backend/notice:list")
 	public String index() {
 		return "/backend/notice/index";
 	}

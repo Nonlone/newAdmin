@@ -70,6 +70,7 @@ public class DebtController extends BaseListableController<Debt>{
      * 首期还款列表页面
      * @return
      */
+	@RequiresPermissions("/backend/loan/debt:list")
     @RequestMapping(value = "/firstRepayOrder")
     public ModelAndView firstRepayOrder() {
     	ModelAndView modelAndView=new ModelAndView("/backend/repayOrder/firstRepayOrder");
@@ -90,6 +91,7 @@ public class DebtController extends BaseListableController<Debt>{
      * 逾期还款列表页面
      * @return
      */
+	  @RequiresPermissions("/backend/loan/debt:list")
     @RequestMapping(value = "/pastRepayOrder")
     public ModelAndView pastRepayOrder() {
     	ModelAndView modelAndView=new ModelAndView("/backend/repayOrder/pastRepayOrder");

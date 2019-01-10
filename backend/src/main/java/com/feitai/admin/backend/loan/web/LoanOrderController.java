@@ -185,6 +185,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
 
     @GetMapping(value = "/index")
+    @RequiresPermissions("/backend/loanOrder:list")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("/backend/loanOrder/index");
         String rejectCash = appProperties.getRejectCash();

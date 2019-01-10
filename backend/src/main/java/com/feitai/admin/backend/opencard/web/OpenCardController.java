@@ -87,7 +87,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
     @Autowired
     private TongDunDataService tongDunDataService;
 
-
+    @RequiresPermissions("/backend/opencard:list")
     @RequestMapping("/index")
     public ModelAndView index() {
     	ModelAndView mav=new ModelAndView("/backend/opencard/index");

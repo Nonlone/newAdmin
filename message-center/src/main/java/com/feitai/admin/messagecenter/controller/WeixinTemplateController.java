@@ -28,6 +28,8 @@ import java.util.Map;
 @RequestMapping(value = "/message/weixinTemplate")
 @Slf4j
 public class WeixinTemplateController extends MessageBaseController {
+
+    @RequiresPermissions("/message/weixinTemplate:list")
     @RequestMapping(value = "index",method = RequestMethod.GET)
     public String index() {
         return "/message/weixinTemplate/index";

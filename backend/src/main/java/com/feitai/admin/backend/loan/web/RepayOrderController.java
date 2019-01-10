@@ -127,6 +127,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
     }
 
     @RequestMapping(value = "index")
+    @RequiresPermissions("/backend/loan/repayOrder:list")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/index");
         modelAndView.addObject("isOut",false);
