@@ -91,7 +91,6 @@
             url: '/home/loadMenu',
             cache: false,
             success: function (data) {
-                debugger;
                 if(data==null){
                     BUI.Message.Alert("未登陆！请重新登陆",function(){
                         window.location.href= '${ctx}';
