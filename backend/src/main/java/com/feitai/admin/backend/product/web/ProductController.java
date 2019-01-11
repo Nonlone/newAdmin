@@ -61,7 +61,8 @@ public class ProductController extends BaseListableController<Product> {
 		}
 		return list;
 	}
-	
+
+	@RequiresPermissions("/backend/product:list")
 	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/product/index";

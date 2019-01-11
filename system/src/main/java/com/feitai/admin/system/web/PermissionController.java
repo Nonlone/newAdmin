@@ -30,6 +30,7 @@ public class PermissionController  extends BaseListableController<Permission> {
 	@Autowired
 	private PermissionService permissionService;
 
+	@RequiresPermissions("/system/permission:list")
 	@RequestMapping(value = "")
 	public String index() {
 		return "/system/permission/index";

@@ -87,7 +87,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
     @Autowired
     private TongDunDataService tongDunDataService;
 
-
+    @RequiresPermissions("/backend/opencard:list")
     @RequestMapping("/index")
     public ModelAndView index() {
     	ModelAndView mav=new ModelAndView("/backend/opencard/index");
@@ -256,7 +256,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
         if(searchSql.equals(getService().WHERE_COMMON)){
             sbSql.append(SelectMultiTable.builder(CardMore.class).buildCountSqlString());
         }else{
-            sbSql.append(getSelectMultiTable().buildCountSqlString());
+            sbSql.append(getSelectMultiTable().buildCountSqlStringByDistinct("id"));
         }
         sbSql.append(searchSql);
         return sbSql.toString();

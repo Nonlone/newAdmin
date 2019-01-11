@@ -45,6 +45,7 @@ public class UserChannelController extends BaseListableController<User> {
     @Autowired
     private ChannelPrimaryService channelPrimaryService;
 
+    @RequiresPermissions("/channel/userChannel:list")
     @GetMapping(value = "/index")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("/channel/userChannel/index");

@@ -75,6 +75,7 @@ public class AdvertItemController extends BaseListableController<AdvertItem>{
     @Autowired
     private CosClientUtil cosClientUtil;
 
+    @RequiresPermissions("/mop/advert/item:list")
     @RequestMapping()
     public ModelAndView index(String blockId) {
         ModelAndView modelAndView = new ModelAndView("/mop/advert/itemIndex");

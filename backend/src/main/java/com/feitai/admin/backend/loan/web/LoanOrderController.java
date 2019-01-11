@@ -174,7 +174,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         try {
             restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
             ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getRejectCash(), requestJsonString, String.class);
-            return jsonString.getBody();
+            return JSONObject.parseObject(jsonString.getBody());
         } catch (Exception e) {
             log.error(String.format("send backend[{%s}] fail",appProperties.getRejectCash()),e);
             return new BackendResponse(-1, "连接服务端失败！");
@@ -185,6 +185,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
 
     @GetMapping(value = "/index")
+    @RequiresPermissions("/backend/loanOrder:list")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("/backend/loanOrder/index");
         String rejectCash = appProperties.getRejectCash();
@@ -475,7 +476,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         if (searchSql.equals(DynamitSupportService.WHERE_COMMON)) {
             sbSql.append(SelectMultiTable.builder(LoanOrderMore.class).buildCountSqlString());
         } else {
-            sbSql.append(getSelectMultiTable().buildCountSqlString());
+            sbSql.append(getSelectMultiTable().buildCountSqlStringByDistinct("id"));
         }
         sbSql.append(searchSql);
         return sbSql.toString();

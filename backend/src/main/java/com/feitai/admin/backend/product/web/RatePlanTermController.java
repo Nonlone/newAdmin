@@ -27,7 +27,8 @@ import javax.validation.Valid;
 public class RatePlanTermController extends BaseListableController<RatePlanTermMore> {
 	@Autowired
 	private RatePlanTermService ratePlanTermService;
-	
+
+	@RequiresPermissions("/backend/ratePlanTerm:list")
 	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/ratePlanTerm/index";

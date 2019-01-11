@@ -91,22 +91,28 @@
             url: '/home/loadMenu',
             cache: false,
             success: function (data) {
-                var navs = data;
-                //var active="";
-                for (var i = 0; i < navs.length; i++) {
-                    var nav = navs[i];
-                    if (i == 0 || i == 1 || i == 2) {
-                        active = 'dl-selected';
-                    }
-                    $('<li class="nav-item ' + active + '">' +
-                        '<div class="nav-item-inner">' +
+                if(data==null){
+                    BUI.Message.Alert("未登陆！请重新登陆",function(){
+                        window.location.href= '${ctx}';
+                    },'error');
+                }else{
+                    var navs = data;
+                    //var active="";
+                    for (var i = 0; i < navs.length; i++) {
+                        var nav = navs[i];
+                        if (i == 0 || i == 1 || i == 2) {
+                            active = 'dl-selected';
+                        }
+                        $('<li class="nav-item ' + active + '">' +
+                            '<div class="nav-item-inner">' +
                             '<i class="iconfont ' + nav.icon + '-1 icon_nav"></i>' + nav.text + '' +
-                        '</div>' +
-                    '</li>').appendTo($('#J_Nav'));
+                            '</div>' +
+                            '</li>').appendTo($('#J_Nav'));
+                    }
+                    new PageUtil.MainPage({
+                        modulesConfig: navs
+                    });
                 }
-                new PageUtil.MainPage({
-                    modulesConfig: navs
-                });
             },
             failure: function (data) {
                 BUI.Message.Alert('加载菜单列表失败，请稍后再试！');

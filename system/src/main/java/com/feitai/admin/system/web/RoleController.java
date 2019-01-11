@@ -35,6 +35,7 @@ public class RoleController extends BaseListableController<Role> {
     private RoleAuthService roleAuthService;
 
     @RequestMapping(value = "")
+    @RequiresPermissions("/system/role:list")
     public String index() {
         return "/system/role/index";
     }
