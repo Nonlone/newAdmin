@@ -138,6 +138,7 @@
                     success:function(result){
                         if(result.code== 0){
                             BUI.Message.Alert('操作成功！',function(){
+                                window.location.reload();
                             },'success');
                         }else {
                             BUI.Message.Alert(result.message,function(){
