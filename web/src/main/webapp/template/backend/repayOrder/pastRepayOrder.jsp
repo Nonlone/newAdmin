@@ -49,8 +49,8 @@
 				<label class="control-label">还款日:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input id="start_dueDate" readonly="true" type="text" class="calendar-monthpicker" name="search_GTE_dueDateFormat" data-tip="{text : '开始日期'}"> <span>
-             - </span><input id="end_dueDate" readonly="true"  name="search_LTE_dueDateFormat" type="text" class="calendar-monthpicker" data-tip="{text : '结束日期'}">
+					<input id="start_dueDate" readonly="true" type="text" class="calendarStart calendar-time" name="search_GTE_dueDateFormat" data-tip="{text : '开始日期'}"> <span>
+             - </span><input id="end_dueDate" readonly="true"  name="search_LTE_dueDateFormat" type="text" class="calendarEnd calendar-time" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 			<div class="control-group span7">
@@ -144,6 +144,34 @@
 
 		BUI.use([ 'bui/ux/crudgrid', 'bui/select', 'bui/data','bui/calendar' ], function(
 				CrudGrid, Select, Data,Calendar) {
+
+            var datepickerStart = new Calendar.DatePicker({
+                trigger:'.calendarStart',
+                showTime : true,
+                lockTime : { //可以锁定时间，hour,minute,second
+                    hour : 00,
+                    minute:00,
+                    second : 00,
+                    editable : true
+                },
+                editable : true,
+                autoRender : true
+
+            });
+
+            var datepickerEnd = new Calendar.DatePicker({
+                trigger:'.calendarEnd',
+                showTime : true,
+                lockTime : { //可以锁定时间，hour,minute,second
+                    hour : 23,
+                    minute:59,
+                    second : 59,
+                    editable : true
+                },
+
+                autoRender : true
+
+            });
 
 			selectProduct = new Select.Select({
 				render : '#selectProduct',
@@ -297,17 +325,7 @@
 				}
 			});
 			var grid = crudGrid.get('grid');
-			
-			 var datepicker = new Calendar.DatePicker({
-		            trigger:'#start_dueDate',
-		            dateMask : 'yyyy-mm-dd',
-		            autoRender : true
-		          });
-			 var datepicker1 = new Calendar.DatePicker({
-		            trigger:'#end_dueDate',
-		            dateMask : 'yyyy-mm-dd',
-		            autoRender : true
-		          });
+
 		});
 		
 		function changeOverdueDays(obj){
