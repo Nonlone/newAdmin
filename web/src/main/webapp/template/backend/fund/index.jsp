@@ -254,7 +254,7 @@
     var disableUrl = "/backend/fund/disable";
 
 
-    BUI.use(['bui/ux/crudgrid', 'bui/form', 'bui/ux/savedialog', 'bui/overlay','bui/calendar'], function (CrudGrid, Form, Dialog,Calendar) {
+    BUI.use(['bui/ux/crudgrid', 'bui/form', 'bui/ux/savedialog', 'bui/overlay','bui/calendar'], function (CrudGrid, Form, Dialog,Overlay,Calendar) {
 
         var datepickerStart = new Calendar.DatePicker({
             trigger:'.calendarStart',
