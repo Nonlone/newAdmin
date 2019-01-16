@@ -50,9 +50,9 @@
                 <label class="control-label">注册时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar-time calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
+                    <input type="text" class="calendar-time calendarStart" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
                     <span>
-             - </span><input name="search_LTE_createdTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
+             - </span><input name="search_LTE_createdTime" type="text" class="calendar-time calendarEnd" data-tip="{text : '结束日期'}">
                 </div>
             </div>
             <div class="span1 offset2">
@@ -87,7 +87,36 @@
         }
     }
 
-    BUI.use(['bui/ux/crudgrid'], function (CrudGrid) {
+    BUI.use(['bui/ux/crudgrid','bui/calendar'], function (CrudGrid,Calendar) {
+
+        var datepickerStart = new Calendar.DatePicker({
+            trigger:'.calendarStart',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 00,
+                minute:00,
+                second : 00,
+                editable : true
+            },
+            editable : true,
+            autoRender : true
+
+        });
+
+        var datepickerEnd = new Calendar.DatePicker({
+            trigger:'.calendarEnd',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 23,
+                minute:59,
+                second : 59,
+                editable : true
+            },
+
+            autoRender : true
+
+        });
+
 
         //定义页面权限
         var add = false, update = false, del = false, list = false;

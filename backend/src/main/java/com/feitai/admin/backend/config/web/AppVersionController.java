@@ -37,6 +37,7 @@ public class AppVersionController extends BaseListableController<AppVersion> {
 	private AppVersionService appVersionService;
 	
 	@RequestMapping(value = "index")
+	@RequiresPermissions("/backend/appVersion:list")
 	public String index(Model model) {
 		List<AppVersion> appVersions = appVersionService.findAll();
 		Map<String,String> osTypeMap = new HashMap<>();

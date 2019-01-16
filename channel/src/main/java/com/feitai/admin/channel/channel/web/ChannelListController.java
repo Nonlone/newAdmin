@@ -47,6 +47,7 @@ public class ChannelListController extends BaseListableController<ChannelList> {
     @Autowired
     private ChannelService channelService;
 
+    @RequiresPermissions("/channel/channelList:list")
     @GetMapping(value = "/index")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("/channel/channelList/index");

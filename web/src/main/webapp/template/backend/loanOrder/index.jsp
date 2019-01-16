@@ -77,16 +77,16 @@
 				<label class="control-label">申请时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar-time calendar" name="search_GTE_applyTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_applyTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
+					<input type="text" readonly="true" class="calendarStart calendar-time" name="search_GTE_applyTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_applyTime" readonly="true" type="text" class="calendar-time calendarEnd" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 			<div class="control-group span_width">
 				<label class="control-label">放款时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar-time calendar" name="search_GTE_payLoanTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_payLoanTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar-time calendarStart" name="search_GTE_payLoanTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_payLoanTime" type="text" class="calendar-time calendarEnd" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 
@@ -136,15 +136,11 @@
                     async:true,
                     //contentType: 'application/json;charset=utf-8',
                     success:function(result){
-                        debugger;
-                        if(result.code=="SUC000"){
+                        if(result.code== 0){
                             BUI.Message.Alert('操作成功！',function(){
                             },'success');
-                        }else if(result.code=="-1"){
+                        }else {
                             BUI.Message.Alert(result.message,function(){
-                            },'error');
-                        }else{
-                            BUI.Message.Alert('提交终止放款失败！',function(){
                             },'error');
                         }
                     }});
@@ -154,7 +150,36 @@
     }
 
 
-    BUI.use(['bui/ux/crudgrid','bui/common/search','bui/common/page','bui/overlay','bui/select','bui/data'],function (CrudGrid,Search,Grid,Overlay,Select,Data) {
+    BUI.use(['bui/ux/crudgrid','bui/common/search','bui/common/page','bui/overlay','bui/select','bui/data','bui/calendar'],function (CrudGrid,Search,Grid,Overlay,Select,Data,Calendar) {
+
+        var datepickerStart = new Calendar.DatePicker({
+            trigger:'.calendarStart',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 00,
+                minute:00,
+                second : 00,
+                editable : true
+            },
+            editable : true,
+            autoRender : true
+
+        });
+
+        var datepickerEnd = new Calendar.DatePicker({
+            trigger:'.calendarEnd',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 23,
+                minute:59,
+                second : 59,
+                editable : true
+            },
+
+            autoRender : true
+
+        });
+
 
         var  detailUrl = '${ctx}/backend/loanOrder/detail/';
 

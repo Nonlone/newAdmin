@@ -40,6 +40,7 @@ public class AppConfigTypeController extends BaseListableController<AppConfigTyp
 	private static final String TYPE_CODE = "typeCode";
 	
 	@RequestMapping(value = "index")
+	@RequiresPermissions("/backend/appConfigType:list")
 	public String index() {
 		return "/backend/appConfigType/index";
 	}

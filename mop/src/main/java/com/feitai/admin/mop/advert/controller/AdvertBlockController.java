@@ -53,6 +53,7 @@ public class AdvertBlockController extends BaseListableController<AdvertBlock>{
     
 
     @RequestMapping()
+    @RequiresPermissions("/mop/advert/block:list")
     public String index() {
         return "/mop/advert/blockIndex";
     }

@@ -67,16 +67,16 @@
                 <label class="control-label">提交审批时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar-time calendar" name="search_GTE_submitTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_submitTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
+                    <input type="text" class="calendar-time calendarStart" name="search_GTE_submitTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_submitTime" type="text" class="calendar-time calendarEnd" data-tip="{text : '结束日期'}">
                 </div>
             </div>
             <div class="control-group span12">
                 <label class="control-label">订单创建时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar-time calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_createdTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
+                    <input type="text" class="calendar-time calendarStart" name="search_GTE_createdTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_createdTime" type="text" class="calendar-time calendarEnd" data-tip="{text : '结束日期'}">
                 </div>
             </div>
 
@@ -117,26 +117,33 @@
     BUI.use(['bui/ux/crudgrid','bui/select','bui/data',"bui/calendar"],function (CrudGrid,Select,Data,Calendar) {
 
         var datepickerStart = new Calendar.DatePicker({
-            trigger:'.start',
+            trigger:'.calendarStart',
             showTime : true,
             lockTime : { //可以锁定时间，hour,minute,second
-                hour : 0,
-                minute:0,
-                second : 0
+                hour : 00,
+                minute:00,
+                second : 00,
+                editable : true
             },
+            editable : true,
             autoRender : true
+
         });
 
         var datepickerEnd = new Calendar.DatePicker({
-            trigger:'.end',
+            trigger:'.calendarEnd',
             showTime : true,
             lockTime : { //可以锁定时间，hour,minute,second
                 hour : 23,
                 minute:59,
-                second : 59
+                second : 59,
+                editable : true
             },
+
             autoRender : true
+
         });
+
 
         var selectStatusStore = new Data.Store({
             url: '/admin/backend/opencard/openCardStatus',
