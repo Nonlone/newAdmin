@@ -192,7 +192,6 @@
     }
 
     <shiro:hasPermission name="/backend/supply/log:supply">
-    debugger;
         var elementsByName = document.getElementsByName("sendDashu");
         for(var i = 0;i<elementsByName.length;i++){
             elementsByName[i].removeAttribute("hidden");
@@ -234,7 +233,6 @@
         $('img.dialog').on('click', function () {
             var large_image = '<img class=\'closeImg\' style=\'max-height: 780px;max-width: 800px\' src= ' + $(this).attr("src") + '></img>';
 
-                debugger;
                 var width = this.width;
                 var height = this.height;
                 var dialog = new Overlay.Dialog({

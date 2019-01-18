@@ -35,6 +35,7 @@ public class DictionaryController extends BaseListableController<Dictionary> {
     @Autowired
     private DictionaryService dictionaryService;
 
+    @RequiresPermissions("/system/dictionary:list")
     @RequestMapping(value = "")
     public String index() {
         return "/system/dictionary/index";

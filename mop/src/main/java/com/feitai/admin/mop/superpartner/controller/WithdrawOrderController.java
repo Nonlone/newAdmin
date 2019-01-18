@@ -49,6 +49,7 @@ public class WithdrawOrderController extends BaseListableController<WithdrawOrde
     @Autowired
     private AdminWithdrawOrderService adminWithdrawOrderService;
 
+    @RequiresPermissions("/mop/partner/withdrawOrder:list")
     @RequestMapping()
     public String index() {
         return "/mop/withdrawOrder/index";

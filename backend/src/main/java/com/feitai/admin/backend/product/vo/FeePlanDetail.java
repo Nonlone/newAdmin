@@ -6,6 +6,8 @@ import com.feitai.jieya.server.dao.base.constant.PaymentTimeType;
 import com.feitai.jieya.server.dao.base.constant.PaymentType;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -35,7 +37,7 @@ public class FeePlanDetail {
      * 收费内容
      */
     @NotNull
-    private Double fee;
+    private BigDecimal fee;
 
     /**
      * 收费基数

@@ -54,7 +54,8 @@ public class ChannelController extends BaseListableController<Channel> {
 	
 	@Autowired
 	private MapProperties mapProperties;
-	
+
+	@RequiresPermissions("/backend/channel:list")
 	@RequestMapping(value = "index")
 	public ModelAndView index() {
 		ModelAndView mav=new ModelAndView("/backend/channel/index");

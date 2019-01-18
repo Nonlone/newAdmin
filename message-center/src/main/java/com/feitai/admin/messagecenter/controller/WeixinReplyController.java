@@ -6,8 +6,6 @@ import com.feitai.admin.messagecenter.base.MessageBaseController;
 import com.feitai.admin.messagecenter.constants.MessageConstants;
 import com.feitai.admin.messagecenter.dto.WeixinReplyDto;
 import com.feitai.admin.messagecenter.dto.WeixinReplyQueryDto;
-import com.feitai.admin.messagecenter.dto.WeixinTemplateDto;
-import com.feitai.admin.messagecenter.dto.WeixinTemplateQueryParam;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -30,6 +28,8 @@ import java.util.Map;
 @RequestMapping(value = "/message/weixinReplyTemplate")
 @Slf4j
 public class WeixinReplyController extends MessageBaseController {
+
+    @RequiresPermissions("/message/weixinReplyTemplate:list")
     @RequestMapping(value = "index",method = RequestMethod.GET)
     public String index() {
         return "/message/weixinTemplate/replyIndex";

@@ -193,6 +193,17 @@ public class SelectMultiTable {
         return sqlSb.toString();
     }
 
+    public String buildCountSqlStringByDistinct(String field) {
+        StringBuffer sqlSb = new StringBuffer();
+        EntityHelper.initEntityNameMap(resultClass, config);
+        EntityTable entityTable = EntityHelper.getEntityTable(resultClass);
+        sqlSb.append("select  count(distinct "+MAIN_ALAIS+"."+field+") AS " + COUNT_ALIAS + " from " + entityTable.getName() + " AS " + MAIN_ALAIS + " ");
+        for (TableJoin tableJoin : tableJoinList) {
+            sqlSb.append(tableJoin.buildJoinString());
+        }
+        return sqlSb.toString();
+    }
+
 
     /**
      * 连接表类，join的单位

@@ -224,7 +224,6 @@
 
 
         var beforeUpdateShow = function(dialog,form,record){
-            debugger;
             update = true;
             //form.getField('id').disable();
             form.getField('code').disable();

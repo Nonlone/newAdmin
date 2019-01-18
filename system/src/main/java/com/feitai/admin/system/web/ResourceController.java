@@ -30,6 +30,7 @@ public class ResourceController extends BaseListableController<Resource> {
     private ResourceService resourceService;
 
     @RequestMapping(value = "")
+    @RequiresPermissions("/system/resource:list")
     public String index() {
         return "/system/resource/index";
     }

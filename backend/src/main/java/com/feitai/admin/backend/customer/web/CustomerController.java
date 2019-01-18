@@ -80,6 +80,7 @@ public class CustomerController extends BaseListableController<IdCardDataExtend>
     private AuthdataLinkfaceLivenessSelfieVerificationService authdataLinkfaceLivenessSelfieVerificationService;
 
     @RequestMapping(value = "/index")
+    @RequiresPermissions("/backend/customer:list")
     public String index() {
         return "/backend/customer/index";
     }

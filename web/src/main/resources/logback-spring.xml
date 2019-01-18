@@ -22,21 +22,18 @@
     <springProfile name="test">
         <property name="LOG_HOME" value="/data/log-center/${APP_NAME}" />
         <logger name="org.hibernate.engine.internal" level="OFF"/>
-        <logger name="com.feitai" level="DEBUG" />
         <logger name="org.apache.http.impl.conn.PoolingHttpClientConnectionManager" level="INFO"/>
         <logger name="org.apache.http" level="INFO" />
     </springProfile>
     <springProfile name="sit">
         <property name="LOG_HOME" value="/data/log-center/${APP_NAME}" />
         <logger name="org.hibernate.engine.internal" level="OFF"/>
-        <logger name="com.feitai" level="DEBUG"/>
         <logger name="org.apache.http.impl.conn.PoolingHttpClientConnectionManager" level="INFO"/>
         <logger name="org.apache.http" level="DEBUG"/>
     </springProfile>
      <springProfile name="sit2">
         <property name="LOG_HOME" value="/data/log-center/${APP_NAME}" />
         <logger name="org.hibernate.engine.internal" level="OFF"/>
-        <logger name="com.feitai" level="DEBUG"/>
         <logger name="org.apache.http.impl.conn.PoolingHttpClientConnectionManager" level="INFO"/>
         <logger name="org.apache.http" level="DEBUG"/>
     </springProfile>

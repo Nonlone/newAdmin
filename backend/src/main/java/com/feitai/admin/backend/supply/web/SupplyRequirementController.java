@@ -51,7 +51,7 @@ public class SupplyRequirementController extends BaseListableController<SupplyRe
 
     private final static String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-
+    @RequiresPermissions("/backend/supply/requirement:list")
     @RequestMapping(value = "index")
     public String index(Model model) {
         return "backend/supply/requirement/index";

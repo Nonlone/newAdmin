@@ -27,7 +27,8 @@ import java.util.Date;
 public class ProductTermFeeFeatureController extends BaseListableController<ProductTermFeeFeature> {
 	@Autowired
 	private ProductTermFeeFeatureService productTermFeeFeatureService;
-	
+
+	@RequiresPermissions("/backend/productTermFeeFeature:list")
 	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/productTermFeeFeature/index";
