@@ -56,13 +56,13 @@
 			<div class="control-group span7">
 				<label class="control-label">逾期天数:</label>
 				<div class="controls">
-					<input type="text" class="input-normal control-text" onchange="changeOverdueDays(this)" >
+					<input id="overdueDays" type="text" class="input-normal control-text" >
 				</div>
 				<input id="search_LTE_overdueDays" type="hidden" class="input-normal control-text" value="3"   name="search_LTE_overdueDays">
 				<input type="hidden" class="input-normal control-text" value="0"  name="search_GT_overdueDays">
 			</div>
 				<div class="span1 offset2">
-					<button type="button" id="btnSearch" class="button button-primary">搜索</button>
+					<button type="button" id="btnSearch" onclick="changeDue();" class="button button-primary">搜索</button>
 				</div>
 				<div class="span1 offset2">
 					<button class="button button-danger" onclick="flushall();">清空</button>
@@ -84,6 +84,22 @@
 	</div>
 
 	<script type="text/javascript">
+
+        function changeDue(){
+            debugger;
+            var start_dueDate = document.getElementById("start_dueDate").value;
+            var end_dueDate = document.getElementById("end_dueDate").value;
+            if(start_dueDate!=""||end_dueDate!=""){
+                document.getElementById("search_LTE_overdueDays").value = "";
+			}
+			if(start_dueDate==""&&end_dueDate==""){
+                document.getElementById("search_LTE_overdueDays").value = "3";
+			}
+			if(document.getElementById("overdueDays").value != ""){
+                document.getElementById("search_LTE_overdueDays").value = document.getElementById("overdueDays").value;
+			}
+		}
+
 		Date.prototype.format = function(format) {
 			var args = {
 				"M+" : this.getMonth() + 1,
@@ -327,10 +343,7 @@
 			var grid = crudGrid.get('grid');
 
 		});
-		
-		function changeOverdueDays(obj){
-			$("#search_LTE_overdueDays").val($(obj).val());
-		}
+
 	</script>
 
 </body>
