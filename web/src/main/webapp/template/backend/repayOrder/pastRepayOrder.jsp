@@ -86,7 +86,6 @@
 	<script type="text/javascript">
 
         function changeDue(){
-            debugger;
             var start_dueDate = document.getElementById("start_dueDate").value;
             var end_dueDate = document.getElementById("end_dueDate").value;
             if(start_dueDate!=""||end_dueDate!=""){
