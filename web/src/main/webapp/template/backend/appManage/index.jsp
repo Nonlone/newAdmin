@@ -81,7 +81,7 @@
             </div>
             <div class="row">
                 <div class="control-group span8">
-                    <label class="control-label"><s>*</s>appID:</label>
+                    <label class="control-label">appID:</label>
                     <div class="controls">
                         <input name="appId" type="text"
                                data-rules="{required:true,}"
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <div class="control-group span8">
-                    <label class="control-label"><s>*</s>BundleID:</label>
+                    <label class="control-label">BundleID:</label>
                     <div class="controls">
                         <input name="bundleId" type="text"
                                data-rules="{required:true,}"
