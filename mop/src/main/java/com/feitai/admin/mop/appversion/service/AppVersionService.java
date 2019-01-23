@@ -2,9 +2,13 @@ package com.feitai.admin.mop.appversion.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +47,11 @@ public class AppVersionService {
 
 	@Value("${mop.app.version.evictCache.url}")
 	private String appVersionEvictUrl;
+
+	@Value("${mop.app.version.history}")
+	private String appHistoryVersion;
+
+	private volatile List<String> appHistoryVersionList;
 
 	public void add(VerAppVersion appVersion, String operator) {
 		Date now = new Date();
@@ -101,8 +110,6 @@ public class AppVersionService {
 	public List<Channel> queryChannelList(String searchChannelSort, String searchChannelId) {
 		List<Channel> list = new ArrayList<>();
 
-		// List<ChannelInfoVo> queryList = queryChannelList();
-
 		List<Channel> queryList = channelService.findAll();
 
 		for (Channel channel : queryList) {
@@ -111,8 +118,8 @@ public class AppVersionService {
 				continue;
 			}
 
-			if (StringUtils.isNotBlank(searchChannelId) && !(searchChannelId.equals(channel.getChannelId())
-					|| searchChannelId.equals(channel.getChannelId()))) {
+			if (StringUtils.isNotBlank(searchChannelId)
+					&& -1 == channel.getChannelId().toLowerCase().indexOf(searchChannelId.toLowerCase())) {
 				continue;
 			}
 
@@ -123,7 +130,48 @@ public class AppVersionService {
 	}
 
 	public List<String> queryAllVersions() {
-		return appVersionMapper.queryAllVersions();
+		List<String> versions = new ArrayList<>();
+
+		List<String> queryVersions = appVersionMapper.queryAllVersions();
+
+		versions.addAll(queryVersions);
+		versions.addAll(getHistoryVersions());
+
+		versions.sort(new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o2.compareToIgnoreCase(o1);
+			}
+		});
+
+		return versions;
+	}
+
+	private synchronized List<String> getHistoryVersions() {
+
+		if (null != appHistoryVersionList) {
+			return appHistoryVersionList;
+		}
+
+		appHistoryVersionList = new ArrayList<>();
+
+		String[] tmpVersions = appHistoryVersion.split(",");
+
+		if (ArrayUtils.isEmpty(tmpVersions)) {
+			return appHistoryVersionList;
+		}
+
+		Set<String> tmpVersionSet = new HashSet<>();
+
+		for (String tmpVersion : tmpVersions) {
+			if (tmpVersionSet.contains(tmpVersion)) {
+				continue;
+			}
+			appHistoryVersionList.add(tmpVersion);
+			tmpVersionSet.add(tmpVersion);
+		}
+
+		return appHistoryVersionList;
 	}
 
 	public boolean evictCache(String appCode) {

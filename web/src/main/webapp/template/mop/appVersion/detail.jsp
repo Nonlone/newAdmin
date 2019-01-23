@@ -11,6 +11,12 @@
 .form-horizontal .control-label {
     width: 110px;
 }
+
+.required-color {
+    padding-right: 5px;
+    color: red;
+    text-decoration: none;
+}
 </style>
 <body>
 
@@ -41,14 +47,14 @@
 	    <div class="control-group span10">
 	        <label class="control-label"><s>*</s>内部版本号：</label>
 	        <div id="s1" class="controls">
-	            <input id="insideVersion" name="insideVersion" type="text" class="control-text"  style="width: 150px;" data-rules="{required : true}">
+	            <input id="insideVersion" name="insideVersion" type="text" class="control-text" style="width: 150px;" data-rules="{required : true}" placeholder="例如:1.1.0">
 	        </div>
 	    </div>
 	
 	    <div class="control-group span10">
 	        <label class="control-label"><s>*</s>外部版本号：</label>
 	        <div class="controls">
-	            <input id="appVersion" name="appVersion" type="text" class="control-text"  style="width: 150px;" data-rules="{required : true}">
+	            <input id="appVersion" name="appVersion" type="text" class="control-text" style="width: 150px;" data-rules="{required : true}" placeholder="例如:1.1.0">
 	        </div>
 	    </div>
     </div>
@@ -57,7 +63,7 @@
 	    <div class="control-group span10">
 	        <label class="control-label"><s>*</s>通用版本更新：</label>
 	        <div id="commonRuleUpdateTypeSelect" class="controls">
-				<input type="hidden" id="commonRuleUpdateType" name="commonRuleUpdateType" class="defaultUpdateType" data-rules="{required : true}">
+				<input type="hidden" id="commonRuleUpdateType" name="commonRuleUpdateType" class="defaultUpdateType" data-rules="{required : true}" placeholder="请选择更新方式">
             </div>
 	    </div>
     </div>
@@ -77,8 +83,8 @@
 	    <div class="control-group">
             <label class="control-label"><s>*</s>更新说明：</label>
             <div class="controls" style="margin-left:20px;height: 80px;">
-                <textarea name="updateNote" type="text" class="control-text"
-                          style="width: 300px;height: 60px;"></textarea>
+                <textarea id="updateNote" name="updateNote" type="text" class="control-text"
+                          style="width: 300px;height: 60px;" data-rules="{required : true}"></textarea>
             </div>
         </div>
     </div>
@@ -89,9 +95,9 @@
     </div>
 	
 	
-	<div class="row" style="padding-left: 20px;width:350px;">
+	<div class="row" style="padding-left: 20px;width:915px;">
     	<span style="font-weight: bold;font-size: 18px;">高级配置</span>
-    	<button type="button" id="addAdvanceButton" class="button showAdvanceShow" style="margin-left:10px;margin-top: -5px;">添加高级配置</button>
+    	<button type="button" id="addAdvanceButton" class="button showAdvanceShow" style="margin-left:60px;margin-top: -5px;">添加高级配置</button>
     	<button type="button" class="button advanceToggleButton showAdvanceHide" style="margin-left:10px;margin-top: -5px;float:right;display:none;">显示高级配置↓</button>
     	<button type="button" class="button advanceToggleButton showAdvanceShow" style="margin-left:10px;margin-top: -5px;float:right;">收起高级配置↑</button>
     </div>
@@ -214,10 +220,10 @@
         	html += '<div id="custom_'+index+'" class="customChannelDiv" index="'+index+'" style="padding: 10px 0px;border: 6px solid white;">';
         	//html += 	'<input type="hidden" id="custom_" name="osType">';
         	html += 	'<div class="row">';
-        	html += 		'<div class="control-group" style="width:650px;">';
+        	html += 		'<div class="control-group" style="width:910px;">';
         	html += 			'<label class="control-label"><s>*</s>选择渠道：</label>';
         	html += 			'<div class="controls">';
-        	html += 				'<input id="customChannel_'+index+'" name="selectChannels" type="text" class="control-text customChannelValue" readonly="readonly"  style="margin-left:10px;width: 325px;" data-rules="{required : true}">';
+        	html += 				'<input id="customChannel_'+index+'" name="selectChannels" type="text" class="control-text customChannelValue" readonly="readonly"  style="margin-left:10px;width: 325px;" data-rules="{required : true}" placeholder="请选择渠道">';
         	html += 				'<button type="button" id="selectChannelButton_'+index+'" class="button" style="margin-left:-5px;">选择</button>';
         	html += 			'</div>';
         	html += 			'<button type="button" class="button" style="float:right;" onclick="removeCustomConfig(\''+containerId+'\',\''+index+'\')">删除配置</button>';
@@ -227,7 +233,7 @@
         	html += 		'<div class="control-group span10">';
         	html += 			'<label class="control-label"><s>*</s>通用版本更新：</label>';
         	html += 			'<div id="customRuleUpdateTypeSelect_'+index+'" class="controls">';
-        	html += 				'<input type="hidden" id="customRuleUpdateType_'+index+'" name="defaultUpdateType" class="defaultUpdateType" data-rules="{required : true}">';
+        	html += 				'<input type="hidden" id="customRuleUpdateType_'+index+'" name="defaultUpdateType" class="defaultUpdateType" data-rules="{required : true}" placeholder="请选择更新方式">';
         	html += 			'</div>';
         	html += 		'</div>';
         	html += 	'</div>';
@@ -251,14 +257,12 @@
                     $(this).val(data[$(this).attr('name')])
                 });
         		
-        		if (null == data.additions || 0 == data.additions.length) {
-           			return;
+        		if (null != data.additions && 0 < data.additions.length) {
+        			for (var j=0;j < data.additions.length; j++) {
+        				var addition = data.additions[j];
+            			addAdditionRule("customAdditionDiv_"+index, "custom_"+index, additionConfigIndex++, addition);
+        			}
         		}
-    			
-    			for (var j=0;j < data.additions.length; j++) {
-    				var addition = data.additions[j];
-        			addAdditionRule("customAdditionDiv_"+index, "custom_"+index, additionConfigIndex++, addition);
-    			}
         	}
         	
         	
@@ -311,17 +315,17 @@
         	var updateTypeSelect = prefix+'_additionUpdateTypeSelect_'+index;
         	
         	var html = '';
-        	html += '<div id="'+prefix+'_addition_'+index+'" class="additionRule" style="width:100%;float: left;">';
+        	html += '<div id="'+prefix+'_addition_'+index+'" class="additionRule" style="width:100%;float: left;margin-left: -10px">';
         	html += 	'<div id="'+updateVersionBeginSelect+'" class="controls">';
-        	html += 		'<input type="hidden" id="'+updateVersionBegin+'" name="beginVersion" class="updateVersionBegin">';
+        	html += 		'<s class="required-color">*</s><input type="hidden" id="'+updateVersionBegin+'" name="beginVersion" class="updateVersionBegin" data-rules="{required : true}" placeholder="请选择版本">';
         	html += 	'</div>';
         	html += 	'<label class="control-label" style="width:30px;">&nbsp;&nbsp;至&nbsp;&nbsp;</label>';
         	html += 	'<div id="'+updateVersionEndSelect+'" class="controls">';
-        	html += 		'<input type="hidden" id="'+updateVersionEnd+'" name="endVersion" class="updateVersionEnd">';
+        	html += 		'<s class="required-color">*</s><input type="hidden" id="'+updateVersionEnd+'" name="endVersion" class="updateVersionEnd" data-rules="{required : true}" placeholder="请选择版本">';
         	html += 	'</div>';
-        	html += 	'<label class="control-label" style="width:100px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;更新方式：</label>';
+        	html += 	'<label class="control-label" style="width:100px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<s>*</s>更新方式：</label>';
         	html += 	'<div id="'+updateTypeSelect+'" class="controls">';
-        	html += 		'<input type="hidden" id="'+updateType+'" name="updateType" class="updateType">';
+        	html += 		'<input type="hidden" id="'+updateType+'" name="updateType" class="updateType" data-rules="{required : true}" placeholder="请选择更新方式">';
         	html += 	'</div>';
         	html += 	'<button type="button" id="'+prefix+'_removeAdditionButton_'+index+'" class="button" style="margin-left:15px;" onclick="removeAdditionRule(\''+containerId+'\',\''+prefix+'\',\''+index+'\')">删除</button>';
         	html += '</div>';
@@ -696,6 +700,14 @@
 			    	showWarning("外部版本号不能为空");
 			    	return false;
 			    }
+			    
+			    var updateNote = $("#updateNote").html();
+			    if (null == updateNote || "" == updateNote) {
+			    	showWarning("更新说明不能为空");
+			    	return false;
+			    }
+			    
+			    
 			    
 			    var flag = true;
 	            
