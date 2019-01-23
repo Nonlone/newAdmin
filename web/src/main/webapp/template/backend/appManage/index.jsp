@@ -35,7 +35,7 @@
             </div>
 
             <div class="control-group span_width">
-                <label class="control-label">绑定ID:</label>
+                <label class="control-label">BundleID:</label>
                 <div class="controls">
                     <input type="text" class="input-small control-text" name="search_LIKE_bundleId">
                 </div>
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <div class="control-group span8">
-                    <label class="control-label"><s>*</s>绑定Id:</label>
+                    <label class="control-label"><s>*</s>BundleID:</label>
                     <div class="controls">
                         <input name="bundleId" type="text"
                                data-rules="{required:true,}"
@@ -158,7 +158,7 @@
             {title: '应用编码', dataIndex: 'code', width: '10%'},
             {title: '应用名称', dataIndex: 'name', width: '10%'},
             {title: 'appID', dataIndex: 'appId', width: '10%'},
-            {title: '绑定Id', dataIndex: 'bundleId', width: '10%'},
+            {title: 'BundleID', dataIndex: 'bundleId', width: '10%'},
             {title: '创建时间', dataIndex: 'createdTime', width: '10%', renderer: BUI.Grid.Format.datetimeRenderer},
             {title: '更新时间', dataIndex: 'updateTime', width: '10%', renderer: BUI.Grid.Format.datetimeRenderer}
 
