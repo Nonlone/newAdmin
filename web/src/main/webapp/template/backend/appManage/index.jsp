@@ -28,14 +28,14 @@
             </div>
 
             <div class="control-group span_width">
-                <label class="control-label">appID:</label>
+                <label class="control-label">Android(APPID):</label>
                 <div class="controls">
                     <input type="text" class="input-small control-text" name="search_LIKE_appId">
                 </div>
             </div>
 
             <div class="control-group span_width">
-                <label class="control-label">BundleID:</label>
+                <label class="control-label">IOS(BundleID):</label>
                 <div class="controls">
                     <input type="text" class="input-small control-text" name="search_LIKE_bundleId">
                 </div>
@@ -81,7 +81,7 @@
             </div>
             <div class="row">
                 <div class="control-group span8">
-                    <label class="control-label">appID:</label>
+                    <label class="control-label">Android(APPID):</label>
                     <div class="controls">
                         <input name="appId" type="text"
                                data-rules="{required:true,}"
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <div class="control-group span8">
-                    <label class="control-label">BundleID:</label>
+                    <label class="control-label">IOS(BundleID):</label>
                     <div class="controls">
                         <input name="bundleId" type="text"
                                data-rules="{required:true,}"
@@ -157,8 +157,8 @@
             {title: 'id', dataIndex: 'id', width: '5%'},
             {title: '应用编码', dataIndex: 'code', width: '10%'},
             {title: '应用名称', dataIndex: 'name', width: '10%'},
-            {title: 'appID', dataIndex: 'appId', width: '10%'},
-            {title: 'BundleID', dataIndex: 'bundleId', width: '10%'},
+            {title: 'Android(APPID)', dataIndex: 'appId', width: '10%'},
+            {title: 'IOS(BundleID)', dataIndex: 'bundleId', width: '10%'},
             {title: '创建时间', dataIndex: 'createdTime', width: '10%', renderer: BUI.Grid.Format.datetimeRenderer},
             {title: '更新时间', dataIndex: 'updateTime', width: '10%', renderer: BUI.Grid.Format.datetimeRenderer}
 
