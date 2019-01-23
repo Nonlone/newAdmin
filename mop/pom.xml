@@ -11,11 +11,11 @@
     <artifactId>mop</artifactId>
     <version>2.0.0</version>
     <dependencies>
-
+		
         <dependency>
             <groupId>com.feitai.admin</groupId>
-            <artifactId>system</artifactId>
-            <version>2.0.0</version>
+		    <artifactId>backend</artifactId>
+		    <version>2.0.0</version>
         </dependency>
 
         <!-- excel -->
