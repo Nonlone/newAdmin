@@ -324,8 +324,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         Page<RepayOrderMore> repayOrderMorePage = list(sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".created_time DESC", pageNo, pageSize, getCountSqls(request), SelectMultiTable.RCOUNT_ALIAS);
         List<RepayOrderMore> content = repayOrderMorePage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
-        for (RepayOrderMore repayOrderMore :
-                content) {
+        for (RepayOrderMore repayOrderMore : content) {
             try{
                 JSONObject jsonObject = handleRepayOrder(repayOrderMore);
                 resultList.add(jsonObject);
