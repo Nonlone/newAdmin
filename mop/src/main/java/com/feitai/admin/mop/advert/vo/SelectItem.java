@@ -9,6 +9,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SelectItem {
-    private String text;
-    private Long value;
+	private String text;
+	private String value;
 }
