@@ -4,6 +4,7 @@ import com.feitai.admin.backend.config.entity.AppManage;
 import com.feitai.admin.backend.config.service.AppManageService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
+import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.web.BaseListableController;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -61,8 +62,13 @@ public class AppManageController extends BaseListableController<AppManage> {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(@Valid AppManage appManage){
-        this.appManageService.save(appManage);
-        return BaseListableController.successResult;
+        try{
+            this.appManageService.save(appManage);
+            return BaseListableController.successResult;
+        }catch (Exception e){
+            log.error("add appManage fail!",e);
+            return new AjaxResult(false, "创建失败，应用编码已存在！");
+        }
     }
 
     @RequiresPermissions("/backend/appManage:update")

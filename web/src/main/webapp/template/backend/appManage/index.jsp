@@ -84,7 +84,6 @@
                     <label class="control-label">Android(APPID):</label>
                     <div class="controls">
                         <input name="appId" type="text"
-                               data-rules="{required:true,}"
                                class="input-normal control-text">
                     </div>
                 </div>
@@ -92,7 +91,6 @@
                     <label class="control-label">IOS(BundleID):</label>
                     <div class="controls">
                         <input name="bundleId" type="text"
-                               data-rules="{required:true,}"
                                class="input-normal control-text">
                     </div>
                 </div>
