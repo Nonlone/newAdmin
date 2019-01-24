@@ -65,7 +65,7 @@
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>应用编码:</label>
                     <div class="controls">
-                        <input name="code" type="text"
+                        <input id="code" name="code" type="text"
                                data-rules="{required:true,}"
                                class="input-normal control-text">
                     </div>
@@ -115,6 +115,8 @@
 
 
     BUI.use(['bui/ux/crudgrid','bui/calendar'], function (CrudGrid,Calendar) {
+
+
 
         var datepickerStart = new Calendar.DatePicker({
             trigger:'.calendarStart',
@@ -185,6 +187,12 @@
                 }
             }
         });
+
+        var beforeUpdateShow = function(dialog,form,record){
+            form.getField("code").disable();
+        };
+
+        crudGrid.on('beforeUpdateShow', beforeUpdateShow);
     });
 
 
