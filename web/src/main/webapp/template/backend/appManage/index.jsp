@@ -66,7 +66,7 @@
                     <label class="control-label"><s>*</s>应用编码:</label>
                     <div class="controls">
                         <input id="code" name="code" type="text"
-                               data-rules="{required:true,}"
+                               data-rules="{required:true,channel:true}"
                                class="input-normal control-text">
                     </div>
                 </div>
@@ -114,9 +114,18 @@
     }
 
 
-    BUI.use(['bui/ux/crudgrid','bui/calendar'], function (CrudGrid,Calendar) {
+    BUI.use(['bui/ux/crudgrid','bui/calendar','bui/form'], function (CrudGrid,Calendar,Form) {
 
-
+        Form.Rules.add({
+            name: 'channel',
+            msg: '不允许包含非英文或数字的标识',
+            validator: function (value, baseValue, formatMsg) {
+                var regexp = new RegExp(/^[0-9a-zA-Z]+$/g)
+                if (!regexp.test(value)) {
+                    return formatMsg
+                }
+            }
+        });
 
         var datepickerStart = new Calendar.DatePicker({
             trigger:'.calendarStart',
