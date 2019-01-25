@@ -56,9 +56,8 @@
 			<div class="control-group span7">
 				<label class="control-label">逾期天数:</label>
 				<div class="controls">
-					<input id="overdueDays" type="text" class="input-normal control-text" >
+					<input id="overdueDays" name="search_LTE_overdueDays" type="text" class="input-normal control-text" value="3">
 				</div>
-				<input id="search_LTE_overdueDays" type="hidden" class="input-normal control-text" value="3"   name="search_LTE_overdueDays">
 				<input type="hidden" class="input-normal control-text" value="0"  name="search_GT_overdueDays">
 			</div>
 				<div class="span1 offset2">
@@ -85,19 +84,6 @@
 
 	<script type="text/javascript">
 
-        function changeDue(){
-            var start_dueDate = document.getElementById("start_dueDate").value;
-            var end_dueDate = document.getElementById("end_dueDate").value;
-            if(start_dueDate!=""||end_dueDate!=""){
-                document.getElementById("search_LTE_overdueDays").value = "";
-			}
-			if(start_dueDate==""&&end_dueDate==""){
-                document.getElementById("search_LTE_overdueDays").value = "3";
-			}
-			if(document.getElementById("overdueDays").value != ""){
-                document.getElementById("search_LTE_overdueDays").value = document.getElementById("overdueDays").value;
-			}
-		}
 
 		Date.prototype.format = function(format) {
 			var args = {

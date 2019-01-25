@@ -117,8 +117,6 @@ public class DebtController extends BaseListableController<Debt>{
         sbSql.append(getService().buildSqlWhereCondition(bulidSearchParamsList(request), SelectMultiTable.MAIN_ALAIS));
         String sql=sbSql.toString() + " ORDER BY " + SelectMultiTable.MAIN_ALAIS + ".due_date,"+SelectMultiTable.MAIN_ALAIS+".id";
         String countSql=getCountSqls(request);
-        //countSql=countSql.replace(DUE_DATE_FORMAT_PARAM, DUE_DATE_FORMAT);
-        //sql=sql.replace(DUE_DATE_FORMAT_PARAM, DUE_DATE_FORMAT);
         Page<Debt> debtPage = list(sql, pageNo, pageSize,countSql , SelectMultiTable.COUNT_ALIAS);
         List<Debt> content = debtPage.getContent();
         List<JSONObject> resultList = new ArrayList<>();
