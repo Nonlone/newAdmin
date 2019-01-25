@@ -512,9 +512,9 @@
                     console.log(param);
                     var url;
                     if (param.id == "" || param.id == -1) {
-                        url = "${ctx}/backend/ratePlan/add";
+                        url = "${ctx}/backend/ratePlan/addModel";
                     } else {
-                        url = "${ctx}/backend/ratePlan/update"
+                        url = "${ctx}/backend/ratePlan/updateModel"
                     }
                     //提交数据
                     $.ajax({
