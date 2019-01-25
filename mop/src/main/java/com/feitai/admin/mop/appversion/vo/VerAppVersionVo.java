@@ -129,24 +129,49 @@ public class VerAppVersionVo implements Serializable {
 			return;
 		}
 
-		UpdateRule commonUpdateRule = rule.getCommonRule();
+		setCommonRule(vo, rule.getCommonRule());
+		setCustomRules(vo, rule.getCustomRules());
+	}
 
-		if (null != commonUpdateRule) {
+	private static void setCustomRules(VerAppVersionVo vo, List<UpdateRule> customRules) {
 
-			UpdateTypeEnum typeEnum = UpdateTypeEnum.fromValue(commonUpdateRule.getDefaultUpdateType());
-
-			if (null != typeEnum) {
-				vo.setCommonRuleUpdateType(typeEnum.getValue());
-				vo.setCommonRuleUpdateTypeDesc(typeEnum.getDesc());
-			}
-
-			if (ListUtils.isNotEmpty(commonUpdateRule.getAdditions())) {
-				vo.setExistAddition(true);
-			}
+		if (ListUtils.isEmpty(customRules)) {
+			vo.setExistCustom(false);
+			return;
 		}
 
-		if (ListUtils.isNotEmpty(rule.getCustomRules())) {
-			vo.setExistCustom(true);
+		vo.setExistCustom(true);
+
+		if (vo.getExistAddition()) {
+			return;
+		}
+
+		for (UpdateRule updateRule : customRules) {
+
+			if (ListUtils.isEmpty(updateRule.getAdditions())) {
+				continue;
+			}
+
+			vo.setExistAddition(true);
+			break;
+		}
+	}
+
+	private static void setCommonRule(VerAppVersionVo vo, UpdateRule commonUpdateRule) {
+		if (null == commonUpdateRule) {
+			vo.setExistAddition(false);
+			return;
+		}
+
+		UpdateTypeEnum typeEnum = UpdateTypeEnum.fromValue(commonUpdateRule.getDefaultUpdateType());
+
+		if (null != typeEnum) {
+			vo.setCommonRuleUpdateType(typeEnum.getValue());
+			vo.setCommonRuleUpdateTypeDesc(typeEnum.getDesc());
+		}
+
+		if (ListUtils.isNotEmpty(commonUpdateRule.getAdditions())) {
+			vo.setExistAddition(true);
 		}
 	}
 

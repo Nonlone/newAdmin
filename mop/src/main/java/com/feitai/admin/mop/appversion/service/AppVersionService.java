@@ -57,6 +57,7 @@ public class AppVersionService {
 		Date now = new Date();
 
 		appVersion.setId(SnowFlakeIdGenerator.getDefaultNextId());
+		appVersion.setAppVersionValue(versionLongValue(appVersion.getAppVersion()));
 		appVersion.setStatus(AppVersionStatusEnum.ENABLE.getValue());
 		appVersion.setCreatedTime(now);
 		appVersion.setUpdateTime(now);
@@ -64,6 +65,7 @@ public class AppVersionService {
 	}
 
 	public void update(VerAppVersion appVersion, String operator) {
+		appVersion.setAppVersionValue(versionLongValue(appVersion.getAppVersion()));
 		appVersion.setCreatedTime(null);
 		appVersion.setUpdateTime(new Date());
 		appVersionMapper.updateByPrimaryKeySelective(appVersion);
@@ -195,5 +197,23 @@ public class AppVersionService {
 		data.put("data", param);
 		String resultStr = OkHttpClientUtils.postReturnBody(appVersionEvictUrl, data);
 		return JSON.parseObject(resultStr, RpcResult.class);
+	}
+
+	private long versionLongValue(String appVersion) {
+		if (StringUtils.isBlank(appVersion)) {
+			return 0L;
+		}
+
+		// 版本结构1.4.1三段式
+		String[] vals = appVersion.split("\\.");
+
+		String version = "";
+
+		for (int i = vals.length; i > 0; i--) {
+			String tmp = String.format("%04d", Integer.parseInt(vals[i - 1]));
+			version = tmp + version;
+		}
+
+		return Long.parseLong(version);
 	}
 }
