@@ -141,7 +141,7 @@ public class ChannelController extends BaseCrudController<Channel> {
 	@RequiresPermissions("/backend/channel:update")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
-	public Object update(@Valid @ModelAttribute("channel") Channel channel){
+	public Object update(@Valid @ModelAttribute("t") Channel channel){
 		if(StringUtil.isEmpty(channel.getAppName())){
 			return new AjaxResult(false, "请选择应用名称！");
 		}
@@ -149,9 +149,9 @@ public class ChannelController extends BaseCrudController<Channel> {
 			return new AjaxResult(false, "请选择渠道终端！");
 		}
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
-		channel.setMainPackageCode(channelPrimary.getChannelCode().toString());
-		channel.setChannelId(channelPrimary.getChannelCode().toString()+"_"+channel.getChannelId());
+		channel.setMainPackageCode(channelPrimary.getChannelCode());
 		channel.setUpdateTime(new Date());
+		channel.setMainPackageCode(channelPrimary.getChannelCode());
 		this.channelService.save(channel);
 		return BaseListableController.successResult;
 	}
