@@ -13,6 +13,7 @@ import com.feitai.admin.backend.config.service.ChannelService;
 import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.DynamitSupportService;
+import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseCrudController;
 import com.feitai.admin.core.web.BaseListableController;
@@ -44,6 +45,7 @@ public class ChannelController extends BaseCrudController<Channel> {
 	@Autowired
 	private MapProperties mapProperties;
 	
+	@RequiresPermissions("/backend/channel:list")
 	@RequestMapping(value = "index")
 	public ModelAndView index() {
 		ModelAndView mav=new ModelAndView("/backend/channel/index");
@@ -54,6 +56,14 @@ public class ChannelController extends BaseCrudController<Channel> {
     		 itemList.add(new ListItem(channelSort, channelSort));
     	}); 
     	mav.addObject("channelSortList",JSONObject.toJSONString(itemList));
+    	
+    	List<ChannelPrimary> channelPrimarys = channelPrimaryService.findAll();
+		//List<String> list=new ArrayList();
+    	StringBuffer sb=new StringBuffer();
+		for(ChannelPrimary channelPrimary:channelPrimarys){
+		    sb.append(channelPrimary.getPrimaryChannelName()).append(",");
+		}
+		mav.addObject("primaryChannelList",sb.substring(0, sb.length()-1));
 		return mav;
 	}
 
@@ -112,10 +122,17 @@ public class ChannelController extends BaseCrudController<Channel> {
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public Object add(@Valid Channel channel){
+		if(StringUtil.isEmpty(channel.getAppName())){
+			return new AjaxResult(false, "请选择应用名称！");
+		}
+		if(StringUtil.isEmpty(channel.getChannelTerminal())){
+			return new AjaxResult(false, "请选择渠道终端！");
+		}
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
 		channel.setMainPackageCode(channelPrimary.getChannelCode().toString());
-		channel.setChannelId(channelPrimary.getChannelCode().toString()+"_"+channel.getChannelId());
+		channel.setChannelId(channelPrimary.getChannelCode()+"_"+channel.getChannelId());
 		channel.setCreatedTime(new Date());
+		channel.setChannelSort(channelPrimary.getChannelSort());
 		channel.setUpdateTime(new Date());
 		this.channelService.save(channel);
 		return BaseListableController.successResult;
@@ -125,6 +142,12 @@ public class ChannelController extends BaseCrudController<Channel> {
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	public Object update(@Valid @ModelAttribute("channel") Channel channel){
+		if(StringUtil.isEmpty(channel.getAppName())){
+			return new AjaxResult(false, "请选择应用名称！");
+		}
+		if(StringUtil.isEmpty(channel.getChannelTerminal())){
+			return new AjaxResult(false, "请选择渠道终端！");
+		}
 		ChannelPrimary channelPrimary = channelPrimaryService.findByChannelName(channel.getMainPackgage());
 		channel.setMainPackageCode(channelPrimary.getChannelCode().toString());
 		channel.setChannelId(channelPrimary.getChannelCode().toString()+"_"+channel.getChannelId());
