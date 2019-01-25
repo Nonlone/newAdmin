@@ -11,20 +11,23 @@ import tk.mybatis.mapper.util.Sqls;
 @Service
 public class AreaService extends ClassPrefixDynamicSupportService<LocationData> {
 
+    private final static String CARD_ID = "cardId";
+
+    private final static String SEGMENT = "segment";
 
     public LocationData findByCardIdInAuth(Long id) {
-		Example example = Example.builder(LocationData.class).andWhere(Sqls.custom().andEqualTo("cardId",id).andEqualTo("segment", ProcessSegment.AUTH.getValue())).build();
+		Example example = Example.builder(LocationData.class).andWhere(Sqls.custom().andEqualTo(CARD_ID,id).andEqualTo(SEGMENT, ProcessSegment.AUTH.getValue())).build();
     	return getMapper().selectOneByExample(example);
     }
 
 
     public LocationData findByCardIdInOpenCard(Long id) {
-        Example example = Example.builder(LocationData.class).andWhere(Sqls.custom().andEqualTo("cardId",id).andEqualTo("segment",ProcessSegment.OPENCARD.getValue())).build();
+        Example example = Example.builder(LocationData.class).andWhere(Sqls.custom().andEqualTo(CARD_ID,id).andEqualTo(SEGMENT,ProcessSegment.OPENCARD.getValue())).build();
         return getMapper().selectOneByExample(example);
     }
 
     public LocationData findByCardIdInLoan(Long id) {
-        Example example = Example.builder(LocationData.class).andWhere(Sqls.custom().andEqualTo("cardId",id).andEqualTo("segment",ProcessSegment.LOAN.getValue())).build();
+        Example example = Example.builder(LocationData.class).andWhere(Sqls.custom().andEqualTo(CARD_ID,id).andEqualTo(SEGMENT,ProcessSegment.LOAN.getValue())).build();
         return getMapper().selectOneByExample(example);
     }
 

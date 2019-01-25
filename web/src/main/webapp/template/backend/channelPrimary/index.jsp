@@ -55,7 +55,7 @@
 						<input id="channelCode"
 							   name="channelCode"
 							   type="text"
-							   data-rules="{required:true,}"
+							   data-rules="{required:true,channel:true}"
 							   data-remote="${ctx}/backend/channelPrimary/checkChannelCode"
 							   class="input-normal control-text"
 							   >
@@ -78,7 +78,7 @@
 					<label class="control-label"><s>*</s>渠道大类:</label>
  					 <div id="channelSortUpdateSelect" class="controls"
 						 class="control-text input-small">
-						<input id="channelSortUpdate" name="channelSort" type="hidden" value="">
+						<input id="channelSortUpdate" name="channelSort" data-rules="{required:true,}" type="hidden" value="">
 					</div>
 				</div>
 			</div>
@@ -101,7 +101,19 @@
         }
     }
 
-BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
+BUI.use(['bui/ux/crudgrid','bui/select','bui/form'],function (CrudGrid,Select,Form) {
+
+
+    Form.Rules.add({
+        name: 'channel',
+        msg: '不允许包含非英文或数字的标识',
+        validator: function (value, baseValue, formatMsg) {
+            var regexp = new RegExp(/^[0-9a-zA-Z]+$/g)
+            if (!regexp.test(value)) {
+                return formatMsg
+            }
+        }
+    });
 
 	  var channelSortSearchSelect = new Select.Select({
 	        render:'#channelSortSearchSelect',
@@ -134,6 +146,7 @@ BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
         ];
     
 	var crudGrid = new CrudGrid({
+
 		entityName : '一级渠道',
     	pkColumn : 'id',//主键
       	storeUrl : '${ctx}/backend/channelPrimary/list',
@@ -146,12 +159,13 @@ BUI.use(['bui/ux/crudgrid','bui/select'],function (CrudGrid,Select) {
 		showRemoveBtn : del,
 		addOrUpdateFormId : 'addOrUpdateForm',
 		dialogContentId : 'addOrUpdate',
+        operationwidth:'130px',
 		gridCfg:{
     		innerBorder:true
     	},
 		storeCfg:{//定义store的排序，如果是复合主键一定要修改
 			sortInfo : {
-				field : 'updateTime',//排序字段
+				field : 'createdTime',//排序字段
 				direction : 'DESC' //升序ASC，降序DESC
 				}
 			}

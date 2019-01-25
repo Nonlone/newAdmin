@@ -10,7 +10,6 @@ import com.feitai.admin.system.service.PermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
@@ -31,6 +30,7 @@ public class PermissionController  extends BaseListableController<Permission> {
 	@Autowired
 	private PermissionService permissionService;
 
+	@RequiresPermissions("/system/permission:list")
 	@RequestMapping(value = "")
 	public String index() {
 		return "/system/permission/index";

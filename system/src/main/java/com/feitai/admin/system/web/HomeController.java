@@ -13,18 +13,15 @@ import com.feitai.admin.system.service.UserService;
 import com.feitai.admin.system.vo.Menu;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
 /**
@@ -54,7 +51,11 @@ public class HomeController {
     public Collection<Menu> loadMenu(ServletRequest request) {
         HttpServletRequest r = (HttpServletRequest) request;
         String ctx = r.getContextPath();
-        Collection<Menu> menu = userService.loadMenu(getCurrentUserId(), ctx);
+        Long currentUserId = getCurrentUserId();
+        if(currentUserId == null){
+            return null;
+        }
+        Collection<Menu> menu = userService.loadMenu(currentUserId, ctx);
         return menu;
     }
 
@@ -82,6 +83,9 @@ public class HomeController {
      */
     private Long getCurrentUserId() {
         ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+        if(user == null){
+            return null;
+        }
         return user.getId();
     }
 

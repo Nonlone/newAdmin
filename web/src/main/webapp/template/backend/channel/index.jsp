@@ -72,20 +72,18 @@
 			<div class="row">
 				<div class="control-group span10">
 					<label class="control-label"><s>*</s>一级渠道</label>
-					<div class="controls" id ="primaryList" name='primaryList'>
-						<input name="mainPackgage" type="hidden" id="mainPackgage" onchange="findPrimary(this.value);">
+					 <div class="controls" id ="primaryList" name='primaryList' onchange="findPrimary();" data-rules="{required:true}">
+						
 					</div>
 				</div>
-				<div class="row">
-					<span style='color:#ffbc00'>请先选择一级渠道!自动抉择渠道标识前缀与渠道大类</span>
-				</div>
+				
 			</div>
 			<div class="row">
 				<div class="control-group span8">
 					<label class="control-label"><s>*</s>应用名称:</label>
 					<div class="controls bui-form-field-select" data-items="{'借呀':'借呀'}"
 						 class="control-text input-small">
-						<input name="appName" type="hidden" value="">
+						<input name="appName" type="hidden" data-rules="{required:true}">
 					</div>
 				</div>
 				<div class="control-group span8">
@@ -110,7 +108,7 @@
 					<div class="controls">
 						<input id="primaryCode" name="primaryCode" class="input-minimum" readonly="true" data-rules="{required:false,}" type="text">
 						<input id="channelId" name="channelId" type="text"
-							data-remote="${ctx}/backend/channel/checkChannelId"
+							data-remote="${ctx}/backend/channel/checkChannelId" data-rules="{required:true,channel:true}"
 							class="input-minimum control-text">
 					</div>
 				</div>
@@ -121,7 +119,7 @@
 					<label class="control-label"><s>*</s>开发主体:</label>
 					<div class="controls">
 						<input name="devBody" type="text"
-							   data-rules="{required:false,}"
+							   data-rules="{required:true,}"
 							   class="input-normal control-text">
 					</div>
 				</div>
@@ -144,9 +142,13 @@
 
 <script type="text/javascript">
 
-    function findPrimary(primaryName) {
+    function findPrimary() {
 
-        document.getElementById("mainPackgage").value = primaryName;
+        var primaryName=$("#primaryList div input").val();
+        if(primaryName==''){
+        	return;
+        }
+        console.log(primaryName);
         var channelIdValue,channelSortValue,code;
         if(primaryName!=null||primaryName!=""){
             $.ajax({
@@ -188,28 +190,43 @@
             elementsByTagName[i].innerText = "";
         }
     }
-
-
+ 
 
 BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGrid,Select,Data,Form) {
-	
+
+
+    Form.Rules.add({
+        name: 'channel',
+        msg: '不允许包含非英文或数字的标识',
+        validator: function (value, baseValue, formatMsg) {
+            var regexp = new RegExp(/^[0-9a-zA-Z]+$/g)
+            if (!regexp.test(value)) {
+                return formatMsg
+            }
+        }
+    });
+
 	//定义页面权限
 	var add=false,update=false,del=false,list=false;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
 	<framwork:crudPermission resource="/backend/channel"/>
-
+		
+	
     //一级渠道选择框
-    var selectStore = new Data.Store({
+    	var selectStore = new Data.Store({
         url : '${ctx}/backend/channel/primaryList',
         autoLoad : true
     });
+        var primayChanneStr='${primaryChannelList}';
+        var dataItems=primayChanneStr.split(",");
+    	var select = new Select.Suggest({
+    		render:'#primaryList',
+            name:'mainPackgage',
+           	data:dataItems,
+    	  });
+    	select.render();
 
-    select = new Select.Select({
-        render:'#primaryList',
-        valueField:'#mainPackgage',
-        store:selectStore
-    });
-    select.render();
+
     
     
     var channelSortSelect = new Select.Select({
@@ -231,7 +248,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
         ];
     
 	var crudGrid = new CrudGrid({
-		entityName : 'Channel',
+		entityName : '二级渠道',
     	pkColumn : 'id',//主键
       	storeUrl : '${ctx}/backend/channel/list',
         addUrl : '${ctx}/backend/channel/add',
@@ -248,7 +265,7 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     	},
 		storeCfg:{//定义store的排序，如果是复合主键一定要修改
 			sortInfo : {
-				field : 'id',//排序字段
+				field : 'createdTime',//排序字段
 				direction : 'DESC' //升序ASC，降序DESC
 				}
 			}
@@ -265,14 +282,14 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     // }
 
 	channelId.on('remotestart',function (ev) {
-	    debugger;
+	   // debugger;
 		var data = ev.data;
 		data.primaryCode = document.getElementById("primaryCode").value;
     })
 
 	subPackage.on('remotestart',function(ev){
         var data = ev.data;
-        data.mainPackage = document.getElementById("mainPackgage").value;
+        data.mainPackage = $("#primaryList div input").val();
     });
 
 
@@ -306,6 +323,9 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
     });
 
     var beforeAddShow = function(dialog,form){
+        form.getField("channelSort").disable();
+        form.getField("primaryCode").disable();
+        select.enable();
         update = false;
     };
     crudGrid.on('beforeAddShow', beforeAddShow);
@@ -313,10 +333,11 @@ BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/form'],function (CrudGri
 
     var beforeUpdateShow = function(dialog,form,record){
         update = true;
-        select.setSelectedValue('');
-        select.setSelectedValue(record.mainPackgage);
+        findPrimary();
         select.disable();
-        form.getField("primaryCode").disable();   
+        form.getField("channelId").disable();
+        form.getField("channelSort").disable();
+        form.getField("primaryCode").disable();
     };
 
     crudGrid.on('beforeUpdateShow', beforeUpdateShow);

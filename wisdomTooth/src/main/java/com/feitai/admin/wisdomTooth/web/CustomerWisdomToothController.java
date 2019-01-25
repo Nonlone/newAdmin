@@ -92,10 +92,10 @@ public class CustomerWisdomToothController extends BaseListableController<IdCard
                 String funds = getFunds(repay.getBankCardNo());
                 userBankCard.setFund(funds);
 
-                if(repay.getPayAble().equals("1")){
+                if(repay.getPayAble()){
                     payCardrea.add(userBankCard);
                 }
-                if(repay.getRepayAble().equals("1")){
+                if(repay.getRepayAble()){
                     repayCardrea.add(userBankCard);
                 }
             }
@@ -116,6 +116,9 @@ public class CustomerWisdomToothController extends BaseListableController<IdCard
             if(idcard!=null){
                 model.addAttribute("hyIdcard",Desensitization.idCard(idcard.getIdCard()));
                 //idCard.setIdCard(hyIdcard);
+                if(idcard.getBirthday()!=null){
+                    model.addAttribute("birthday",format.format(idcard.getBirthday()));
+                }
             }
             if(user!=null){
                 model.addAttribute("hyPhone",Desensitization.phone(user.getPhone()));
@@ -125,7 +128,8 @@ public class CustomerWisdomToothController extends BaseListableController<IdCard
 
             model.addAttribute("payCard",payCardrea);
             model.addAttribute("repayCard",repayCardrea);
-            model.addAttribute("birthday",format.format(idcard.getBirthday()));
+
+
             model.addAttribute("person", person);
             model.addAttribute("idCard",idcard);
             model.addAttribute("user", user);

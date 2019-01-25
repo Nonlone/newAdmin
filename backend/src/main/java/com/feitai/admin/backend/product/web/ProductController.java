@@ -56,8 +56,9 @@ public class ProductController extends BaseCrudController<Product> {
 		}
 		return list;
 	}
-	
-	@RequestMapping(value = "")
+
+	@RequiresPermissions("/backend/product:list")
+	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/product/index";
 	}

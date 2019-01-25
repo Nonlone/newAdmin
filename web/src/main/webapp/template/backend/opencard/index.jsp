@@ -46,7 +46,7 @@
                 <label class="control-label">授信状态:</label>
                 <div class="controls">
                     <div id="statusSelect" class="controls">
-                        <input id = "search_EQ_status" name="search_EQ_status" type="hidden" >
+                        <input id = "statusSearch" name="search_OREQ_status" type="hidden" value="">
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
             <div class="control-group span7">
                 <label class="control-label">产品:</label>
                 <div class="controls" id="selectProduct">
-                    <input id="searchProduct" type="hidden" name="search_EQ_product.id">
+                    <input id="searchProduct" type="hidden" name="search_OREQ_product.id" value="">
                 </div>
             </div>
             <div class="control-group span7">
@@ -63,20 +63,20 @@
                     <input type="text" class="input-normal control-text" name="search_LIKE_registChannelId">
                 </div>
             </div>
-            <div class="control-group span10">
+            <div class="control-group span12">
                 <label class="control-label">提交审批时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_submitTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_submitTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+                    <input type="text" class="calendar-time calendarStart" name="search_GTE_submitTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_submitTime" type="text" class="calendar-time calendarEnd" data-tip="{text : '结束日期'}">
                 </div>
             </div>
-            <div class="control-group span10">
+            <div class="control-group span12">
                 <label class="control-label">订单创建时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_createdTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">
+                    <input type="text" class="calendar-time calendarStart" name="search_GTE_createdTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_createdTime" type="text" class="calendar-time calendarEnd" data-tip="{text : '结束日期'}">
                 </div>
             </div>
 
@@ -114,25 +114,55 @@
         window.open('${IP}'+'/backend/opencard/detail/'+id);
     }
 
-    BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
+    BUI.use(['bui/ux/crudgrid','bui/select','bui/data',"bui/calendar"],function (CrudGrid,Select,Data,Calendar) {
 
-         
+        var datepickerStart = new Calendar.DatePicker({
+            trigger:'.calendarStart',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 00,
+                minute:00,
+                second : 00,
+                editable : true
+            },
+            editable : true,
+            autoRender : true
+
+        });
+
+        var datepickerEnd = new Calendar.DatePicker({
+            trigger:'.calendarEnd',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 23,
+                minute:59,
+                second : 59,
+                editable : true
+            },
+
+            autoRender : true
+
+        });
+
+
+        var selectStatusStore = new Data.Store({
+            url: '/admin/backend/opencard/openCardStatus',
+            autoLoad: true
+        });
+
         selectStatus = new Select.Select({
             render:'#statusSelect',
-            valueField:'#search_EQ_status',
-            items:JSON.parse('${itemList}')
+            valueField:'#statusSearch',
+            multipleSelect:true,
+            store:selectStatusStore
         });
         selectStatus.render();
-
-        var ViewBtn = true;
-        var spantrue = "<span style='color:#32CD32'>";
-        var spanfalse = "<span style='color:#FF4500'>";
-
 
         //定义页面权限
         var add = false, update = false, del = false, list = false;
         //"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
         <framwork:crudPermission resource="/backend/opencard"/>
+
 
         var selectProductStore = new Data.Store({
             url: '/admin/backend/product/productNameList',
@@ -142,18 +172,26 @@
         selectProduct = new Select.Select({
             render: '#selectProduct',
             valueField: '#searchProduct',
+            multipleSelect:true,
             store: selectProductStore
         });
         selectProduct.render();
 
         var columns = [
-            {title:'订单号',dataIndex:'id',width:'150px'},
-            {title:'客户ID',dataIndex:'userId',width:'150px'},
-            {title:'客户姓名',dataIndex:'idCard',width:'80px',renderer: function (value) {
+            {title:'订单号',dataIndex:'id',width:'145px'},
+            {title:'客户姓名',dataIndex:'idCard',width:'70px',renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '<span style="color:#ff9955">未填写</span>';
+                    }
+                }},
+            {title:'客户ID',dataIndex:'userId',width:'150px'},
+            {title:'注册手机号',dataIndex:'user',width:'100px',renderer:function (value) {
+                    if(value){
+                        return value.phone;
+                    }else{
+                        return "";
                     }
                 }},
             {title:'身份证',dataIndex:'idCard',width:'120px',renderer: function (value) {
@@ -163,32 +201,25 @@
                         return '<span style="color:#ff9955">未填写</span>';
                     }
                 }},
-            {title:'注册手机号',dataIndex:'user',width:'100px',renderer:function (value) {
-                    if(value){
-                        return value.phone;
-                    }else{
-                        return "";
-                    }
-                }},
             {title:'产品名称',dataIndex:'product',width:'100px',renderer:function(value){
                     if(value){
                         return value.remark;
                     }
                     return "";
                 }},
-            {title:'授信状态',dataIndex:'cardStatusName',width:'100px'},
-            {title:"授权项",dataIndex:'auths',width:'150px'},
-            {title:'授信额度',dataIndex:'creditSum',width:'80px'},
-            {title:'注册渠道',dataIndex:'registChannelId',width:'100px'},
-            {title:'创建时间',dataIndex:'createdTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer},
-            {title:'进件渠道',dataIndex:'applyChannelId',width:'80px'},
-            {title:'提交审批时间',dataIndex:'submitTime',width:'150px',renderer:BUI.Grid.Format.datetimeRenderer},
             {title:'注册客户端',dataIndex:'user',width:'80px',renderer:function(value) {
                     if (value) {
                         return value.osType;
                     }
                     return "";
-                }}
+                }},
+            {title:'注册渠道',dataIndex:'registChannelId',width:'100px'},
+            {title:'进件渠道',dataIndex:'applyChannelId',width:'100px'},
+            {title:'授信状态',dataIndex:'cardStatusName',width:'100px'},
+            {title:'授信额度',dataIndex:'creditSum',width:'80px'},
+            {title:"授权项",dataIndex:'auths',width:'140px'},
+            {title:'创建时间',dataIndex:'createdTime',width:'140px',renderer:BUI.Grid.Format.datetimeRenderer},
+            {title:'提交审批时间',dataIndex:'submitTime',width:'140px',renderer:BUI.Grid.Format.datetimeRenderer}
         ];
 
         var crudGrid = new CrudGrid({
@@ -203,6 +234,7 @@
             showUpdateBtn : update,
             showRemoveBtn : del,
             addOrUpdateFormId : 'addOrUpdateForm',
+            operationwidth:'70px',
             dialogContentId : 'addOrUpdate',
             gridCfg:{
                 innerBorder:true
@@ -212,12 +244,13 @@
                 if(!jQuery.isEmptyObject(obj.idCard)){
                     title = obj.idCard.name + "—授信信息"
                 }
-                return CrudGrid.createLink({
-                    id : obj.id,
-                    title : title,
-                    text : '<li class="icon-user"></li>',
-                    href : $ctx+"/backend/opencard/detail/" +obj.id
-                });
+                return CrudGrid.createLinkCustomSpan({
+                    class:"page-action grid-command",
+                    id: obj.id,
+                    title: title,
+                    text: '详情',
+                    href: $ctx+"/backend/opencard/detail/" +obj.id
+                })
             },
             storeCfg:{//定义store的排序，如果是复合主键一定要修改
                 sortInfo : {

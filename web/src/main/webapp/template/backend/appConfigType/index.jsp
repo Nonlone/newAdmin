@@ -114,7 +114,7 @@ BUI.use(['bui/ux/crudgrid'],function (CrudGrid) {
       	storeUrl : '${ctx}/backend/appConfigType/list',
         addUrl : '${ctx}/backend/appConfigType/add',
         updateUrl : '${ctx}/backend/appConfigType/update',
-        removeUrl : '${ctx}/backend/appConfigType/del',
+        removeUrl : '${ctx}/backend/appConfigType/delModel',
         columns : columns,
 		showAddBtn : add,
 		showUpdateBtn : update,

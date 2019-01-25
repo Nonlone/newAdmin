@@ -5,18 +5,17 @@ import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.service.Page;
 import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.web.BaseListableController;
-import com.feitai.admin.mop.base.dao.entity.Partner;
-import com.feitai.admin.mop.base.dao.entity.PartnerChangeLog;
-import com.feitai.admin.mop.base.enums.PartnerType;
-import com.feitai.admin.mop.superpartner.request.QueryRequest;
-import com.feitai.admin.mop.superpartner.request.UpdateRequest;
+import com.feitai.admin.mop.superpartner.dao.entity.Partner;
+import com.feitai.admin.mop.superpartner.dao.entity.PartnerChangeLog;
+import com.feitai.admin.mop.superpartner.enums.PartnerType;
+import com.feitai.admin.mop.superpartner.request.PartnerQueryRequest;
+import com.feitai.admin.mop.superpartner.request.PartnerUpdateRequest;
 import com.feitai.admin.mop.superpartner.service.PartnerChangeLogService;
 import com.feitai.admin.mop.superpartner.service.PartnerService;
 import com.feitai.admin.mop.superpartner.service.SettleRateHelper;
 import com.feitai.admin.mop.superpartner.service.SettleRateHelper.RateInfo;
 import com.feitai.admin.mop.superpartner.service.SettleRateHelper.RateRange;
 import com.feitai.admin.mop.superpartner.vo.PartnerSettleResp;
-import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ import java.util.List;
  * @Author qiuyunlong
  */
 @Controller
-@RequestMapping("admin/mop/partner")
+@RequestMapping("/mop/partner")
 public class PartnerController extends BaseListableController<Partner> {
 
 	@Autowired
@@ -40,10 +39,10 @@ public class PartnerController extends BaseListableController<Partner> {
 	@Autowired
 	private PartnerChangeLogService partnerChangeLogService;
 
-    @RequiresPermissions("/admin/mop/partner:list")
+    @RequiresPermissions("/mop/partner:list")
     @RequestMapping("/list")
     @ResponseBody
-    public Object listPartner(@ModelAttribute QueryRequest queryRequest){
+    public Object listPartner(@ModelAttribute PartnerQueryRequest queryRequest){
 		List<Partner> partners = partnerService.listPartner(
 				queryRequest.getUserId(), queryRequest.getType(), queryRequest.getPhone());
 		Page<Partner> partnerPage = buildPageByExemple(partners, queryRequest.getPageIndex(), queryRequest.getLimit());
@@ -51,6 +50,7 @@ public class PartnerController extends BaseListableController<Partner> {
         return partnerPage;
     }
 
+	@RequiresPermissions("/mop/partner:list")
     @RequestMapping()
    	public String index() {
    		return "/mop/partner/index";
@@ -102,20 +102,20 @@ public class PartnerController extends BaseListableController<Partner> {
 		return sb.toString();
 	}
 
-    @RequiresPermissions("/admin/mop/partner:update")
+    @RequiresPermissions("/mop/partner:update")
 	@RequestMapping("/type/update")
 	@ResponseBody
-	public Object updatePartnerType(@ModelAttribute UpdateRequest updateRequest) {
+	public Object updatePartnerType(@ModelAttribute PartnerUpdateRequest updateRequest) {
 		// 默认个人改企业
 		partnerService.updatePartnerType(updateRequest.getUserId(), PartnerType.CORPORATE.getType(),
                 SecurityUtils.getSubject().getPrincipal().toString());
 		return new AjaxResult(true, "操作成功！");
 	}
 
-    @RequiresPermissions("/admin/mop/partner:update")
+    @RequiresPermissions("/mop/partner:update")
     @RequestMapping("/rate/update")
     @ResponseBody
-    public Object updatePartnerRate(@ModelAttribute UpdateRequest updateRequest){
+    public Object updatePartnerRate(@ModelAttribute PartnerUpdateRequest updateRequest){
     	try {
             JSON.parseObject(updateRequest.getSettle(), RateInfo.class).validateRange();
         } catch (Exception e) {
@@ -130,10 +130,10 @@ public class PartnerController extends BaseListableController<Partner> {
 		return "/mop/partner/changeLogIndex";
 	}
 
-    @RequiresPermissions("/admin/mop/partner:list")
+    @RequiresPermissions("/mop/partner:list")
     @RequestMapping("/changeLog/list")
     @ResponseBody
-    public Object listPartnerChangeLog(@ModelAttribute QueryRequest queryRequest){
+    public Object listPartnerChangeLog(@ModelAttribute PartnerQueryRequest queryRequest){
         List<PartnerChangeLog> pageInfo = partnerChangeLogService.listPartnerChangeLog(queryRequest.getUserId());
 		Page<PartnerChangeLog> partnerChangeLogPage = buildPage(pageInfo, queryRequest.getPageIndex(), queryRequest.getLimit());
 		return partnerChangeLogPage;

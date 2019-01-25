@@ -13,10 +13,14 @@ import com.feitai.admin.backend.config.service.ChannelPrimaryService;
 import com.feitai.admin.backend.config.service.ChannelService;
 import com.feitai.admin.backend.properties.MapProperties;
 import com.feitai.admin.core.service.DynamitSupportService;
+import com.feitai.admin.core.service.OnCondition;
+import com.feitai.admin.core.service.Operator;
+import com.feitai.admin.core.service.SelectMultiTable;
 import com.feitai.admin.core.vo.AjaxResult;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseCrudController;
 import com.feitai.admin.core.web.BaseListableController;
+import com.feitai.jieya.server.dao.channel.model.Channel;
 import com.feitai.utils.SnowFlakeIdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -27,6 +31,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tk.mybatis.mapper.util.StringUtil;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
@@ -49,7 +54,8 @@ public class ChannelPrimaryController extends BaseCrudController<ChannelPrimary>
 	
 	@Autowired
 	private MapProperties mapProperties;
-	
+
+	@RequiresPermissions("/backend/channelPrimary:list")
 	@RequestMapping(value = "index")
 	public ModelAndView index() {
 		ModelAndView mav=new ModelAndView("/backend/channelPrimary/index");
@@ -95,14 +101,23 @@ public class ChannelPrimaryController extends BaseCrudController<ChannelPrimary>
 	public Object del(@RequestParam(value = "ids[]") Long[] ids){
 		boolean delAllow = true;
 		for(Long id:ids){
-			if(channelService.findByPrimaryId(id).size()!=0) {
+			if(channelService.countBySqls(getCountSql(id),SelectMultiTable.COUNT_ALIAS)!=0){
 				return new AjaxResult(false, "id为：[" + id + "] 的一级渠道尚有对应二级渠道未删除");
 			}
 		}
 		this.channelPrimaryService.delete(ids);
 		return this.successResult;
 	}
-	
+	private  String getCountSql(Long id) {
+		StringBuffer countSql=new StringBuffer();
+		String sql=SelectMultiTable.builder(Channel.class).leftJoin(ChannelPrimary.class, "channelPrimary", new OnCondition[]{
+                        new OnCondition(SelectMultiTable.ConnectType.AND, "mainPackageCode", Operator.EQ, "channelCode")
+                }).buildCountSqlString();
+		countSql.append(sql)
+		        .append(" where channelPrimary.id=")
+		        .append(id);
+		return countSql.toString();
+	}
 
 	/**
 	 * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2 Preparable二次部分绑定的效果,先根据form的id从数据库查出User对象,再把Form提交的内容绑定到该对象上。

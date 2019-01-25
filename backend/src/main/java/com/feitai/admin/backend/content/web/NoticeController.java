@@ -8,6 +8,7 @@
 package com.feitai.admin.backend.content.web;
 
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,8 @@ public class NoticeController extends BaseCrudController<Notice> {
 	@Autowired
 	private NoticeService noticeService;
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
+	@RequiresPermissions("/backend/notice:list")
 	public String index() {		
 		return "/backend/notice/index";
 	}

@@ -1,5 +1,7 @@
 package com.feitai.admin.web;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.DefaultBeanNameGenerator;
 import org.springframework.boot.SpringApplication;
@@ -13,9 +15,11 @@ import tk.mybatis.spring.annotation.MapperScan;
         "com.feitai.admin.**.mapper"})
 @ComponentScan(basePackages = {
         "com.feitai.admin.backend",
+        "com.feitai.admin.channel",
         "com.feitai.admin.wisdomTooth",
         "com.feitai.admin.system",
         "com.feitai.admin.web",
+        "com.feitai.admin.messagecenter",
         "com.feitai.admin.core",
         "com.feitai.admin.mop"})
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class,})
@@ -28,10 +32,7 @@ public class AdminApplication {
         SpringApplication app = new SpringApplication(AdminApplication.class);
         app.setBeanNameGenerator(new DefaultBeanNameGenerator());
         app.run(args);
-
+        JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.IgnoreErrorGetter.getMask();
+        JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.IgnoreNonFieldGetter.getMask();
     }
-
 }
-
-
-

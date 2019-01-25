@@ -12,6 +12,8 @@ import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.web.BaseCrudController;
 import com.feitai.jieya.server.dao.cms.model.Advertise;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,8 @@ public class AdvertiseController extends BaseCrudController<Advertise> {
     @Autowired
     private AdvertiseService advertiseService;
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "index")
+    @RequiresPermissions("/backend/advertise:list")
     public String index() {
         return "/backend/advertise/index";
     }

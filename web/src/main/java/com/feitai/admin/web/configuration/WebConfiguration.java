@@ -46,7 +46,7 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
      */
     @Override
     protected void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("/login");
+        registry.addViewController("/").setViewName("login");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
         super.addViewControllers(registry);
     }
@@ -119,6 +119,8 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         //fastjson配置信息
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        //启用后忽略报错的getter方法
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.IgnoreErrorGetter);
         // 脱敏映射Map
         Map<String, KeyFilter.KeyValueHandler> hyposensitizeHandlerMap = new HashMap<>();
         // 身份证脱敏
@@ -155,6 +157,9 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
         fastJsonConfig.setSerializeFilters(new KeyFilter(hyposensitizeHandlerMap));
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.BrowserCompatible);
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.IgnoreErrorGetter);
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.IgnoreNonFieldGetter);
         fastConverter.setFastJsonConfig(fastJsonConfig);
         converters.add(fastConverter);
     }

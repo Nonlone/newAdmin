@@ -305,6 +305,9 @@
                     <th width="80px">城市名</th>
                     <th width="80px">地区名</th>
                     <th >地址</th>
+                    <th width="80px">经度</th>
+                    <th width="80px">纬度</th>
+                    <th width="80px">区域编码</th>
                     <th width="100px">ip</th>
                     </thead>
                     <tbody>
@@ -317,6 +320,9 @@
                                     <td >${area.cityName}</td>
                                     <td >${area.districtName}</td>
                                     <td >${area.location}</td>
+                                    <td >${area.longitude}</td>
+                                    <td >${area.latitude}</td>
+                                    <td >${area.adCode}</td>
                                     <td >${area.ip}</td>
                                 </tr>
                             </c:forEach>
@@ -376,10 +382,10 @@
 
     </div>
     <c:if test="${dataApprovePass}">
-        <div id="dataApprovePass" style="background-color: white;">
+        <div id="dataApprovePass" style="background-color: white;" hidden="hidden">
             <button style="width: 90px;height: 50px;float: right" onclick="dataApprovePass();"><span style="color: #ac2925;size: 30px">内审通过</span></button>
+            <br/><br/><br/><br/><br/>
         </div>
-        <br/><br/><br/><br/><br/>
 
     </c:if>
 
@@ -389,6 +395,10 @@
 </body>
 <script type="text/javascript">
 
+    <shiro:hasPermission name="/backend/loanOrder:approve">
+    document.getElementById("dataApprovePass").removeAttribute("hidden");
+
+    </shiro:hasPermission>
 
     function dataApprovePass() {
         BUI.use('bui/overlay',function (Overlay){

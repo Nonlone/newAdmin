@@ -40,13 +40,13 @@
                     </select>
                 </div>
             </div>
-            <div class="control-group span10">
+            <div class="control-group span12">
                 <label class="control-label">创建时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createdTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
+                    <input type="text" class="calendarStart calendar-time" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
                     <span>- </span>
-                    <input name="search_LTE_createdTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+                    <input name="search_LTE_createdTime" type="text" class="calendarEnd calendar-time" data-tip="{text : '结束日期'}">
                 </div>
             </div>
             <div class="span3 offset1">
@@ -254,7 +254,35 @@
     var disableUrl = "/backend/fund/disable";
 
 
-    BUI.use(['bui/ux/crudgrid', 'bui/form', 'bui/ux/savedialog', 'bui/overlay'], function (CrudGrid, Form, Dialog) {
+    BUI.use(['bui/ux/crudgrid', 'bui/form', 'bui/ux/savedialog', 'bui/overlay','bui/calendar'], function (CrudGrid, Form, Dialog,Overlay,Calendar) {
+
+        var datepickerStart = new Calendar.DatePicker({
+            trigger:'.calendarStart',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 00,
+                minute:00,
+                second : 00,
+                editable : true
+            },
+            editable : true,
+            autoRender : true
+
+        });
+
+        var datepickerEnd = new Calendar.DatePicker({
+            trigger:'.calendarEnd',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 23,
+                minute:59,
+                second : 59,
+                editable : true
+            },
+
+            autoRender : true
+
+        });
 
         //定义页面权限
         <framwork:crudPermission resource="/backend/fund"/>
@@ -305,28 +333,29 @@
             showUpdateBtn: true,
             showRemoveBtn: false,
             addOrUpdateFormId: 'addOrUpdateForm',
+            operationwidth:'180px',
             dialogContentId: 'addOrUpdate',
             operationColumnRenderer: function (value, obj) {//操作追加
                 var operatorHtml = '';
 
                 <shiro:hasPermission name='/backend/fund:recharge'>
-                operatorHtml +=  '<span class="grid-command js-fundRecharge" data-id="'+obj.id+'" title="资金方充值"><i class="icon-shopping-cart"></i></span>';
+                operatorHtml +=  '<span class="grid-command js-fundRecharge cart" data-id="'+obj.id+'" title="资金方充值">充值</span>';
                 </shiro:hasPermission>
 
                 <shiro:hasPermission name='/backend/fund:detail'>
                 operatorHtml += CrudGrid.createLink({
                     id: obj.id,
                     title: obj.fundName + '—充值记录',
-                    text: '<li class="icon-search js-fundDetailRecord"></li>',
+                    text: '充值记录',
                     href: '${ctx}/backend/fund/detail?fundId=' + obj.id
                 });
                 </shiro:hasPermission>
 
                 <shiro:hasPermission name='/backend/fund:enable'>
                 if (obj.enable == '1') {
-                    operatorHtml += '<span class="grid-command js-fundEnable" data-id="'+obj.id+'" title="停用资金方" ><i class="icon-chevron-down"></i></span>';
+                    operatorHtml += '<span class="grid-command js-fundEnable down" data-id="'+obj.id+'" title="停用资金方" >停用</span>';
                 } else {
-                    operatorHtml += '<span class="grid-command js-fundDisable" data-id="'+obj.id+'" title="启用资金方" ><i class="icon-chevron-up"></i></span>';
+                    operatorHtml += '<span class="grid-command js-fundDisable up" data-id="'+obj.id+'" title="启用资金方" >启用</span>';
                 }
                 </shiro:hasPermission>
                 return operatorHtml;
@@ -384,14 +413,14 @@
             //记录充值金额--并对ChargeDialog添加信息
             $("#amountRecord").val(target.amount);
 
-            if (sender.hasClass('icon-shopping-cart')) {
+            if (sender.hasClass('cart')) {
                 $("#charge_title").text("您正在为资金方【" + title + "】充值");
                 $("#fundId").val(target.id);//赋值到fund的id
                 $('#rechargeMoney').attr("placeholder", '当前余额为: ' + target.amount + ' 元');
                 chargeDialog.update();
             } else if (sender.hasClass('icon-trash')) {
                 fundInfoDailog.show();
-            } else if (sender.hasClass('icon-chevron-down')) {
+            } else if (sender.hasClass('down')) {
                 var data = {};
                 data.id = target.id;
                 data.enable = '0';
@@ -416,7 +445,7 @@
                         }
                     });
                 }
-            } else if (sender.hasClass('icon-chevron-up')) {
+            } else if (sender.hasClass('up')) {
                 var data = {};
                 data.id = target.id;
                 data.enable = '1';

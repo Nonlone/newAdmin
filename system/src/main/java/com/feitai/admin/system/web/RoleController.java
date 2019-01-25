@@ -12,7 +12,6 @@ import com.feitai.admin.system.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
@@ -36,6 +35,7 @@ public class RoleController extends BaseListableController<Role> {
     private RoleAuthService roleAuthService;
 
     @RequestMapping(value = "")
+    @RequiresPermissions("/system/role:list")
     public String index() {
         return "/system/role/index";
     }

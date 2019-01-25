@@ -9,11 +9,11 @@ package com.feitai.admin.backend.config.web;
 
 import com.feitai.admin.backend.config.entity.AppConfigType;
 import com.feitai.admin.backend.config.service.AppConfigTypeService;
-import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseCrudController;
+import com.feitai.admin.core.web.BaseListableController;
 import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.appconfig.model.AppConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +32,11 @@ public class AppConfigTypeController extends BaseCrudController<AppConfigType> {
 
 	@Autowired
 	private AppConfigTypeService appConfigTypeService;
+
+	private static final String TYPE_CODE = "typeCode";
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
+	@RequiresPermissions("/backend/appConfigType:list")
 	public String index() {
 		return "/backend/appConfigType/index";
 	}
@@ -68,7 +71,13 @@ public class AppConfigTypeController extends BaseCrudController<AppConfigType> {
 		return appConfigType;
 	}
 
-
+	@RequiresPermissions("/backend/appConfigType:del")
+	@RequestMapping(value = "delModel")
+	@ResponseBody
+	public Object delModel(@RequestParam(value = "typeCodes[]") String[] ids){
+		this.appConfigTypeService.delete(ids);
+		return BaseListableController.successResult;
+	}
 	@Override
 	protected DynamitSupportService<AppConfigType> getService() {
 		return this.appConfigTypeService;
@@ -88,14 +97,14 @@ public class AppConfigTypeController extends BaseCrudController<AppConfigType> {
 	protected String getSingleSql(String typeCode){
 		String sql = SelectMultiTable.builder(AppConfigType.class)
 				.leftJoin(AppConfig.class,"app_config",new OnCondition[]{
-						new OnCondition(SelectMultiTable.ConnectType.AND, "typeCode", Operator.EQ, "typeCode"),
+						new OnCondition(SelectMultiTable.ConnectType.AND, TYPE_CODE, Operator.EQ, TYPE_CODE),
 				}).buildSqlString()+"where maintable.type_Code = '"+typeCode+"' GROUP BY type_code";
 		return sql;
 	}
 	  private SelectMultiTable getSelectMultiTable() {
 	        return SelectMultiTable.builder(AppConfigType.class)
 					.leftJoin(AppConfig.class,"app_config",new OnCondition[]{
-							new OnCondition(SelectMultiTable.ConnectType.AND, "typeCode", Operator.EQ, "typeCode"),
+							new OnCondition(SelectMultiTable.ConnectType.AND, TYPE_CODE, Operator.EQ, TYPE_CODE),
 					});
 	    }
 	  

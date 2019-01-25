@@ -115,7 +115,8 @@ public class FundController extends BaseCrudController<Fund> {
     }
 
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "index")
+    @RequiresPermissions("/backend/fund:list")
     public String index() {
         return "/backend/fund/index";
     }

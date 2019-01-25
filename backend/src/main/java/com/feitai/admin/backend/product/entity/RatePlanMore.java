@@ -9,7 +9,6 @@ import com.feitai.jieya.server.dao.fund.model.Fund;
 import com.feitai.jieya.server.dao.product.mapper.ProductMapper;
 import com.feitai.jieya.server.dao.product.model.Product;
 import lombok.Data;
-import lombok.ToString;
 import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.Id;

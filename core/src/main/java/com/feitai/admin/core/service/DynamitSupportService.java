@@ -5,15 +5,9 @@ import com.feitai.base.mybatis.OneAnnotationFieldWalkProcessor;
 import com.feitai.base.mybatis.SqlMapper;
 import com.feitai.utils.ObjectUtils;
 import com.feitai.utils.StringUtils;
-import com.github.pagehelper.PageHelper;
-import com.google.common.base.Joiner;
 import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.mybatis.spring.SqlSessionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -21,7 +15,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -226,6 +219,7 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
         return buildSqlWhereCondition(searchParamsList, null);
     }
 
+
     /***
      * 构建搜索条件语句
      *
@@ -321,15 +315,21 @@ public abstract class DynamitSupportService<T> extends BaseSupportService<T> imp
                     case OREQ:
                         if (!ArrayUtils.isEmpty(searchParams.getValues())) {
                             int i = 0;
-                            for (Object val : searchParams.getValues()) {
+                            String[] values = (searchParams.getValues()[0].toString()).split(",");
+                            for (Object val : values) {
+                                if(StringUtils.isBlank(val.toString())){
+                                    break;
+                                }
                                 if (i == 0) {
-                                    sql.append(" and (" + leftParam + " = " + getValue(val));
+                                    sql.append(" and (" + leftParam + " = " + val.toString());
                                 } else {
-                                    sql.append(" or " + leftParam + " = " + getValue(val));
+                                    sql.append(" or " + leftParam + " = " + val.toString());
                                 }
                                 i++;
+                                if(i==values.length){
+                                    sql.append(")");
+                                }
                             }
-                            sql.append(")");
                         }
                         break;
                     case ANDNOTEQ:

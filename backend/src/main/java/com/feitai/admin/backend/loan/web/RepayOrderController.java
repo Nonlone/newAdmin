@@ -27,6 +27,7 @@ import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
 import com.feitai.admin.backend.properties.MapProperties;
+import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
@@ -111,7 +112,22 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
 
     private final static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    @RequestMapping(value = "")
+
+    @RequestMapping(value = "/repayOrderStatus")
+    @ResponseBody
+    @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
+    public Object repayOrderStatus(){
+        Map<String, String> repayOrderStatusMap = mapProperties.getRepayOrderStatusMap();
+        List<ListItem> list = new ArrayList<ListItem>();
+        list.add(new ListItem("全部", " "));
+        for (String key : repayOrderStatusMap.keySet()) {
+            list.add(new ListItem(repayOrderStatusMap.get(key), key));
+        }
+        return list;
+    }
+
+    @RequestMapping(value = "index")
+    @RequiresPermissions("/backend/loan/repayOrder:list")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/index");
         modelAndView.addObject("isOut",false);
@@ -173,7 +189,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         ModelAndView modelAndView = new ModelAndView("/backend/repayOrder/detail");
         RepayOrderMore repayOrder = repayOrderService.findOneBySql(getOneSql(id));
         List<RepayOrderMore> repayOrderMores = repayOrderService.findByRepayPlanId(repayOrder.getRepayPlanId());
-        double amount = new Double(0);
+        Double amount = new Double(0);
         for(RepayOrderMore repayOrderMore:repayOrderMores){
             amount +=  repayOrderMore.getAmount().doubleValue();;
         }
@@ -377,7 +393,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         }
         json.put("payCard", substring);
         List<RepayOrderMore> repayOrderMores = repayOrderService.findByRepayPlanId((Long)json.get("repayPlanId"));
-        double amount = new Double(0);
+        Double amount = new Double(0);
         for(RepayOrderMore repayOrder:repayOrderMores){
             amount +=  repayOrder.getAmount().doubleValue();;
         }
@@ -394,7 +410,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         if(searchSql.equals(getService().WHERE_COMMON)){
             sbSql.append(SelectMultiTable.builder(RepayOrder.class).buildCountSqlString());
         }else{
-            sbSql.append(getSelectMultiTable().buildCountSqlString());
+            sbSql.append(getSelectMultiTable().buildCountSqlStringByDistinct("id"));
         }
         sbSql.append(searchSql);
         sbSql.append(" Group by " + SelectMultiTable.MAIN_ALAIS + ".repay_plan_id )tcount");

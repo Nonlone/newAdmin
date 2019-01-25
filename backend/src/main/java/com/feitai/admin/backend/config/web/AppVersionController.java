@@ -12,6 +12,8 @@ import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.web.BaseCrudController;
 import com.feitai.jieya.server.dao.appconfig.model.AppVersion;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +31,8 @@ public class AppVersionController extends BaseCrudController<AppVersion> {
 	@Autowired
 	private AppVersionService appVersionService;
 	
-	@RequestMapping(value = "")
+	@RequestMapping(value = "index")
+	@RequiresPermissions("/backend/appVersion:list")
 	public String index(Model model) {
 		List<AppVersion> appVersions = appVersionService.findAll();
 		Map<String,String> osTypeMap = new HashMap<>();

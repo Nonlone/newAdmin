@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -33,6 +30,7 @@ public class ResourceController extends BaseListableController<Resource> {
     private ResourceService resourceService;
 
     @RequestMapping(value = "")
+    @RequiresPermissions("/system/resource:list")
     public String index() {
         return "/system/resource/index";
     }

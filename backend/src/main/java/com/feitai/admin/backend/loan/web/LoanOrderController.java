@@ -10,9 +10,11 @@ package com.feitai.admin.backend.loan.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.config.service.AppConfigService;
-import com.feitai.admin.backend.creditdata.service.AuthdataAuthService;
 import com.feitai.admin.backend.creditdata.vo.PhotoAttachViewVo;
-import com.feitai.admin.backend.customer.service.*;
+import com.feitai.admin.backend.customer.service.AreaService;
+import com.feitai.admin.backend.customer.service.AuthDataService;
+import com.feitai.admin.backend.customer.service.BankSupportService;
+import com.feitai.admin.backend.customer.service.PhotoService;
 import com.feitai.admin.backend.fund.service.FundService;
 import com.feitai.admin.backend.loan.entity.LoanOrderMore;
 import com.feitai.admin.backend.loan.entity.RepayOrderMore;
@@ -24,7 +26,6 @@ import com.feitai.admin.backend.loan.vo.BackendLoanRequest;
 import com.feitai.admin.backend.loan.vo.OrderPlande;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.opencard.service.TongDunDataService;
-import com.feitai.admin.backend.product.service.ProductService;
 import com.feitai.admin.backend.product.service.ProductTermFeeFeatureService;
 import com.feitai.admin.backend.properties.AppProperties;
 import com.feitai.admin.backend.properties.MapProperties;
@@ -66,7 +67,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletRequest;
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -82,15 +82,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
     @Autowired
     private ProductTermFeeFeatureService productTermFeeFeatureService;
-
-    @Autowired
-    private IdCardService idcardService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ProductService productService;
 
     @Autowired
     private CardService cardService;
@@ -129,9 +120,6 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
     private AreaService areaService;
 
     @Autowired
-    private AuthdataAuthService authdataAuthService;
-
-    @Autowired
     private PhotoService photoService;
 
     private RestTemplate restTemplate = new RestTemplate();
@@ -148,7 +136,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
      * @return
      */
     @PostMapping(value = "/dataApprovePass/{loanId}")
-    @RequiresPermissions("/backend/loanOrder:auth")
+    @RequiresPermissions("/backend/loanOrder:approve")
     @ResponseBody
     public Object dataApprovePass(@PathVariable("loanId") String loanId) {
         LoanOrderMore loanOrderMore = loanOrderService.findOne(loanId);
@@ -164,6 +152,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
             JSONObject jsonObject = JSON.parseObject(jsonString.getBody());
             return new BackendResponse((int) jsonObject.get("code"), (String) jsonObject.get("message"));
         } catch (Exception e) {
+            log.info(String.format("send backend[{%s}]",appProperties.getDataApprovePassUrl()),e);
             return new BackendResponse(-1, "连接服务器失败！");
         }
 
@@ -172,22 +161,31 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
 
     /***
      * 取消放款
-     * @param dataApprovePassRequest
+     * @param loanId
      * @return
      */
-    @PostMapping("/rejectCash")
-    @RequiresPermissions("/backend/loanOrder:auth")
+    @PostMapping("/rejectCash/{loanId}")
+    @RequiresPermissions("/backend/loanOrder:stop")
     @ResponseBody
-    public Object rejectCash(@Valid BackendLoanRequest dataApprovePassRequest) {
-        String requestJsonString = JSON.toJSONString(dataApprovePassRequest);
-        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getRejectCash(), requestJsonString, String.class);
-        return jsonString.getBody();
+    public Object rejectCash(@PathVariable("loanId") String loanId) {
+        BackendLoanRequest backendLoanRequest = new BackendLoanRequest();
+        backendLoanRequest.setLoanOrderId(Long.parseLong(loanId));
+        String requestJsonString = JSON.toJSONString(backendLoanRequest);
+        try {
+            restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+            ResponseEntity<String> jsonString = restTemplate.postForEntity(appProperties.getRejectCash(), requestJsonString, String.class);
+            return JSONObject.parseObject(jsonString.getBody());
+        } catch (Exception e) {
+            log.error(String.format("send backend[{%s}] fail",appProperties.getRejectCash()),e);
+            return new BackendResponse(-1, "连接服务端失败！");
+        }
     }
 
 
 
+
     @GetMapping(value = "/index")
+    @RequiresPermissions("/backend/loanOrder:list")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("/backend/loanOrder/index");
         String rejectCash = appProperties.getRejectCash();
@@ -439,7 +437,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         Integer loanTerm = (Integer) json.get("loanTerm");
         Long cardId = (Long) json.get("cardId");
 
-        search = productTermFeeFeatureService.findByProductIdAndTerm(productId.longValue(), loanTerm.shortValue());
+        search = productTermFeeFeatureService.findByProductIdAndTerm(productId, loanTerm.shortValue());
 
         if (search.size() > 0) {
             ProductTermFeeFeature productTermFeeFeature = search.get(0);
@@ -478,7 +476,7 @@ public class LoanOrderController extends BaseListableController<LoanOrderMore> {
         if (searchSql.equals(DynamitSupportService.WHERE_COMMON)) {
             sbSql.append(SelectMultiTable.builder(LoanOrderMore.class).buildCountSqlString());
         } else {
-            sbSql.append(getSelectMultiTable().buildCountSqlString());
+            sbSql.append(getSelectMultiTable().buildCountSqlStringByDistinct("id"));
         }
         sbSql.append(searchSql);
         return sbSql.toString();

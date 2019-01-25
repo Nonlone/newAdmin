@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
@@ -44,6 +43,7 @@ public class UserController extends BaseListableController<User> {
     private UserService userService;
 
     @RequestMapping(value = "")
+    @RequiresPermissions("/system/user:list")
     public String index() {
         return "/system/user/index";
     }

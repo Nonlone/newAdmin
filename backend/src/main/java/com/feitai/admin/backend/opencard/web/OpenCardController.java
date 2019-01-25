@@ -9,12 +9,14 @@ package com.feitai.admin.backend.opencard.web;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.feitai.admin.backend.customer.service.AreaService;
 import com.feitai.admin.backend.customer.service.AuthDataService;
-import com.feitai.admin.backend.customer.service.*;
+import com.feitai.admin.backend.customer.service.UserService;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.service.CardService;
 import com.feitai.admin.backend.opencard.service.TongDunDataService;
 import com.feitai.admin.backend.properties.MapProperties;
+import com.feitai.admin.core.annotation.LogAnnotation;
 import com.feitai.admin.core.service.*;
 import com.feitai.admin.core.vo.ListItem;
 import com.feitai.admin.core.web.BaseListableController;
@@ -22,7 +24,9 @@ import com.feitai.admin.core.web.PageBulider;
 import com.feitai.jieya.server.dao.authdata.model.BaseAuthData;
 import com.feitai.jieya.server.dao.base.constant.AuthCode;
 import com.feitai.jieya.server.dao.base.constant.CardStatus;
-import com.feitai.jieya.server.dao.data.model.*;
+import com.feitai.jieya.server.dao.data.model.IdCardData;
+import com.feitai.jieya.server.dao.data.model.LocationData;
+import com.feitai.jieya.server.dao.data.model.TongDunData;
 import com.feitai.jieya.server.dao.product.model.Product;
 import com.feitai.jieya.server.dao.user.model.User;
 import com.feitai.utils.CollectionUtils;
@@ -33,7 +37,6 @@ import com.feitai.utils.datetime.DateUtils;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +62,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
         this.add(AuthCode.PBCCRC);
         this.add(AuthCode.TOBACCO);
         this.add(AuthCode.XYL_TOBACCO);
+        this.add(AuthCode.TAX);
     }};
 
     @Autowired
@@ -83,22 +87,28 @@ public class OpenCardController extends BaseListableController<CardMore> {
     @Autowired
     private TongDunDataService tongDunDataService;
 
-
+    @RequiresPermissions("/backend/opencard:list")
     @RequestMapping("/index")
     public ModelAndView index() {
     	ModelAndView mav=new ModelAndView("/backend/opencard/index");
-    	List<ListItem> itemList = new ArrayList<>();
-    	 itemList.add(new ListItem("全部", ""));
-    	for(CardStatus cs:CardStatus.values()){
-    	  String text=mapProperties.getCardStatus(cs);
-    	  if(!StringUtils.isEmpty(text)){
-    	   itemList.add(new ListItem(text, cs.getValue().toString()));
-    	  }
-    	}
-    	mav.addObject("itemList",JSONObject.toJSONString(itemList));
         return mav;
     }
-  
+
+
+    @RequestMapping(value = "/openCardStatus")
+    @ResponseBody
+    @LogAnnotation(value = true, writeRespBody = false)// 写日志但是不打印请求的params,但不打印ResponseBody的内容
+    public Object openCardStatus(){
+        List<ListItem> itemList = new ArrayList<>();
+        itemList.add(new ListItem("全部", ""));
+        for(CardStatus cs:CardStatus.values()){
+            String text=mapProperties.getCardStatus(cs);
+            if(!StringUtils.isEmpty(text)){
+                itemList.add(new ListItem(text, cs.getValue().toString()));
+            }
+        }
+        return itemList;
+    }
 
     @RequiresPermissions("/backend/opencard:list")
     @RequestMapping(value = "list")
@@ -169,16 +179,15 @@ public class OpenCardController extends BaseListableController<CardMore> {
         // 征信项
         List<BaseAuthData> baseAuthDataList = authDataService.getAuthValueString(card.getId());
         if (!CollectionUtils.isEmpty(baseAuthDataList)) {
-            List<JSONObject> authsList = new ArrayList<JSONObject>(){{
-                for(BaseAuthData baseAuthData:baseAuthDataList){
-                    if(authListSet.contains(baseAuthData.getCode())) {
-                        JSONObject json = (JSONObject) JSON.toJSON(baseAuthData);
-                        json.put("function",baseAuthData.getCode().getValue()+"_"+ baseAuthData.getSource().getValue());
-                        json.put("name", mapProperties.getAuthValue(baseAuthData.getCode(), baseAuthData.getSource()));
-                        this.add(json);
-                    }
+            List<JSONObject> authsList = new ArrayList<>();
+            for(BaseAuthData baseAuthData:baseAuthDataList){
+                if(authListSet.contains(baseAuthData.getCode())) {
+                    JSONObject json = (JSONObject) JSON.toJSON(baseAuthData);
+                    json.put("function",baseAuthData.getCode().getValue()+"_"+ baseAuthData.getSource().getValue());
+                    json.put("name", mapProperties.getAuthValue(baseAuthData.getCode(), baseAuthData.getSource()));
+                    authsList.add(json);
                 }
-            }};
+            }
             if(!CollectionUtils.isEmpty(authsList)) {
                 model.addObject("authsList", authsList);
             }
@@ -247,7 +256,7 @@ public class OpenCardController extends BaseListableController<CardMore> {
         if(searchSql.equals(getService().WHERE_COMMON)){
             sbSql.append(SelectMultiTable.builder(CardMore.class).buildCountSqlString());
         }else{
-            sbSql.append(getSelectMultiTable().buildCountSqlString());
+            sbSql.append(getSelectMultiTable().buildCountSqlStringByDistinct("id"));
         }
         sbSql.append(searchSql);
         return sbSql.toString();

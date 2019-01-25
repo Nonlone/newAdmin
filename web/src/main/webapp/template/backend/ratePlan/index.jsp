@@ -42,13 +42,13 @@
                 </div>
             </div>
             -->
-            <div class="control-group span10">
+            <div class="control-group span12">
                 <label class="control-label">创建时间:</label>
                 <div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
                     <!-- search_GTE_createdTime_D 后面的D表示数据类型是Date -->
-                    <input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
+                    <input type="text" class="calendarStart calendar-time" name="search_GTE_createdTime" data-tip="{text : '开始日期'}">
                     <span>- </span>
-                    <input name="search_LTE_createdTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+                    <input name="search_LTE_createdTime" type="text" class="calendarEnd calendar-time" data-tip="{text : '结束日期'}">
                 </div>
             </div>
             <div class="span3 offset2">
@@ -120,7 +120,35 @@
 
 <script type="text/javascript">
 
-    BUI.use(['bui/ux/crudgrid', 'bui/common/page'], function (CrudGrid) {
+    BUI.use(['bui/ux/crudgrid', 'bui/common/page','bui/calendar'], function (CrudGrid,Page,Calendar) {
+
+        var datepickerStart = new Calendar.DatePicker({
+            trigger:'.calendarStart',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 00,
+                minute:00,
+                second : 00,
+                editable : true
+            },
+            editable : true,
+            autoRender : true
+
+        });
+
+        var datepickerEnd = new Calendar.DatePicker({
+            trigger:'.calendarEnd',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 23,
+                minute:59,
+                second : 59,
+                editable : true
+            },
+
+            autoRender : true
+
+        });
 
         //定义页面权限
         var add = false, update = false, del = false, list = false;
@@ -213,7 +241,7 @@
             operationColumnRenderer: function (value, obj) {
                 var editStr = '';
                 if (update) {
-                    editStr = '<span class="grid-command" title="修改"><i class="icon-edit "></i></span>';
+                    editStr = '<span class="grid-command edit" title="修改">编辑</span>';
                 }
                 return editStr;
             }
@@ -223,7 +251,7 @@
         grid.on('cellclick', function (ev) {
             var sender = $(ev.domTarget); //点击的Dom
             var record = ev.record;
-            if (sender.hasClass('icon-edit')) {
+            if (sender.hasClass('edit')) {
                 addOrUpdateFunction('', record.id);
             }
         });

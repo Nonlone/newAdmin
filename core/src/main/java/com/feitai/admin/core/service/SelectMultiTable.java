@@ -161,12 +161,12 @@ public class SelectMultiTable {
      * @return
      */
     private SelectMultiTable join(JoinType joinType, Class<?> joinClass, String tableAlias, List<OnCondition> onConditionList) {
-        this.getTableJoinList().add(new TableJoin() {{
-            this.setJoinType(JoinType.LEFT);
-            this.setJoinClass(joinClass);
-            this.setTableAlias(tableAlias);
-            this.setConditions(onConditionList);
-        }});
+        TableJoin tableJoin = new TableJoin();
+        tableJoin.setJoinType(JoinType.LEFT);
+        tableJoin.setJoinClass(joinClass);
+        tableJoin.setTableAlias(tableAlias);
+        tableJoin.setConditions(onConditionList);
+        this.getTableJoinList().add(tableJoin);
         return this;
     }
 
@@ -187,6 +187,17 @@ public class SelectMultiTable {
         EntityHelper.initEntityNameMap(resultClass, config);
         EntityTable entityTable = EntityHelper.getEntityTable(resultClass);
         sqlSb.append("select  count(*) AS " + COUNT_ALIAS + " from " + entityTable.getName() + " AS " + MAIN_ALAIS + " ");
+        for (TableJoin tableJoin : tableJoinList) {
+            sqlSb.append(tableJoin.buildJoinString());
+        }
+        return sqlSb.toString();
+    }
+
+    public String buildCountSqlStringByDistinct(String field) {
+        StringBuffer sqlSb = new StringBuffer();
+        EntityHelper.initEntityNameMap(resultClass, config);
+        EntityTable entityTable = EntityHelper.getEntityTable(resultClass);
+        sqlSb.append("select  count(distinct "+MAIN_ALAIS+"."+field+") AS " + COUNT_ALIAS + " from " + entityTable.getName() + " AS " + MAIN_ALAIS + " ");
         for (TableJoin tableJoin : tableJoinList) {
             sqlSb.append(tableJoin.buildJoinString());
         }

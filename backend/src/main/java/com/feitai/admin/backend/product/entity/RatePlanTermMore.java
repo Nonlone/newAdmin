@@ -7,11 +7,15 @@
 
 package com.feitai.admin.backend.product.entity;
 
+import com.feitai.admin.backend.product.mapper.RatePlanTermMoreMapper;
+import com.feitai.base.mybatis.Many;
+import com.feitai.jieya.server.dao.rateplan.mapper.RatePlanDetailMapper;
 import com.feitai.jieya.server.dao.rateplan.model.RatePlanDetail;
 import lombok.Data;
 
 import javax.persistence.Table;
-import java.io.Serializable;
+import javax.persistence.Transient;
+
 import java.util.List;
 
 
@@ -19,6 +23,8 @@ import java.util.List;
 @Data
 public class RatePlanTermMore extends com.feitai.jieya.server.dao.rateplan.model.RatePlanTerm  {
 
+	@Transient
+    @Many(classOfEntity = RatePlanDetail.class, classOfMapper = RatePlanDetailMapper.class , targetField = "ratePlanTermId" )
     private List<RatePlanDetail> ratePlanDetails;
 
 }

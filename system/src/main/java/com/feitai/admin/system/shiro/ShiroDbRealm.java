@@ -42,7 +42,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
         String username = token.getUsername();
         User user = userService.findByLoginName(username);
         if (user != null) {
-            if ("disabled".equals(user.getStatus())) {
+            if (new Short("2")==(user.getStatus())) {
                 throw new DisabledAccountException();
             }
             try {

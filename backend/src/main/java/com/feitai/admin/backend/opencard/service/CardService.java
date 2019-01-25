@@ -10,14 +10,10 @@ package com.feitai.admin.backend.opencard.service;
 import com.feitai.admin.backend.opencard.entity.CardMore;
 import com.feitai.admin.backend.opencard.mapper.CardMoreMapper;
 import com.feitai.admin.core.service.ClassPrefixDynamicSupportService;
-import com.feitai.admin.core.service.DynamitSupportService;
-import com.feitai.jieya.server.dao.card.mapper.CardMapper;
 import com.feitai.jieya.server.dao.card.model.Card;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 

@@ -43,12 +43,12 @@
 					</select>
 				</div>
 			</div>
-			<div class="control-group span10">
+			<div class="control-group span12">
 				<label class="control-label">申请提现时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
-					<input type="text" class="calendar" name="startTime" data-tip="{text : '开始日期'}">
+					<input type="text" class="calendar-time calendar" name="startTime" data-tip="{text : '开始日期'}">
 					<span>- </span>
-					<input name="endTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input name="endTime" type="text" class="calendar-time calendar" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 			<div class="span1 offset1">
@@ -191,7 +191,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
 	//定义页面权限
 	var add=false,update=false,list=false,del=false;
 	//"framwork:crudPermission"会根据用户的权限给add，update，del,list赋值
-	<framwork:crudPermission resource="/admin/mop/partner/withdrawOrder"/>
+	<framwork:crudPermission resource="/mop/partner/withdrawOrder"/>
 
     //清空
     $("#btnClear").click(function(){
@@ -204,7 +204,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
 
 
     function downloadData(){
-        var url = "${ctx}/admin/mop/partner/withdrawOrder/output"
+        var url = "${ctx}/mop/partner/withdrawOrder/output"
         var form=$("#searchForm");
         var oldUrl = form.attr("action");
         form.attr("action",url);
@@ -220,7 +220,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
             data[$(this).attr("name")] = $(this).val();
         })
         $.ajax({
-            url:'${ctx}/admin/mop/partner/withdrawOrder/output/count',
+            url:'${ctx}/mop/partner/withdrawOrder/output/count',
             async:false,
             type : "POST",
             data : data,
@@ -249,7 +249,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
     function startGetDownloadInfo() {
         timer = setInterval(function() {
             $.ajax({
-                url:'${ctx}/admin/mop/partner/withdrawOrder/output/info',
+                url:'${ctx}/mop/partner/withdrawOrder/output/info',
                 type : "get",
                 success:function (data) {
                     if (data) {
@@ -324,17 +324,12 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
 	var crudGrid = new CrudGrid({
 		entityName : '合伙人提现信息',
     	pkColumn : 'id',//主键
-      	storeUrl : '${ctx}/admin/mop/partner/withdrawOrder/list',
+      	storeUrl : '${ctx}/mop/partner/withdrawOrder/list',
         columns : columns,
 		showAddBtn : false,
 		showUpdateBtn : false,
 		showRemoveBtn : false,
 		dialogContentId : 'orderDetailInfoId',
-		storeCfg:{
-		    proxy : {
-              pageStart : 1
-            }
-		},
 		gridCfg:{
     		innerBorder:true
     	}});
@@ -353,7 +348,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
             var data = {};
             data.orderId = target.id;
             $.ajax({
-                url:'${ctx}/admin/mop/partner/withdrawOrder/detail',
+                url:'${ctx}/mop/partner/withdrawOrder/detail',
                 async:false,
                 type : "POST",
                 data : data,
@@ -437,7 +432,7 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                       data.type = $("#audit_type").val();
                       console.log(data);
                       $.ajax({
-                          url:'${ctx}/admin/mop/partner/withdrawOrder/status/update',
+                          url:'${ctx}/mop/partner/withdrawOrder/status/update',
                           async:false,
                           type : "POST",
                           data : data,

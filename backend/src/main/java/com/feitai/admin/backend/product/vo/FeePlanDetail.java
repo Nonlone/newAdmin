@@ -1,11 +1,19 @@
 package com.feitai.admin.backend.product.vo;
 
-import javax.validation.constraints.Max;
+import com.feitai.jieya.server.dao.base.constant.CalculationMode;
+import com.feitai.jieya.server.dao.base.constant.FeeBaseType;
+import com.feitai.jieya.server.dao.base.constant.PaymentTimeType;
+import com.feitai.jieya.server.dao.base.constant.PaymentType;
+import lombok.Data;
+
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotNull;
 
 /**
  * 费率详细
  */
+@Data
 public class FeePlanDetail {
 
     /**
@@ -17,35 +25,30 @@ public class FeePlanDetail {
      * 计息方式
      */
     @NotNull
-    @Max(127)
-    private Byte paymentType;
+    private PaymentType paymentType;
 
     /**
      * 收费类型
      */
     @NotNull
-    @Max(127)
-    private Byte calculationMode;
+    private CalculationMode calculationMode;
 
     /**
      * 收费内容
      */
     @NotNull
-    private Double fee;
+    private BigDecimal fee;
 
     /**
      * 收费基数
      */
-    @NotNull
-    @Max(127)
-    private Byte feeBaseType;
+    private FeeBaseType feeBaseType;
 
     /**
      * 收取时点
      */
     @NotNull
-    @Max(127)
-    private Byte paymentTimeType;
+    private PaymentTimeType paymentTimeType;
 
     /**
      * 收取时间点
@@ -60,56 +63,4 @@ public class FeePlanDetail {
         this.subjectId = subjectId;
     }
 
-    @NotNull
-    public Byte getPaymentType() {
-        return paymentType;
-    }
-
-    public void setPaymentType(@NotNull Byte paymentType) {
-        this.paymentType = paymentType;
-    }
-
-    @NotNull
-    public Byte getCalculationMode() {
-        return calculationMode;
-    }
-
-    public void setCalculationMode(@NotNull Byte calculationMode) {
-        this.calculationMode = calculationMode;
-    }
-
-    @NotNull
-    public Double getFee() {
-        return fee;
-    }
-
-    public void setFee(@NotNull Double fee) {
-        this.fee = fee;
-    }
-
-    @NotNull
-    public Byte getFeeBaseType() {
-        return feeBaseType;
-    }
-
-    public void setFeeBaseType(@NotNull Byte feeBaseType) {
-        this.feeBaseType = feeBaseType;
-    }
-
-    @NotNull
-    public Byte getPaymentTimeType() {
-        return paymentTimeType;
-    }
-
-    public void setPaymentTimeType(@NotNull Byte paymentTimeType) {
-        this.paymentTimeType = paymentTimeType;
-    }
-
-    public String getPaymentTime() {
-        return paymentTime;
-    }
-
-    public void setPaymentTime(String paymentTime) {
-        this.paymentTime = paymentTime;
-    }
 }

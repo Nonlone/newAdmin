@@ -58,19 +58,19 @@
         }, {
             field : "interestBalanceAmount",
             name : "剩余应还利息"
-        },{
-            field : "approveFeeAmount",
-            name : "应还审批费"
-        }, {
-            field : "approveFeeBalanceAmount",
-            name : "剩余应还审批费"
         }, {
             field : "guaranteeFeeAmount",
             name : "应还担保费"
         }, {
             field : "guaranteeFeeBalanceAmount",
             name : "剩余应还担保费"
-        },  {
+        }, {
+            field : "approveFeeAmount",
+            name : "应还评审费"
+        }, {
+            field : "approveFeeBalanceAmount",
+            name : "剩余应还评审费"
+        }, {
             field : "overdueFineAmount",
             name : "应还罚息"
         }, {
@@ -114,29 +114,102 @@
 
             var repayPlan = ${repayPlan};
 
+            /************总数***************/
+            var termCount = "总计：";
+            var pincipalAmountCount = 0;
+            var pincipalBalanceAmountCount = 0;
+            var interestAmountCount = 0;
+            var interestBalanceAmountCount = 0;
+            var overdueFineAmountCount = 0;
+            var overdueFineBalanceAmountCount = 0;
+            var overdueFineCompoundAmountCount = 0;
+            var overdueFineCompoundBalanceAmountCount = 0;
+            var innerInteAmountCount = 0;
+            var innerInteAalanceAmountCount = 0;
+            var occupyFeeAmountCount = 0;
+            var occupyFeeBalanceAmountCount = 0;
+            var poundageAmtAmountCount = 0;
+            var poundageAmtBalanceAmountCount = 0;
+            var approveFeeAmountCount = 0;
+            var approveFeeBalanceAmountCount = 0;
+            var guaranteeFeeAmountCount = 0;
+            var guaranteeFeeBalanceAmountCount = 0;
+            var brokerCommissionAmountCount = 0;
+            var brokerCommissionBalanceAmountCount = 0;
+
+            for ( var i = 0; i < repayPlan.length; i++) {
+                pincipalAmountCount +=  Number(repayPlan[i].pincipalAmount);
+                pincipalBalanceAmountCount += Number(repayPlan[i].pincipalBalanceAmount);
+                interestAmountCount += Number(repayPlan[i].interestAmount);
+                interestBalanceAmountCount += Number(repayPlan[i].interestBalanceAmount);
+                overdueFineAmountCount += Number(repayPlan[i].overdueFineAmount);
+                overdueFineBalanceAmountCount += Number(repayPlan[i].overdueFineBalanceAmount);
+                overdueFineCompoundAmountCount += Number(repayPlan[i].overdueFineCompoundAmount);
+                overdueFineCompoundBalanceAmountCount += Number(repayPlan[i].overdueFineCompoundBalanceAmount);
+                innerInteAmountCount += Number(repayPlan[i].innerInteAmount);
+                innerInteAalanceAmountCount += Number(repayPlan[i].innerInteAalanceAmount);
+                occupyFeeAmountCount += Number(repayPlan[i].occupyFeeAmount);
+                occupyFeeBalanceAmountCount += Number(repayPlan[i].occupyFeeBalanceAmount);
+                poundageAmtAmountCount += Number(repayPlan[i].poundageAmtAmount);
+                poundageAmtBalanceAmountCount += Number(repayPlan[i].poundageAmtBalanceAmount);
+                approveFeeAmountCount += Number(repayPlan[i].approveFeeAmount);
+                approveFeeBalanceAmountCount += Number(repayPlan[i].approveFeeBalanceAmount);
+                guaranteeFeeAmountCount += Number(repayPlan[i].guaranteeFeeAmount);
+                guaranteeFeeBalanceAmountCount += Number(repayPlan[i].guaranteeFeeBalanceAmount);
+                brokerCommissionAmountCount += Number(repayPlan[i].brokerCommissionAmount);
+                brokerCommissionBalanceAmountCount += Number(repayPlan[i].brokerCommissionBalanceAmount);
+            }
+
+            data.push({
+                term : termCount,
+                dueDate : " ",
+                pincipalAmount : Number(pincipalAmountCount).toFixed(2),
+                pincipalBalanceAmount : Number(pincipalBalanceAmountCount).toFixed(2),
+                interestAmount : Number(interestAmountCount).toFixed(2),
+                interestBalanceAmount : Number(interestBalanceAmountCount).toFixed(2),
+                overdueFineAmount : Number(overdueFineAmountCount).toFixed(2),
+                overdueFineBalanceAmount : Number(overdueFineBalanceAmountCount).toFixed(2),
+                overdueFineCompoundAmount : Number(overdueFineCompoundAmountCount).toFixed(2),
+                overdueFineCompoundBalanceAmount : Number(overdueFineCompoundBalanceAmountCount).toFixed(2),
+                innerInteAmount : Number(innerInteAmountCount).toFixed(2),
+                innerInteAalanceAmount : Number(innerInteAalanceAmountCount).toFixed(2),
+                occupyFeeAmount : Number(occupyFeeAmountCount).toFixed(2),
+                occupyFeeBalanceAmount : Number(occupyFeeBalanceAmountCount).toFixed(2),
+                poundageAmtAmount : Number(poundageAmtAmountCount).toFixed(2),
+                poundageAmtBalanceAmount : Number(poundageAmtBalanceAmountCount).toFixed(2),
+                approveFeeAmount : Number(approveFeeAmountCount).toFixed(2),
+                approveFeeBalanceAmount : Number(approveFeeBalanceAmountCount).toFixed(2),
+                guaranteeFeeAmount : Number(guaranteeFeeAmountCount).toFixed(2),
+                guaranteeFeeBalanceAmount : Number(guaranteeFeeBalanceAmountCount).toFixed(2),
+                brokerCommissionAmount : Number(brokerCommissionAmountCount).toFixed(2),
+                brokerCommissionBalanceAmount : Number(brokerCommissionBalanceAmountCount).toFixed(2)
+            });
+            /******************************/
+
+
             for ( var i = 0; i < repayPlan.length; i++) {
                 var term = repayPlan[i].term;
                 var dueDate = new Date(repayPlan[i].dueDate);
-                var pincipalAmount = repayPlan[i].pincipalAmount;
-                var pincipalBalanceAmount = repayPlan[i].pincipalBalanceAmount;
-                var interestAmount = repayPlan[i].interestAmount;
-                var interestBalanceAmount = repayPlan[i].interestBalanceAmount;
-                var overdueFineAmount = repayPlan[i].overdueFineAmount;
-                var overdueFineBalanceAmount = repayPlan[i].overdueFineBalanceAmount;
-                var overdueFineCompoundAmount = repayPlan[i].overdueFineCompoundAmount;
-                var overdueFineCompoundBalanceAmount = repayPlan[i].overdueFineCompoundBalanceAmount;
-                var innerInteAmount = repayPlan[i].innerInteAmount;
-                var innerInteAalanceAmount = repayPlan[i].innerInteAalanceAmount;
-                var occupyFeeAmount = repayPlan[i].occupyFeeAmount;
-                var occupyFeeBalanceAmount = repayPlan[i].occupyFeeBalanceAmount;
-                var poundageAmtAmount = repayPlan[i].poundageAmtAmount;
-                var poundageAmtBalanceAmount = repayPlan[i].poundageAmtBalanceAmount;
-                var approveFeeAmount = repayPlan[i].approveFeeAmount;
-                var approveFeeBalanceAmount = repayPlan[i].approveFeeBalanceAmount;
-                var guaranteeFeeAmount = repayPlan[i].guaranteeFeeAmount;
-                var guaranteeFeeBalanceAmount = repayPlan[i].guaranteeFeeBalanceAmount;
-                var brokerCommissionAmount = repayPlan[i].brokerCommissionAmount;
-                var brokerCommissionBalanceAmount = repayPlan[i].brokerCommissionBalanceAmount;
+                var pincipalAmount = Number(repayPlan[i].pincipalAmount).toFixed(2);
+                var pincipalBalanceAmount = Number(repayPlan[i].pincipalBalanceAmount).toFixed(2);
+                var interestAmount = Number(repayPlan[i].interestAmount).toFixed(2);
+                var interestBalanceAmount = Number(repayPlan[i].interestBalanceAmount).toFixed(2);
+                var overdueFineAmount = Number(repayPlan[i].overdueFineAmount).toFixed(2);
+                var overdueFineBalanceAmount = Number(repayPlan[i].overdueFineBalanceAmount).toFixed(2);
+                var overdueFineCompoundAmount = Number(repayPlan[i].overdueFineCompoundAmount).toFixed(2);
+                var overdueFineCompoundBalanceAmount = Number(repayPlan[i].overdueFineCompoundBalanceAmount).toFixed(2);
+                var innerInteAmount = Number(repayPlan[i].innerInteAmount).toFixed(2);
+                var innerInteAalanceAmount = Number(repayPlan[i].innerInteAalanceAmount).toFixed(2);
+                var occupyFeeAmount = Number(repayPlan[i].occupyFeeAmount).toFixed(2);
+                var occupyFeeBalanceAmount = Number(repayPlan[i].occupyFeeBalanceAmount).toFixed(2);
+                var poundageAmtAmount = Number(repayPlan[i].poundageAmtAmount).toFixed(2);
+                var poundageAmtBalanceAmount = Number(repayPlan[i].poundageAmtBalanceAmount).toFixed(2);
+                var approveFeeAmount = Number(repayPlan[i].approveFeeAmount).toFixed(2);
+                var approveFeeBalanceAmount = Number(repayPlan[i].approveFeeBalanceAmount).toFixed(2);
+                var guaranteeFeeAmount = Number(repayPlan[i].guaranteeFeeAmount).toFixed(2);
+                var guaranteeFeeBalanceAmount = Number(repayPlan[i].guaranteeFeeBalanceAmount).toFixed(2);
+                var brokerCommissionAmount = Number(repayPlan[i].brokerCommissionAmount).toFixed(2);
+                var brokerCommissionBalanceAmount = Number(repayPlan[i].brokerCommissionBalanceAmount).toFixed(2);
 
                 data.push({
                     term : term,

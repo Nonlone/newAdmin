@@ -11,6 +11,8 @@ import com.feitai.admin.backend.product.entity.RatePlanTermMore;
 import com.feitai.admin.backend.product.service.RatePlanTermService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.web.BaseCrudController;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +23,9 @@ import org.springframework.web.bind.annotation.*;
 public class RatePlanTermController extends BaseCrudController<RatePlanTermMore> {
 	@Autowired
 	private RatePlanTermService ratePlanTermService;
-	
-	@RequestMapping(value = "")
+
+	@RequiresPermissions("/backend/ratePlanTerm:list")
+	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/ratePlanTerm/index";
 	}

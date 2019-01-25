@@ -29,8 +29,8 @@
 				<label class="control-label">提交补件时间:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_createdTime" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_createdTime" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar-time calendarStart" name="search_GTE_createdTime" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_createdTime" type="text" class="calendar-time calendarEnd" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 
@@ -39,8 +39,8 @@
 				<%--<label class="control-label">申请日期:</label>--%>
 				<%--<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">--%>
 					<%--<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->--%>
-					<%--<input type="text" class="calendar" name="search_GTE_applyTime_D" data-tip="{text : '开始日期'}"> <span>--%>
-             <%--- </span><input name="search_LTE_loanOrder.applyTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">--%>
+					<%--<input type="text" class="calendar" name="search_GTE_applyTime" data-tip="{text : '开始日期'}"> <span>--%>
+             <%--- </span><input name="search_LTE_loanOrder.applyTime" type="text" class="calendar" data-tip="{text : '结束日期'}">--%>
 				<%--</div>--%>
 			<%--</div>--%>
 			<div class="span1 offset2">
@@ -74,7 +74,35 @@
 		}
 	}
 
-    BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
+    BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/calendar'],function (CrudGrid,Select,Data,Calendar) {
+
+        var datepickerStart = new Calendar.DatePicker({
+            trigger:'.calendarStart',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 00,
+                minute:00,
+                second : 00,
+                editable : true
+            },
+            editable : true,
+            autoRender : true
+
+        });
+
+        var datepickerEnd = new Calendar.DatePicker({
+            trigger:'.calendarEnd',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 23,
+                minute:59,
+                second : 59,
+                editable : true
+            },
+
+            autoRender : true
+
+        });
 
 		//定义页面权限
         var add=false,update=false,del=false,list=false;
@@ -95,6 +123,13 @@
                     return '';
                 }
             }},
+        {title:'客户ID',dataIndex:'user',width:'135px',renderer:function (value) {
+                if(value){
+                    return value.id;
+                }else{
+                    return '';
+                }
+            }},
         {title:'注册手机号',dataIndex:'user',width:"150px",renderer:function (value) {
 				if(value){
 				    return value.phone;
@@ -110,8 +145,9 @@
                     return '';
                 }
             }},
-        {title:'提交补件时间',dataIndex:'createdTime',width:'135px',renderer:BUI.Grid.Format.dateRenderer},
-		{title:'补件次数',dataIndex:'supplyCount',width:'135px'},
+        {title:'客户提交补件时间',dataIndex:'createdTime',width:'270px',renderer:BUI.Grid.Format.datetimeRenderer},
+		{title:'允许再补件次数',dataIndex:'can2dashu',width:'100px'},
+		{title:'待发送补件数',dataIndex:'remain',width:'100px'},
 		 {title:'资金方',dataIndex:'fundName',width:'135px'},
 		 {title:'产品名称',dataIndex:'loanOrder',width:'135px',renderer:function (value) {
                  if(value){
@@ -120,13 +156,6 @@
                      }
                  }
                  return '';
-             }},
-		 {title:'用户ID',dataIndex:'user',width:'135px',renderer:function (value) {
-				 if(value){
-				     return value.id;
-				 }else{
-				     return '';
-				 }
              }}
         ];
     
@@ -139,13 +168,15 @@
         showUpdateBtn : update,
         showRemoveBtn : del,
         columns : columns,
+        operationwidth:'80px',
         operationColumnRenderer : function(value, obj){//操作列最追加按钮
-            return CrudGrid.createLink({
+            return CrudGrid.createLinkCustomSpan({
+                class:"page-action grid-command",
                 id: obj.id,
-                title:  '补件详细记录',
-                text: '<li class="icon icon-list-alt"></li>',
+                title: obj.idCardData.name+"补件记录",
+                text: '详情',
                 href: $ctx+"/backend/supply/log/detail/"+obj.id
-            });
+            })
      },
         storeCfg:{//定义store的排序，如果是复合主键一定要修改
             sortInfo : {

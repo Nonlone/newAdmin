@@ -12,6 +12,8 @@ import com.feitai.admin.backend.product.service.RatePlanDetailService;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.web.BaseCrudController;
 import com.feitai.jieya.server.dao.rateplan.model.RatePlanDetail;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +26,9 @@ public class RatePlanDetailController extends BaseCrudController<RatePlanDetail>
 
 	@Autowired
 	private RatePlanDetailService ratePlanDetailService;
-	
-	@RequestMapping(value = "")
+
+	@RequiresPermissions("/backend/ratePlanDetail:list")
+	@RequestMapping(value = "index")
 	public String index() {
 		return "/backend/ratePlanDetail/index";
 	}

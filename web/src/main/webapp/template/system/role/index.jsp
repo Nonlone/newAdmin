@@ -105,14 +105,15 @@ BUI.use(['bui/ux/crudgrid','bui/common/search','bui/grid','bui/common/page'],fun
         showUpdateBtn : update,
         showRemoveBtn : del,
         addOrUpdateFormId : 'addOrUpdateForm',
-        dialogContentId : 'addOrUpdate', 
+        dialogContentId : 'addOrUpdate',
+        operationwidth:'150px',
         operationColumnRenderer : function(value, obj){
         	var editStr = '';
         	if(authBtn){
         		editStr = CrudGrid.createLink({
                 	id : 'auth' + obj.id,
                 	title : obj.name +'--权限授权',
-                	text : '<li class="icon-ok auth"></li>',
+                	text : '授权',
                 	href : authUrl +obj.id
         		});
         	}

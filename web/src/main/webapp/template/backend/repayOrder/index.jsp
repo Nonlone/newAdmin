@@ -45,16 +45,16 @@
 
 			<div class="control-group span_width">
 				<label class="control-label">还款状态：</label>
-				<div class="controls bui-form-field-select height_auto"  data-items="{' ':'全部','10':'初始状态','90':'还款成功','100':'还款成功且结清','-10':'失败'}" class="control-text input-small">
-					<input name="search_EQ_status" type="hidden" >
+				<div id="selectStatus" class="controls">
+					<input id="searchStatus" name="search_OREQ_status" type="hidden" >
 				</div>
 			</div>
 			<div class="control-group span_width">
 				<label class="control-label">还款到期日:</label>
 				<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">
 					<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->
-					<input type="text" class="calendar" name="search_GTE_repayPlan.dueDate" data-tip="{text : '开始日期'}"> <span>
-             - </span><input name="search_LTE_repayPlan.dueDate" type="text" class="calendar" data-tip="{text : '结束日期'}">
+					<input type="text" class="calendar-time calendarStart" name="search_GTE_repayPlan.dueDate" data-tip="{text : '开始日期'}"> <span>
+             - </span><input name="search_LTE_repayPlan.dueDate" type="text" class="calendar-time calendarEnd" data-tip="{text : '结束日期'}">
 				</div>
 			</div>
 			<div class="control-group span7">
@@ -72,15 +72,15 @@
 			</div>
 			<div class="control-group span7" hidden="true">
 				<div class="controls">
-					<input type="text" class="input-normal control-text" name="search_EQ_userId" value="${userId}">
+					<input type="text" class="input-normal control-text" name="search_OREQ_userId" value="${userId}">
 				</div>
 			</div>
 			<%--<div class="control-group span_width">--%>
 			<%--<label class="control-label">申请日期:</label>--%>
 			<%--<div class="controls bui-form-group height_auto" data-rules="{dateRange : true}">--%>
 			<%--<!-- search_GTE_createTime_D 后面的D表示数据类型是Date -->--%>
-			<%--<input type="text" class="calendar" name="search_GTE_applyTime_D" data-tip="{text : '开始日期'}"> <span>--%>
-			<%--- </span><input name="search_LTE_loanOrder.applyTime_D" type="text" class="calendar" data-tip="{text : '结束日期'}">--%>
+			<%--<input type="text" class="calendar" name="search_GTE_applyTime" data-tip="{text : '开始日期'}"> <span>--%>
+			<%--- </span><input name="search_LTE_loanOrder.applyTime" type="text" class="calendar" data-tip="{text : '结束日期'}">--%>
 			<%--</div>--%>
 			<%--</div>--%>
 			<div class="span1 offset2">
@@ -114,7 +114,35 @@
         }
     }
 
-    BUI.use(['bui/ux/crudgrid','bui/select','bui/data'],function (CrudGrid,Select,Data) {
+    BUI.use(['bui/ux/crudgrid','bui/select','bui/data','bui/calendar'],function (CrudGrid,Select,Data,Calendar) {
+
+        var datepickerStart = new Calendar.DatePicker({
+            trigger:'.calendarStart',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 00,
+                minute:00,
+                second : 00,
+                editable : true
+            },
+            editable : true,
+            autoRender : true
+
+        });
+
+        var datepickerEnd = new Calendar.DatePicker({
+            trigger:'.calendarEnd',
+            showTime : true,
+            lockTime : { //可以锁定时间，hour,minute,second
+                hour : 23,
+                minute:59,
+                second : 59,
+                editable : true
+            },
+
+            autoRender : true
+
+        });
 
         var selectProductStore = new Data.Store({
             url: '${ctx}/backend/product/productNameList',
@@ -124,9 +152,25 @@
         selectProduct = new Select.Select({
             render: '#selectProduct',
             valueField: '#searchProduct',
+            multipleSelect:true,
             store: selectProductStore
         });
         selectProduct.render();
+
+        var selectStatusStore = new Data.Store({
+            url: '${ctx}/backend/loan/repayOrder/repayOrderStatus',
+            autoLoad: true
+        });
+
+        selectStatus = new Select.Select({
+            render: '#selectStatus',
+            valueField: '#searchStatus',
+            multipleSelect:true,
+            store: selectStatusStore
+        });
+        selectStatus.render();
+
+
 
         //定义页面权限
         var add=false,update=false,del=false,list=false;
@@ -136,28 +180,28 @@
         var authUrl = '${ctx}/backend/loan/repayOrder/detail/';
 
         var columns = [
-            {title:'订单号',dataIndex:'id',width:'110px'},
-            {title:'姓名',dataIndex:'idcard',width:"110px",renderer: function (value) {
+            {title:'订单号',dataIndex:'id',width:'150px'},
+            {title:'姓名',dataIndex:'idcard',width:"80px",renderer: function (value) {
                     if(value){
                         return value.name;
                     }else{
                         return '';
                     }
                 }},
-            {title:'客户ID',dataIndex:'user',width:"170px",renderer: function (value) {
+            {title:'客户ID',dataIndex:'user',width:"150px",renderer: function (value) {
                     if(value){
                         return value.id;
                     }else{
                         return '';
                     }
                 }},
-            {title:'注册手机号',dataIndex:'user',width:"120px",renderer:function (value) {
+            {title:'注册手机号',dataIndex:'user',width:"100px",renderer:function (value) {
                     if(value){
                         return value.phone;
                     }
                     return '';
                 }},
-            {title:'身份证号',dataIndex:'idcard',width:"110px",renderer: function (value) {
+            {title:'身份证号',dataIndex:'idcard',width:"130px",renderer: function (value) {
                     if(value){
                         return value.idCard;
                     }else{
@@ -194,7 +238,7 @@
                     }
                     return '';
                 }},
-            {title:'存储信贷系统的出账编号',dataIndex:'repayPlan',width:'120px',renderer:function (value) {
+            {title:'存储信贷系统的出账编号',dataIndex:'repayPlan',width:'150px',renderer:function (value) {
                     if(value){
                         return value.putoutno;
                     }
@@ -215,14 +259,15 @@
             showAddBtn : add,
             showUpdateBtn : update,
             showRemoveBtn : del,
+            operationwidth:'80px',
             operationColumnRenderer : function(value, obj){//操作列最追加按钮
                 var detail="";
                 var id = obj.id;
                 detail = CrudGrid.createLinkCustomSpan({
-                    class:"page-action grid-command x-icon x-icon-info",
+                    class:"page-action grid-command",
                     id: 'detail' + obj.id,
                     title: obj.idcard.name + '还款信息',
-                    text: '<i class="icon icon-list-alt icon-white"></i>',
+                    text: '详情',
                     href: authUrl + obj.id
                 })
                 return "<div style='text-align:left'>&nbsp;&nbsp;"+detail+"</div>";
