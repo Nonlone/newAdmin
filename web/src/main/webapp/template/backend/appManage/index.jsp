@@ -66,7 +66,7 @@
                     <label class="control-label"><s>*</s>应用编码:</label>
                     <div class="controls">
                         <input id="code" name="code" type="text"
-                               data-rules="{required:true,channel:true}"
+                               data-rules="{required:true,channel:true,regexp:/^\d+$/}"
                                class="input-normal control-text">
                     </div>
                 </div>
