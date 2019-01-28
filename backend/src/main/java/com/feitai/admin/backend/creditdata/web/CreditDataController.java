@@ -10,7 +10,7 @@ import com.feitai.admin.backend.creditdata.service.CreditDataService;
 import com.feitai.admin.backend.creditdata.service.MoxieDataService;
 import com.feitai.admin.core.contants.ResultCode;
 import com.feitai.admin.core.vo.ResponseBean;
-import com.feitai.jieya.server.dao.callback.model.moxie.MoxieData;
+import com.feitai.credit.moxie.model.MoxieData;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
