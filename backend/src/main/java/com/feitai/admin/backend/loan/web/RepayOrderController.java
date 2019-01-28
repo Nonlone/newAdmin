@@ -144,16 +144,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
         return modelAndView;
     }
 
-    /**
-     * 首期还款列表页面
-     * @return
-     */
-    @RequestMapping(value = "/firstRepayOrder")
-    public ModelAndView firstRepayOrder() {
-    	ModelAndView modelAndView=new ModelAndView("/backend/repayOrder/firstRepayOrder");
-    	getProductList(modelAndView);
-        return modelAndView;
-    }
+
 
 	private void getProductList(ModelAndView modelAndView) {
 		List<Product> products = productService.findAll();
@@ -164,16 +155,7 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
 		}
 		modelAndView.addObject("productList",JSONObject.toJSONString(list));
 	}
-	  /**
-     * 逾期还款列表页面
-     * @return
-     */
-    @RequestMapping(value = "/pastRepayOrder")
-    public ModelAndView pastRepayOrder() {
-    	ModelAndView modelAndView=new ModelAndView("/backend/repayOrder/pastRepayOrder");
-    	getProductList(modelAndView);
-        return modelAndView;
-    }
+
 
 	@RequiresPermissions("/backend/loan/repayOrder:list")
     @RequestMapping(value = "list")
@@ -448,109 +430,8 @@ public class RepayOrderController extends BaseListableController<RepayOrderMore>
                 }).buildSqlString()+" where "+SelectMultiTable.MAIN_ALAIS+".id = '" + id +"' ";
         return sql;
     }
-    /**
-     * 下载首期还款数据
-     * @param request
-     * @param response
-     */
-    @RequestMapping(value = "downLoadFirstRepayOrder")
-    public void downLoadFirstRepayOrder(HttpServletRequest request,HttpServletResponse response){
-    	try{
-    		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-    		List<String[]> dataList=getDataList(listSupport(request),(obj,rowList)->{
-    			rowList.add(obj.getString("userId"));
-        		rowList.add(obj.getJSONObject("idCard").getString("name"));
-        		rowList.add(obj.getJSONObject("user").get("phone").toString());
-        		rowList.add(obj.getJSONObject("loanOrder").get("loanAmount").toString());
-        		Date dueDate=obj.getJSONObject("repayPlan").getDate("dueDate");
-        		rowList.add(sdf.format(dueDate));  		
-        		rowList.add(obj.getDouble("amount").toString());
-        		rowList.add(obj.getJSONObject("orderPlande").get("approveFeeAmount").toString());
-        		rowList.add(obj.getJSONObject("orderPlande").get("guaranteeFeeAmount").toString());
-        		rowList.add(obj.getJSONObject("orderPlande").get("pincipalAmount").toString());
-        		rowList.add(obj.getString("fundName"));
-        		rowList.add(obj.getString("productName"));
-    		});
-    	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","首个还款日","首期总费用","评审费","担保费","本息","资金方","产品名称"});
-    	  downLoad(request,response, dataList,"首期还款列表.cvs");
-    	}catch(Exception e){
-    		log.error("",e);
-    	}
-    }
-    /**
-     * 下载逾期还款数据
-     * @param request
-     * @param response
-     */
-    @RequestMapping(value = "downLoadPastRepayOrder")
-    public void downLoadPastRepayOrder(HttpServletRequest request,HttpServletResponse response){
-    	try{
-    		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-    		List<String[]> dataList=getDataList(listSupport(request),(obj,rowList)->{
-    			rowList.add(obj.getString("userId"));
-        		rowList.add(obj.getJSONObject("idCard").getString("name"));
-        		rowList.add(obj.getJSONObject("user").get("phone").toString());
-        		rowList.add(obj.getJSONObject("loanOrder").get("loanAmount").toString());
-        		Date dueDate=obj.getJSONObject("repayPlan").getDate("dueDate");
-        		rowList.add(sdf.format(dueDate));  	
-        		rowList.add(obj.getJSONObject("repayPlan").get("overdueDays").toString());
-        		rowList.add(obj.getString("termPre"));
-        		rowList.add(obj.getString("fundName"));
-        		rowList.add(obj.getString("productName"));
-    		});
-    	  dataList.add(0, new String[]{"用户ID","客户姓名","注册手机号","贷款金额","还款日","逾期天数","当期/总期","应还金额","资金方","产品名称"});
-    	  downLoad(request,response, dataList,"逾期还款列表.cvs");
-    	}catch(Exception e){
-    		log.error("",e);
-    	}
-    }
-	private void downLoad(HttpServletRequest request,HttpServletResponse response, List<String[]> dataList,String fileName) throws IOException {
-		try{
-			String userAgent = request.getHeader("User-Agent");      
-		    // 针对IE或者以IE为内核的浏览器：  
-		    if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {  
-		    	fileName = java.net.URLEncoder.encode(fileName, "UTF-8");  
-		    } else {  
-		        // 非IE浏览器的处理：  
-		    	fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");  
-		    }
-           response.setCharacterEncoding("utf-8");
-		  response.setHeader("content-type", "application/octet-stream");
-		  response.setContentType("application/octet-stream");
-		 response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));  
-		 write(response.getOutputStream(),dataList, fileName);
-		}catch(Exception e){
-			log.error("",e);
-		}finally {
-			response.getOutputStream().flush();
-			response.getOutputStream().close();
-		}
-		  
-	}
-    
-    private List<String[]> getDataList(Map<String,Object> map,DownLoadProcesser dlp){
-    	List<String[]> dataList=new ArrayList<>();
-    	List<JSONObject> repayDataList= (List<JSONObject>) map.get("content");
-    	List<String> rowList=null;
-    	for(JSONObject obj:repayDataList){
-    		rowList=new ArrayList<>();
-    		dlp.process(obj,rowList);
-    		dataList.add(rowList.toArray(new String[rowList.size()]));
-    	}
-    	return dataList;
-    }
-    private interface DownLoadProcesser{
-    	 void process(JSONObject obj,List<String> rowList);
-    }
-    private void write(OutputStream os,List<String[]> dataList,String fileName){
-    	CsvWriter writer=new CsvWriter(os, ',', Charset.forName("UTF-8"));
-    	dataList.forEach(data->{
-    		try {
-				writer.writeRecord(data);
-			} catch (Exception e) {
-				log.error("",e);
-			}
-    	});
-    	writer.close();
-    }
+
+ 
+
+
 }
