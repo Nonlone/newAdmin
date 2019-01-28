@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.feitai.admin.backend.config.entity.AppManage;
 import com.feitai.admin.core.service.DynamitSupportService;
 import com.feitai.admin.core.web.BaseListableController;
@@ -128,6 +129,7 @@ public class AppVersionController extends BaseListableController<VerAppVersion> 
 
 	@RequiresPermissions("/mop/appVersion:update")
 	@RequestMapping("saveOrUpdate")
+	@ResponseBody
 	public Object saveOrUpdate(@ModelAttribute VerAppVersionVo info) {
 
 		VerAppVersion version = info.toVerAppVersion();
@@ -137,7 +139,11 @@ public class AppVersionController extends BaseListableController<VerAppVersion> 
 		}
 		appVersionService.update(version, getOperator());
 		appVersionService.evictCache(info.getAppCode());
-		return detail(version.getId());
+		JSONObject result = (JSONObject) JSONObject.toJSON(BaseListableController.successResult);
+
+		result.put("result", version.getId());
+
+		return result;
 	}
 
 	private Map<String, String> getAppInfoMap() {

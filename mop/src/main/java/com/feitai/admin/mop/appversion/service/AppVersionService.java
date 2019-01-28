@@ -54,6 +54,12 @@ public class AppVersionService {
 	private volatile List<String> appHistoryVersionList;
 
 	public void add(VerAppVersion appVersion, String operator) {
+		VerAppVersion readVersion = query(appVersion.getAppCode(), appVersion.getOsType(), appVersion.getAppVersion());
+
+		if (null != readVersion) {
+			throw new BusinessException(String.format("外部版本号【%s】已存在,请更换外部版本号", appVersion.getAppVersion()));
+		}
+
 		Date now = new Date();
 
 		appVersion.setId(SnowFlakeIdGenerator.getDefaultNextId());
@@ -65,6 +71,13 @@ public class AppVersionService {
 	}
 
 	public void update(VerAppVersion appVersion, String operator) {
+
+		VerAppVersion readVersion = query(appVersion.getAppCode(), appVersion.getOsType(), appVersion.getAppVersion());
+
+		if (null != readVersion && readVersion.getId().longValue() != appVersion.getId()) {
+			throw new BusinessException(String.format("外部版本号【%s】已存在,请更换外部版本号", appVersion.getAppVersion()));
+		}
+
 		appVersion.setAppVersionValue(versionLongValue(appVersion.getAppVersion()));
 		appVersion.setCreatedTime(null);
 		appVersion.setUpdateTime(new Date());
@@ -96,6 +109,17 @@ public class AppVersionService {
 		}
 
 		return appVersionMapper.selectByExample(example);
+	}
+
+	protected VerAppVersion query(String appCode, String osType, String version) {
+		Example example = new Example(VerAppVersion.class);
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("appCode", appCode);
+		criteria.andEqualTo("osType", osType);
+		criteria.andEqualTo("appVersion", version);
+
+		return appVersionMapper.selectOneByExample(example);
 	}
 
 	public VerAppVersion getVerAppVersion(long id) {

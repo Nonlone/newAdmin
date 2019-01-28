@@ -733,7 +733,18 @@
         
         
         editForm = new Form.HForm({
-            srcNode: '#detail'
+            srcNode: '#detail',
+            submitType : 'ajax',
+			method : 'post',
+			callback : function(data) {
+				if(data.success){
+					$("#id").val(data.result);
+					showSuccess(data.msg);
+					//location.href = $ctx + '/mop/appVersion/detail/index?id='+data.result;
+	            }else {
+	            	showWarning(data.msg);
+	            }
+			}
         });
         
         editForm.on('beforesubmit', function () {
