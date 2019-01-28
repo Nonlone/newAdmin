@@ -360,8 +360,8 @@ BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/com
                     $("#_bankCardNo").val(data.bankCardNo);
                     $("#_bankFullName").val(data.bankFullName);
                     $("#_bankName").val(data.bankName);
-                    $("#_front").attr('src',data.picFront);
-                    $("#_reverse").attr('src',data.picReverse);
+                    $("#_front").attr('src',data.idCardDetail.front);
+                    $("#_reverse").attr('src',data.idCardDetail.reverse);
                 },
                 failure:function () {
                     showWarning('系统异常，请稍后操作');
