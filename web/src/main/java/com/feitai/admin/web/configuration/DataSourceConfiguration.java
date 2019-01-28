@@ -34,6 +34,8 @@ public class DataSourceConfiguration implements EnvironmentAware {
 
     private static final String ORDER_CENTER_DATASOURCE = "orderCenter";
 
+    private static final String CREDIT_CENTER_DATASOURCE = "creditCenter";
+
     private static final String MOP_DATASOURCE = "mop";
 
     private static final String SUPERPARTNER_DATASOURCE = "superpartner";
@@ -66,6 +68,8 @@ public class DataSourceConfiguration implements EnvironmentAware {
         ));
         // 服务端持久层
         classPrefixMap.put("com.feitai.jieya.server.dao", BACKEND_DATASOURCE);
+        // 征信中心吃就成
+        classPrefixMap.put("com.feitai.credit", CREDIT_CENTER_DATASOURCE);
         // 管理后台管理服务端持久层
         classPrefixMap.put("com.feitai.admin.backend", BACKEND_DATASOURCE);
         // 管理后台管理征信数据
