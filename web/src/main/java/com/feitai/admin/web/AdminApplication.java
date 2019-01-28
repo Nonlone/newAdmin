@@ -12,16 +12,9 @@ import tk.mybatis.spring.annotation.MapperScan;
 
 @MapperScan(basePackages = {
         "com.feitai.jieya.**.mapper",
+        "com.feitai.credit.**.mapper",
         "com.feitai.admin.**.mapper"})
-@ComponentScan(basePackages = {
-        "com.feitai.admin.backend",
-        "com.feitai.admin.channel",
-        "com.feitai.admin.wisdomTooth",
-        "com.feitai.admin.system",
-        "com.feitai.admin.web",
-        "com.feitai.admin.messagecenter",
-        "com.feitai.admin.core",
-        "com.feitai.admin.mop"})
+@ComponentScan(basePackages = {"com.feitai.admin"})
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class,})
 @Slf4j
 public class AdminApplication {
