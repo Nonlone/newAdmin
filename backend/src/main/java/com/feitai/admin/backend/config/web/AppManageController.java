@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 
 /**
  * detail:app管理
@@ -75,6 +76,7 @@ public class AppManageController extends BaseListableController<AppManage> {
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
     public Object update(@Valid @ModelAttribute("appManage") AppManage appManage){
+        appManage.setUpdateTime(new Date());
         this.appManageService.save(appManage);
         return BaseListableController.successResult;
     }
