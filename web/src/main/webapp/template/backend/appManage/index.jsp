@@ -120,7 +120,7 @@
             name: 'channel',
             msg: '不允许包含非英文或数字的标识',
             validator: function (value, baseValue, formatMsg) {
-                var regexp = new RegExp(/^[0-9a-zA-Z]+$/g)
+                var regexp = new RegExp(/^[0-9a-zA-Z_]+$/g)
                 if (!regexp.test(value)) {
                     return formatMsg
                 }
