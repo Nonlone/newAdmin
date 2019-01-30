@@ -44,6 +44,10 @@ public class VerAppVersion implements Serializable {
 	 */
 	private String appVersion;
 	/**
+	 * APP外部版本号值(可用于最新版本排序)
+	 */
+	private Long appVersionValue;
+	/**
 	 * 内部版本号
 	 */
 	private String insideVersion;

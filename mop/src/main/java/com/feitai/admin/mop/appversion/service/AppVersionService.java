@@ -54,9 +54,16 @@ public class AppVersionService {
 	private volatile List<String> appHistoryVersionList;
 
 	public void add(VerAppVersion appVersion, String operator) {
+		VerAppVersion readVersion = query(appVersion.getAppCode(), appVersion.getOsType(), appVersion.getAppVersion());
+
+		if (null != readVersion) {
+			throw new BusinessException(String.format("外部版本号【%s】已存在,请更换外部版本号", appVersion.getAppVersion()));
+		}
+
 		Date now = new Date();
 
 		appVersion.setId(SnowFlakeIdGenerator.getDefaultNextId());
+		appVersion.setAppVersionValue(versionLongValue(appVersion.getAppVersion()));
 		appVersion.setStatus(AppVersionStatusEnum.ENABLE.getValue());
 		appVersion.setCreatedTime(now);
 		appVersion.setUpdateTime(now);
@@ -64,6 +71,14 @@ public class AppVersionService {
 	}
 
 	public void update(VerAppVersion appVersion, String operator) {
+
+		VerAppVersion readVersion = query(appVersion.getAppCode(), appVersion.getOsType(), appVersion.getAppVersion());
+
+		if (null != readVersion && readVersion.getId().longValue() != appVersion.getId()) {
+			throw new BusinessException(String.format("外部版本号【%s】已存在,请更换外部版本号", appVersion.getAppVersion()));
+		}
+
+		appVersion.setAppVersionValue(versionLongValue(appVersion.getAppVersion()));
 		appVersion.setCreatedTime(null);
 		appVersion.setUpdateTime(new Date());
 		appVersionMapper.updateByPrimaryKeySelective(appVersion);
@@ -94,6 +109,17 @@ public class AppVersionService {
 		}
 
 		return appVersionMapper.selectByExample(example);
+	}
+
+	protected VerAppVersion query(String appCode, String osType, String version) {
+		Example example = new Example(VerAppVersion.class);
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("appCode", appCode);
+		criteria.andEqualTo("osType", osType);
+		criteria.andEqualTo("appVersion", version);
+
+		return appVersionMapper.selectOneByExample(example);
 	}
 
 	public VerAppVersion getVerAppVersion(long id) {
@@ -195,5 +221,23 @@ public class AppVersionService {
 		data.put("data", param);
 		String resultStr = OkHttpClientUtils.postReturnBody(appVersionEvictUrl, data);
 		return JSON.parseObject(resultStr, RpcResult.class);
+	}
+
+	private long versionLongValue(String appVersion) {
+		if (StringUtils.isBlank(appVersion)) {
+			return 0L;
+		}
+
+		// 版本结构1.4.1三段式
+		String[] vals = appVersion.split("\\.");
+
+		String version = "";
+
+		for (int i = vals.length; i > 0; i--) {
+			String tmp = String.format("%04d", Integer.parseInt(vals[i - 1]));
+			version = tmp + version;
+		}
+
+		return Long.parseLong(version);
 	}
 }

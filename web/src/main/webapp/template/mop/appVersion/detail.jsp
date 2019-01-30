@@ -17,9 +17,14 @@
     color: red;
     text-decoration: none;
 }
+
+.addition-group .x-form-error {
+	float:left;
+}
 </style>
 <body>
 
+<div id="formDiv">
 <form id="detail" class="form-horizontal" action="${ctx}/mop/appVersion/saveOrUpdate" method="post">
     <input type="hidden" id="id" name="id" value="${id}">
     <input type="hidden" id="updateRule" name="updateRule" value="">
@@ -47,14 +52,14 @@
 	    <div class="control-group span10">
 	        <label class="control-label"><s>*</s>内部版本号：</label>
 	        <div id="s1" class="controls">
-	            <input id="insideVersion" name="insideVersion" type="text" class="control-text" style="width: 150px;" data-rules="{required : true}" placeholder="例如:1.1.0">
+	            <input id="insideVersion" name="insideVersion" type="text" class="control-text" style="width: 150px;" data-rules="{required : true, appVersion : true}" placeholder="例如:1.1.0">
 	        </div>
 	    </div>
 	
 	    <div class="control-group span10">
 	        <label class="control-label"><s>*</s>外部版本号：</label>
 	        <div class="controls">
-	            <input id="appVersion" name="appVersion" type="text" class="control-text" style="width: 150px;" data-rules="{required : true}" placeholder="例如:1.1.0">
+	            <input id="appVersion" name="appVersion" type="text" class="control-text" style="width: 150px;" data-rules="{required : true, appVersion : true}" placeholder="例如:1.1.0">
 	        </div>
 	    </div>
     </div>
@@ -113,7 +118,7 @@
         </div>
     </div>
 </form>
-
+</div>
 
 <!-- 渠道列表 -->
 <div id="channelList" class="hide">
@@ -160,17 +165,14 @@
         };
     })(jQuery);
     
-    
+    var editForm = null;
+	var editFormContainer={};
+	
     var appInfos = JSON.parse('${appInfoSelectItems}');
     var osTypes = JSON.parse('${osTypeSelectItems}');
     var updateTypes = JSON.parse('${updateTypeSelectItems}');
     var versions = JSON.parse('${versionSelectItems}');
     var channelSorts = JSON.parse('${channelSortSelectItems}');
-    
-    
-    
-    //appSelect.setSelectedValue(appInfos[0].value);
-    //osTypeSelect.setSelectedValue(osTypes[0].value);
     
     function removeCustomConfig(containerId, index) {
      	$("#"+containerId+" #custom_"+index).remove();
@@ -178,9 +180,46 @@
     
     function removeAdditionRule(containerId, prefix, index) {
     	$("#"+containerId+" #"+prefix+"_addition_"+index).remove();
+    	
+		var form = editFormContainer['"addition_'+index+'"'];
+    	
+		if (null != form) {
+			form.destroy();
+			editFormContainer['"addition_'+index+'"'] = null;
+    	}
     }
     
     BUI.use(['bui/ux/crudgrid','bui/form','bui/ux/savedialog','bui/overlay','bui/common/page','bui/select','bui/grid','bui/data'], function (CrudGrid,Form,ChargeDialog,OverLay,Page,Select,Grid,Data) {
+    	
+        BUI.Form.Rules.add({
+        	  name : 'versionRange',
+        	  msg : '结束版本号必须大于或等于开始版本号！',
+        	  validator : function(value,baseValue,formatedMsg,group){
+	              var beginValue = value.beginVersion;
+	          	  var endValue = value.endVersion;
+		          if (null == beginValue || "" == beginValue) {
+		      	  	return undefined;
+		      	  }
+		          
+		          if (null == endValue || "" == endValue) {
+		      	  	return undefined;
+		      	  }
+        		  
+		          return versionCmp(beginValue, endValue) <= 0 ? undefined : formatedMsg;
+        	 }
+        });
+        
+        Form.Rules.add({
+            name : 'appVersion',  //规则名称
+            msg : '请填写正确的版本格式,如:1.2.1',//默认显示的错误信息
+            validator : function(value,baseValue,formatMsg){
+              var regexp = new RegExp('^[0-9]+[\\.][0-9]+[\\.][0-9]+$');
+              if(value && !regexp.test(value)){
+                return formatMsg;
+              }
+            }
+        }); 
+    	
     	var id = $("#id").val();
     	
     	var appSelect = new BUI.Select.Select({
@@ -316,12 +355,14 @@
         	
         	var html = '';
         	html += '<div id="'+prefix+'_addition_'+index+'" class="additionRule" style="width:100%;float: left;margin-left: -10px">';
+        	html += 	'<div id="'+prefix+'_addition_group_'+index+'" class="bui-form-group addition-group controls" data-rules="{required : true, versionRange:true}">';
         	html += 	'<div id="'+updateVersionBeginSelect+'" class="controls">';
-        	html += 		'<s class="required-color">*</s><input type="hidden" id="'+updateVersionBegin+'" name="beginVersion" class="updateVersionBegin" data-rules="{required : true}" placeholder="请选择版本">';
+        	html += 		'<s class="required-color">*</s><input type="hidden" id="'+updateVersionBegin+'" name="beginVersion" class="updateVersionBegin" placeholder="请选择版本">';
         	html += 	'</div>';
         	html += 	'<label class="control-label" style="width:30px;">&nbsp;&nbsp;至&nbsp;&nbsp;</label>';
         	html += 	'<div id="'+updateVersionEndSelect+'" class="controls">';
-        	html += 		'<s class="required-color">*</s><input type="hidden" id="'+updateVersionEnd+'" name="endVersion" class="updateVersionEnd" data-rules="{required : true}" placeholder="请选择版本">';
+        	html += 		'<s class="required-color">*</s><input type="hidden" id="'+updateVersionEnd+'" name="endVersion" class="updateVersionEnd" placeholder="请选择版本">';
+        	html += 	'</div>';
         	html += 	'</div>';
         	html += 	'<label class="control-label" style="width:100px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<s>*</s>更新方式：</label>';
         	html += 	'<div id="'+updateTypeSelect+'" class="controls">';
@@ -338,33 +379,63 @@
                 });
         	}
         	
-            var updateVersionBeginSelect = new BUI.Select.Select({
+            var versionBeginComponent = new BUI.Select.Select({
                 render:'#'+updateVersionBeginSelect,
                 valueField:'#'+updateVersionBegin,
                 width:'180',
                 items: versions
           	});
             
-            var updateVersionEndSelect = new BUI.Select.Select({
+            var versionEndComponent = new BUI.Select.Select({
                 render:'#'+updateVersionEndSelect,
                 valueField:'#'+updateVersionEnd,
                 width:'180',
                 items: versions
           	});
             
-            var updateTypeSelect = new BUI.Select.Select({
+            var typeComponent = new BUI.Select.Select({
                 render:'#'+updateTypeSelect,
                 valueField:'#'+updateType,
                 width:'180',
                 items: updateTypes
           	});
             
-            updateVersionBeginSelect.render();
-            updateVersionEndSelect.render();
-            updateTypeSelect.render();
+            versionBeginComponent.on('validchange change',function(ev){
+            	versionCheckEvent(prefix, index);
+            });
+            
+            versionEndComponent.on('validchange change',function(ev){
+            	versionCheckEvent(prefix, index);
+            });
+            
+            versionBeginComponent.render();
+            versionEndComponent.render();
+            typeComponent.render();
+            
+            if (null != editForm) {
+            	extEditForm = new Form.HForm({
+                    srcNode: '#'+prefix+'_addition_'+index
+                });
+            	extEditForm.render(); 
+            	
+            	editFormContainer['"addition_'+index+'"'] = extEditForm;
+            }
         }
         
-        
+        function versionCheckEvent(prefix, index) {
+        	var form = editFormContainer['"addition_'+index+'"'];
+        	
+    		if (null == form) {
+    			form = editForm;
+        	}
+        	
+        	var item = form.getChild(prefix+'_addition_group_'+index);
+        	
+        	var errors = [];
+        	item.validControl(item.getRecord());
+        	errors.push(item.get('error'));
+        	item.showErrors(errors);
+        }
         
         function toggleCustom(hide) {
         	
@@ -661,8 +732,19 @@
         
         
         
-        var editForm = new Form.HForm({
-            srcNode: '#detail'
+        editForm = new Form.HForm({
+            srcNode: '#detail',
+            submitType : 'ajax',
+			method : 'post',
+			callback : function(data) {
+				if(data.success){
+					$("#id").val(data.result);
+					showSuccess(data.msg);
+					//location.href = $ctx + '/mop/appVersion/detail/index?id='+data.result;
+	            }else {
+	            	showWarning(data.msg);
+	            }
+			}
         });
         
         editForm.on('beforesubmit', function () {
@@ -701,7 +783,7 @@
 			    	return false;
 			    }
 			    
-			    var updateNote = $("#updateNote").html();
+			    var updateNote = $("#updateNote").val();
 			    if (null == updateNote || "" == updateNote) {
 			    	showWarning("更新说明不能为空");
 			    	return false;
@@ -815,6 +897,43 @@
         function showSuccess(str) {
             BUI.Message.Alert(str, 'success');
         }
+        
+        
+     // 不考虑字母
+        function s2i(s) {
+            return s.split('').reduce(function(a, c) {
+                var code = c.charCodeAt(0);
+                if (48<=code && code < 58) {
+                    a.push(code-48);
+                }
+                return a;
+            }, []).reduce(function(a, c) {
+                return 10*a + c;
+            }, 0);
+        }
+         
+        function versionCmp(s1, s2) {
+            var a = s1.split('.').map(function(s) {
+                return s2i(s);
+            });
+            var b = s2.split('.').map(function(s) {
+                return s2i(s);
+            });
+            var n = a.length < b.length ? a.length : b.length;
+            for (var i = 0; i < n; i++) {
+                if (a[i] < b[i]) {
+                    return -1;
+                } else if (a[i] > b[i]) {
+                    return 1;
+                }
+            }
+            if (a.length < b.length) return -1;
+            if (a.length > b.length) return 1;
+            var last1 = s1.charCodeAt(s1.length-1) | 0x20,
+                last2 = s2.charCodeAt(s2.length-1) | 0x20;
+            return last1 > last2 ? 1 : last1 < last2 ? -1 : 0;
+        }
+
     });
 </script>
 

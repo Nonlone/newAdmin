@@ -28,14 +28,14 @@
             </div>
 
             <div class="control-group span_width">
-                <label class="control-label">appID:</label>
+                <label class="control-label">Android(APPID):</label>
                 <div class="controls">
                     <input type="text" class="input-small control-text" name="search_LIKE_appId">
                 </div>
             </div>
 
             <div class="control-group span_width">
-                <label class="control-label">BundleID:</label>
+                <label class="control-label">IOS(BundleID):</label>
                 <div class="controls">
                     <input type="text" class="input-small control-text" name="search_LIKE_bundleId">
                 </div>
@@ -65,8 +65,8 @@
                 <div class="control-group span8">
                     <label class="control-label"><s>*</s>应用编码:</label>
                     <div class="controls">
-                        <input name="code" type="text"
-                               data-rules="{required:true,}"
+                        <input id="code" name="code" type="text"
+                               data-rules="{required:true,channel:true}"
                                class="input-normal control-text">
                     </div>
                 </div>
@@ -81,18 +81,16 @@
             </div>
             <div class="row">
                 <div class="control-group span8">
-                    <label class="control-label"><s>*</s>appID:</label>
+                    <label class="control-label">Android(APPID):</label>
                     <div class="controls">
                         <input name="appId" type="text"
-                               data-rules="{required:true,}"
                                class="input-normal control-text">
                     </div>
                 </div>
                 <div class="control-group span8">
-                    <label class="control-label"><s>*</s>BundleID:</label>
+                    <label class="control-label">IOS(BundleID):</label>
                     <div class="controls">
                         <input name="bundleId" type="text"
-                               data-rules="{required:true,}"
                                class="input-normal control-text">
                     </div>
                 </div>
@@ -116,7 +114,18 @@
     }
 
 
-    BUI.use(['bui/ux/crudgrid','bui/calendar'], function (CrudGrid,Calendar) {
+    BUI.use(['bui/ux/crudgrid','bui/calendar','bui/form'], function (CrudGrid,Calendar,Form) {
+
+        Form.Rules.add({
+            name: 'channel',
+            msg: '不允许包含非英文或数字的标识',
+            validator: function (value, baseValue, formatMsg) {
+                var regexp = new RegExp(/^[0-9a-zA-Z_]+$/g)
+                if (!regexp.test(value)) {
+                    return formatMsg
+                }
+            }
+        });
 
         var datepickerStart = new Calendar.DatePicker({
             trigger:'.calendarStart',
@@ -157,8 +166,8 @@
             {title: 'id', dataIndex: 'id', width: '5%'},
             {title: '应用编码', dataIndex: 'code', width: '10%'},
             {title: '应用名称', dataIndex: 'name', width: '10%'},
-            {title: 'appID', dataIndex: 'appId', width: '10%'},
-            {title: 'BundleID', dataIndex: 'bundleId', width: '10%'},
+            {title: 'Android(APPID)', dataIndex: 'appId', width: '10%'},
+            {title: 'IOS(BundleID)', dataIndex: 'bundleId', width: '10%'},
             {title: '创建时间', dataIndex: 'createdTime', width: '10%', renderer: BUI.Grid.Format.datetimeRenderer},
             {title: '更新时间', dataIndex: 'updateTime', width: '10%', renderer: BUI.Grid.Format.datetimeRenderer}
 
@@ -187,6 +196,12 @@
                 }
             }
         });
+
+        var beforeUpdateShow = function(dialog,form,record){
+            form.getField("code").disable();
+        };
+
+        crudGrid.on('beforeUpdateShow', beforeUpdateShow);
     });
 
 
